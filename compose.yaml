@@ -1,0 +1,12 @@
+services: 
+  mysql: 
+    image: mysql:8.0-debian
+    volumes: 
+      - TaskManager-MySql-Data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: TaskManagerDatabase
+
+volumes: 
+  TaskManager-MySql-Data:
+
