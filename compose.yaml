@@ -7,6 +7,15 @@ services:
       - "8000:3306"
     env_file:
       - .env
+    
+  api: 
+    build: 
+      context: ./Backend/API
+      target: final
+    ports: 
+      - "8001:8080"
+      - "8002:8081"
+
 
 volumes: 
   planner-web-app-mysql-data:
