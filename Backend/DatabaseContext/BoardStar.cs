@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,12 +10,10 @@ using System.Threading.Tasks;
 namespace DatabaseContext;
 
 [Table("boardstar")]
+[PrimaryKey(nameof(BoardId), nameof(UserId))]
 public class BoardStar
 {
-    [Key]
     public int UserId { get; set; }
-
-    [Key]
     public int BoardId { get; set; }
 
     [Column(TypeName = "date")]

@@ -1,4 +1,5 @@
 ﻿using DatabaseContext.Types;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,12 +11,10 @@ using System.Threading.Tasks;
 namespace DatabaseContext;
 
 [Table("workspacemembers")]
+[PrimaryKey(nameof(WorkspaceId), nameof(UserId))]
 public class WorkspaceMember
 {
-    [Key]
     public int WorkspaceId { get; set; }
-
-    [Key]
     public int UserId { get; set; }
 
     [StringLength(50)]

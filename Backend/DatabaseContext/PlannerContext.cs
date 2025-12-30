@@ -18,9 +18,13 @@ public class PlannerContext : DbContext
     public DbSet<BoardList> BoardLists { get; set; }
     public DbSet<Card> Cards { get; set; }  
 
+
+    public PlannerContext() { }
+
     public PlannerContext(DbContextOptions<PlannerContext> options) 
         : base(options) { }
 
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

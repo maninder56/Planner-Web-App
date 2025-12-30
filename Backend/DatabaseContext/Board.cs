@@ -24,6 +24,7 @@ public class Board
     public DateOnly CreatedAt { get; set; }
 
     // Foreign key
+    [ForeignKey(nameof(Workspace))]
     public int WorkspaceId { get; set; }
 
     // Navigation Properties 

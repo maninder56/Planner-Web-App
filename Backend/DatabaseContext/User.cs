@@ -31,6 +31,7 @@ public class User
     public required string PasswordHash { get; set; }
 
     // Foreign Key
+    [ForeignKey(nameof(Board))] 
     public int? LastBoardId { get; set; }    
 
     // Navigation properties
