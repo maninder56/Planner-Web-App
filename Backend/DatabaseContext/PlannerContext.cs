@@ -24,7 +24,6 @@ public class PlannerContext : DbContext
     public PlannerContext(DbContextOptions<PlannerContext> options) 
         : base(options) { }
 
-    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
