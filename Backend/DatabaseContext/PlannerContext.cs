@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +19,12 @@ public class PlannerContext : DbContext
     public DbSet<Workspace> Workspaces { get; set; }
     public DbSet<Board> Boards { get; set; }
     public DbSet<BoardList> BoardLists { get; set; }
-    public DbSet<Card> Cards { get; set; }  
+    public DbSet<Card> Cards { get; set; }
 
 
     public PlannerContext() { }
 
-    public PlannerContext(DbContextOptions<PlannerContext> options) 
-        : base(options) { }
+    public PlannerContext(DbContextOptions<PlannerContext> options) : base(options) { }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

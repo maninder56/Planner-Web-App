@@ -15,14 +15,15 @@ public class PlannerDatabaseContextFactory : IDesignTimeDbContextFactory<Planner
     {
         var configuration = new ConfigurationBuilder()
             .AddEnvironmentVariables()
+            .AddUserSecrets<PlannerContext>()
             .Build();
 
         string connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException(); 
+            ?? throw new InvalidOperationException("Unable to find database connection"); 
 
         var optionsBuilder = new DbContextOptionsBuilder<PlannerContext>(); 
 
-        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); 
+        optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 44))); 
 
         return new PlannerContext(optionsBuilder.Options);  
     }
