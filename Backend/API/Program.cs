@@ -1,5 +1,6 @@
 using DatabaseContext;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using API.ServiceRegistrationExtensions; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,19 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-//string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-//            ?? throw new InvalidOperationException("Unable to find database connection");
+// Add database services
+builder.Services.AddDatabaseService(builder.Configuration); 
 
-//builder.Services.AddDbContext<PlannerContext>(options =>
-//    options.UseMySql(
-//        connectionString,
-
-//        b => b.MigrationsAssembly("DatabaseContext"))); 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using var scope = app.Services.CreateScope();
+var database = scope.ServiceProvider.GetRequiredService<PlannerContext>(); 
+database.Database.Migrate();
 
+
+// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
