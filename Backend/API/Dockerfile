@@ -31,18 +31,16 @@
 
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS development
 WORKDIR /app
-
-RUN dotnet restore "./API.csproj"
-
-ENV ASPNETCORE_ENVIRONMENT=Development
-
 EXPOSE 8080
 EXPOSE 8081 
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENTRYPOINT ["dotnet", "run", "--project", "API/API.csproj"]
 
-RUN dotnet build "./API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+
+
 
 
 
