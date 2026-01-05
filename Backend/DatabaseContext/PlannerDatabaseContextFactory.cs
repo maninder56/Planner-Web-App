@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseContext;
 
+// This class is only userd when creating migrations 
 public class PlannerDatabaseContextFactory : IDesignTimeDbContextFactory<PlannerContext>
 {
     public PlannerContext CreateDbContext(string[] args)
@@ -18,8 +19,9 @@ public class PlannerDatabaseContextFactory : IDesignTimeDbContextFactory<Planner
             .AddUserSecrets<PlannerContext>()
             .Build();
 
+        // Only used for creating migrations
         string connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Unable to find database connection"); 
+            ?? throw new InvalidOperationException("Unable to load database connection"); 
 
         var optionsBuilder = new DbContextOptionsBuilder<PlannerContext>(); 
 

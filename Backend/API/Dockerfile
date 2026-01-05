@@ -33,10 +33,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS development
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081 
-ENV ASPNETCORE_ENVIRONMENT=Development
-ENTRYPOINT ["dotnet", "run", "--project", "API/API.csproj"]
+CMD ["dotnet", "run", "--launch-profile", "https", "--project", "API/API.csproj"]
 
 
 

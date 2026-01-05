@@ -14,14 +14,18 @@ builder.Services.AddDatabaseService(builder.Configuration);
 
 var app = builder.Build();
 
+// Apply migrations
 using var scope = app.Services.CreateScope();
 var database = scope.ServiceProvider.GetRequiredService<PlannerContext>(); 
 database.Database.Migrate();
+database.SaveChanges();
+database.Dispose(); 
+scope.Dispose();
 
 
 // Configure the HTTP request pipeline.
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

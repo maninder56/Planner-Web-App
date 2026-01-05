@@ -1,3 +1,5 @@
 SHOW DATABASES;
 
+USE plannerwebapp;
+
 SHOW TABLES;

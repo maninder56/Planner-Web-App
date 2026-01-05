@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\DatabaseContext\DatabaseContext.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DatabaseContext\DatabaseContext.csproj" />
+    <Folder Include="HttpsCertificates\" />
   </ItemGroup>
 
 </Project>
