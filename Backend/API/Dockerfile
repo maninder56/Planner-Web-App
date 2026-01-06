@@ -35,7 +35,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS development
 WORKDIR /app/Backend
 EXPOSE 8001
 EXPOSE 8002
-CMD ["dotnet", "run", "--launch-profile", "https", "--project", "API/API.csproj"]
+CMD ["dotnet", "watch", "--launch-profile", "https", "--project", "API/API.csproj"]
 
 
 
