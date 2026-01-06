@@ -17,19 +17,15 @@ public class RefreshToken
     [Key]
     public int RefreshTokenId { get; set; }
 
-    [Required]
     [StringLength(100)]
     public required string TokenHash { get; set; }
 
-    [Required]
     public DateTime ExpiresAt { get; set; }
 
-    [Required]
     public DateTime CreatedAt { get; set; }
 
 
     // Foreign Key
-    [Required]
     public int UserId { get; set; }
 
 

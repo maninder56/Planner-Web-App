@@ -16,32 +16,30 @@ public class User
     [Key]
     public int UserId { get; set; }
 
-    [Required]
     [StringLength(100)]
     public  required string Name { get; set; }
 
-    [Required]
     [StringLength(200)]
     public required string Email { get; set; }
 
-    [Required]
     [Column(TypeName = "date")]
     public DateOnly CreatedAt { get; set; }
 
     public bool Guest { get; set; }
 
-    [Required]
     [StringLength(255)]
     public required string PasswordHash { get; set; }
 
     // Foreign Key
+    [ForeignKey(nameof(Board))] 
     public int? LastBoardId { get; set; }    
 
     // Navigation properties
     public RefreshToken RefreshToken { get; set; } = null!;
 
-    // workspace 
-    // boardstars 
-    // lastboard
+    public List<WorkspaceMember> WorkspaceMembers { get; set;  } = [];
 
+    public Board? Board { get; set; } = null!;
+
+    public List<BoardStar> BoardStars { get; set; } = []; 
 }

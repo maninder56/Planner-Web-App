@@ -2,21 +2,36 @@ services:
   mysql: 
     image: mysql:8.0-debian
     volumes: 
-      - planner-web-app-mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     ports: 
       - "8000:3306"
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+      start_period: 3s
     
   api: 
+    image: planner-web-app
+    depends_on:
+      mysql: 
+        condition: service_healthy
     build: 
-      context: ./Backend/API
-      target: final
+      context: ./Backend
+      target: development
+      dockerfile: API/Dockerfile
     ports: 
-      - "8001:8080"
-      - "8002:8081"
+      - "8001:8001"
+      - "8002:8002"
+    env_file:
+      - .env
+    volumes: 
+      - ./Backend:/app
 
 
 volumes: 
-  planner-web-app-mysql-data:
+  mysql-data:
 
