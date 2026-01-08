@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseContext;
 
-[Table("lists")]
+[Table("boardlists")]
 public class BoardList
 {
     [Key]

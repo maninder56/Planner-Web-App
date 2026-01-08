@@ -45,12 +45,7 @@ namespace DatabaseContext.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("WorkspaceId")
-                        .HasColumnType("int");
-
                     b.HasKey("BoardId");
-
-                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("boards");
                 });
@@ -83,7 +78,29 @@ namespace DatabaseContext.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("lists");
+                    b.ToTable("boardlists");
+                });
+
+            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+                {
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Role")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
+                    b.HasKey("BoardId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("boardmembers");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardStar", b =>
@@ -218,62 +235,6 @@ namespace DatabaseContext.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("DatabaseContext.Workspace", b =>
-                {
-                    b.Property<int>("WorkspaceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("WorkspaceId"));
-
-                    b.Property<DateOnly>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
-                        .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("WorkspaceId");
-
-                    b.ToTable("workspace");
-                });
-
-            modelBuilder.Entity("DatabaseContext.WorkspaceMember", b =>
-                {
-                    b.Property<int>("WorkspaceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Role")
-                        .HasMaxLength(50)
-                        .HasColumnType("int");
-
-                    b.HasKey("WorkspaceId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("workspacemembers");
-                });
-
-            modelBuilder.Entity("DatabaseContext.Board", b =>
-                {
-                    b.HasOne("DatabaseContext.Workspace", "Workspace")
-                        .WithMany("Boards")
-                        .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Workspace");
-                });
-
             modelBuilder.Entity("DatabaseContext.BoardList", b =>
                 {
                     b.HasOne("DatabaseContext.Board", "Board")
@@ -283,6 +244,25 @@ namespace DatabaseContext.Migrations
                         .IsRequired();
 
                     b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+                {
+                    b.HasOne("DatabaseContext.Board", "Board")
+                        .WithMany("BoardMembers")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseContext.User", "User")
+                        .WithMany("BoardMembers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardStar", b =>
@@ -335,27 +315,10 @@ namespace DatabaseContext.Migrations
                     b.Navigation("Board");
                 });
 
-            modelBuilder.Entity("DatabaseContext.WorkspaceMember", b =>
-                {
-                    b.HasOne("DatabaseContext.User", "User")
-                        .WithMany("WorkspaceMembers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseContext.Workspace", "Workspace")
-                        .WithMany("WorkspaceMembers")
-                        .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Workspace");
-                });
-
             modelBuilder.Entity("DatabaseContext.Board", b =>
                 {
+                    b.Navigation("BoardMembers");
+
                     b.Navigation("BoardStars");
 
                     b.Navigation("Lists");
@@ -370,19 +333,12 @@ namespace DatabaseContext.Migrations
 
             modelBuilder.Entity("DatabaseContext.User", b =>
                 {
+                    b.Navigation("BoardMembers");
+
                     b.Navigation("BoardStars");
 
                     b.Navigation("RefreshToken")
                         .IsRequired();
-
-                    b.Navigation("WorkspaceMembers");
-                });
-
-            modelBuilder.Entity("DatabaseContext.Workspace", b =>
-                {
-                    b.Navigation("Boards");
-
-                    b.Navigation("WorkspaceMembers");
                 });
 #pragma warning restore 612, 618
         }

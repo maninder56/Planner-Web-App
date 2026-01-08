@@ -14,9 +14,8 @@ public class PlannerContext : DbContext
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
+    public DbSet<BoardMembers> BoardMembers { get; set; }
     public DbSet<BoardStar> BoardStars { get; set; }
-    public DbSet<Workspace> Workspaces { get; set; }
     public DbSet<Board> Boards { get; set; }
     public DbSet<BoardList> BoardLists { get; set; }
     public DbSet<Card> Cards { get; set; }
@@ -43,10 +42,6 @@ public class PlannerContext : DbContext
 
         modelBuilder.Entity<BoardStar>()
             .Property(bs => bs.CreatedAt)
-            .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
-
-        modelBuilder.Entity<Workspace>()
-            .Property(w => w.CreatedAt)
             .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
         modelBuilder.Entity<Board>()
