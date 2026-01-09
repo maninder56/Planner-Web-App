@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.DTOs.Account;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers; 
@@ -8,7 +9,29 @@ namespace API.Controllers;
 public class AccountController : ControllerBase
 {
 
-    [HttpGet("hello")]
+    private ILogger logger; 
+
+    public AccountController(ILogger<AccountController> logger)
+    {
+        this.logger = logger;
+    }
+
+
+    // Read routs
+
+
+
+    // Create routs
+
+    [HttpPost("create")]
+    public IActionResult CreateAccountPostAsync(NewUserDTO newUser)
+    {
+        throw new NotImplementedException();
+    }
+
+
+
+    [HttpGet("/api/hello")]
     public IActionResult HelloGet()
     {
         return Ok(new { message = "Hello, from API" }); 
