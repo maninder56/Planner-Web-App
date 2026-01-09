@@ -18,6 +18,8 @@ builder.Services.AddJWTBearerAuthentication(builder.Configuration);
 builder.Services.AddAuthorization(); 
 
 
+// Web app services 
+builder.Services.AddPlannerServices();
 
 var app = builder.Build();
 

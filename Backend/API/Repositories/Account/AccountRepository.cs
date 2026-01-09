@@ -1,5 +1,6 @@
 ﻿using API.Models.Account;
 using API.Models.Result;
+using API.Utilities;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
@@ -10,18 +11,19 @@ namespace API.Repositories.Account;
 
 public class AccountRepository : IAccountRepository
 {
-    private ILogger logger; 
+    private ILogger<AccountRepository> logger; 
     private PlannerContext database; 
 
-    public AccountRepository(ILogger logger, PlannerContext context)
+    public AccountRepository(ILogger<AccountRepository> logger, PlannerContext context)
     {
         this.logger = logger;
         this.database = context;
     }
 
+
     // Create Operations
 
-    public async Task<Result<CreatedUser, Error>> CreateUserAsync(string username, string email, string passwordHash)
+    public async Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash)
     {
         try
         {
@@ -46,7 +48,7 @@ public class AccountRepository : IAccountRepository
             if (sqlEx is not null && sqlEx.Number == 1062) // Check if email was duplicate
             {
                 logger.LogError("Failed to Create new user account with email {Email} which already exists.", email);
-                return Result<CreatedUser, Error>.Failed(Error.InternalServerError);
+                return Result<CreatedUser, Error>.Failed(Error.BadRequest);
             }
 
             logger.LogError("Failed to Create New User account with email {Email}", email);
@@ -58,4 +60,35 @@ public class AccountRepository : IAccountRepository
             return Result<CreatedUser, Error>.Failed(Error.InternalServerError); 
         }
     }
+
+
+    public async Task<Result<Error>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
+    {
+        try
+        {
+            var user = await database.Users
+                .Include(u => u.RefreshToken)
+                .FirstOrDefaultAsync(u => u.UserId == userId); 
+
+            if (user is null)
+            {
+                logger.LogWarning("Failed to Save new refresh token, User id: {UserId} Invalid", userId);
+                return Result<Error>.Failed(Error.InternalServerError); 
+            }
+
+            var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
+            var tokenHash = RefreshTokenUtility.Encode(hashBytes);
+
+            user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt };
+
+            await database.SaveChangesAsync(); 
+            return Result<Error>.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to save new refresh token, with Exception message: {ExMessage}", ex.Message);
+            return Result<Error>.Failed(Error.InternalServerError);
+        }
+    }
+
 }

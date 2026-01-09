@@ -1,6 +1,9 @@
 ﻿using API.DTOs.Account;
+using API.Services.Account;
+using API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace API.Controllers; 
 
@@ -9,11 +12,15 @@ namespace API.Controllers;
 public class AccountController : ControllerBase
 {
 
-    private ILogger logger; 
+    private ILogger<AccountController> logger; 
+    private IAccountService service;
+    private CookiesUtility cookiesUtility; 
 
-    public AccountController(ILogger<AccountController> logger)
+    public AccountController(ILogger<AccountController> logger, IAccountService accountService, CookiesUtility cookiesUtility)
     {
         this.logger = logger;
+        this.service = accountService;
+        this.cookiesUtility = cookiesUtility;
     }
 
 
@@ -24,9 +31,19 @@ public class AccountController : ControllerBase
     // Create routs
 
     [HttpPost("create")]
-    public IActionResult CreateAccountPostAsync(NewUserDTO newUser)
+    public async Task<IActionResult> CreateAccountPostAsync(NewUserDTO newUser)
     {
-        throw new NotImplementedException();
+        var result = await service.CreateNewUserAsync(newUser);
+
+        if (result.Successful && result.Data2 is not null)
+        {
+            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data2); 
+            return Ok(); 
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult(); 
+        }
     }
 
 

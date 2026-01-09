@@ -5,20 +5,27 @@ namespace API.Utilities;
 
 public static class RefreshTokenUtility
 {
-    public static string GenerateRefreshTokenHashAsBase64()
+    public static byte[] GenerateRefreshTokenAsByteArray()
     {
         byte[] randomNumber = new byte[32];
         using RandomNumberGenerator rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
-        byte[] hash = SHA256.HashData(randomNumber);
-        return Base64UrlTextEncoder.Encode(hash);
+        return randomNumber;
     }
 
-
-    public static bool VerifyBase64RefreshTokenHash(string base64hash, string providedbase64Hash)
+    public static byte[] HashRefreshToken(byte[] refreshTokenAsByteArray)
     {
-        byte[] hashBytes = Base64UrlTextEncoder.Decode(base64hash);
-        byte[] providedHashBytes = Base64UrlTextEncoder.Decode(providedbase64Hash);
-        return CryptographicOperations.FixedTimeEquals(hashBytes, providedHashBytes);
+        return SHA256.HashData(refreshTokenAsByteArray);
     }
+
+    public static bool VerifyBase64RefreshTokenHash(string base64hash, string base64Token)
+    {
+        byte[] hashBytes = Decode(base64hash);
+        byte[] tokenHashBytes = HashRefreshToken(Decode(base64Token));
+        return CryptographicOperations.FixedTimeEquals(hashBytes, tokenHashBytes);
+    }
+
+    public static string Encode(byte[] bytes) => Base64UrlTextEncoder.Encode(bytes);
+    public static byte[] Decode(string base64) => Base64UrlTextEncoder.Decode(base64); 
+
 }

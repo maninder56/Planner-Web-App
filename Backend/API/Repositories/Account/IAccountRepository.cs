@@ -9,7 +9,8 @@ public interface IAccountRepository
     // Read Operations 
 
     // Create Operations
-    public Task<Result<CreatedUser, Error>> CreateUserAsync(string username, string email, string passwordHash); 
+    public Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash);
+    public Task<Result<Error>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt); 
 
     // Update Operations 
 
