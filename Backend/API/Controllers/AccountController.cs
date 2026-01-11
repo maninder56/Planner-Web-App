@@ -13,31 +13,28 @@ public class AccountController : ControllerBase
 {
 
     private ILogger<AccountController> logger; 
-    private IAccountService service;
+    private IAccountService accountService;
     private CookiesUtility cookiesUtility; 
 
     public AccountController(ILogger<AccountController> logger, IAccountService accountService, CookiesUtility cookiesUtility)
     {
         this.logger = logger;
-        this.service = accountService;
+        this.accountService = accountService;
         this.cookiesUtility = cookiesUtility;
     }
 
 
-    // Read routs
-
-
-
-    // Create routs
+    
+    // Account Routes
 
     [HttpPost("create")]
     public async Task<IActionResult> CreateAccountPostAsync(NewUserDTO newUser)
     {
-        var result = await service.CreateNewUserAsync(newUser);
+        var result = await accountService.CreateNewUserAsync(newUser);
 
-        if (result.Successful && result.Data2 is not null)
+        if (result.Successful && result.Data != null)
         {
-            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data2); 
+            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data); 
             return Ok(); 
         }
         else
@@ -45,6 +42,31 @@ public class AccountController : ControllerBase
             return result.Error.ErrorToActionResult(); 
         }
     }
+
+
+    [HttpPost("login")]
+    public async Task<IActionResult> LogInUserPostAsync(LogInUserDTO logInUser)
+    {
+        var result = await accountService.LogInUserAsync(logInUser); 
+
+        if (result.Successful && result.Data != null)
+        {
+            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data); 
+            return Ok();
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult();
+        }
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> LogoutUserPostAsync()
+    {
+        throw new NotImplementedException();
+    }
+
 
 
 

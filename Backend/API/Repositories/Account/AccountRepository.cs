@@ -20,6 +20,32 @@ public class AccountRepository : IAccountRepository
         this.database = context;
     }
 
+    // Read Operations
+
+    public async Task<Result<User, Error>> GetUserDetailsByEmail(string email)
+    {
+        try
+        {
+            User? user = await database.Users
+                .FirstOrDefaultAsync(u => u.Email == email); 
+
+            if (user == null)
+            {
+                logger.LogWarning("Unable to find user with email: {Email}", email);
+                return Result<User, Error>.Failed(Error.NotFound); 
+            }
+            else
+            {
+                return Result<User, Error>.Success(user);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Failed to get user details, Exception message: {ExceptionMessage}", ex.Message);
+            return Result<User, Error>.Failed(Error.InternalServerError); 
+        }
+    }
+
 
     // Create Operations
 
