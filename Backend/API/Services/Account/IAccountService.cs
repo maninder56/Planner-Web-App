@@ -10,5 +10,9 @@ public interface IAccountService
     public Task<Result<Tokens, Error>> LogInUserAsync(LogInUserDTO logInUser); 
 
     // Create operations
-    public Task<Result<Tokens, Error>> CreateNewUserAsync(NewUserDTO newUser); 
+    public Task<Result<Tokens, Error>> CreateNewUserAsync(NewUserDTO newUser);
+
+
+    // delete operations
+    public Task<Result<Error>> LogoutUserAsync(HttpContext httpContext); 
 }

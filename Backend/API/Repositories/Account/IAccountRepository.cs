@@ -18,4 +18,5 @@ public interface IAccountRepository
 
 
     // Delete Operations
+    public Task<Result<Error>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64);
 }

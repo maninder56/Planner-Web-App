@@ -31,6 +31,13 @@ public class CookiesUtility
         return await tokenUtility.GetUserIdFromAccessTokenAsync(accessToken); 
     }
 
+    public string? GetRefreshTokenFromHttpContextAsync(HttpContext httpContext)
+    {
+        httpContext.Request.Cookies.TryGetValue(nameof(CookieType.refreshToken), out string? refreshToken);
+
+        return refreshToken; 
+    }
+
     public void SetTokensInsideCookies(HttpContext httpContext, Tokens tokens)
     {
         int accessTokenExpirationInMinutes = configuration.GetValue<int>("Jwt:ExpirationInMinutes", GetRefreshTokenLifeInDaysDefaultValue());
@@ -49,5 +56,22 @@ public class CookiesUtility
             {
                 Expires = DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays)
             }); 
+    }
+
+    public void InvalidateCookies(HttpContext httpContext)
+    {
+        CookieOptions cookieOptions = new CookieOptions { HttpOnly = true, IsEssential = true, Secure = true, SameSite = SameSiteMode.None };
+
+        httpContext.Response.Cookies.Append(nameof(CookieType.accessToken), "",
+            new CookieOptions(cookieOptions)
+            {
+                Expires = DateTime.UtcNow.AddMinutes(-1)
+            });
+
+        httpContext.Response.Cookies.Append(nameof(CookieType.refreshToken), "",
+            new CookieOptions(cookieOptions)
+            {
+                Expires = DateTime.UtcNow.AddDays(-1)
+            });
     }
 }

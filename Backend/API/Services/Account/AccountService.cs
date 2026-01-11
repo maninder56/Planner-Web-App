@@ -95,4 +95,20 @@ public class AccountService : IAccountService
         return Result<Tokens, Error>.Success(tokens); 
     }
 
+
+    // Delete operations
+
+    public async Task<Result<Error>> LogoutUserAsync(HttpContext httpContext)
+    {
+        string? refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContextAsync(httpContext);
+
+        if (refreshTokenInBase64 == null)
+        {
+            return Result<Error>.Success(); 
+        }
+
+        await repository.DeleteRefreshTokenHashAsync(refreshTokenInBase64);
+
+        return Result<Error>.Success();
+    }
 }

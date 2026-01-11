@@ -112,9 +112,39 @@ public class AccountRepository : IAccountRepository
         }
         catch (Exception ex)
         {
-            logger.LogWarning("Failed to save new refresh token, with Exception message: {ExMessage}", ex.Message);
+            logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
             return Result<Error>.Failed(Error.InternalServerError);
         }
     }
 
+
+    // Delete operations
+
+    public async Task<Result<Error>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64)
+    {
+        try
+        {
+            var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
+            var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
+            var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
+
+            var token = await database.RefreshTokens
+                .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64); 
+
+            if (token == null)
+            {
+                return Result<Error>.Success(); 
+            }
+
+            database.RefreshTokens.Remove(token);
+
+            await database.SaveChangesAsync(); 
+            return Result<Error>.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to delete refresh token, with Exception message: {ExceptionMessage}", ex.Message);
+            return Result<Error>.Failed(Error.InternalServerError); 
+        }
+    }
 }

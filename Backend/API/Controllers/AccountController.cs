@@ -35,7 +35,7 @@ public class AccountController : ControllerBase
         if (result.Successful && result.Data != null)
         {
             cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data); 
-            return Ok(); 
+            return NoContent(); 
         }
         else
         {
@@ -51,8 +51,11 @@ public class AccountController : ControllerBase
 
         if (result.Successful && result.Data != null)
         {
-            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data); 
-            return Ok();
+            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data);
+
+            logger.LogInformation("User with email {email} successfully logged in at {time}", 
+                logInUser.Email, DateTime.UtcNow.ToString());
+            return NoContent();
         }
         else
         {
@@ -61,10 +64,13 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpPost("logout")]
     public async Task<IActionResult> LogoutUserPostAsync()
     {
-        throw new NotImplementedException();
+        await accountService.LogoutUserAsync(HttpContext);
+        cookiesUtility.InvalidateCookies(HttpContext);
+
+        return NoContent(); 
     }
 
 
