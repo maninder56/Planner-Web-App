@@ -135,9 +135,40 @@ public class AccountRepository : IAccountRepository
             var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
             var tokenHash = RefreshTokenUtility.Encode(hashBytes);
 
-            user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt, CreatedAt = DateTime.UtcNow };
+            user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt };
 
             await database.SaveChangesAsync(); 
+            return Result<Error>.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
+            return Result<Error>.Failed(Error.InternalServerError);
+        }
+    }
+
+
+    // Update operations 
+    
+    public async Task<Result<Error>> UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes)
+    {
+        try
+        {
+            var user = await database.Users
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user is null)
+            {
+                logger.LogWarning("Failed to update refresh token, User id: {UserId} Invalid", userId);
+                return Result<Error>.Failed(Error.InternalServerError);
+            }
+
+            var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
+            var tokenHash = RefreshTokenUtility.Encode(hashBytes);
+
+            user.RefreshToken.TokenHash = tokenHash;    
+
+            await database.SaveChangesAsync();
             return Result<Error>.Success();
         }
         catch (Exception ex)

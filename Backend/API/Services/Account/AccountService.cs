@@ -150,8 +150,7 @@ public class AccountService : IAccountService
             RefreshTokenExpiresAt = refreshToken.ExpiresAt
         }; 
 
-        await repository.CreateNewRefreshTokenHashByUserIdAsync(user.UserId,
-            refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+        await repository.UpdateRefreshTokenHashByUserIdAsync(user.UserId,refreshTokenBytes);
 
         // return tokens 
         return Result<Tokens, Error>.Success(tokens);

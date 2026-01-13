@@ -13,10 +13,10 @@ public interface IAccountRepository
 
     // Create Operations
     public Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash);
-    public Task<Result<Error>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt); 
+    public Task<Result<Error>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt);
 
     // Update Operations 
-
+    public Task<Result<Error>> UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes); 
 
     // Delete Operations
     public Task<Result<Error>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64);
