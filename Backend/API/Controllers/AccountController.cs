@@ -34,7 +34,7 @@ public class AccountController : ControllerBase
 
         if (result.Successful && result.Data != null)
         {
-            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data); 
+            cookiesUtility.SetNewTokensInsideCookies(HttpContext, result.Data); 
             return NoContent(); 
         }
         else
@@ -51,7 +51,7 @@ public class AccountController : ControllerBase
 
         if (result.Successful && result.Data != null)
         {
-            cookiesUtility.SetTokensInsideCookies(HttpContext, result.Data);
+            cookiesUtility.SetNewTokensInsideCookies(HttpContext, result.Data);
 
             logger.LogInformation("User with email {email} successfully logged in at {time}", 
                 logInUser.Email, DateTime.UtcNow.ToString());
@@ -71,6 +71,22 @@ public class AccountController : ControllerBase
         cookiesUtility.InvalidateCookies(HttpContext);
 
         return NoContent(); 
+    }
+
+    [HttpPost("token/refresh")]
+    public async Task<IActionResult> RefreshTokenPostAsync()
+    {
+        var tokenResult = await accountService.UpdateRefreshTokenAsync(HttpContext);
+
+        if (tokenResult.Successful && tokenResult.Data != null)
+        {
+            cookiesUtility.UpdateTokensInsideCookies(HttpContext, tokenResult.Data);
+            return NoContent();
+        }
+        else
+        {
+            return tokenResult.Error.ErrorToActionResult();
+        }
     }
 
 

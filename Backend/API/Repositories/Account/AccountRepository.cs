@@ -47,6 +47,37 @@ public class AccountRepository : IAccountRepository
     }
 
 
+    public async Task<Result<(User, RefreshToken), Error>> GetUserAndRefreshToken(string refreshTokenInBase64)
+    {
+        try
+        {
+            var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
+            var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
+            var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
+
+            var token = await database.RefreshTokens
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64); 
+
+            if (token == null)
+            {
+                logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
+                return Result<(User, RefreshToken), Error>.Failed(Error.NotFound); 
+            }
+            else
+            {
+                return Result<(User, RefreshToken), Error>.Success((token.User, token)); 
+            }
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Failed to get user and refresh token, Exception message: {ExceptionMessage}", ex.Message); 
+            return Result<(User, RefreshToken), Error>.Failed(Error.InternalServerError); 
+        }
+    }
+
+
     // Create Operations
 
     public async Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash)
@@ -93,7 +124,6 @@ public class AccountRepository : IAccountRepository
         try
         {
             var user = await database.Users
-                .Include(u => u.RefreshToken)
                 .FirstOrDefaultAsync(u => u.UserId == userId); 
 
             if (user is null)
@@ -105,7 +135,7 @@ public class AccountRepository : IAccountRepository
             var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
             var tokenHash = RefreshTokenUtility.Encode(hashBytes);
 
-            user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt };
+            user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt, CreatedAt = DateTime.UtcNow };
 
             await database.SaveChangesAsync(); 
             return Result<Error>.Success();
@@ -147,4 +177,5 @@ public class AccountRepository : IAccountRepository
             return Result<Error>.Failed(Error.InternalServerError); 
         }
     }
+
 }

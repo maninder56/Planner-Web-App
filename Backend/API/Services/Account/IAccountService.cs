@@ -12,6 +12,8 @@ public interface IAccountService
     // Create operations
     public Task<Result<Tokens, Error>> CreateNewUserAsync(NewUserDTO newUser);
 
+    // Update operations 
+    public Task<Result<Tokens, Error>> UpdateRefreshTokenAsync(HttpContext httpContext); 
 
     // delete operations
     public Task<Result<Error>> LogoutUserAsync(HttpContext httpContext); 

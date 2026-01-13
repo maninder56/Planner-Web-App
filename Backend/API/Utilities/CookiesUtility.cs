@@ -10,8 +10,9 @@ public class CookiesUtility
     private TokenProviderUtility tokenUtility; 
     private IConfiguration configuration;
 
-    public int GetRefreshTokenLifeInDaysDefaultValue() => 3;
     public int GetAccessTokenLifeInMinutesDefaultValue() => 5;
+    public int GetRefreshTokenLifeInDaysDefaultValue() => 3;
+    
 
     public CookiesUtility(TokenProviderUtility tokenUtility, IConfiguration configuration)
     {
@@ -31,17 +32,17 @@ public class CookiesUtility
         return await tokenUtility.GetUserIdFromAccessTokenAsync(accessToken); 
     }
 
-    public string? GetRefreshTokenFromHttpContextAsync(HttpContext httpContext)
+    public string? GetRefreshTokenFromHttpContext(HttpContext httpContext)
     {
         httpContext.Request.Cookies.TryGetValue(nameof(CookieType.refreshToken), out string? refreshToken);
 
         return refreshToken; 
     }
 
-    public void SetTokensInsideCookies(HttpContext httpContext, Tokens tokens)
+    public void SetNewTokensInsideCookies(HttpContext httpContext, Tokens tokens)
     {
-        int accessTokenExpirationInMinutes = configuration.GetValue<int>("Jwt:ExpirationInMinutes", GetRefreshTokenLifeInDaysDefaultValue());
-        int refreshTokenLifeTimeInDays = configuration.GetValue<int>("RefreshToken:ExpirationInDays", GetAccessTokenLifeInMinutesDefaultValue());
+        int accessTokenExpirationInMinutes = configuration.GetValue<int>("Jwt:ExpirationInMinutes", GetAccessTokenLifeInMinutesDefaultValue());
+        int refreshTokenLifeTimeInDays = configuration.GetValue<int>("RefreshToken:ExpirationInDays", GetRefreshTokenLifeInDaysDefaultValue());
 
         CookieOptions cookieOptions = new CookieOptions { HttpOnly = true, IsEssential = true, Secure = true, SameSite = SameSiteMode.None };
 
@@ -56,6 +57,26 @@ public class CookiesUtility
             {
                 Expires = DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays)
             }); 
+    }
+
+    public void UpdateTokensInsideCookies(HttpContext httpContext, Tokens tokens)
+    {
+        int accessTokenExpirationInMinutes = configuration.GetValue<int>("Jwt:ExpirationInMinutes", GetAccessTokenLifeInMinutesDefaultValue());
+        int refreshTokenLifeTimeInDays = configuration.GetValue<int>("RefreshToken:ExpirationInDays", GetRefreshTokenLifeInDaysDefaultValue());
+
+        CookieOptions cookieOptions = new CookieOptions { HttpOnly = true, IsEssential = true, Secure = true, SameSite = SameSiteMode.None };
+
+        httpContext.Response.Cookies.Append(nameof(CookieType.accessToken), tokens.AccessToken,
+            new CookieOptions(cookieOptions)
+            {
+                Expires = DateTime.UtcNow.AddMinutes(accessTokenExpirationInMinutes)
+            });
+
+        httpContext.Response.Cookies.Append(nameof(CookieType.refreshToken), tokens.RefreshToken,
+            new CookieOptions(cookieOptions)
+            {
+                Expires = tokens.RefreshTokenExpiresAt ?? DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays)
+            });
     }
 
     public void InvalidateCookies(HttpContext httpContext)

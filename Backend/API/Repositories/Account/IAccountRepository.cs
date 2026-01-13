@@ -9,6 +9,7 @@ public interface IAccountRepository
 {
     // Read Operations 
     public Task<Result<User, Error>> GetUserDetailsByEmail(string email);
+    public Task<Result<(User, RefreshToken), Error>> GetUserAndRefreshToken(string refreshTokenInBase64);
 
     // Create Operations
     public Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash);
