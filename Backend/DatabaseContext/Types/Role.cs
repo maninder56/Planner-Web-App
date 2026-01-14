@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseContext.Types; 
 
-public enum WorkspaceRole
+public enum Role
 {
     Owner, Member, Viewer
 }

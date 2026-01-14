@@ -23,12 +23,8 @@ public class Board
     [Column(TypeName = "date")]
     public DateOnly CreatedAt { get; set; }
 
-    // Foreign key
-    [ForeignKey(nameof(Workspace))]
-    public int WorkspaceId { get; set; }
-
     // Navigation Properties 
-    public Workspace Workspace { get; set; } = null!;
+    public List<BoardMembers> BoardMembers { get; set; } = null!;
 
     public User? User { get; set; }
 

@@ -16,22 +16,6 @@ namespace DatabaseContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "workspace",
-                columns: table => new
-                {
-                    WorkspaceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(CURRENT_TIMESTAMP)")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_workspace", x => x.WorkspaceId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "boards",
                 columns: table => new
                 {
@@ -41,23 +25,16 @@ namespace DatabaseContext.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     BackgroundColour = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(CURRENT_TIMESTAMP)"),
-                    WorkspaceId = table.Column<int>(type: "int", nullable: false)
+                    CreatedAt = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(CURRENT_TIMESTAMP)")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_boards", x => x.BoardId);
-                    table.ForeignKey(
-                        name: "FK_boards_workspace_WorkspaceId",
-                        column: x => x.WorkspaceId,
-                        principalTable: "workspace",
-                        principalColumn: "WorkspaceId",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "lists",
+                name: "boardlists",
                 columns: table => new
                 {
                     BoardListId = table.Column<int>(type: "int", nullable: false)
@@ -71,9 +48,9 @@ namespace DatabaseContext.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_lists", x => x.BoardListId);
+                    table.PrimaryKey("PK_boardlists", x => x.BoardListId);
                     table.ForeignKey(
-                        name: "FK_lists_boards_BoardId",
+                        name: "FK_boardlists_boards_BoardId",
                         column: x => x.BoardId,
                         principalTable: "boards",
                         principalColumn: "BoardId",
@@ -125,10 +102,37 @@ namespace DatabaseContext.Migrations
                 {
                     table.PrimaryKey("PK_cards", x => x.CardId);
                     table.ForeignKey(
-                        name: "FK_cards_lists_BoardListId",
+                        name: "FK_cards_boardlists_BoardListId",
                         column: x => x.BoardListId,
-                        principalTable: "lists",
+                        principalTable: "boardlists",
                         principalColumn: "BoardListId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "boardmembers",
+                columns: table => new
+                {
+                    BoardId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    JoinedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_boardmembers", x => new { x.BoardId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_boardmembers_boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "boards",
+                        principalColumn: "BoardId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_boardmembers_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -183,37 +187,15 @@ namespace DatabaseContext.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "workspacemembers",
-                columns: table => new
-                {
-                    WorkspaceId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    JoinedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_workspacemembers", x => new { x.WorkspaceId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_workspacemembers_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_workspacemembers_workspace_WorkspaceId",
-                        column: x => x.WorkspaceId,
-                        principalTable: "workspace",
-                        principalColumn: "WorkspaceId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.CreateIndex(
+                name: "IX_boardlists_BoardId",
+                table: "boardlists",
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_boards_WorkspaceId",
-                table: "boards",
-                column: "WorkspaceId");
+                name: "IX_boardmembers_UserId",
+                table: "boardmembers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_boardstar_UserId",
@@ -224,11 +206,6 @@ namespace DatabaseContext.Migrations
                 name: "IX_cards_BoardListId",
                 table: "cards",
                 column: "BoardListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_lists_BoardId",
-                table: "lists",
-                column: "BoardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_refreshtokens_TokenHash",
@@ -253,16 +230,14 @@ namespace DatabaseContext.Migrations
                 table: "users",
                 column: "LastBoardId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_workspacemembers_UserId",
-                table: "workspacemembers",
-                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "boardmembers");
+
             migrationBuilder.DropTable(
                 name: "boardstar");
 
@@ -273,19 +248,13 @@ namespace DatabaseContext.Migrations
                 name: "refreshtokens");
 
             migrationBuilder.DropTable(
-                name: "workspacemembers");
-
-            migrationBuilder.DropTable(
-                name: "lists");
+                name: "boardlists");
 
             migrationBuilder.DropTable(
                 name: "users");
 
             migrationBuilder.DropTable(
                 name: "boards");
-
-            migrationBuilder.DropTable(
-                name: "workspace");
         }
     }
 }

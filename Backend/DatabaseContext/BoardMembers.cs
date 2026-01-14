@@ -10,20 +10,19 @@ using System.Threading.Tasks;
 
 namespace DatabaseContext;
 
-[Table("workspacemembers")]
-[PrimaryKey(nameof(WorkspaceId), nameof(UserId))]
-public class WorkspaceMember
+[Table("boardmembers")]
+[PrimaryKey(nameof(BoardId), nameof(UserId))]
+public class BoardMembers
 {
-    public int WorkspaceId { get; set; }
+    public int BoardId { get; set; }
     public int UserId { get; set; }
 
     [StringLength(50)]
-    public WorkspaceRole Role { get; set; }
+    public Role Role { get; set; }
 
     public DateTime JoinedAt { get; set; }
 
-
     // Navigation properties
-    public Workspace Workspace { get; set; } = null!;
+    public Board Board { get; set; } = null!;
     public User User { get; set; } = null!;  
 }

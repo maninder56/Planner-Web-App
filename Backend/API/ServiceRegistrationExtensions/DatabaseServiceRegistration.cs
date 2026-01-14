@@ -1,4 +1,5 @@
-﻿using DatabaseContext;
+﻿using API.Repositories.Account;
+using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.ServiceRegistrationExtensions; 
@@ -17,7 +18,7 @@ public static class DatabaseServiceRegistration
                 b => b.MigrationsAssembly("DatabaseContext")));
 
 
-
+        services.AddScoped<IAccountRepository, AccountRepository>();
 
         return services;
     }

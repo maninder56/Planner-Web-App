@@ -37,7 +37,7 @@ public class User
     // Navigation properties
     public RefreshToken RefreshToken { get; set; } = null!;
 
-    public List<WorkspaceMember> WorkspaceMembers { get; set;  } = [];
+    public List<BoardMembers> BoardMembers { get; set;  } = [];
 
     public Board? Board { get; set; } = null!;
 
