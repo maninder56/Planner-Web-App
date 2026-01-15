@@ -2,6 +2,23 @@
   
 }
 
+.header {
+    padding: 10px 20px;
+    background-color: white;
+    display: flex;
+}
+
+.appHeading {
+    flex: 1 1 auto;
+    margin: auto;
+    display: inline-flex;
+}
+
+.appHeading > h1 {
+    padding: 0;
+    margin: auto 0;
+}
+
 .main {
   
 }
