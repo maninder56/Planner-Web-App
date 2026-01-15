@@ -3,7 +3,7 @@
 }
 
 .header {
-    padding: 10px 20px;
+    padding: 10px 5px;
     background-color: white;
     display: flex;
 }
@@ -14,9 +14,22 @@
     display: inline-flex;
 }
 
+.appHeading > img {
+    width: 30px;
+    height: 30px;
+    margin: auto 0;
+}
+
 .appHeading > h1 {
     padding: 0;
-    margin: auto 0;
+    margin: auto 10px;
+    font-size: 1.4rem;
+}
+
+@media (min-width: 400) {
+    .header {
+        padding: 10px 20px;
+    }
 }
 
 .main {
