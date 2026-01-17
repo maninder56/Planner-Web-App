@@ -2,10 +2,22 @@
   
 }
 
+/* .header * {
+    border: solid 1px;
+} */
+
+.header,
+.appHeading > img, 
+.appHeading > h1 {
+    transition: all 0.5s ease-in-out;
+}
+
 .header {
     padding: 10px 5px;
     background-color: white;
     display: flex;
+    max-width: 800px;
+    margin: auto;
 }
 
 .appHeading {
@@ -24,13 +36,24 @@
     padding: 0;
     margin: auto 10px;
     font-size: 1.4rem;
+    font-weight: 400;
 }
 
-@media (min-width: 400) {
+@media (min-width: 370) {
     .header {
         padding: 10px 20px;
     }
+
+    .appHeading > img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .appHeading > h1 {
+        font-size: 1.8rem;
+    }
 }
+
 
 .main {
   
