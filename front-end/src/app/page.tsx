@@ -21,32 +21,34 @@ export default function Home() {
         </div>
       </header>
       <main className={styles.main}>
-        <section>
-          <div>
-            <div>
-              <p>Have a bunch of to-dos and can&apos;t decide where to start?</p>
-              <p>No worries — we have a solution. Start planning your project with our planner.</p>
+        <section className={styles.firstSection}>
+          <div className={styles.firstSectionContainer}>
+            <div className={styles.childOne}>
+              <div className={styles.introduction}>
+                <p>Have a bunch of to-dos and can&apos;t decide where to start?</p>
+                <p>No worries — we have a solution. Start planning your project with our planner.</p>
+              </div>
+              <div className={styles.signupLink}>
+                <Link href={'/signup'} className='button red'>Sign up</Link>
+              </div>
+              <div className={styles.guestInfo}>
+                <p>don&apos;t want to create an account?, then just create an guest account.</p>
+              </div>
+              <div className={styles.guestButton}>
+                <Button name='Guest' color='black' onClick={() => {}} />
+              </div>
             </div>
-            <div>
-              <Link href={'/signup'} className='button red'>Sign up</Link>
-            </div>
-            <div>
-              <p>don&apos;t want to create an account?, then just create an guest account.</p>
-            </div>
-            <div>
-              <Button name='Guest' color='red' onClick={() => {}} />
-            </div>
-          </div>
-          <div>
-            <div>
-              <Image src={'/no-image.svg'}  alt='Dashboard image' width={100} height={100} loading='eager' />
-            </div>
-            <div>
-              <p>
-                This is a demo web application, Please do not enter any private or sensitive information. 
-                You can explore the app using a Guest Account with auto-generated sample data.
-              </p>
-              <p>Please note that guest accounts are intended for temporary use and are not retained for extended periods.</p>
+            <div className={styles.childTwo}>
+              <div className={styles.appPhoto}>
+                <Image src={'/mockImage.jpg'}  alt='Dashboard image' width={1920} height={1200} loading='eager' />
+              </div>
+              <div className={styles.guestAccountInfo}>
+                <p>
+                  This is a demo web application, Please do not enter any private or sensitive information. 
+                  You can explore the app using a Guest Account with auto-generated sample data.
+                </p>
+                <p>Please note that guest accounts are intended for temporary use and are not retained for extended periods.</p>
+              </div>
             </div>
           </div>
         </section>

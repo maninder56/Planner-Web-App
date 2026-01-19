@@ -54,7 +54,96 @@
     }
 }
 
-
 .main {
-  
+    display: block;
+}
+
+
+.firstSection {
+    background-color: var(--verylight-red-color);
+    padding: 20px 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.firstSectionContainer {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.firstSection .childOne {
+    margin-bottom: 30px;
+}
+
+
+.introduction p {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+
+.signupLink {
+    display: flex;
+    justify-content: center;
+}
+
+.guestInfo {
+    font-size: 1rem;
+    text-align: center;
+}
+
+.guestButton {
+    display: flex;
+    justify-content: center;
+}
+
+
+.appPhoto {
+    display: flex;
+    justify-content: center;
+}
+
+.appPhoto > img {
+    width: 100%;
+    height: 100%;
+}
+
+.guestAccountInfo > p {
+    font-size: 1rem;
+}
+
+@media (min-width: 370) {
+    .firstSection {
+        padding: 20px;
+    }
+}
+
+
+@media (min-width: 800) {
+    .firstSection {
+        flex-direction: row;
+    }
+
+    .firstSectionContainer {
+        max-width: 800px;
+        flex-direction: row;
+    }
+
+    .firstSectionContainer .childOne, 
+    .firstSectionContainer .childTwo {
+        margin: 10px;
+        flex: 1 1 auto;
+    }
+
+    .firstSectionContainer .childOne {
+        margin-top: 40px;
+    }
+
+    .guestAccountInfo {
+        padding: 0 20px;
+    }
+
 }
