@@ -14,7 +14,7 @@
 .headerContainer {
     background-color: rgb(237, 237, 237);
     padding: 5px;
-    margin: 20px 5px;
+    margin: 10px 5px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -55,7 +55,7 @@
 
     .headerContainer {
         padding: 10px;
-        margin: 20px 10px;
+        margin: 10px 10px;
     }
 
     .headerContainer > button {
@@ -70,10 +70,6 @@
 }
 
 
-.container * {
-    border: solid 1px;
-}
-
 
 .contentContainer {
     display: flex;
@@ -85,14 +81,38 @@
 }
 
 .feature {
-
+    margin: 0px 5px;
+    animation: fadeIn 2s; 
 }
 
 .feature > p {
     font-size: 1rem;
+    text-align: center;
+    margin: 5px 0px;
 }
 
-.contentContainer img {
+.feature img {
     width: 100%;
     height: 100%;
+    border-radius: 20px;
 }
+
+@media (min-width: 600) {
+    .feature > p {
+        margin: 5px 10px;
+    }
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+

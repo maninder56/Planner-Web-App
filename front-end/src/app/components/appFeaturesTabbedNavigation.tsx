@@ -54,7 +54,7 @@ export default function AppFeaturesTabbedNavigation() {
                 </div>
                 <div className={styles.contentContainer}>
                     <div>
-                        <div className={styles.feature}>
+                        <div className={styles.feature} key={currentTab.tabId}>
                             <Image src={currentTab.imageSrc}  alt={`${currentTab.tabTitle} image`} width={640} height={400} loading='eager' />
                             <p>{currentTab.description}</p>
                         </div>
