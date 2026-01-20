@@ -9,6 +9,12 @@
     transition: all 0.5s ease-in-out;
 }
 
+.headerWrapper {
+    position: sticky;
+    top: 0px;
+    background-color: white;
+}
+
 .header {
     padding: 10px 5px;
     background-color: white;

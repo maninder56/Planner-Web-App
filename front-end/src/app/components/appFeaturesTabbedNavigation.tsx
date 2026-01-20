@@ -1,7 +1,7 @@
 
 import styles from '@/app/components/appFeaturesTabbedNavigation.module.css'; 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface tabInterface {
     tabId: number;
@@ -39,14 +39,18 @@ export default function AppFeaturesTabbedNavigation() {
     ]; 
 
     const [currentTab, setCurrentTab] = useState<tabInterface>(tabs[0]); 
+    const scrollTargetRef = useRef<null | HTMLDivElement>(null); 
     
     return (
-        <div className={styles.container}>
+        <div className={styles.container} ref={scrollTargetRef} >
             <div>
                 <div className={styles.headerContainer}>
                     {tabs.map((content) => 
                         <button key={content.tabId}
-                            onClick={() => setCurrentTab(content)}
+                            onClick={() => {
+                                setCurrentTab(content); 
+                                scrollTargetRef.current?.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest' }); 
+                            }}
                             className={content.tabId === currentTab.tabId ? styles.active : undefined}>
                             {content.tabTitle}
                         </button>

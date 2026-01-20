@@ -9,18 +9,20 @@ import AppFeaturesTabbedNavigation from "./components/appFeaturesTabbedNavigatio
 export default function Home() {
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.appHeading}>
-          <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
-          <h1>Planner</h1>
-        </div>
-        <div>
-          <Link href={'/login'} className='button transparent'>Log in</Link>
-        </div>
-        <div>
-          <Link href={'/signup'} className='button red'>Sign up</Link>
-        </div>
-      </header>
+      <div className={styles.headerWrapper}>
+        <header className={styles.header}>
+          <div className={styles.appHeading}>
+            <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
+            <h1>Planner</h1>
+          </div>
+          <div>
+            <Link href={'/login'} className='button transparent'>Log in</Link>
+          </div>
+          <div>
+            <Link href={'/signup'} className='button red'>Sign up</Link>
+          </div>
+        </header>
+      </div>
       <main className={styles.main}>
         <section className={styles.firstSection}>
           <div className={styles.firstSectionContainer}>
@@ -55,6 +57,7 @@ export default function Home() {
         </section>
         <section className={styles.secondSection}>
           <header>What can I do?</header>
+          <AppFeaturesTabbedNavigation />
           <AppFeaturesTabbedNavigation />
         </section>
       </main>
