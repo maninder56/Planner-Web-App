@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Button from "@/Components/Buttons/button";
 import Link from "next/link";
+import AppFeaturesTabbedNavigation from "./components/appFeaturesTabbedNavigation";
 
 export default function Home() {
   return (
@@ -51,6 +52,10 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+        <section className={styles.secondSection}>
+          <header>What can I do?</header>
+          <AppFeaturesTabbedNavigation />
         </section>
       </main>
       <footer>
