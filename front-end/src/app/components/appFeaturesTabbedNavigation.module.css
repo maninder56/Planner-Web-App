@@ -1,14 +1,98 @@
 
 
 .container {
-
+    display: flex;
+    justify-content: center;
 }
 
-.headerContainer {
+.container > div {
+    width: 100%;
+    max-width: 800px;
+}
 
+
+.headerContainer {
+    background-color: rgb(237, 237, 237);
+    padding: 5px;
+    margin: 20px 5px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly; 
+}
+
+.headerContainer > button {
+    flex: 1 1 40%;
+    display: block;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 400;
+    white-space: nowrap;
+    background-color: transparent;
+}
+
+.headerContainer > .active {
+    background-color: white;
+}
+
+@media (min-width: 370) {
+
+    .headerContainer {
+        flex-direction: row;
+    }
+
+    .headerContainer > button {
+        padding: 10px 15px;
+    }
+}
+
+@media (min-width: 600) {
+
+    .headerContainer {
+        padding: 10px;
+        margin: 20px 10px;
+    }
+
+    .headerContainer > button {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 800) {
+    .headerContainer > button {
+        flex: 1 1 auto;
+    }
+}
+
+
+.container * {
+    border: solid 1px;
 }
 
 
 .contentContainer {
-    
+    display: flex;
+    justify-content: center;
+}
+
+.contentContainer > div {
+    max-width: 700px;
+}
+
+.feature {
+
+}
+
+.feature > p {
+    font-size: 1rem;
+}
+
+.contentContainer img {
+    width: 100%;
+    height: 100%;
 }

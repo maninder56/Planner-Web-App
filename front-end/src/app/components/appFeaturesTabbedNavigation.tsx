@@ -16,54 +16,48 @@ export default function AppFeaturesTabbedNavigation() {
             tabId: 0,
             tabTitle: 'Manage To-Dos', 
             imageSrc: '/mockImage.jpg', 
-            description: 'Description one'
+            description: 'See all of your to-dos of a project in one place, Drag and drop to-dos from one category to another, Create new lists to manage as the projects grows.'
         }, 
         {
             tabId: 1,
             tabTitle: 'Multiple Projects', 
             imageSrc: '/mockImage.jpg', 
-            description: 'two '
+            description: 'Want to keep track of other projects not just the main one? then create new board for those project.'
         }, 
         {
             tabId: 2,
             tabTitle: 'Colaborate', 
             imageSrc: '/mockImage.jpg', 
-            description: 'three'
+            description: 'Invite your friends to your project to work on it together.'
         }, 
         {
             tabId: 3,
             tabTitle: 'Customise', 
             imageSrc: '/mockImage.jpg', 
-            description: 'four'
+            description: 'Choose the colours that fit your style and make your dashboard personal.'
         }
     ]; 
 
     const [currentTab, setCurrentTab] = useState<tabInterface>(tabs[0]); 
-
-    function getCurrentTab() {
-        return (
-            <div>
-                <Image src={currentTab.imageSrc}  alt={`${currentTab.tabTitle} image`} width={640} height={400} loading='eager' />
-                <p>{currentTab.description}</p>
-            </div>
-        ); 
-    }
     
-
     return (
         <div className={styles.container}>
             <div>
                 <div className={styles.headerContainer}>
                     {tabs.map((content) => 
                         <button key={content.tabId}
-                            onClick={() => setCurrentTab(content)}>
+                            onClick={() => setCurrentTab(content)}
+                            className={content.tabId === currentTab.tabId ? styles.active : undefined}>
                             {content.tabTitle}
                         </button>
                     )}
                 </div>
                 <div className={styles.contentContainer}>
                     <div>
-                        {getCurrentTab()}
+                        <div className={styles.feature}>
+                            <Image src={currentTab.imageSrc}  alt={`${currentTab.tabTitle} image`} width={640} height={400} loading='eager' />
+                            <p>{currentTab.description}</p>
+                        </div>
                     </div>
                 </div>
             </div>

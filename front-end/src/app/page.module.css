@@ -2,9 +2,6 @@
   
 }
 
-/* .header * {
-    border: solid 1px;
-} */
 
 .header,
 .appHeading > img, 
@@ -57,6 +54,10 @@
 .main {
     display: block;
 }
+
+
+
+/* First Section */
 
 
 .firstSection {
@@ -147,3 +148,24 @@
     }
 
 }
+
+
+/* .main * {
+    border: solid 1px;
+} */
+
+
+/* Second section */
+
+.secondSection {
+    margin-top: 40px;
+}
+
+.secondSection > header{
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+
+
+
