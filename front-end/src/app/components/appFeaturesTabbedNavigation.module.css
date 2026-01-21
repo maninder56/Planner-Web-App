@@ -1,0 +1,119 @@
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    scroll-margin-top: 100px;
+}
+
+.container > div {
+    width: 100%;
+    max-width: 800px;
+}
+
+
+.headerContainer {
+    background-color: rgb(255, 123, 123);
+    padding: 5px;
+    margin: 10px 5px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly; 
+}
+
+.headerContainer > button {
+    flex: 1 1 40%;
+    display: block;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 400;
+    white-space: nowrap;
+    background-color: transparent;
+    color: black;
+}
+
+
+.headerContainer > .active {
+    background-color: rgb(255, 255, 255);
+}
+
+@media (min-width: 370) {
+
+    .headerContainer {
+        flex-direction: row;
+    }
+
+    .headerContainer > button {
+        padding: 10px 15px;
+    }
+}
+
+@media (min-width: 600) {
+
+    .headerContainer {
+        margin: 10px 10px;
+    }
+}
+
+@media (min-width: 800) {
+    .headerContainer > button {
+        flex: 1 1 auto;
+    }
+}
+
+
+
+.contentContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    /* Set the height in final version */
+    /* min-height: 500px; */
+}
+
+.contentContainer > div {
+    max-width: 700px;
+}
+
+.feature {
+    margin: 0px 5px;
+    animation: fadeIn 2s; 
+}
+
+.feature > p {
+    font-size: 1rem;
+    text-align: center;
+    margin: 5px 0px;
+}
+
+.feature img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+@media (min-width: 600) {
+    .feature > p {
+        margin: 5px 10px;
+    }
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
