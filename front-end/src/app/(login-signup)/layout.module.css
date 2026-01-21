@@ -1,0 +1,60 @@
+
+
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page main {
+    margin: 5px;
+    margin-top: 100px;
+    flex: 1 1 auto;
+    max-width: 500px;
+    background-color: #fff0f0; 
+    border-radius: 20px;
+}
+
+
+.page section {
+    margin: 20px 5px;
+}
+
+.appLogo {
+    margin: 50px 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.appLogo > img {
+    width: 50px;
+    height: 50px;
+    margin: auto 10px;
+}
+
+.appLogo > h1 {
+    padding: 0;
+    margin: auto 0;
+    font-weight: 400;
+    font-size: 2rem;
+}
+
+
+@media (min-width: 500) {
+
+    .page section {
+        margin: 20px;
+    }
+
+
+    .appLogo > img {
+        width: 60px;
+        height: 60px;
+        margin: auto 10px;
+    }
+
+    .appLogo > h1 {
+        font-size: 2.5rem;
+    }
+
+}
