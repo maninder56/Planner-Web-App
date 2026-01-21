@@ -11,6 +11,7 @@
 
 .headerWrapper {
     position: sticky;
+    z-index: 1;
     top: 0px;
     background-color: white;
 }
@@ -83,6 +84,10 @@
     margin-bottom: 30px;
 }
 
+.firstSection .childTwo {
+    margin: 10px 5px;
+}
+
 
 .introduction p {
     text-align: center;
@@ -116,6 +121,7 @@
 .appPhoto > img {
     width: 100%;
     height: 100%;
+    border-radius: 20px;
 }
 
 .guestAccountInfo > p {
@@ -164,12 +170,13 @@
 /* Second section */
 
 .secondSection {
-    margin-top: 40px;
+    margin: 40px 5px;
 }
 
 .secondSection > header{
     text-align: center;
     font-size: 1.4rem;
+    margin: 10px;
 }
 
 
@@ -237,27 +244,42 @@
 
 /* Footer */
 
-.footerWrapper {
+
+.page footer {
     padding: 10px 5px;
     background-color: white;
     display: flex;
-    flex-direction: column;
     justify-content: space-evenly;
     max-width: 700px;
     margin: auto;
 }
 
-.footerWrapper > div {
+.page footer > div {
     flex: 1 1 auto;
-}
-
-.footerWrapper > div > div {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
-.footerWrapper a {
-    margin-top: 20px;
+.footerAppHeading {
+    display: flex;
+}
+
+.footerAppHeading > img {
+    width: 30px;
+    height: 30px;
+    margin: auto 0;
+}
+
+.footerAppHeading > h1 {
+    padding: 0;
+    margin: auto 10px;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.page footer a {
+    margin-top: 10px;
     font-size: 1rem;
     color: black;
     background-color: transparent;
@@ -265,11 +287,9 @@
 
 
 @media (min-width: 500px) {
-    .footerWrapper {
-        flex-direction: row;
-    }
 
-    .footerWrapper a {
-        margin-top: 0px;
+    .page footer > div {
+        flex-direction: row;
+        justify-content: space-evenly;
     }
-}
+} 

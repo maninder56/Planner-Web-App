@@ -79,20 +79,18 @@ export default function Home() {
       </main>
       <footer>
         <div>
-          <div className={styles.footerWrapper}>
-            <div className={styles.appHeading}>
-              <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
-              <h1>Planner</h1>  
-            </div>
+          <div className={styles.footerAppHeading}>
+            <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
+            <h1>Planner</h1>  
+          </div>
+          <div>
             <div>
-              <div>
-                <Link href={'/login'} className='button'>About Planner</Link>
-              </div>
+              <Link href={'/login'} className='button'>About Planner</Link>
             </div>
+          </div>
+          <div>
             <div>
-              <div>
-                <Link href={'/login'} className='button'>Contact</Link>
-              </div>
+              <Link href={'/login'} className='button'>Contact</Link>
             </div>
           </div>
         </div>
