@@ -15,7 +15,7 @@ export default function Layout({
                         <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
                         <h1>Planner</h1>
                     </div>
-                    <div>
+                    <div className={styles.content}>
                         {children}
                     </div>
                 </section>
