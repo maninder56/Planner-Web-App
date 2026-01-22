@@ -14,24 +14,24 @@
 }
 
 
-.createAccountLink {
+.LoginLink {
     display: flex;
     justify-content: center;
     font-size: 1rem;
 }
 
-.createAccountLink a:hover {
+.LoginLink a:hover {
     text-decoration: none;
 }
 
-.logIn {
+.signup {
     margin: 30px;
     margin-bottom: 100px;
     display: flex;
     justify-content: center;
 }
 
-.logIn button {
+.signup button {
     width: 80%;
     max-width: 250px;
 }

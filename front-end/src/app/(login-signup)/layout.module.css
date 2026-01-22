@@ -15,6 +15,7 @@
     border-radius: 20px;
     display: flex;
     justify-content: center;
+    box-shadow: 0px 0px 20px -10px black;
 }
 
 
@@ -26,6 +27,7 @@
 
 .appLogo {
     margin: 50px 0px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
 }

@@ -10,6 +10,7 @@ export default function FormInput({
     maxLength, 
     setValue, 
     error,
+    type, 
 }: {
     label: string;
     value: string; 
@@ -17,6 +18,7 @@ export default function FormInput({
     maxLength: number; 
     setValue: (value: string) => void; 
     error?: string; 
+    type: 'text' | 'password'; 
 }) {
     return (
         <div className={styles.fromInput}>
@@ -24,7 +26,7 @@ export default function FormInput({
             <input 
                 name={label}
                 id={label}
-                type='text'
+                type={type}
                 value={value}
                 placeholder={placeholder}
                 maxLength={maxLength}

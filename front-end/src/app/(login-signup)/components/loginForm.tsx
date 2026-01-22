@@ -60,12 +60,26 @@ export default function LoginForm({
         <form className={styles.form} onSubmit={handleFormSubmit}>
             <header>Log in to continue</header>
             <div className={styles.formError}>{formError}</div>
-            <FormInput label='Email' placeholder='Enter your email' 
-                maxLength={100} value={email} setValue={setEmail} error={errors.email} />
-            <FormInput label='Password' placeholder='Enter your password' 
-                maxLength={100} value={password} setValue={setPassword} error={errors.password} />
+            <FormInput label='Email' placeholder='Enter your email' maxLength={100} value={email} error={errors.email} type='text'
+                setValue={(value) => {
+                    setEmail(value); 
+                    if (value === '') {
+                        setErrors({...errors, email: 'Email is Required'}); 
+                    } else {
+                        setErrors({...errors, email: undefined}); 
+                    }
+                }} />
+            <FormInput label='Password' placeholder='Enter your password' maxLength={100} value={password} error={errors.password} type='password'
+                setValue={(value) => {
+                    setPassword(value); 
+                    if (value === '') {
+                        setErrors({...errors, password: 'Password is Required'}); 
+                    } else {
+                        setErrors({...errors, password: undefined}); 
+                    }
+                }} />
             <div className={styles.createAccountLink}>
-                <Link href={'/signup'}>Create account</Link>
+                <Link href={'/signup'}>Create New account</Link>
             </div>
             <div className={styles.logIn}>
                 <button type='submit' className='button red' disabled={buttonsDisabled}>Log in</button>
