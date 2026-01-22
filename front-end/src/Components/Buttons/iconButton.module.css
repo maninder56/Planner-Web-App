@@ -1,0 +1,67 @@
+
+.button {
+    display: flex;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.button img {
+    width: 30px;
+    height: 30px; 
+}
+
+.button span {
+    margin: auto;
+    display: none;
+}
+
+.button.blue {
+    background-color: rgb(133, 133, 255);
+}
+
+.button.brown {
+    background-color: rgb(212, 212, 212);
+}
+
+.button.transparent {
+    background-color: transparent;
+}
+
+.button.blue:hover {
+    background-color: rgb(133, 133, 255, 0.7);
+}
+
+.button.brown:hover {
+    background-color: rgb(212, 212, 212, 0.7);
+}
+
+.button.transparent:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+
+@media (min-width: 370) {
+
+  .button img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (min-width: 600) {
+  .button {
+    font-size: 1.2rem;
+  }
+
+  .button span {
+    display: inline-block;
+    margin-left: 5px;
+  }
+}
