@@ -3,7 +3,7 @@
 .container {
     display: flex;
     justify-content: center;
-    scroll-margin-top: 100px;
+    scroll-margin-top: 120px;
 }
 
 .container > div {
@@ -13,7 +13,9 @@
 
 
 .headerContainer {
-    background-color: rgb(255, 123, 123);
+    /* border: solid 2px; */
+    box-shadow: 0px 0px 10px -5px black;
+    background-color: white;
     padding: 5px;
     margin: 10px 5px;
     border-radius: 20px;
@@ -38,9 +40,15 @@
     color: black;
 }
 
+.headerContainer > button:hover:not(.active) {
+    background-color: rgb(238, 238, 238);
+}
+
 
 .headerContainer > .active {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 44, 44);
+    box-shadow: 0px 0px 10px -4px black;
+    color: white;
 }
 
 @media (min-width: 370) {

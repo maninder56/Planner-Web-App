@@ -1,5 +1,5 @@
 .page {
-  
+  background-color: white;
 }
 
 
@@ -69,7 +69,8 @@
 
 
 .firstSection {
-    background-color: var(--verylight-red-color);
+    /* background-color: var(--verylight-red-color); */
+    background: linear-gradient(rgb(255, 248, 248) 0%, rgba(255, 255, 255, 1) 100%); 
     padding: 20px 5px;
     display: flex;
     justify-content: center;
@@ -184,7 +185,8 @@
 /* Third section */
 
 .thirdSection {
-    background-color: var(--verylight-red-color);
+    /* background-color: var(--verylight-red-color); */
+    background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgb(255, 248, 248) 100%);
     padding: 20px 5px;
     display: flex;
     justify-content: center;
@@ -248,10 +250,10 @@
 
 .page footer {
     padding: 10px 5px;
+    box-shadow: 0px 0px 20px -10px black; 
     background-color: white;
     display: flex;
     justify-content: space-evenly;
-    max-width: 700px;
     margin: auto;
 }
 
@@ -260,6 +262,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 700px;
 }
 
 .footerAppHeading {
