@@ -1,0 +1,48 @@
+
+.searchWrapper {
+    flex: 1 1 auto;
+    max-width: 500px;
+}
+
+.search {
+    margin: 5px;
+    border: solid 2px;
+    border-radius: 20px;
+    display: flex;
+}
+
+.search:hover {
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+.search:focus {
+    
+}
+
+.search > img {
+    height: 100%;
+    margin: auto;
+    margin-left: 5px;
+}
+
+.search > input {
+    flex: 1 1 auto;
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    padding: 5px 0px;
+}
+
+.search > input:focus {
+    outline: none;
+}
+
+
+.searchResultsWrapper {
+
+}
+
+.results {
+
+}
