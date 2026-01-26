@@ -14,6 +14,7 @@ export default function SearchBar({
     setActivePanel: (panel: panelType) => void; 
 }) {
     const [searchInput, setSearchInput] = useState(''); 
+    // const [searchFocused, setSearchFocused] = useState(false); 
 
     const mockResults = ['Edit css to match brand', 'improve search functionality']; 
 
@@ -30,12 +31,14 @@ export default function SearchBar({
                     placeholder='Search' 
                     maxLength={100}
                     value={searchInput}
+                    // onFocus={() => setSearchFocused(true)}
+                    // onBlur={() => setSearchFocused(false)}
                     onChange={e => setSearchInput(e.target.value)}/>
             </div>
             {
                 activePanel === 'search' ?
                 <div className={styles.searchResultsWrapper}>
-                    <p>Search results</p>
+                    <header>Search results</header>
                     <div className={styles.results}>
                         {mockResults.map((r, i) => <p key={i}>{r}</p>)}
                     </div>
