@@ -1,2 +1,2 @@
 
-export type panelType = 'search' | 'none'; 
+export type panelType = 'none' | 'search' | 'profileOptions'; 
