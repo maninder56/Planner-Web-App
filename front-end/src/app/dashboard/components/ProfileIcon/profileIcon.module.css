@@ -1,9 +1,42 @@
 
 .wrapper {
-
+    margin: 5px;
+    border-radius: 100%;
+    width: 2.8rem;
+    height: 2.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.wrapper header {
+    flex: 1 1 auto;
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 550;   
+}
 
-.profileIcon {
-    
+.wrapper.red {
+    background-color: rgb(255, 64, 64);
+}
+
+.wrapper.blue {
+    background-color: rgb(91, 91, 255);
+}
+
+.wrapper.green {
+    background-color: rgb(52, 193, 52);
+}
+
+@media (min-width: 600) {
+    .wrapper {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .wrapper header {
+        font-size: 1.4rem;
+    }
 }

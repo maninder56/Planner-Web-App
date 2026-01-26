@@ -89,3 +89,20 @@ body {
   color: red;
 }
 
+
+
+/* Profile icons colour */
+
+.profileIcon.red {
+    background-color: rgb(255, 64, 64);
+}
+
+.profileIcon.blue {
+    background-color: rgb(91, 91, 255);
+}
+
+.profileIcon.green {
+    background-color: rgb(52, 193, 52);
+}
+
+

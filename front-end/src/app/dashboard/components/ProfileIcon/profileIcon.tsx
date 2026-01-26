@@ -1,28 +1,18 @@
-import { panelType } from '@/Types/UIState';
+import { panelType, profileColour } from '@/Types/UIState';
 
 import styles from './profileIcon.module.css'; 
+import IconButton from '@/Components/Buttons/iconButton';
 
 export default function ProfileIcon({
-    userName,
-    activePanel, 
-    setActivePanel,
+    colour, 
+    userInitials, 
 }: {
-    userName: string; 
-    activePanel: panelType
-    setActivePanel: (panel: panelType) => void; 
+    colour: profileColour; 
+    userInitials: string; 
 }) {
-    const nameArray = userName.split(' '); 
-    const i = nameArray[0].concat(nameArray[nameArray.length - 1]); 
-
     return (
-        <div className={styles.wrapper}
-            onClick={(e) => {
-                e.stopPropagation(); 
-                setActivePanel(activePanel === 'profileOptions' ? 'none' : 'profileOptions'); 
-            }}>
-            <div className={styles.profileIcon}>
-                
-            </div>
+        <div className={[styles.wrapper, styles[colour]].join(' ')}>
+            <header>{userInitials}</header>
         </div>
     ); 
 }
