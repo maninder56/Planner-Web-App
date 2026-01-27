@@ -1,19 +1,21 @@
 
+import { profileColour } from '@/Types/UIState';
+import ProfileIcon from '../ProfileIcon/profileIcon';
 import styles from './profileInfo.module.css'; 
 
 export default function ProfileInfo({
-    userInitials, 
     userName, 
     userEmail,
+    iconColour,
 }: {
-    userInitials: string; 
     userName: string; 
     userEmail: string; 
+    iconColour: profileColour;
 }) {
     return (
         <div className={styles.wrapper}>
-            <div className={styles.profileIcon}>
-                <header>{userInitials}</header>
+            <div className={styles.iconWrapper}>
+                <ProfileIcon userName={userName} colour={iconColour} />
             </div>
             <div className={styles.userDetails}>
                 <p>{userName}</p>

@@ -1,29 +1,51 @@
 
 
+
 .wrapper {
-    flex: 1 1 auto;
-    border: solid 1px;
-}
-
-.profileIcon {
-    margin: 5px;
-    border-radius: 100%;
-    width: 50px;
-    height: 50px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 10px;
 }
 
-.profileIcon header {
-    flex: 1 1 auto;
-    display: block;
-    text-align: center;
+.iconWrapper {
+    --size: 35px; 
+    margin: auto 5px;
+    display: flex;
+    width: var(--size);
+    height: var(--size);
     font-size: 1rem;
-    color: white;
-    font-weight: 600;
 }
 
 .userDetails {
+    margin: auto 5px;
+    padding: 0;
+}
+
+.userDetails p {
+    padding: 0;
+    margin: 0;
+}
+
+.userDetails p:first-child {
+    font-size: 1rem;
+}
+
+.userDetails p:last-child {
+    font-size: 0.8rem;
+}
+
+
+@media (min-width: 600) {
+    .iconWrapper {
+        --size: 50px; 
+        font-size: 1.4rem;
+    }
+
+    .userDetails p:first-child {
+        font-size: 1.1rem;
+    }
+
+    .userDetails p:last-child {
+        font-size: 0.9rem;
+    }
 
 }

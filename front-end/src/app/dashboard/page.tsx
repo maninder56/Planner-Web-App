@@ -22,10 +22,12 @@ export default function Dashboard() {
             <IconButton iconSrc='/star.svg' alt='Favorite baord icon' color='transparent' onClick={() => {}} />
             <IconButton iconSrc='/switchBoard.svg' name='Switch Board' alt='Switch board icon' color='grey' onClick={() => {}} />
             <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
-            <ProfileIcon colour='blue' userInitials='SN' />
-            <ProfileIcon colour='red' userInitials='HS' />
-            <ProfileIcon colour='green' userInitials='IS' />
-            <ProfileInfo userInitials='KV' userName='Kevin Venoki' userEmail='kevin234@gmail.com' />    
+            <ProfileIcon colour='blue' userName='Samila haka' />
+            <ProfileIcon colour='red' userName='chester ronal' />
+            <div style={{width: '100px', height: '100px', display: 'flex', fontSize: '2rem'}}>
+                <ProfileIcon colour='green' userName='isabella victoria' />
+            </div>
+            <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>    
         </div>
     ); 
 }

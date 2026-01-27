@@ -12,21 +12,6 @@ export default function ProfileOptions({
     activePanel: panelType
     setActivePanel: (panel: panelType) => void; 
 }) {
-    function getUserInitials() {
-        try {
-            const nameArray = userName.split(' '); 
-            if (nameArray.length === 0) {
-                return 'U'; 
-            } else if (nameArray.length === 1) {
-                return nameArray[0][0]; 
-            } else {
-                return nameArray[0][0] + nameArray[nameArray.length - 1][0]; 
-            }
-        } catch {
-            console.error('Failed to get user Initials'); 
-            return 'U'; 
-        }
-    }
 
     return (
         <div className={styles.wrapper}
@@ -35,7 +20,7 @@ export default function ProfileOptions({
                 setActivePanel(activePanel === 'profileOptions' ? 'none' : 'profileOptions'); 
             }}>
             <div className={styles.profileIcon}>
-                <header>{getUserInitials()}</header>
+                <header>-+</header>
             </div>
             {
                 activePanel === 'profileOptions' ? 
