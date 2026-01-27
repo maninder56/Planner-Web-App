@@ -6,6 +6,7 @@ import { useState } from 'react';
 import SearchBar from './components/Search/searchBar';
 import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
+import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 
 export default function Dashboard() {
 
@@ -27,7 +28,8 @@ export default function Dashboard() {
             <div style={{width: '100px', height: '100px', display: 'flex', fontSize: '2rem'}}>
                 <ProfileIcon colour='green' userName='isabella victoria' />
             </div>
-            <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>    
+            <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>  
+            <ProfileOptions userName='Rice Kevin' userEmail='ricekevin@gmail.com' iconColour='red' activePanel={activePanel} setActivePanel={setActivePanel} />
         </div>
     ); 
 }
