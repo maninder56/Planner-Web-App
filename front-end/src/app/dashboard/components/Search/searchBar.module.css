@@ -53,6 +53,8 @@
     padding: 5px;
     background-color: white;
     box-shadow: 0 0 20px -10px rgb(0, 0, 0);
+    position: absolute;
+    top: auto;
 }
 
 
