@@ -8,6 +8,7 @@ import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 import ClosePanelButton from '@/Components/Buttons/closePanelButton';
+import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 
 export default function Dashboard() {
 
@@ -32,6 +33,8 @@ export default function Dashboard() {
             <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>  
             <ProfileOptions userName='Rice Kevin' userEmail='ricekevin@gmail.com' iconColour='red' activePanel={activePanel} setActivePanel={setActivePanel} />
             {/* <ClosePanelButton onClick={() => {}} /> */}
+            <InnerPanelButton name='Profile' onClick={() => {}} />
+            <InnerPanelButton name='ProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfile' onClick={() => {}} />
         </div>
     ); 
 }

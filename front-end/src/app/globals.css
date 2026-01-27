@@ -109,6 +109,23 @@ body {
   height: 100%;
 }
 
+.innerPanelButton {
+  padding: 10px 20px;
+  margin: auto;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 1em;
+  text-align: start;
+  color: black;
+}
+
+.innerPanelButton:hover {
+  background-color: rgba(0, 0, 0, 8%);
+}
+
 
 
 /* Messages */

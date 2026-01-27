@@ -7,6 +7,7 @@ import styles from './ProfileOptions.module.css';
 import ProfileIcon from '../ProfileIcon/profileIcon';
 import ProfileInfo from '../ProfileInfo/profileInfo';
 import ClosePanelButton from '@/Components/Buttons/closePanelButton';
+import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 
 export default function ProfileOptions({
     userName,
@@ -41,9 +42,13 @@ export default function ProfileOptions({
                 </div>
                 <header>Account</header>
                 <ProfileInfo userName={userName} userEmail={userEmail} iconColour={iconColour} />
-                <div>
-                    <button>Profile</button>
-                    <button>Log out</button>
+                <div className={styles.buttons}>
+                    <div>
+                        <InnerPanelButton name='Profile' onClick={() => {}} />
+                    </div>
+                    <div className={styles.logoutButton}>
+                        <InnerPanelButton name='Log out' onClick={() => {}} />
+                    </div>
                 </div>
             </div>
             :null

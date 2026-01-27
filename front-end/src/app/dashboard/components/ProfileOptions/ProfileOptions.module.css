@@ -23,7 +23,7 @@
     top: auto;
     left: 10px;
     right: 10px;
-    max-width: 300px;
+    max-width: 250px;
     z-index: 1;
     padding: 10px;
 }
@@ -36,6 +36,16 @@
 }
 
 .options > header {
-    margin-left: 10px;
+    text-align: center;
     font-size: 1rem;
+}
+
+.buttons {
+    font-size: 1rem;
+}
+
+.logoutButton {
+    border-top: solid 1px rgb(147, 147, 147);
+    margin-top: 10px;
+    padding-top: 10px;
 }
