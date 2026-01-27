@@ -83,6 +83,34 @@ body {
 }
 
 
+.closePanelButton {
+  padding: 5px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+  max-height: 100px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  background-color: transparent;
+}
+
+.closePanelButton:hover {
+  background-color: rgba(0, 0, 0, 8%);
+}
+
+.closePanelButton img {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+
 /* Messages */
 .warning-message {
   font-size: 2rem;

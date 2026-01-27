@@ -7,6 +7,7 @@ import SearchBar from './components/Search/searchBar';
 import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
+import ClosePanelButton from '@/Components/Buttons/closePanelButton';
 
 export default function Dashboard() {
 
@@ -30,6 +31,7 @@ export default function Dashboard() {
             </div>
             <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>  
             <ProfileOptions userName='Rice Kevin' userEmail='ricekevin@gmail.com' iconColour='red' activePanel={activePanel} setActivePanel={setActivePanel} />
+            {/* <ClosePanelButton onClick={() => {}} /> */}
         </div>
     ); 
 }
