@@ -9,6 +9,7 @@ import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 import ClosePanelButton from '@/Components/Buttons/closePanelButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
+import HoverPanel from '@/Components/HoverPanels/hoverPanel';
 
 export default function Dashboard() {
 
@@ -16,7 +17,6 @@ export default function Dashboard() {
 
     return (
         <div
-        style={{backgroundColor: 'lightgreen'}}
             onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel('none'); 
@@ -32,9 +32,13 @@ export default function Dashboard() {
             </div>
             <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>  
             <ProfileOptions userName='Rice Kevin' userEmail='ricekevin@gmail.com' iconColour='red' activePanel={activePanel} setActivePanel={setActivePanel} />
-            {/* <ClosePanelButton onClick={() => {}} /> */}
-            <InnerPanelButton name='Profile' onClick={() => {}} />
-            <InnerPanelButton name='ProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfile' onClick={() => {}} />
+            <HoverPanel title='Options' onCloseClick={() => {}}>
+                <div><InnerPanelButton name='one' onClick={() => {}} /></div>
+                <div><InnerPanelButton name='two' onClick={() => {}} /></div>
+                <div><InnerPanelButton name='three' onClick={() => {}} /></div>
+                <div><InnerPanelButton name='four' onClick={() => {}} /></div>
+                <div><InnerPanelButton name='five' onClick={() => {}} /></div>
+            </HoverPanel>
         </div>
     ); 
 }
