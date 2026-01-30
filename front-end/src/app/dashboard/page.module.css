@@ -1,0 +1,37 @@
+
+.page {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* background-color: rgb(238, 126, 126); */
+}
+
+.firstSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+.firstSection > div {
+    margin: auto;
+}
+
+
+.searchButton {
+    display: block;
+}
+
+.searchBar {
+    display: none;
+}
+
+
+@media (min-width: 600) {
+    
+    .searchButton {
+        display: none;
+    }
+
+    .searchBar {
+        display: block;
+    }
+}

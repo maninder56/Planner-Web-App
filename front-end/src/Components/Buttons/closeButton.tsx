@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 
-export default function ClosePanelButton({
+export default function CloseButton({
     onClick,
 }: {
     onClick: () => void; 

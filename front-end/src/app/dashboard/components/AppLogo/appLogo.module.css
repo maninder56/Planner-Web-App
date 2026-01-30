@@ -4,19 +4,18 @@
 } */
 
 .wrapper {
-    border: solid 1px;
     display: flex;
 }
 
 .wrapper img {
-    width: 30px;
+    width: 35px;
     margin: auto 5px;
 }
 
 .wrapper header {
     margin: auto 0px;
     padding: 0px;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
 }
 
 @media (min-width: 600) {

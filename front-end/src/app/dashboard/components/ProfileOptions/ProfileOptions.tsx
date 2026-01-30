@@ -6,7 +6,7 @@ import IconButton from '@/Components/Buttons/iconButton';
 import styles from './ProfileOptions.module.css'; 
 import ProfileIcon from '../ProfileIcon/profileIcon';
 import ProfileInfo from '../ProfileInfo/profileInfo';
-import ClosePanelButton from '@/Components/Buttons/closePanelButton';
+import CloseButton from '@/Components/Buttons/closeButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 
 export default function ProfileOptions({
@@ -38,7 +38,7 @@ export default function ProfileOptions({
                     e.stopPropagation(); 
                 }}>
                 <div className={styles.closeButton}>
-                    <ClosePanelButton onClick={() => setActivePanel('none')} />
+                    <CloseButton onClick={() => setActivePanel('none')} />
                 </div>
                 <header>Account</header>
                 <ProfileInfo userName={userName} userEmail={userEmail} iconColour={iconColour} />

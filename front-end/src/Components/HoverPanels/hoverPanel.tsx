@@ -1,5 +1,5 @@
 
-import ClosePanelButton from '../Buttons/closePanelButton';
+import CloseButton from '../Buttons/closeButton';
 import styles from './hoverPanel.module.css'; 
 
 export default function HoverPanel({
@@ -14,7 +14,7 @@ export default function HoverPanel({
     return (
         <div className={styles.wrapper}>
             <div className={styles.closeButton}>
-                <ClosePanelButton onClick={onCloseClick} />
+                <CloseButton onClick={onCloseClick} />
             </div>
             <header>{title}</header>
             {children}

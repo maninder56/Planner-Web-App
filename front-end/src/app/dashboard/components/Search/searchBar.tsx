@@ -22,7 +22,7 @@ export default function SearchBar({
         <div className={styles.searchWrapper}
             onClick={(e) => {
                 e.stopPropagation(); 
-                setActivePanel('search'); 
+                setActivePanel('searchBarPanel'); 
             }}>
             <div className={styles.search}>
                 <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
@@ -36,7 +36,7 @@ export default function SearchBar({
                     onChange={e => setSearchInput(e.target.value)}/>
             </div>
             {
-                activePanel === 'search' ?
+                activePanel === 'searchBarPanel' ?
                 <div className={styles.searchResultsWrapper}>
                     <header>Search results</header>
                     <div className={styles.results}>

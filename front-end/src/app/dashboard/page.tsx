@@ -2,18 +2,19 @@
 
 import IconButton from '@/Components/Buttons/iconButton';
 import { panelType } from '@/Types/UIState';
-import { useState } from 'react';
+import { act, useState } from 'react';
 import SearchBar from './components/Search/searchBar';
 import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
-import ClosePanelButton from '@/Components/Buttons/closePanelButton';
+import CloseButton from '@/Components/Buttons/closeButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import HoverPanel from '@/Components/HoverPanels/hoverPanel';
 import DashboardMenu from './components/DashboardMenu/dashboardMenu';
 
 import styles from './page.module.css'; 
 import AppLogo from './components/AppLogo/appLogo';
+import SearchButton from './components/Search/SearchButton/searchButton';
 
 export default function Dashboard() {
 
@@ -30,8 +31,17 @@ export default function Dashboard() {
                     <div>
                         <AppLogo />
                     </div>
-                    <div>Search button</div>
-                    <div>Menu button</div>
+                    <div>
+                        <div className={styles.searchButton}>
+                            <SearchButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                        </div>
+                        <div className={styles.searchBar}>
+                            <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
+                        </div>
+                    </div>
+                    <div>
+                        <DashboardMenu activePanel={activePanel} setActivePanel={setActivePanel} />
+                    </div>
                 </section>
                 <main>
 
