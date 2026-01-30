@@ -1,7 +1,7 @@
 'use client'
 
 
-import styles from '@/app/dashboard/components/Search/searchBar.module.css'; 
+import styles from './searchBar.module.css'; 
 import { panelType } from '@/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';

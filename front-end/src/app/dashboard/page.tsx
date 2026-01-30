@@ -3,7 +3,7 @@
 import IconButton from '@/Components/Buttons/iconButton';
 import { panelType } from '@/Types/UIState';
 import { act, useState } from 'react';
-import SearchBar from './components/Search/searchBar';
+import SearchBar from './components/Search/SearchBar/searchBar';
 import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
