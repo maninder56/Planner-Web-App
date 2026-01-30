@@ -13,7 +13,7 @@ export default function SearchBar({
     activePanel: panelType; 
     setActivePanel: (panel: panelType) => void; 
 }) {
-    const [searchInput, setSearchInput] = useState('k'); 
+    const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 
 
     const mockResults = ['Edit css to match brand', 'improve search functionality']; 

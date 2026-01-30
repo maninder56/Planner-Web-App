@@ -3,6 +3,8 @@
     flex: 1 1 auto;
     max-width: 400px;
     margin: 5px;
+    position: relative;
+    width: 100%;
 }
 
 .searchWrapper:focus-within {
@@ -16,6 +18,7 @@
     display: flex;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 5%);
+    width: 100%;
 }
 
 .search:hover {
@@ -54,9 +57,9 @@
 
 
 .searchResultsWrapper {
-    border: solid 1.5px;
+    width: 100%;
+    outline: solid 1.5px;
     border-radius: 10px;
-    padding: 5px;
     background-color: white;
     box-shadow: 0 0 20px -10px rgb(0, 0, 0);
     position: absolute;
@@ -66,7 +69,7 @@
 
 
 .searchResultsWrapper header {
-    margin: 5px;
+    margin: 10px;
     padding-left: 10px;
     font-size: 1rem;
     border-bottom: solid 1px;
