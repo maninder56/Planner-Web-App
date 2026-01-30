@@ -1,0 +1,30 @@
+
+/* .wrapper * {
+    border: solid 1px;
+} */
+
+.wrapper {
+    border: solid 1px;
+    display: flex;
+}
+
+.wrapper img {
+    width: 30px;
+    margin: auto 5px;
+}
+
+.wrapper header {
+    margin: auto 0px;
+    padding: 0px;
+    font-size: 1.4rem;
+}
+
+@media (min-width: 600) {
+    .wrapper img {
+        width: 50px;
+    }
+
+    .wrapper header {
+        font-size: 2rem;
+    }
+}
