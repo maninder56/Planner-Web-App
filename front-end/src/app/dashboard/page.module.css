@@ -1,18 +1,26 @@
 
+/* .page * {
+    border: solid 1px;
+} */
+
+
 .page {
-    height: 100%;
+    flex: 1 1 auto;
     margin: 0;
     padding: 0;
+    padding-top: 5px;
     /* background-color: rgb(238, 126, 126); */
 }
 
 .firstSection {
+    margin: 0;
     display: flex;
     justify-content: space-between;
 }
 
 .firstSection > div {
     margin: auto;
+    flex: 1 1 auto;
 }
 
 

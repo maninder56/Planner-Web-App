@@ -13,7 +13,7 @@ export default function SearchBar({
     activePanel: panelType; 
     setActivePanel: (panel: panelType) => void; 
 }) {
-    const [searchInput, setSearchInput] = useState(''); 
+    const [searchInput, setSearchInput] = useState('k'); 
     // const [searchFocused, setSearchFocused] = useState(false); 
 
     const mockResults = ['Edit css to match brand', 'improve search functionality']; 
@@ -22,7 +22,9 @@ export default function SearchBar({
         <div className={styles.searchWrapper}
             onClick={(e) => {
                 e.stopPropagation(); 
-                setActivePanel('searchBarPanel'); 
+                if (activePanel !== 'searchBarPanel') {
+                    setActivePanel('searchBarPanel'); 
+                }
             }}>
             <div className={styles.search}>
                 <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
@@ -32,11 +34,11 @@ export default function SearchBar({
                     maxLength={100}
                     value={searchInput}
                     // onFocus={() => setSearchFocused(true)}
-                    // onBlur={() => setSearchFocused(false)}
+                    onBlur={() => setSearchInput('')}
                     onChange={e => setSearchInput(e.target.value)}/>
             </div>
             {
-                activePanel === 'searchBarPanel' ?
+                searchInput.length > 0 ?
                 <div className={styles.searchResultsWrapper}>
                     <header>Search results</header>
                     <div className={styles.results}>

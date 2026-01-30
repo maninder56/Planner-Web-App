@@ -9,6 +9,7 @@
     border-radius: 10px;
     cursor: pointer;
     background-color: rgba(0, 0, 0, 5%);
+    width: fit-content;
 }
 
 .wrapper:hover {
