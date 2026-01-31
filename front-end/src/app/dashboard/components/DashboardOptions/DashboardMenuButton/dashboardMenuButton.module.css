@@ -1,7 +1,4 @@
 
-.wrapper * {
-    border: solid 1px black;
-}
 
 .wrapper {
     margin: 5px;
@@ -10,6 +7,7 @@
     position: relative;
 }
 
+/* Button */
 
 .menuButton {
     width: inherit;
@@ -31,6 +29,7 @@
     height: 35px;
 }
 
+/* Hover options */
 
 .options {
     background-color: white;
@@ -44,28 +43,64 @@
     right: 0;
 }
 
+
+.menuAndCloseButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.menuAndCloseButton > header {
+    flex: 1 1 auto;
+    text-align: center;
+    margin: auto;
+    font-size: 1rem;
+    color: rgb(0, 0, 0, 0.8);
+}
+
 .closeButton {
     width: 30px;
     height: 30px;
-    margin-left: auto;
 }
 
-.options > header {
-    text-align: center;
-    margin: 5px 0px;
-}
 
-.options > ul {
-    list-style-type: none;
-    padding: 0;
+
+/* .wrapper * {
+    border: solid 1px black;
+} */
+
+
+.optionsList {
     margin: 0;
-    margin-top: 10px;
+    padding: 0;
+}
+
+.optionsList > hr {
+    color: rgb(0, 0, 0, 0.1);
+}
+
+.optionsList > button {
+    display: flex;
+    justify-content: start;
+    margin: 0;
+    margin-top: 5px;
+    border: none;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.optionsList > button:hover {
+    background-color: rgba(0, 0, 0, 5%);
 }
 
 
-.options > ul > li {
-    margin-top: 10px;
-    padding: 5px 10px;
+.optionsList > button > span {
     text-wrap: nowrap;
-    display: flex;
+    margin: auto;
+    font-size: 0.9rem;
+    margin-left: 5px;
+    color: black;
 }

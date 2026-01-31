@@ -26,26 +26,31 @@ export default function DashboardMenuButton({
             {
                 activePanel === 'dashboardMenuButtonOptions' ? 
                 <div className={styles.options} onClick={(e) => { e.stopPropagation(); }}>
-                    <div className={styles.closeButton}>
-                        <CloseButton onClick={() => setActivePanel('none')} />
+                    <div className={styles.menuAndCloseButton}>
+                        <header>Menu</header>
+                        <div className={styles.closeButton}>
+                            <CloseButton onClick={() => setActivePanel('none')} />
+                        </div>
                     </div>
-                    <header>Menu</header>
-                    <ul>
-                        <li>
+                    <div className={styles.optionsList}>
+                        <button>
                             <Image src={'./plusSign.svg'} alt='plus sign icon' width={20}  height={20}/>
-                            <button>New Board</button>
-                        </li>
-                        <li>
-                            <Image src={'./switchBoard.svg'} alt='plus sign icon' width={20}  height={20}/>
-                            <button>Switch board</button>
-                        </li>
-                        <li>
-                            <button>Profile</button>
-                        </li>
-                        <li>
-                            <button>Logout</button>
-                        </li>
-                    </ul>
+                            <span>New Board</span>
+                        </button>
+                        <button>
+                            <Image src={'./switchBoard.svg'} alt='switch board icon' width={20}  height={20}/>
+                            <span>Switch board</span>
+                        </button>
+                        <button>
+                            <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>
+                            <span>Profile</span>
+                        </button>
+                        <hr />
+                        <button className={styles.logoutButton}>
+                            <Image src={'./logout-icon.svg'} alt='logout icon' width={20}  height={20}/>
+                            <span>Logout</span>
+                        </button>
+                    </div>
                 </div>
                 : null
             }
