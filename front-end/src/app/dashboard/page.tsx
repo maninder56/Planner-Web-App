@@ -10,7 +10,7 @@ import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 import CloseButton from '@/Components/Buttons/closeButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import HoverPanel from '@/Components/HoverPanels/hoverPanel';
-import DashboardMenu from './components/DashboardMenu/dashboardMenu';
+import DashboardMenuButton from './components/DashboardOptions/DashboardMenuButton/dashboardMenuButton';
 
 import styles from './page.module.css'; 
 import AppLogo from './components/AppLogo/appLogo';
@@ -40,7 +40,12 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div>
-                        <DashboardMenu activePanel={activePanel} setActivePanel={setActivePanel} />
+                        <div className={styles.dashboardMenu}>
+                            <DashboardMenuButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                        </div>
+                        <div className={styles.dashboardOptions}>
+                            new board, switch board, and profile buttons
+                        </div>
                     </div>
                 </section>
                 <main>

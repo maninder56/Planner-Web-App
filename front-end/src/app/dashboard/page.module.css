@@ -24,6 +24,8 @@
 }
 
 
+/* For mobile version */
+
 .searchButton {
     display: block;
 }
@@ -40,6 +42,26 @@
     }
 
     .searchBar {
+        display: block;
+    }
+}
+
+
+.dashboardMenu {
+    display: block;
+}
+
+.dashboardOptions {
+    display: none;
+}
+
+
+@media (min-width: 800) {
+    .dashboardMenu {
+        display: none;
+    }
+
+    .dashboardOptions {
         display: block;
     }
 }

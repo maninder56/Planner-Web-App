@@ -1,4 +1,4 @@
 
-export type panelType = 'none' | 'searchBarPanel' | 'searchButtonPanel' | 'profileOptions' | 'dashboardMenuOptions'; 
+export type panelType = 'none' | 'searchBarPanel' | 'searchButtonPanel' | 'profileOptions' | 'dashboardMenuButtonOptions'; 
 
 export type profileColour = 'red' | 'blue' | 'green'; 
