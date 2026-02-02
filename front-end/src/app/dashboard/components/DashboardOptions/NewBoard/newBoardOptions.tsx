@@ -3,15 +3,12 @@
 import { panelType } from '@/Types/UIState';
 import styles from './newBoardOptions.module.css'; 
 import CloseButton from '@/Components/Buttons/closeButton';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
+import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 
-export default function NewBoardOptions({
-    activePanel, 
-    setActivePanel,
-}: {
-    activePanel: panelType
-    setActivePanel: (panel: panelType) => void; 
-}) {
+export default function NewBoardOptions() {
+    const [activePanel, setActivePanel] = useActivePanel(); 
+
     // temporary colour array, this needs to ba a argument
     const colours = ['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink' ];
 

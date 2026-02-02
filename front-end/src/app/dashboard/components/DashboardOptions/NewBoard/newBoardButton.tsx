@@ -2,15 +2,13 @@
 import { panelType } from '@/Types/UIState';
 import styles from './newBoardButton.module.css'; 
 import Image from 'next/image';
+import NewBoardOptions from './newBoardOptions';
+import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 
 
-export default function NewBoardButton({
-    activePanel, 
-    setActivePanel,
-}: {
-    activePanel: panelType
-    setActivePanel: (panel: panelType) => void; 
-}) {
+export default function NewBoardButton() {
+    const [activePanel, setActivePanel] = useActivePanel(); 
+
     return (
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.mainButton}
@@ -18,14 +16,12 @@ export default function NewBoardButton({
                     e.stopPropagation(); 
                     setActivePanel(activePanel === 'newBoardOptions' ? 'none' : 'newBoardOptions'); 
                 }}>
-                <Image src={''} alt='plus sign icon' width={20} height={20} />
+                <Image src={'./plusSign.svg'} alt='plus sign icon' width={20} height={20} />
                 <span>New Board</span>
             </div>
             {
                 activePanel === 'newBoardOptions' ? 
-                <div>
-                    
-                </div>
+                <NewBoardOptions />
                 : null
             }
         </div>

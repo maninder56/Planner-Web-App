@@ -2,7 +2,7 @@
 
 import IconButton from '@/Components/Buttons/iconButton';
 import { panelType } from '@/Types/UIState';
-import { act, useState } from 'react';
+import { act, createContext, useContext, useState } from 'react';
 import SearchBar from './components/Search/SearchBar/searchBar';
 import ProfileIcon from './components/ProfileIcon/profileIcon';
 import ProfileInfo from './components/ProfileInfo/profileInfo';
@@ -15,42 +15,45 @@ import DashboardMenuButton from './components/DashboardOptions/DashboardMenuButt
 import styles from './page.module.css'; 
 import AppLogo from './components/AppLogo/appLogo';
 import SearchButton from './components/Search/SearchButton/searchButton';
+import { ActivePanelContext } from './Hooks/ActivePanel/ActivePanelContext';
+import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButton';
 
 export default function Dashboard() {
-
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
 
     return (
-        <div className={styles.page}
-            onClick={(e) => {
-                e.stopPropagation(); 
-                setActivePanel('none'); 
-            }}>
-                {/* log search and profile options */}
-                <section className={styles.firstSection}>
-                    <div>
-                        <AppLogo />
-                    </div>
-                    <div>
-                        <div className={styles.searchButton}>
-                            <SearchButton activePanel={activePanel} setActivePanel={setActivePanel} />
+        <ActivePanelContext.Provider value={[activePanel, setActivePanel]}>
+            <div className={styles.page}
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    setActivePanel('none'); 
+                }}>
+                    {/* log search and profile options */}
+                    <section className={styles.firstSection}>
+                        <div>
+                            <AppLogo />
                         </div>
-                        <div className={styles.searchBar}>
-                            <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
+                        <div>
+                            <div className={styles.searchButton}>
+                                <SearchButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                            </div>
+                            <div className={styles.searchBar}>
+                                <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className={styles.dashboardMenu}>
-                            <DashboardMenuButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                        <div>
+                            <div className={styles.dashboardMenu}>
+                                <DashboardMenuButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                            </div>
+                            <div className={styles.dashboardOptions}>
+                                <NewBoardButton />
+                            </div>
                         </div>
-                        <div className={styles.dashboardOptions}>
-                            new board, switch board, and profile buttons
-                        </div>
-                    </div>
-                </section>
-                <main>
+                    </section>
+                    <main>
 
-                </main>
-        </div>
+                    </main>
+            </div>
+        </ActivePanelContext.Provider>
     ); 
 }
