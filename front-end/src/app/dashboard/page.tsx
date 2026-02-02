@@ -35,15 +35,15 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <div className={styles.searchButton}>
-                                <SearchButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                                <SearchButton />
                             </div>
                             <div className={styles.searchBar}>
-                                <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
+                                <SearchBar />
                             </div>
                         </div>
                         <div>
                             <div className={styles.dashboardMenu}>
-                                <DashboardMenuButton activePanel={activePanel} setActivePanel={setActivePanel} />
+                                <DashboardMenuButton />
                             </div>
                             <div className={styles.dashboardOptions}>
                                 <NewBoardButton />

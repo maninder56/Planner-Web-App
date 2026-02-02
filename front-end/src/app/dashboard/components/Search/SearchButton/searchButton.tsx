@@ -4,14 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './searchButton.module.css'; 
 import CloseButton from '@/Components/Buttons/closeButton';
 import Image from 'next/image';
+import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 
-export default function SearchButton({
-    activePanel, 
-    setActivePanel,
-}: {
-    activePanel: panelType; 
-    setActivePanel: (panel: panelType) => void; 
-}) {
+export default function SearchButton() {
+    const [activePanel, setActivePanel] = useActivePanel(); 
+
     const [searchInput, setSearchInput] = useState(''); 
     const inputRef = useRef<HTMLInputElement>(null); 
 

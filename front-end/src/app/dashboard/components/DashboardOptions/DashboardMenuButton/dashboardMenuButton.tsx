@@ -6,14 +6,10 @@ import HoverPanel from '@/Components/HoverPanels/hoverPanel';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import Image from 'next/image';
 import CloseButton from '@/Components/Buttons/closeButton';
+import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 
-export default function DashboardMenuButton({
-    activePanel, 
-    setActivePanel,
-}: {
-    activePanel: panelType; 
-    setActivePanel: (panel: panelType) => void; 
-}) {
+export default function DashboardMenuButton() {
+    const [activePanel, setActivePanel] = useActivePanel(); 
     return (
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.menuButton}

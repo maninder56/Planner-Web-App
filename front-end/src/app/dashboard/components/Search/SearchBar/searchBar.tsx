@@ -1,18 +1,14 @@
 'use client'
 
 
+import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './searchBar.module.css'; 
 import { panelType } from '@/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function SearchBar({
-    activePanel, 
-    setActivePanel,
-}: {
-    activePanel: panelType; 
-    setActivePanel: (panel: panelType) => void; 
-}) {
+export default function SearchBar() {
+    const [activePanel, setActivePanel] = useActivePanel(); 
     const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 
 
