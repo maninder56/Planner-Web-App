@@ -7,6 +7,7 @@ import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import Image from 'next/image';
 import CloseButton from '@/Components/Buttons/closeButton';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
+import NewBoardOptions from '../NewBoard/newBoardOptions';
 
 export default function DashboardMenuButton() {
     const [activePanel, setActivePanel] = useActivePanel(); 
@@ -29,7 +30,10 @@ export default function DashboardMenuButton() {
                         </div>
                     </div>
                     <div className={styles.optionsList}>
-                        <button>
+                        <button onClick={e => {
+                            e.stopPropagation(); 
+                            setActivePanel('newBoardOptions'); 
+                        }}>
                             <Image src={'./plusSign.svg'} alt='plus sign icon' width={20}  height={20}/>
                             <span>New Board</span>
                         </button>
@@ -48,6 +52,11 @@ export default function DashboardMenuButton() {
                         </button>
                     </div>
                 </div>
+                : null
+            }
+            {
+                activePanel === 'newBoardOptions' ? 
+                <NewBoardOptions /> 
                 : null
             }
         </div>

@@ -1,0 +1,192 @@
+
+.wrapper {
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px; 
+    position: absolute;
+    z-index: 1;
+    padding: 20px;
+    overflow: hidden;
+    top: calc(100% + 5px);
+    right: 0;
+}
+
+.titleAndCloseButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndCloseButton > header {
+    flex: 1 1 auto;
+    text-align: center;
+    margin: auto;
+    font-size: 0.9rem;
+    color: rgb(0, 0, 0, 0.8);
+}
+
+.closeButton {
+    width: 30px;
+    height: 30px;
+}
+
+
+
+
+/* Options */
+
+.options {
+    
+}
+
+
+.boardBackgroundColour {
+    margin: 20px 0px;
+}
+
+.boardBackgroundColour > header {
+    font-size: 0.9rem;
+}
+
+.colourGrid {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.colourGrid > div {
+    width: 50px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: solid 2px white;
+    transition: 
+        transform 0.15s ease;
+}
+
+.colourGrid > div:hover {
+    transform: scale(1.05);
+}
+
+
+/* board colours */
+
+.soft-pink{
+    background-color: #f8bdbd;
+} 
+
+.soft-pink:hover, 
+.soft-pink.selectedBoardColour {
+    outline: solid #fe7070;
+}
+
+.light-mint-green {
+    background-color: #c8e7b1;
+}
+
+.light-mint-green:hover, 
+.light-mint-green.selectedBoardColour {
+    outline: solid #6abf28;
+}
+
+.aqua {
+    background-color: #aee2dc;
+}
+
+.aqua:hover, 
+.aqua.selectedBoardColour {
+    outline: solid #21a394;
+}
+
+.lavender-blue {
+    background-color: #bbbef5;
+}
+
+.lavender-blue:hover, 
+.lavender-blue.selectedBoardColour {
+    outline: solid #454bc5;
+}
+
+.light-purple {
+    background-color: #e0b8f1;
+}
+
+.light-purple:hover, 
+.light-purple.selectedBoardColour {
+    outline: solid #ad3ddd;
+}
+
+.bright-pink {
+    background-color: #ff91e0;
+}
+
+.bright-pink:hover, 
+.bright-pink.selectedBoardColour {
+    outline: solid #eb5ac2;
+}
+
+
+
+
+.boardNameForm {
+    margin-top: 30px;
+}
+
+.boardNameForm > div {
+    margin-top: 20px;
+}
+
+.boardNameForm label {
+    font-size: 0.9rem;
+}
+
+.boardNameForm input {
+    border: solid 1.5px black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+}
+
+.formButton {
+    display: flex;
+    justify-content: center;
+}
+
+.formButton button {
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 28px;
+    background-color: #6f77d1;
+    color: #ffffff;
+    cursor: pointer;
+    transition: 
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.1s ease;
+}
+
+.formButton button:hover {
+    background-color: #5f67c2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+.formButton button:focus-visible {
+    outline: 2px solid #9aa0ff;
+    outline-offset: 2px;
+}
+
+.formButton button:disabled {
+    background-color: #c7c9e8;
+    color: #f3f3f3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.formButton button:disabled:hover {
+    background-color: #c7c9e8;
+}
+
+

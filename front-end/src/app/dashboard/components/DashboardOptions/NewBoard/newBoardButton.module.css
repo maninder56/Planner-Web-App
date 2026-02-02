@@ -1,0 +1,33 @@
+
+.wrapper {
+    margin: 5px;
+    height: 40px;
+    width: 140px;
+    position: relative;
+}
+
+.mainButton {
+    width: inherit;
+    height: inherit;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mainButton > img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.mainButton > span {
+    text-wrap: nowrap;
+    font-size: 1rem;
+}
