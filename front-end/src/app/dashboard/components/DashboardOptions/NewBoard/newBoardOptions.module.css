@@ -73,57 +73,57 @@
 /* board colours */
 
 .soft-pink{
-    background-color: #f8bdbd;
+    background-color: var(--soft-pink);
 } 
 
 .soft-pink:hover, 
 .soft-pink.selectedBoardColour {
-    outline: solid #fe7070;
+    outline: solid var(--soft-pink-outline);
 }
 
 .light-mint-green {
-    background-color: #c8e7b1;
+    background-color: var(--light-mint-green);
 }
 
 .light-mint-green:hover, 
 .light-mint-green.selectedBoardColour {
-    outline: solid #6abf28;
+    outline: solid var(--light-mint-green-outline);
 }
 
 .aqua {
-    background-color: #aee2dc;
+    background-color: var(--aqua);
 }
 
 .aqua:hover, 
 .aqua.selectedBoardColour {
-    outline: solid #21a394;
+    outline: solid var(--aqua-outline);
 }
 
 .lavender-blue {
-    background-color: #bbbef5;
+    background-color: var(--lavender-blue);
 }
 
 .lavender-blue:hover, 
 .lavender-blue.selectedBoardColour {
-    outline: solid #454bc5;
+    outline: solid var(--lavender-blue-outline);
 }
 
 .light-purple {
-    background-color: #e0b8f1;
+    background-color: var(--light-purple);
 }
 
 .light-purple:hover, 
 .light-purple.selectedBoardColour {
-    outline: solid #ad3ddd;
+    outline: solid var(--light-purple-outline);
 }
 
 .bright-pink {
-    background-color: #ff91e0;
+    background-color: var(--bright-pink);
 }
 
 .bright-pink:hover, 
 .bright-pink.selectedBoardColour {
-    outline: solid #eb5ac2;
+    outline: solid var(--bright-pink-outline);
 }
 
 
