@@ -47,6 +47,14 @@
     height: 40px;
 }
 
+.fadeOut {
+    animation: fade-out 0.2s ease-out forwards;
+}
+
+.slideOut {
+    animation: slide-out 0.2s ease-in forwards;
+}
+
 @keyframes fade-in {
     from {
         opacity: 0;
@@ -54,6 +62,15 @@
 
     to {
         opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from { 
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }
 
@@ -65,5 +82,16 @@
     to {
         transform: translateY(0%);
         opacity: 1;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-10%);
+        opacity: 0;
     }
 }
