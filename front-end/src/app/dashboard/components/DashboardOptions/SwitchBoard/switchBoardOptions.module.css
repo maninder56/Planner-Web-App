@@ -45,12 +45,43 @@
 .boards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
+    gap: 50px;
 }
 
 .boards > div {
+    cursor: pointer;
+    height: 100px;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    box-shadow: 0 0 10px -5px black;
+    overflow: hidden;
+    transition: 
+        transform 0.1s ease-out,
+        outline 0.05s ease-out, 
+        box-shadow 0.15s ease, 
+        border 0.15s ease;
 }
+
+.boards > div:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.boards span {
+    flex: 1 1 auto;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
+    padding: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
 
 /* board colours */
 

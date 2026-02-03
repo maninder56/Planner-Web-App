@@ -49,6 +49,10 @@ export default function SwitchBoardOptions() {
             name: 'Fitness Tracker',
             colour: 'aqua',
         },
+        {
+            name: 'This is going to be a long name of the board, This is going to be a long name of the board, This is going to be a long name of the board', 
+            colour: 'light-purple',
+        }
     ]; 
 
     return (

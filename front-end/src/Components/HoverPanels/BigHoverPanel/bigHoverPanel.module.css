@@ -11,6 +11,13 @@
     display: flex;
     justify-content: center;
     animation: fade-in 0.2s ease-in;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 .panel {
@@ -23,7 +30,6 @@
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 10px; 
-    overflow: hidden;
     animation: slide-in 0.2s ease-out;
 }
 
