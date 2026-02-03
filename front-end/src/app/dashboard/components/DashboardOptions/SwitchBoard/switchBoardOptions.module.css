@@ -42,3 +42,65 @@
 }
 
 
+.boards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.boards > div {
+    border-radius: 10px;
+}
+
+/* board colours */
+
+
+.soft-pink {
+  background-color: var(--soft-pink);
+}
+
+.soft-pink:hover {
+  outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green {
+  background-color: var(--light-mint-green);
+}
+
+.light-mint-green:hover {
+  outline: solid var(--light-mint-green-outline);
+}
+
+.aqua {
+  background-color: var(--aqua);
+}
+
+.aqua:hover {
+  outline: solid var(--aqua-outline);
+}
+
+.lavender-blue {
+  background-color: var(--lavender-blue);
+}
+
+.lavender-blue:hover {
+  outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple {
+  background-color: var(--light-purple);
+}
+
+.light-purple:hover {
+  outline: solid var(--light-purple-outline);
+}
+
+.bright-pink {
+  background-color: var(--bright-pink);
+}
+
+.bright-pink:hover {
+  outline: solid var(--bright-pink-outline);
+}
+
+

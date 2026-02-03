@@ -27,6 +27,28 @@ export default function SwitchBoardOptions() {
             name: 'planner web app', 
             colour: 'lavender-blue'
         }, 
+        {
+            name: 'Ocean Notes',
+            colour: 'aqua',
+        },
+        {
+            name: 'Design Ideas',
+            colour: 'light-purple',
+        },
+        {
+            name: 'Marketing Campaign',
+            colour: 'bright-pink',
+        },
+
+        // optional: duplicates to see repetition / UI scaling
+        {
+            name: 'Daily Tasks',
+            colour: 'soft-pink',
+        },
+        {
+            name: 'Fitness Tracker',
+            colour: 'aqua',
+        },
     ]; 
 
     return (
@@ -43,7 +65,15 @@ export default function SwitchBoardOptions() {
                     onChange={e => setSearchInput(e.target.value)}/>
             </div>
             <div className={styles.boards}>
-                boards
+                {
+                    boards.map((b, i) => {
+                        return (
+                            <div key={i} className={styles[b.colour]}>
+                                <span>{b.name}</span>
+                            </div>
+                        ); 
+                    })
+                }
             </div>
         </BigHoverPanel>
     ); 
