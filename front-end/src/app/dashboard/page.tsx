@@ -9,7 +9,7 @@ import ProfileInfo from './components/ProfileInfo/profileInfo';
 import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 import CloseButton from '@/Components/Buttons/closeButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
-import HoverPanel from '@/Components/HoverPanels/hoverPanel';
+import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import DashboardMenuButton from './components/DashboardOptions/DashboardMenuButton/dashboardMenuButton';
 
 import styles from './page.module.css'; 
@@ -17,6 +17,7 @@ import AppLogo from './components/AppLogo/appLogo';
 import SearchButton from './components/Search/SearchButton/searchButton';
 import { ActivePanelContext } from './Hooks/ActivePanel/ActivePanelContext';
 import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButton';
+import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchBoardButton';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
@@ -47,6 +48,7 @@ export default function Dashboard() {
                             </div>
                             <div className={styles.dashboardOptions}>
                                 <NewBoardButton />
+                                <SwitchBoardButton />
                             </div>
                         </div>
                     </section>

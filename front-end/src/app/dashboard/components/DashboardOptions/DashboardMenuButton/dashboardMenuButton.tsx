@@ -2,7 +2,7 @@
 
 import { panelType } from '@/Types/UIState';
 import styles from './dashboardMenuButton.module.css'; 
-import HoverPanel from '@/Components/HoverPanels/hoverPanel';
+import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import Image from 'next/image';
 import CloseButton from '@/Components/Buttons/closeButton';
