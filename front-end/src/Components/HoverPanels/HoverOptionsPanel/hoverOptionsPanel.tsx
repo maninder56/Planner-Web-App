@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import CloseButton from '../../Buttons/closeButton';
 import styles from './hoverOptionsPanel.module.css'; 
 
