@@ -1,0 +1,69 @@
+
+
+.wrapper {
+    background-color: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    animation: fade-in 0.2s ease-in;
+}
+
+.panel {
+    flex: 1 1 auto;
+    margin: 10px;
+    margin-top: 10vh;
+    padding: 20px;
+    height: max-content;
+    max-width: 600px;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px; 
+    overflow: hidden;
+    animation: slide-in 0.2s ease-out;
+}
+
+
+.titleAndCloseButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndCloseButton > header {
+    flex: 1 1 auto;
+    text-align: center;
+    margin: auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(0, 0, 0, 0.8);
+}
+
+.closeButton {
+    width: 40px;
+    height: 40px;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-10%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}

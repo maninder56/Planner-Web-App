@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function SearchBar() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    // const [activePanel, setActivePanel] = useActivePanel(); 
     const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 
 
@@ -18,9 +18,9 @@ export default function SearchBar() {
         <div className={styles.searchWrapper}
             onClick={(e) => {
                 e.stopPropagation(); 
-                if (activePanel !== 'searchBarPanel') {
-                    setActivePanel('searchBarPanel'); 
-                }
+                // if (activePanel !== 'searchBarPanel') {
+                //     setActivePanel('searchBarPanel'); 
+                // }
             }}>
             <div className={styles.search}>
                 <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />

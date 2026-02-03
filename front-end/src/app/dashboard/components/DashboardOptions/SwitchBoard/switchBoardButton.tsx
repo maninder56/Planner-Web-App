@@ -2,6 +2,7 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './switchBoardButton.module.css'; 
 import Image from 'next/image';
+import SwitchBoardOptions from './switchBoardOptions';
 
 
 export default function SwitchBoardButton() {
@@ -19,7 +20,7 @@ export default function SwitchBoardButton() {
             </div>
             {
                 activePanel === 'switchBoardOptions' ? 
-                <span>options</span>
+                <SwitchBoardOptions />
                 : null
             }
         </div>

@@ -1,7 +1,7 @@
 
 export type panelType = 
     'none' | 
-    'searchBarPanel' | 
+    // 'searchBarPanel' | 
     'searchButtonPanel' | 
     'profileOptions' | 
     'dashboardMenuButtonOptions' | 
