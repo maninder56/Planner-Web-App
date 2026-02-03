@@ -10,7 +10,7 @@ import ProfileOptions from './components/ProfileOptions/ProfileOptions';
 import CloseButton from '@/Components/Buttons/closeButton';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
-import DashboardMenuButton from './components/DashboardOptions/DashboardMenuButton/dashboardMenuButton';
+import DashboardMenuButton from './components/DashboardOptions/DashboardMenu/dashboardMenuButton';
 
 import styles from './page.module.css'; 
 import AppLogo from './components/AppLogo/appLogo';

@@ -30,7 +30,7 @@
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 10px; 
-    animation: slide-in 0.2s ease-out;
+    animation: slide-in 0.1s ease-out;
 }
 
 
@@ -58,7 +58,7 @@
 }
 
 .slideOut {
-    animation: slide-out 0.2s ease-in forwards;
+    animation: slide-out 0.1s ease-in forwards;
 }
 
 @keyframes fade-in {

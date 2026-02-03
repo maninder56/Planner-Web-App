@@ -22,7 +22,7 @@ export default function HoverOptionsPanel({
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.titleAndCloseButton}>
                 <header>{title}</header>
-                <div className={styles.closeButton}>
+                <div className={styles.closeButton} onClick={e => {e.stopPropagation();}}>
                     <CloseButton onClick={onCloseClick} />
                 </div>
             </div>

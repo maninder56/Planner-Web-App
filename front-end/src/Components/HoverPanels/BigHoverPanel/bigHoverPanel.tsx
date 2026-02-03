@@ -17,7 +17,7 @@ export default function BigHoverPanel({
 
     function handleClose() {
         setClosing(true); 
-        setTimeout(onCloseClick, 200); // match animation duration
+        setTimeout(onCloseClick, 100); // match animation duration
     }
 
     return (
