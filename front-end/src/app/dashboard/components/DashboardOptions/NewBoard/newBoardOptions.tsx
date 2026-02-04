@@ -22,31 +22,29 @@ export default function NewBoardOptions() {
     }
 
     return (
-        <div className={styles.wrapper}>
-            <HoverOptionsPanel title='New Board' onCloseClick={() => setActivePanel('none')}>
-                <div className={styles.boardBackgroundColour}>
-                        <header>Background Colour</header>
-                        <div className={styles.colourGrid}>
-                            {colours.map((c) => {
-                                const selectedBoard = c === boardColour ? styles.selectedBoardColour : null; 
-                                return <div key={c} className={[styles[c], selectedBoard].join(' ')} 
-                                        onClick={e => { 
-                                            e.stopPropagation(); 
-                                            setBoardColour(c)
-                                        }}></div>
-                            })}
-                        </div>
+        <HoverOptionsPanel title='New Board' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
+            <div className={styles.boardBackgroundColour}>
+                    <header>Background Colour</header>
+                    <div className={styles.colourGrid}>
+                        {colours.map((c) => {
+                            const selectedBoard = c === boardColour ? styles.selectedBoardColour : null; 
+                            return <div key={c} className={[styles[c], selectedBoard].join(' ')} 
+                                    onClick={e => { 
+                                        e.stopPropagation(); 
+                                        setBoardColour(c)
+                                    }}></div>
+                        })}
                     </div>
-                    <form onSubmit={handleFormSubmit} className={styles.boardNameForm}>
-                        <div>
-                            <label>Board Name</label>
-                            <input type='text' maxLength={50} value={boardName} onChange={e => setBoardName(e.target.value)} />
-                        </div>
-                        <div className={styles.formButton}>
-                            <button type='submit' disabled={boardName === ''}>Create</button>
-                        </div>
-                    </form>
-            </HoverOptionsPanel>
-        </div>
+                </div>
+                <form onSubmit={handleFormSubmit} className={styles.boardNameForm}>
+                    <div>
+                        <label>Board Name</label>
+                        <input type='text' maxLength={50} value={boardName} onChange={e => setBoardName(e.target.value)} />
+                    </div>
+                    <div className={styles.formButton}>
+                        <button type='submit' disabled={boardName === ''}>Create</button>
+                    </div>
+                </form>
+        </HoverOptionsPanel>
     ); 
 }

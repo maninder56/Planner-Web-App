@@ -13,13 +13,15 @@ export default function HoverOptionsPanel({
     title, 
     onCloseClick, 
     children,
+    offsetZeroTo,
 }: {
     title: string; 
     onCloseClick: () => void; 
-    children: React.ReactNode; 
+    children: React.ReactNode;
+    offsetZeroTo: 'right' | 'left';  
 }) {
     return (
-        <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
+        <div className={[styles.wrapper, styles[offsetZeroTo]].join(' ')} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.titleAndCloseButton}>
                 <header>{title}</header>
                 <div className={styles.closeButton} onClick={e => {e.stopPropagation();}}>

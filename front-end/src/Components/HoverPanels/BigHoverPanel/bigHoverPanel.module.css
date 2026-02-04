@@ -23,7 +23,7 @@
 .panel {
     flex: 1 1 auto;
     margin: 10px;
-    margin-top: 10vh;
+    margin-top: 5vh;
     padding: 20px;
     height: max-content;
     max-width: 600px;
@@ -33,6 +33,11 @@
     animation: slide-in 0.1s ease-out;
 }
 
+@media (min-width: 600) {
+    .panel {
+        margin-top: 10vh;
+    }
+}
 
 .titleAndCloseButton {
     display: flex;

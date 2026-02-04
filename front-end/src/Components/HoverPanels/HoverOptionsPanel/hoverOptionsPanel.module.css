@@ -12,6 +12,14 @@
     animation: slide-in 0.1s ease-out;
 }
 
+.wrapper.right {
+    right: 0;
+}
+
+.wrapper.left {
+    left: 0;
+}
+
 .titleAndCloseButton {
     display: flex;
     justify-content: space-between;
