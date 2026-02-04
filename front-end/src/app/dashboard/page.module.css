@@ -6,7 +6,7 @@
 
 .page {
     flex: 1 1 auto;
-    margin: 0;
+    margin: 0px;
     padding: 0;
     padding-top: 5px;
     /* background-color: rgb(238, 126, 126); */
@@ -14,14 +14,30 @@
 
 .firstSection {
     margin: 0;
+    height: 70px;
     display: flex;
     justify-content: space-between;
 }
 
 .firstSection > div {
     margin: auto;
-    flex: 1 1 auto;
 }
+
+.appLogo {
+    flex: 0 1 auto;
+}
+
+.searchWrapper {
+    flex: 2 1 auto;
+}
+
+.dashboardMenuWrapper {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: end;
+}
+
+
 
 
 /* For mobile version */
@@ -34,19 +50,6 @@
     display: none;
 }
 
-
-@media (min-width: 600) {
-    
-    .searchButton {
-        display: none;
-    }
-
-    .searchBar {
-        display: block;
-    }
-}
-
-
 .dashboardMenu {
     display: block;
 }
@@ -56,12 +59,39 @@
 }
 
 
-@media (min-width: 800) {
+@media (min-width: 350) {
+    .page {
+        margin: 0px 10px;
+    }
+}
+
+
+@media (min-width: 600) {
+
+    .page {
+        margin: 0px 20px;
+    }
+    
+    .searchButton {
+        display: none;
+    }
+
+    .searchBar {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+
+
+@media (min-width: 900) {
     .dashboardMenu {
         display: none;
     }
 
     .dashboardOptions {
-        display: block;
+        display: flex;
+        justify-content: end;
+        align-items: center;
     }
 }

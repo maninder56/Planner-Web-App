@@ -29,10 +29,10 @@ export default function Dashboard() {
                 }}>
                     {/* log search and profile options */}
                     <section className={styles.firstSection}>
-                        <div>
+                        <div className={styles.appLogo}>
                             <AppLogo />
                         </div>
-                        <div>
+                        <div className={styles.searchWrapper}>
                             <div className={styles.searchButton}>
                                 <SearchButton />
                             </div>
@@ -40,7 +40,7 @@ export default function Dashboard() {
                                 <SearchBar />
                             </div>
                         </div>
-                        <div>
+                        <div className={styles.dashboardMenuWrapper}>
                             <div className={styles.dashboardMenu}>
                                 <DashboardMenuButton />
                             </div>
