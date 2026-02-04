@@ -1,15 +1,8 @@
 'use client'
 
-import IconButton from '@/Components/Buttons/iconButton';
-import { panelType } from '@/Types/UIState';
-import { act, createContext, useContext, useState } from 'react';
+import { panelType, profileColour } from '@/Types/UIState';
+import { useState } from 'react';
 import SearchBar from './components/Search/SearchBar/searchBar';
-import ProfileIcon from './components/ProfileIcon/profileIcon';
-import ProfileInfo from './components/ProfileInfo/profileInfo';
-import ProfileOptions from './components/ProfileOptions/ProfileOptions';
-import CloseButton from '@/Components/Buttons/closeButton';
-import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
-import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import DashboardMenuButton from './components/DashboardOptions/DashboardMenu/dashboardMenuButton';
 
 import styles from './page.module.css'; 
@@ -18,9 +11,14 @@ import SearchButton from './components/Search/SearchButton/searchButton';
 import { ActivePanelContext } from './Hooks/ActivePanel/ActivePanelContext';
 import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButton';
 import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchBoardButton';
+import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
+    
+    const tempUser: { name: string, email: string, colour: profileColour} = {
+        name: 'Julius Caesar', email: 'caesa23r@gmail.com', colour: 'red'
+    }
 
     return (
         <ActivePanelContext.Provider value={[activePanel, setActivePanel]}>
@@ -49,6 +47,7 @@ export default function Dashboard() {
                             <div className={styles.dashboardOptions}>
                                 <NewBoardButton />
                                 <SwitchBoardButton />
+                                <ProfileButton userName={tempUser.name} userEmail={tempUser.email} iconColour={tempUser.colour} />
                             </div>
                         </div>
                     </section>
