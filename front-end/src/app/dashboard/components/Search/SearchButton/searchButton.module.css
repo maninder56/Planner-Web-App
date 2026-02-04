@@ -1,0 +1,99 @@
+
+/* button styles */
+.wrapper {
+    margin: auto;
+    padding: 0 10px;
+    /* width: 40px; */
+    height:40px;
+    display: flex;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 5%);
+    width: fit-content;
+}
+
+.wrapper:hover {
+    background-color: rgba(0,0,0, 10%);
+}
+
+.wrapper > img {
+    margin: auto;
+}
+
+.wrapper > header {
+    margin: auto;
+    margin-right: 5px;
+    font-size: 1rem;
+}
+
+
+/* panel styles */
+
+.searchPanel {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+
+
+.search {
+    margin: auto;
+    margin-top: 5vh;
+    padding: 0px 10px;
+    max-width: 400px;
+}
+
+.closeButton {
+    width: 50px;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+/* Search bar */
+
+.searchBar {
+    padding: 2px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    display: flex;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 5%);
+}
+
+.searchBar:hover {
+    background-color: rgba(0, 0, 0, 10%);
+}
+
+.searchBar:focus-within {
+    background-color: white;
+    box-shadow: 0 0 20px -10px rgb(0, 0, 0);
+    transition: 
+        background-color 0.2s ease, 
+        box-shadow 0.2s ease;
+    outline: solid 1.5px;
+}
+
+.searchBar > img {
+    height: 100%;
+    margin: auto;
+    margin-left: 5px;
+}
+
+.searchBar > input {
+    flex: 1 1 auto; 
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    padding: 5px 0px;
+}
+
+.searchBar > input:focus {
+    outline: none;
+}
+

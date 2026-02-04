@@ -1,0 +1,51 @@
+
+.wrapper {
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px; 
+    position: absolute;
+    z-index: 1;
+    padding: 20px;
+    overflow: hidden;
+    top: calc(100% + 5px);
+    height: max-content;
+    animation: slide-in 0.1s ease-out;
+}
+
+.wrapper.right {
+    right: 0;
+}
+
+.wrapper.left {
+    left: 0;
+}
+
+.titleAndCloseButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndCloseButton > header {
+    flex: 1 1 auto;
+    text-align: center;
+    margin: auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgb(0, 0, 0, 0.8);
+}
+
+.closeButton {
+    width: 30px;
+    height: 30px;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-5%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}

@@ -1,40 +1,60 @@
 'use client'
 
-import IconButton from '@/Components/Buttons/iconButton';
-import { panelType } from '@/Types/UIState';
+import { panelType, profileColour } from '@/Types/UIState';
 import { useState } from 'react';
-import SearchBar from './components/Search/searchBar';
-import ProfileIcon from './components/ProfileIcon/profileIcon';
-import ProfileInfo from './components/ProfileInfo/profileInfo';
-import ProfileOptions from './components/ProfileOptions/ProfileOptions';
-import ClosePanelButton from '@/Components/Buttons/closePanelButton';
-import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
+import SearchBar from './components/Search/SearchBar/searchBar';
+import DashboardMenuButton from './components/DashboardOptions/DashboardMenu/dashboardMenuButton';
+
+import styles from './page.module.css'; 
+import AppLogo from './components/AppLogo/appLogo';
+import SearchButton from './components/Search/SearchButton/searchButton';
+import { ActivePanelContext } from './Hooks/ActivePanel/ActivePanelContext';
+import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButton';
+import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchBoardButton';
+import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
 
 export default function Dashboard() {
-
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
+    
+    const tempUser: { name: string, email: string, colour: profileColour} = {
+        name: 'Julius Caesar', email: 'caesa23r@gmail.com', colour: 'red'
+    }
 
     return (
-        <div
-        style={{backgroundColor: 'lightgreen'}}
-            onClick={(e) => {
-                e.stopPropagation(); 
-                setActivePanel('none'); 
-            }}>
-            <IconButton iconSrc='/plusSign.svg' name='New Board' alt='New board icon' color='blue' onClick={() => {}} />
-            <IconButton iconSrc='/star.svg' alt='Favorite baord icon' color='transparent' onClick={() => {}} />
-            <IconButton iconSrc='/switchBoard.svg' name='Switch Board' alt='Switch board icon' color='grey' onClick={() => {}} />
-            <SearchBar activePanel={activePanel} setActivePanel={setActivePanel} />
-            <ProfileIcon colour='blue' userName='Samila haka' />
-            <ProfileIcon colour='red' userName='chester ronal' />
-            <div style={{width: '100px', height: '100px', display: 'flex', fontSize: '2rem'}}>
-                <ProfileIcon colour='green' userName='isabella victoria' />
+        <ActivePanelContext.Provider value={[activePanel, setActivePanel]}>
+            <div className={styles.page}
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    setActivePanel('none'); 
+                }}>
+                    {/* log search and profile options */}
+                    <section className={styles.firstSection}>
+                        <div className={styles.appLogo}>
+                            <AppLogo />
+                        </div>
+                        <div className={styles.searchWrapper}>
+                            <div className={styles.searchButton}>
+                                <SearchButton />
+                            </div>
+                            <div className={styles.searchBar}>
+                                <SearchBar />
+                            </div>
+                        </div>
+                        <div className={styles.dashboardMenuWrapper}>
+                            <div className={styles.dashboardMenu}>
+                                <DashboardMenuButton />
+                            </div>
+                            <div className={styles.dashboardOptions}>
+                                <NewBoardButton />
+                                <SwitchBoardButton />
+                                <ProfileButton userName={tempUser.name} userEmail={tempUser.email} iconColour={tempUser.colour} />
+                            </div>
+                        </div>
+                    </section>
+                    <main>
+
+                    </main>
             </div>
-            <ProfileInfo userName='Kevin Venoki' userEmail='kevin234@gmail.com' iconColour='red'/>  
-            <ProfileOptions userName='Rice Kevin' userEmail='ricekevin@gmail.com' iconColour='red' activePanel={activePanel} setActivePanel={setActivePanel} />
-            {/* <ClosePanelButton onClick={() => {}} /> */}
-            <InnerPanelButton name='Profile' onClick={() => {}} />
-            <InnerPanelButton name='ProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfileProfile' onClick={() => {}} />
-        </div>
+        </ActivePanelContext.Provider>
     ); 
 }

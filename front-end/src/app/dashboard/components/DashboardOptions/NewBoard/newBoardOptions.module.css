@@ -1,0 +1,154 @@
+
+/* Options */
+
+.boardBackgroundColour {
+    margin: 20px 0px;
+}
+
+.boardBackgroundColour > header {
+    font-size: 0.9rem;
+}
+
+.colourGrid {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.colourGrid > div {
+    width: 50px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: solid 2px white;
+    transition: 
+        transform 0.15s ease;
+}
+
+.colourGrid > div:hover {
+    transform: scale(1.05);
+}
+
+
+/* board colours */
+
+.soft-pink{
+    background-color: var(--soft-pink);
+} 
+
+.soft-pink:hover, 
+.soft-pink.selectedBoardColour {
+    outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.light-mint-green:hover, 
+.light-mint-green.selectedBoardColour {
+    outline: solid var(--light-mint-green-outline);
+}
+
+.aqua {
+    background-color: var(--aqua);
+}
+
+.aqua:hover, 
+.aqua.selectedBoardColour {
+    outline: solid var(--aqua-outline);
+}
+
+.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.lavender-blue:hover, 
+.lavender-blue.selectedBoardColour {
+    outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple {
+    background-color: var(--light-purple);
+}
+
+.light-purple:hover, 
+.light-purple.selectedBoardColour {
+    outline: solid var(--light-purple-outline);
+}
+
+.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+.bright-pink:hover, 
+.bright-pink.selectedBoardColour {
+    outline: solid var(--bright-pink-outline);
+}
+
+
+
+
+.boardNameForm {
+    margin-top: 30px;
+}
+
+.boardNameForm > div {
+    margin-top: 20px;
+}
+
+.boardNameForm label {
+    font-size: 0.9rem;
+}
+
+.boardNameForm input {
+    border: solid 1.5px black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+}
+
+.formButton {
+    display: flex;
+    justify-content: center;
+}
+
+.formButton button {
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 28px;
+    background-color: #6f77d1;
+    color: #ffffff;
+    cursor: pointer;
+    transition: 
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.1s ease;
+}
+
+.formButton button:hover {
+    background-color: #5f67c2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+.formButton button:focus-visible {
+    outline: 2px solid #9aa0ff;
+    outline-offset: 2px;
+}
+
+.formButton button:disabled {
+    background-color: #c7c9e8;
+    color: #f3f3f3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.formButton button:disabled:hover {
+    background-color: #c7c9e8;
+}
+
+

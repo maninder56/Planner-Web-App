@@ -1,6 +1,25 @@
 :root {
   --verylight-red-color: #fff0f0;  
   --birght-red-color: #ff3f3f; 
+  color: black;
+
+  /* Board colours */
+  --soft-pink: #f8bdbd; 
+  --light-mint-green: #c8e7b1; 
+  --aqua: #aee2dc; 
+  --lavender-blue: #bbbef5; 
+  --light-purple: #e0b8f1; 
+  --bright-pink: #ff91e0; 
+
+  /* board outline colours */
+  --soft-pink-outline: #fe7070;
+  --light-mint-green-outline: #6abf28;
+  --aqua-outline: #21a394;
+  --lavender-blue-outline: #454bc5;
+  --light-purple-outline: #ad3ddd;
+  --bright-pink-outline: #eb5ac2;
+
+
 }
   
 html,
@@ -15,6 +34,7 @@ body {
   
   margin: 0;
   padding: 0;
+  display: flex;
 }
 
 
@@ -100,7 +120,7 @@ body {
 }
 
 .closePanelButton:hover {
-  background-color: rgba(0, 0, 0, 8%);
+  background-color: rgba(0, 0, 0, 5%);
 }
 
 .closePanelButton img {

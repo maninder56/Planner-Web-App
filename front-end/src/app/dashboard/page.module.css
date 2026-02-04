@@ -1,0 +1,97 @@
+
+/* .page * {
+    border: solid 1px;
+} */
+
+
+.page {
+    flex: 1 1 auto;
+    margin: 0px;
+    padding: 0;
+    padding-top: 5px;
+    /* background-color: rgb(238, 126, 126); */
+}
+
+.firstSection {
+    margin: 0;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.firstSection > div {
+    margin: auto;
+}
+
+.appLogo {
+    flex: 0 1 auto;
+}
+
+.searchWrapper {
+    flex: 2 1 auto;
+}
+
+.dashboardMenuWrapper {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: end;
+}
+
+
+
+
+/* For mobile version */
+
+.searchButton {
+    display: block;
+}
+
+.searchBar {
+    display: none;
+}
+
+.dashboardMenu {
+    display: block;
+}
+
+.dashboardOptions {
+    display: none;
+}
+
+
+@media (min-width: 350) {
+    .page {
+        margin: 0px 10px;
+    }
+}
+
+
+@media (min-width: 600) {
+
+    .page {
+        margin: 0px 20px;
+    }
+    
+    .searchButton {
+        display: none;
+    }
+
+    .searchBar {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+
+
+@media (min-width: 900) {
+    .dashboardMenu {
+        display: none;
+    }
+
+    .dashboardOptions {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+}

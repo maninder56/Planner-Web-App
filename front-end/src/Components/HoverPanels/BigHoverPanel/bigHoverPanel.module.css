@@ -1,0 +1,108 @@
+
+
+.wrapper {
+    background-color: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    animation: fade-in 0.2s ease-in;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.panel {
+    flex: 1 1 auto;
+    margin: 10px;
+    margin-top: 5vh;
+    padding: 20px;
+    height: max-content;
+    max-width: 600px;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px; 
+    animation: slide-in 0.1s ease-out;
+}
+
+@media (min-width: 600) {
+    .panel {
+        margin-top: 10vh;
+    }
+}
+
+.titleAndCloseButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndCloseButton > header {
+    flex: 1 1 auto;
+    text-align: center;
+    margin: auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(0, 0, 0, 0.8);
+}
+
+.closeButton {
+    width: 40px;
+    height: 40px;
+}
+
+.fadeOut {
+    animation: fade-out 0.2s ease-out forwards;
+}
+
+.slideOut {
+    animation: slide-out 0.1s ease-in forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from { 
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-10%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-10%);
+        opacity: 0;
+    }
+}

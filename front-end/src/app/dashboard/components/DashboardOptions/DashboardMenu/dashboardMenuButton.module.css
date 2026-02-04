@@ -1,0 +1,32 @@
+
+
+.wrapper {
+    margin: 5px;
+    height: 40px;
+    width: 50px;
+    position: relative;
+}
+
+/* Button */
+
+.menuButton {
+    width: inherit;
+    height: inherit;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.menuButton > img {
+    width: 35px;
+    height: 35px;
+}
+
+

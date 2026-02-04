@@ -1,0 +1,137 @@
+
+.search {
+    margin: 20px 0px;
+    border-radius: 10px;
+    display: flex;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 5%);
+}
+
+
+.search:hover {
+    background-color: rgba(0, 0, 0, 10%);
+}
+
+.search:focus-within {
+    background-color: white;
+    box-shadow: 0 0 20px -10px rgb(0, 0, 0);
+    transition: 
+        background-color 0.2s ease, 
+        box-shadow 0.2s ease;
+    outline: solid 1.5px;
+}
+
+
+.search > img {
+    height: 100%;
+    margin: auto;
+    margin-left: 5px;
+}
+
+.search > input {
+    flex: 1 1 auto;
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    padding: 5px 0px;
+}
+
+.search > input:focus {
+    outline: none;
+}
+
+
+.boards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 50px;
+}
+
+.boards > div {
+    cursor: pointer;
+    height: 100px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    box-shadow: 0 0 10px -5px black;
+    overflow: hidden;
+    transition: 
+        transform 0.1s ease-out,
+        outline 0.05s ease-out, 
+        box-shadow 0.15s ease, 
+        border 0.15s ease;
+}
+
+.boards > div:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.boards span {
+    flex: 1 1 auto;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
+    padding: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+
+/* board colours */
+
+
+.soft-pink {
+  background-color: var(--soft-pink);
+}
+
+.soft-pink:hover {
+  outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green {
+  background-color: var(--light-mint-green);
+}
+
+.light-mint-green:hover {
+  outline: solid var(--light-mint-green-outline);
+}
+
+.aqua {
+  background-color: var(--aqua);
+}
+
+.aqua:hover {
+  outline: solid var(--aqua-outline);
+}
+
+.lavender-blue {
+  background-color: var(--lavender-blue);
+}
+
+.lavender-blue:hover {
+  outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple {
+  background-color: var(--light-purple);
+}
+
+.light-purple:hover {
+  outline: solid var(--light-purple-outline);
+}
+
+.bright-pink {
+  background-color: var(--bright-pink);
+}
+
+.bright-pink:hover {
+  outline: solid var(--bright-pink-outline);
+}
+
+
