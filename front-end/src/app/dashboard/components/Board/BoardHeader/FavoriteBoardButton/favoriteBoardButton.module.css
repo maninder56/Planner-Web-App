@@ -1,0 +1,25 @@
+
+
+.wrapper {
+    --max-Size: 100px; 
+    border: solid 2px black;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    max-width: var(--max-Size);
+    max-height: var(--max-Size);
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.wrapper:hover {
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+.wrapper > svg {
+    width: inherit;
+    height: inherit;
+}
+
+
+
