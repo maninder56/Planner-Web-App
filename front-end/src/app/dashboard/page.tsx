@@ -12,6 +12,7 @@ import { ActivePanelContext } from './Hooks/ActivePanel/ActivePanelContext';
 import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButton';
 import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchBoardButton';
 import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
+import BoardHeaderBar from './components/Board/BoardHeader/boardHeaderBar';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
@@ -52,7 +53,9 @@ export default function Dashboard() {
                         </div>
                     </section>
                     <main>
-
+                        <section>
+                            <BoardHeaderBar />
+                        </section>
                     </main>
             </div>
         </ActivePanelContext.Provider>

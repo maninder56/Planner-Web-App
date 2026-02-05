@@ -1,0 +1,37 @@
+
+.wrapper {
+    flex: 1 1 auto;
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    overflow: hidden;
+    width: max-content;
+}
+
+.wrapper:hover {
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+.wrapper:focus-within {
+    background-color: white;
+    color: black;
+    outline: solid 0.5px;
+    box-shadow: 0 0 5px black;
+}
+
+
+@media (min-width: 600) {
+    .wrapper {
+        font-size: 1.4rem;
+    }
+}
+
+
+
