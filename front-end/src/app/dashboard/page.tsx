@@ -28,7 +28,7 @@ export default function Dashboard() {
                     e.stopPropagation(); 
                     setActivePanel('none'); 
                 }}>
-                    {/* log search and profile options */}
+                    {/* App logo search and profile options */}
                     <section className={styles.firstSection}>
                         <div className={styles.appLogo}>
                             <AppLogo />
@@ -54,7 +54,7 @@ export default function Dashboard() {
                     </section>
                     <main>
                         <section>
-                            <BoardHeaderBar />
+                            <BoardHeaderBar colourType='soft-pink-bar'/>
                         </section>
                     </main>
             </div>

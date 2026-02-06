@@ -1,5 +1,8 @@
 
 .wrapper {
-    background-color: var(--soft-pink-bar);
     padding: 5px;
+}
+
+.wrapper.soft-pink-bar {
+    background-color: var(--soft-pink-bar);
 }

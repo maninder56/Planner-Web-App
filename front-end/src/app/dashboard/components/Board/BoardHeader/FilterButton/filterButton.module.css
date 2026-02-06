@@ -1,0 +1,30 @@
+
+.wrapper {
+    --size: 40px; 
+    margin: 5px;
+    height: var(--size);
+    width: var(--size);
+    position: relative;
+}
+
+.mainButton {
+    width: inherit;
+    height: inherit;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mainButton svg {
+    --svgSize: calc(var(--size) - 15px);
+    width: var(--svgSize);
+    height: var(--svgSize);
+    margin: auto;
+}

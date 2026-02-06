@@ -6,7 +6,8 @@ export type panelType =
     'profileOptions' | 
     'dashboardMenuButtonOptions' | 
     'newBoardOptions' | 
-    'switchBoardOptions'; 
+    'switchBoardOptions' | 
+    'filterBoardOptions'; 
 
 export type profileColour = 'red' | 'blue' | 'green'; 
 
