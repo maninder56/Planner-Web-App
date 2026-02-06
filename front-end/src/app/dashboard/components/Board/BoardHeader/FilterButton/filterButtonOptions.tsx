@@ -84,8 +84,8 @@ export default function FilterBoardOptions() {
                     <label>Due this month</label>
                 </div>
             </div>
-            <div>
-                <Button name='Reset Filters' color='red' onClick={() => {}} />
+            <div className={styles.resetButton}>
+                <Button name='Reset Filters' color='blue' onClick={() => {}} />
             </div>
         </HoverOptionsPanel>
     ); 
