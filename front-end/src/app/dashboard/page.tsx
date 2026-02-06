@@ -13,6 +13,7 @@ import NewBoardButton from './components/DashboardOptions/NewBoard/newBoardButto
 import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchBoardButton';
 import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
 import BoardHeaderBar from './components/Board/BoardHeader/boardHeaderBar';
+import Button from '@/Components/Buttons/button';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
@@ -55,6 +56,9 @@ export default function Dashboard() {
                     <main>
                         <section>
                             <BoardHeaderBar colourType='soft-pink-bar'/>
+                        </section>
+                        <section>
+                            
                         </section>
                     </main>
             </div>

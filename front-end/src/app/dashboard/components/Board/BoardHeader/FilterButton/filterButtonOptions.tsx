@@ -4,6 +4,7 @@ import styles from './filterButtonOptions.module.css';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import { useState } from 'react';
 import Image from 'next/image';
+import Button from '@/Components/Buttons/button';
 
 export default function FilterBoardOptions() {
     const [activePanel, setActivePanel] = useActivePanel(); 
@@ -84,7 +85,7 @@ export default function FilterBoardOptions() {
                 </div>
             </div>
             <div>
-                Reset Filters button
+                <Button name='Reset Filters' color='red' onClick={() => {}} />
             </div>
         </HoverOptionsPanel>
     ); 
