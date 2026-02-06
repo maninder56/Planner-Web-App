@@ -1,6 +1,7 @@
 
 .wrapper {
     padding: 5px;
+    display: flex;
 }
 
 .wrapper.soft-pink-bar {

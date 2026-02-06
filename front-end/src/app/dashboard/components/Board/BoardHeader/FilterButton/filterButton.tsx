@@ -1,6 +1,7 @@
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './filterButton.module.css'; 
+import FilterBoardOptions from './filterButtonOptions';
 
 export default function FilterButton() {
     const [activePanel, setActivePanel] = useActivePanel(); 
@@ -21,7 +22,7 @@ export default function FilterButton() {
             </div>
             {
                 activePanel === 'filterBoardOptions' ?
-                <span>sdfs</span>
+                <FilterBoardOptions />
                 : null
             }
         </div>
