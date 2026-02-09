@@ -4,6 +4,31 @@
     display: flex;
 }
 
-.wrapper.soft-pink-bar {
+
+.wrapper.soft-pink{
     background-color: var(--soft-pink-bar);
+} 
+
+.wrapper.light-mint-green {
+    background-color: var(--light-mint-green);
 }
+
+.wrapper.aqua {
+    background-color: var(--aqua);
+}
+
+
+.wrapper.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.wrapper.light-purple {
+    background-color: var(--light-purple);
+}
+
+
+.wrapper.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+

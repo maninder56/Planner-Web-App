@@ -4,14 +4,15 @@ import styles from './boardHeaderBar.module.css';
 import BoardNameInput from './BoardNameInput/boardNameInput';
 import FavoriteBoardButton from './FavoriteBoardButton/favoriteBoardButton';
 import FilterButton from './FilterButton/filterButton';
+import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 
 export default function BoardHeaderBar({
-    colourType,
+    boardColour, 
 }: {
-    colourType: DashBoardHeaderColour; 
+    boardColour: BoardColour; 
 }) {
     return (
-        <div className={[styles.wrapper, styles[colourType]].join(' ')}>
+        <div className={[styles.wrapper, styles[boardColour]].join(' ')}>
             <div>
                 <BoardNameInput initialName='My First board' />
             </div>

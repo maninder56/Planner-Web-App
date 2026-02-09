@@ -14,9 +14,15 @@ import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchB
 import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
 import BoardHeaderBar from './components/Board/BoardHeader/boardHeaderBar';
 import Button from '@/Components/Buttons/button';
+import { Board } from './Types/boardTypes';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
+
+    // Main board object for managing current board
+    const currentBoard: Board = {
+        boardColour: 'soft-pink'
+    }
     
     const tempUser: { name: string, email: string, colour: profileColour} = {
         name: 'Julius Caesar', email: 'caesa23r@gmail.com', colour: 'red'
@@ -55,7 +61,7 @@ export default function Dashboard() {
                     </section>
                     <main>
                         <section>
-                            <BoardHeaderBar colourType='soft-pink-bar'/>
+                            <BoardHeaderBar boardColour={currentBoard.boardColour} />
                         </section>
                         <section>
                             

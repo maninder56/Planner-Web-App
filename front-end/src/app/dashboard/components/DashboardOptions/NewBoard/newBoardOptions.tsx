@@ -6,12 +6,12 @@ import CloseButton from '@/Components/Buttons/closeButton';
 import { FormEvent, useActionState, useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
+import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 
 export default function NewBoardOptions() {
     const [activePanel, setActivePanel] = useActivePanel(); 
 
-    // temporary colour array, this needs to ba a argument
-    const colours = ['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink' ];
+    const colours: BoardColour[] = ['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink' ];
 
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 
