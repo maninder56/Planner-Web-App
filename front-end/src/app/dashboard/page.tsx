@@ -21,8 +21,99 @@ export default function Dashboard() {
 
     // Main board object for managing current board
     const currentBoard: Board = {
-        boardColour: 'soft-pink'
-    }
+        id: 1,
+        title: "Product Development Q1",
+        boardColour: "soft-pink",
+        boardLists: [
+        {
+            id: 101,
+            title: "Backlog",
+            listColour: "not completed yet",
+            position: 0,
+            cardList: [
+            {
+                id: 1001,
+                title: "User authentication system",
+                Description: "Implement OAuth 2.0 login with Google and GitHub providers",
+                done: false,
+                priority: "High",
+                dueDate: "2026-03-15",
+                position: 0
+            },
+            {
+                id: 1002,
+                title: "Design new landing page",
+                Description: "Create mockups and prototypes for homepage redesign",
+                done: false,
+                priority: "Medium",
+                dueDate: "2026-03-20",
+                position: 1
+            },
+            {
+                id: 1003,
+                title: "Fix mobile responsiveness",
+                Description: "Address layout issues on tablets and mobile devices",
+                done: false,
+                priority: "Low",
+                dueDate: "2026-03-25",
+                position: 2
+            }
+            ]
+        },
+        {
+            id: 102,
+            title: "In Progress",
+            listColour: "not completed yet",
+            position: 1,
+            cardList: [
+            {
+                id: 1004,
+                title: "API documentation",
+                Description: "Complete API endpoints documentation using Swagger",
+                done: false,
+                priority: "High",
+                dueDate: "2026-02-18",
+                position: 0
+            },
+            {
+                id: 1005,
+                title: "Database optimization",
+                Description: "Add indexes and optimize slow queries",
+                done: false,
+                priority: "Medium",
+                dueDate: "2026-02-22",
+                position: 1
+            }
+            ]
+        },
+        {
+            id: 103,
+            title: "Done",
+            listColour: "not completed yet",
+            position: 2,
+            cardList: [
+            {
+                id: 1006,
+                title: "Setup CI/CD pipeline",
+                Description: "Configure GitHub Actions for automated testing and deployment",
+                done: true,
+                priority: "High",
+                dueDate: "2026-02-10",
+                position: 0
+            },
+            {
+                id: 1007,
+                title: "Create project roadmap",
+                Description: "Define milestones and deliverables for Q1",
+                done: true,
+                priority: "Medium",
+                dueDate: "2026-02-05",
+                position: 1
+            }
+            ]
+        }
+        ]
+    }; 
     
     const tempUser: { name: string, email: string, colour: profileColour} = {
         name: 'Julius Caesar', email: 'caesa23r@gmail.com', colour: 'red'

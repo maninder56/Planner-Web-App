@@ -192,3 +192,48 @@ body {
 }
 
 
+
+
+
+
+
+/* temporary styles for practice */
+
+.dndContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.droppable {
+  border: solid 1px black;
+  border-radius: 10px;
+  background-color: rgb(232, 232, 232);
+  width: 100px;
+  height: 100px;
+  margin: 100px;
+  display: flex;
+}
+
+.droppable.overDroppable {
+  background-color: lightcoral;
+}
+
+.draggable {
+  width: 80px;
+  height: 50px;
+  margin: auto;
+  background-color: #21a394;
+  border: solid 1px black;
+  border-radius: 10px;
+  display: flex;
+}
+
+.draggable:hover{
+  cursor: grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+

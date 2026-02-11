@@ -22,6 +22,12 @@ export default function BoardHeaderBar({
             <div>
                 <FilterButton />
             </div>
+            <div>
+                <button>Share button</button>
+            </div>
+            <div>
+                <button>...</button>
+            </div>
         </div>
     ); 
 }
