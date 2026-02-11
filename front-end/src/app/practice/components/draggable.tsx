@@ -16,7 +16,9 @@ export default function Draggable({
         <div className='draggable' ref={setNodeRef} style={ transform ? {
             transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         } : undefined} {...listeners} {...attributes}>
-            {children}
+            <div>
+                {children}
+            </div>
         </div>
     ); 
 }
