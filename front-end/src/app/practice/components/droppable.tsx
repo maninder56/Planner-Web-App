@@ -1,15 +1,15 @@
-import { useDroppable } from "@dnd-kit/core";
+import { UniqueIdentifier, useDroppable } from "@dnd-kit/core";
 import { useRef } from "react";
 
 export default function Droppable({
-    position, 
+    id, 
     children,
 }: {
-    position: number; 
+    id: UniqueIdentifier; 
     children?: React.ReactNode; 
 }) {
     const {isOver, setNodeRef} = useDroppable({
-        id: position, 
+        id: id, 
     }); 
 
     return (

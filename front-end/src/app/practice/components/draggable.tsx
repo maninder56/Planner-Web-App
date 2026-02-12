@@ -1,11 +1,11 @@
-import { useDraggable } from "@dnd-kit/core";
+import { UniqueIdentifier, useDraggable } from "@dnd-kit/core";
 
 
 export default function Draggable({
     id,
     children, 
 }: {
-    id: number
+    id: UniqueIdentifier
     children?: React.ReactNode; 
 }) {
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
@@ -15,7 +15,7 @@ export default function Draggable({
     return (
         <div className='draggable' ref={setNodeRef} style={ transform ? {
             transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        } : undefined} {...listeners} {...attributes}>
+        } : undefined } {...listeners} {...attributes}>
             <div>
                 {children}
             </div>

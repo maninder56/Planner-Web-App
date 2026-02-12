@@ -199,30 +199,49 @@ body {
 
 /* temporary styles for practice */
 
-.dndContainer {
+.dndWrapper {
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-.droppable {
+.dndContainer {
+  /* flex: 1 1 auto; */
   border: solid 1px black;
   border-radius: 10px;
-  background-color: rgb(232, 232, 232);
-  width: 100px;
-  height: 100px;
-  margin: 100px;
+  min-width: 100px;
+  min-height: 120px;
+  background-color: rgb(192, 192, 192);
   display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+
+
+.droppable {
+  flex: 1 1 auto;
+  border: solid 1px black;
+  border-radius: 10px;
+  background-color: rgb(241, 241, 241);
+  min-width: 100px;
+  min-height: 50px;
+  display: flex;
+  padding: 5px;
+  margin: 10px;
 }
 
 .droppable.overDroppable {
-  background-color: lightcoral;
+  background-color: rgb(223, 178, 178);
 }
 
 .draggable {
-  width: 80px;
-  height: 50px;
   margin: auto;
-  background-color: #21a394;
+  min-width: inherit;
+  min-height: inherit;
+  background-color: #7fdf76;
   border: solid 1px black;
   border-radius: 10px;
   display: flex;
@@ -230,9 +249,6 @@ body {
   align-items: center;
 }
 
-.draggable > div {
-
-}
 
 .draggable:hover{
   cursor: grab;
