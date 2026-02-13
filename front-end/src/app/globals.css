@@ -230,6 +230,7 @@ body {
   min-width: 100px;
   min-height: 50px;
   display: flex;
+  flex-direction: column;
   padding: 5px;
   margin: 10px;
 }
@@ -260,6 +261,7 @@ body {
   min-width: 100px;
   min-height: 120px;
   background-color: rgb(192, 192, 192);
+  display: flex;
 }
 
 .draggable:hover{

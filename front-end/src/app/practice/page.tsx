@@ -9,8 +9,10 @@ import SortableItem from './components/sortableItem';
 
 export default function Practice() {
 
-    const [listA, setListA] = useState([1, 2, 3]); 
-    const [listB, setListB] = useState([4, 5, 6]); 
+    const [dndObject, setDndObject] = useState({
+        A: [1, 2, 3],
+        B: [4, 5, 6], 
+    })
 
     const sensors = useSensors(
         useSensor(PointerSensor), 
@@ -24,67 +26,52 @@ export default function Practice() {
 
         if (active.id !== over?.id) {
 
-            const activeItemInListA = typeof(listA.find(i => i === active.id)) !== 'undefined'; 
-            const overItemInListA = typeof(listA.find(i => i === over?.id)) !== 'undefined'; 
+            const activeItemInListA = dndObject.A.includes(active.id as number); 
+            const overItemInListA = dndObject.A.includes(over?.id as number); 
 
-            const activeItemInListB = typeof(listB.find(i => i === active.id)) !== 'undefined'; 
-            const overItemInListB = typeof(listB.find(i => i === over?.id)) !== 'undefined'; 
+            const activeItemInListB = dndObject.B.includes(active.id as number); 
+            const overItemInListB = dndObject.B.includes(over?.id as number); 
         
-            const listBEmpty = listB.length === 0; 
-            const listAEmpty = listA.length === 0; 
 
             // if they are in same container
             if (activeItemInListA && overItemInListA) { // if they are in same comtainer for A
-                setListA((listA) => {
-                    const newIndex = listA.indexOf(over?.id as number); 
-                    const oldIndex = listA.indexOf(active.id as number); 
 
-                    return arrayMove(listA, oldIndex, newIndex); 
-                })
+                const listA = dndObject.A; 
+                const newIndex = listA.indexOf(over?.id as number); 
+                const oldIndex = listA.indexOf(active.id as number); 
+                const newList = arrayMove(listA, oldIndex, newIndex); 
+
+                setDndObject({...dndObject, A: newList }); 
+
             } else if (activeItemInListB && overItemInListB) { // if they are in same comtainer for B
-                setListB((listB) => {
-                    const newIndex = listB.indexOf(over?.id as number); 
-                    const oldIndex = listB.indexOf(active.id as number); 
 
-                    return arrayMove(listB, oldIndex, newIndex); 
-                })
-            } else if (overItemInListA && activeItemInListB && active.id !== 0) { // if element moves from B -> A
-                const newListB = listB.filter(i => i !== active.id)
+                const listB = dndObject.B; 
+                const newIndex = listB.indexOf(over?.id as number); 
+                const oldIndex = listB.indexOf(active.id as number); 
+                const newList = arrayMove(listB, oldIndex, newIndex); 
 
-                if (newListB.length === 0) {
-                    setListB([0]); 
-                } else {
-                    setListB(newListB); 
-                }
+                setDndObject({...dndObject, B: newList }); 
 
-                const newListA = listA.filter(i => i !== 0); 
+            } else if ((overItemInListA || over?.id === 10) && activeItemInListB) { // if element moves from B -> A
+                const newListB = dndObject.B.filter(i => i !== active.id)
 
-                setListA(() => {
-                    const list = [...newListA, active.id]; 
-                    const newIndex = newListA.indexOf(over?.id as number); 
-                    const oldIndex = newListA.length; 
+                const list = [...dndObject.A, active.id]; 
+                const newIndex = list.indexOf(over?.id as number); 
+                const oldIndex = list.indexOf(active.id as number); 
+                const newListA = arrayMove(list, oldIndex, newIndex) as number[]; 
+                
+                setDndObject({A: newListA, B: newListB}); 
 
-                    return arrayMove(list, oldIndex, newIndex) as number[]; 
-                })
-            } else if (overItemInListB && activeItemInListA && active.id !== 0) { // if element moves from A -> B
+            } else if ((overItemInListB || over?.id === 11) && activeItemInListA) { // if element moves from A -> B
 
-                const newListA = listA.filter(i => i !== active.id); 
+                const newListA = dndObject.A.filter(i => i !== active.id)
 
-                if (newListA.length === 0) {
-                    setListA([0]); 
-                } else {
-                    setListA(newListA); 
-                }
-
-                const newListB = listB.filter(i => i !== 0); 
-
-                setListB(() => {
-                    const list = [...newListB, active.id]; 
-                    const newIndex = newListB.indexOf(over?.id as number); 
-                    const oldIndex = newListB.length; 
-
-                    return arrayMove(list, oldIndex, newIndex) as number[]; 
-                })
+                const list = [...dndObject.B, active.id]; 
+                const newIndex = list.indexOf(over?.id as number); 
+                const oldIndex = list.indexOf(active.id as number); 
+                const newListB = arrayMove(list, oldIndex, newIndex) as number[]; 
+                
+                setDndObject({A: newListA, B: newListB}); 
             } 
         }
     }
@@ -94,7 +81,7 @@ export default function Practice() {
 
 
         console.log(`A: ${active.id}, O: ${over?.id}`); 
-        console.log(`ListA: ${listA}, ListB: ${listB}`); 
+        // console.log(`dndObject: ${dndObject}`); 
     }
 
     return (
@@ -108,26 +95,30 @@ export default function Practice() {
                 >
                     <div className='listContainer'>
                         <SortableContext
-                            items={listA}
+                            items={dndObject.A}
                             strategy={verticalListSortingStrategy}
                         >
-                            {listA.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
+                            <Droppable id={10}>
+                                {dndObject.A.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
+                            </Droppable>
                         </SortableContext>
                     </div>
 
                     <div className='listContainer'>
                         <SortableContext
-                            items={listB}
+                            items={dndObject.B}
                             strategy={verticalListSortingStrategy}
                         >
-                            {listB.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
+                            <Droppable id={11}>
+                                {dndObject.B.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
+                            </Droppable>
                         </SortableContext>
                     </div>
                 </DndContext>       
             </div>
             <div>
-                <div>List A{JSON.stringify(listA)}</div>
-                <div>List B{JSON.stringify(listB)}</div>
+                <div>List A{JSON.stringify(dndObject.A)}</div>
+                <div>List B{JSON.stringify(dndObject.B)}</div>
             </div>
         </main>
     ); 
