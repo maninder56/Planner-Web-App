@@ -207,19 +207,58 @@ body {
   align-items: center;
 }
 
-.dndContainer {
+.outerColumnContainer {
   /* flex: 1 1 auto; */
-  /* border: solid 1px black;
-  border-radius: 10px; */
+
   min-width: 500px;
   min-height: 120px;
-  /* background-color: rgb(192, 192, 192); */
+
+  background-color: rgb(188, 188, 188);
+  /* border: solid 1px black; */
+  border-radius: 10px;
+
   display: flex;
-  justify-content: space-between;
-  /* flex-direction: column; */
+  justify-content: center;
+
   padding: 10px;
 }
 
+.outerColumn {
+  flex: 1 1 auto;
+  min-width: 150px;
+  min-height: 200px;
+  background-color: rgb(243, 243, 243);
+  border-radius: 10px;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.innerListContainer {
+  flex: 1 1 auto;
+  background-color: rgb(105, 105, 105);
+  margin: 5px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sortableItem {
+  min-height: 40px;
+  margin: 5px;
+  background-color: rgb(237, 237, 237);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outerColumn:hover {
+  cursor: grab;
+}
+.outerColumn:active {
+  cursor: grabbing;
+}
 
 
 .droppable {
@@ -239,7 +278,7 @@ body {
   background-color: rgb(223, 178, 178);
 }
 
-.sortableItem, 
+
 .draggable {
   margin: 5px;
   min-width: inherit;

@@ -4,15 +4,11 @@ import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor,
 import { act, useState } from 'react';
 import Droppable from './components/droppable';
 import Draggable from './components/draggable';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableItem from './components/sortableItem';
+import OuterColumn from './components/outerColumn';
 
 export default function Practice() {
-
-    const [dndObject, setDndObject] = useState({
-        A: [1, 2, 3],
-        B: [4, 5, 6], 
-    })
 
     const sensors = useSensors(
         useSensor(PointerSensor), 
@@ -21,59 +17,33 @@ export default function Practice() {
         })
     ); 
 
+    const [dndArray, setDndArray] = useState<{
+        id: UniqueIdentifier, 
+        data: {
+            id: UniqueIdentifier,
+        }[]
+    }[]>([
+        { id: 'A', data: [{ id: 'A1'}, { id: 'A2' }]}, 
+        { id: 'B', data: [{ id: 'B1'}, { id: 'B2' }]}, 
+    ]); 
+
+
     function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event; 
 
+
         if (active.id !== over?.id) {
+            setDndArray(array => {
+                const oldIndex = dndArray.findIndex(i => i.id === active.id); 
+                const newIndex = dndArray.findIndex(i => i.id === over?.id); 
 
-            const activeItemInListA = dndObject.A.includes(active.id as number); 
-            const overItemInListA = dndObject.A.includes(over?.id as number); 
+                console.log(`oldIndex: ${oldIndex}, newIndex: ${newIndex}`); 
 
-            const activeItemInListB = dndObject.B.includes(active.id as number); 
-            const overItemInListB = dndObject.B.includes(over?.id as number); 
-        
-
-            // if they are in same container
-            if (activeItemInListA && overItemInListA) { // if they are in same comtainer for A
-
-                const listA = dndObject.A; 
-                const newIndex = listA.indexOf(over?.id as number); 
-                const oldIndex = listA.indexOf(active.id as number); 
-                const newList = arrayMove(listA, oldIndex, newIndex); 
-
-                setDndObject({...dndObject, A: newList }); 
-
-            } else if (activeItemInListB && overItemInListB) { // if they are in same comtainer for B
-
-                const listB = dndObject.B; 
-                const newIndex = listB.indexOf(over?.id as number); 
-                const oldIndex = listB.indexOf(active.id as number); 
-                const newList = arrayMove(listB, oldIndex, newIndex); 
-
-                setDndObject({...dndObject, B: newList }); 
-
-            } else if ((overItemInListA || over?.id === 10) && activeItemInListB) { // if element moves from B -> A
-                const newListB = dndObject.B.filter(i => i !== active.id)
-
-                const list = [...dndObject.A, active.id]; 
-                const newIndex = list.indexOf(over?.id as number); 
-                const oldIndex = list.indexOf(active.id as number); 
-                const newListA = arrayMove(list, oldIndex, newIndex) as number[]; 
-                
-                setDndObject({A: newListA, B: newListB}); 
-
-            } else if ((overItemInListB || over?.id === 11) && activeItemInListA) { // if element moves from A -> B
-
-                const newListA = dndObject.A.filter(i => i !== active.id)
-
-                const list = [...dndObject.B, active.id]; 
-                const newIndex = list.indexOf(over?.id as number); 
-                const oldIndex = list.indexOf(active.id as number); 
-                const newListB = arrayMove(list, oldIndex, newIndex) as number[]; 
-                
-                setDndObject({A: newListA, B: newListB}); 
-            } 
+                return arrayMove(array, oldIndex, newIndex); 
+            })
         }
+
+        console.log(`A: ${active.id}, O: ${over?.id}`); 
     }
 
     function handleDragOver(event: DragEndEvent) {
@@ -86,40 +56,44 @@ export default function Practice() {
 
     return (
         <main className='dndWrapper'>
-            <div className='dndContainer'>
+            <div className='outerColumnContainer'>
                 <DndContext 
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
-                    onDragOver={handleDragOver}
+                    // onDragOver={handleDragOver}
                 >
-                    <div className='listContainer'>
-                        <SortableContext
-                            items={dndObject.A}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <Droppable id={10}>
-                                {dndObject.A.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
-                            </Droppable>
-                        </SortableContext>
-                    </div>
-
-                    <div className='listContainer'>
-                        <SortableContext
-                            items={dndObject.B}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <Droppable id={11}>
-                                {dndObject.B.map(id => <SortableItem key={id} id={id}><span>{id}</span></SortableItem>)}
-                            </Droppable>
-                        </SortableContext>
-                    </div>
+                    <SortableContext
+                        items={dndArray}
+                        strategy={horizontalListSortingStrategy}
+                    >
+                        {
+                            dndArray.map(i => (
+                                <OuterColumn id={i.id} key={i.id}>
+                                    <div className='innerListContainer' key={i.id}>
+                                        <SortableContext
+                                            items={i.data}
+                                            strategy={verticalListSortingStrategy}
+                                        >
+                                            {
+                                                i.data.map(d => (
+                                                    <SortableItem id={d.id} key={d.id}>
+                                                        <span>{d.id}</span>
+                                                    </SortableItem>
+                                                ))
+                                            }
+                                        </SortableContext>
+                                    </div>
+                                </OuterColumn>
+                            ))
+                        }
+                    </SortableContext>
                 </DndContext>       
             </div>
-            <div>
+            {/* <div>
                 <div>List A{JSON.stringify(dndObject.A)}</div>
                 <div>List B{JSON.stringify(dndObject.B)}</div>
-            </div>
+            </div> */}
         </main>
     ); 
-}
+} 
