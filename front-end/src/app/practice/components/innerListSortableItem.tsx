@@ -10,7 +10,7 @@ export default function InnerListSortableItem({
 }: {
     id: UniqueIdentifier; 
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: id}); 
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: id }); 
 
     return (
         <div className='innerListSortableItem' ref={setNodeRef} {...attributes} {...listeners} style={{

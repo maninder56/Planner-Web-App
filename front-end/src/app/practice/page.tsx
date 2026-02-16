@@ -28,7 +28,7 @@ export default function Practice() {
     ); 
 
     const [dndArray, setDndArray] = useState<DndOuterList[]>([
-        { id: 'A', name: 'List A', data: [{ id: 'A1'}, { id: 'A2' }, { id: 'A3' }, { id: 'A4' }]}, 
+        { id: 'A', name: 'List A', data: [{ id: 'A1'}, { id: 'A2' }]}, 
         { id: 'B', name: 'List B', data: [{ id: 'B1'}, { id: 'B2' }]}, 
     ]); 
 
@@ -66,7 +66,7 @@ export default function Practice() {
         function findInnerChildIndex(id: UniqueIdentifier, parentId: UniqueIdentifier) {
             return newArray.find(l => l.id === parentId)?.data.findIndex(i => i.id === id); 
         }
-        
+
 
         const {activeParentId, overParentId} = findParentsOfList(active.id, over.id); 
 
@@ -104,6 +104,12 @@ export default function Practice() {
             const overParentIndex = newArray.findIndex(l => l.id === overParentId); 
 
             // remove the child from parent 
+            const tempChildData = newArray[activeParentIndex].data.find(i => i.id === active.id); 
+
+            if (tempChildData === undefined) {
+                return; 
+            }
+
             newArray[activeParentIndex].data = newArray[activeParentIndex].data.filter(i => i.id !== active.id); 
 
             // Add the child to new parent
@@ -114,7 +120,9 @@ export default function Practice() {
             }
 
             const newChildData = arrayMove(childData, oldIndex, newIndex); 
+            newChildData[newIndex] = tempChildData; 
             newArray[overParentIndex].data = newChildData; 
+            console.log(newChildData); 
             setDndArray(newArray); 
             return; 
         }
