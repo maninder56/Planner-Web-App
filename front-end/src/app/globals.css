@@ -199,116 +199,60 @@ body {
 
 /* temporary styles for practice */
 
+.dndWrapper * {
+  border: solid 1px black;
+  margin: 20px;
+}
+
 .dndWrapper {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.outerColumnContainer {
-  /* flex: 1 1 auto; */
 
-  min-width: 500px;
-  min-height: 120px;
-
-  background-color: rgb(188, 188, 188);
-  /* border: solid 1px black; */
-  border-radius: 10px;
-
-  display: flex;
-  justify-content: center;
-
-  padding: 10px;
-}
-
-.outerColumn {
+.dndContext {
   flex: 1 1 auto;
-  min-width: 150px;
-  min-height: 200px;
-  background-color: rgb(243, 243, 243);
-  border-radius: 10px;
-  margin: 5px;
+  /* margin-top: 10vh; */
   display: flex;
-  justify-content: center;
 }
 
-.innerListContainer {
+.outerListSortableContext {
   flex: 1 1 auto;
-  background-color: rgb(105, 105, 105);
-  margin: 5px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-.sortableItem {
-  min-height: 40px;
-  margin: 5px;
-  background-color: rgb(237, 237, 237);
-  border-radius: 10px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 }
 
-.outerColumn:hover {
+.outerListSortableItem {
+  flex: 1 1 auto;
+  margin-top: 10vh;
+  max-width: 200px;
+  border-radius: 10px;
+  padding-top: 50px;
+}
+
+.outerListSortableItem:hover {
   cursor: grab;
 }
-.outerColumn:active {
+
+.outerListSortableItem:active {
   cursor: grabbing;
 }
 
 
-.droppable {
-  flex: 1 1 auto;
-  border: solid 1px black;
-  border-radius: 10px;
-  background-color: rgb(241, 241, 241);
+.innerListSortableContext {
+  background-color: rgb(177, 150, 204);
+}
+
+.innerListSortableItem {
   min-width: 100px;
   min-height: 50px;
   display: flex;
-  flex-direction: column;
-  padding: 5px;
-  margin: 10px;
-}
-
-.droppable.overDroppable {
-  background-color: rgb(223, 178, 178);
-}
-
-
-.draggable {
-  margin: 5px;
-  min-width: inherit;
-  min-height: inherit;
-  background-color: #7fdf76;
-  border: solid 1px black;
-  border-radius: 10px;
-  display: flex;
   justify-content: center;
-  align-items: center;
-}
-
-
-.listContainer {
-  flex: 1 1 auto;
-  margin: 10px;
-  border: solid 1px black;
   border-radius: 10px;
-  min-width: 100px;
-  min-height: 120px;
-  background-color: rgb(192, 192, 192);
-  display: flex;
 }
 
-.draggable:hover{
-  cursor: grab;
-}
 
-.draggable:active {
-  cursor: grabbing;
-}
 
 
