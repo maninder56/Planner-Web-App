@@ -44,14 +44,6 @@ export default function Practice() {
         }
 
         const newArray = [...dndArray]; 
-        
-        const outerOldIndex = dndArray.findIndex(i => i.id === active.id); 
-        const outerNewIndex = dndArray.findIndex(i => i.id === over.id); 
-
-        if (outerOldIndex !== -1 && outerNewIndex !== -1) { // check if outer list has been changed
-            setDndArray(array => arrayMove(array, outerOldIndex, outerNewIndex)); 
-            return; 
-        }
 
         function findParentsOfList(activeId: UniqueIdentifier, overId: UniqueIdentifier) {
             const activeParentId = findParentId(activeId); 
@@ -67,14 +59,41 @@ export default function Practice() {
             return newArray.find(l => l.id === parentId)?.data.findIndex(i => i.id === id); 
         }
 
+        
+        const outerOldIndex = dndArray.findIndex(i => i.id === active.id); 
+        const outerNewIndex = dndArray.findIndex(i => i.id === over.id); 
+
+
+        if (outerOldIndex !== -1 && outerNewIndex !== -1) { // check if outer list has been changed
+            setDndArray(array => arrayMove(array, outerOldIndex, outerNewIndex)); 
+            return; 
+        } 
 
         const {activeParentId, overParentId} = findParentsOfList(active.id, over.id); 
 
         if (activeParentId === undefined || overParentId === undefined) {
-            return; 
-        }
+            // if outer list is empty
+            if (activeParentId !== undefined && overParentId === undefined && outerNewIndex !== -1) {
+                // remove from inner list
+                const activeParentIndex = newArray.findIndex(l => l.id === activeParentId); 
+                const tempChildData = newArray[activeParentIndex].data.find(i => i.id === active.id); 
 
-        if (activeParentId === overParentId) { // check if parents of inner list are same
+                if (tempChildData === undefined) {
+                    return; 
+                }
+                newArray[activeParentIndex].data = newArray[activeParentIndex].data.filter(i => i.id !== active.id); 
+
+                // add item to list
+                newArray[outerNewIndex].data = arrayMove(newArray[outerNewIndex].data, 0, newArray[outerNewIndex].data.length); 
+                newArray[outerNewIndex].data[0] = tempChildData; 
+
+                setDndArray(newArray); 
+                return; 
+            }
+
+
+            return; 
+        } else if (activeParentId === overParentId) { // check if parents of inner list are same
             const oldIndex = findInnerChildIndex(active.id, activeParentId); 
             const newIndex = findInnerChildIndex(over.id, overParentId); 
 
@@ -93,7 +112,7 @@ export default function Practice() {
             newArray[parentIndex].data = newChildData; 
             setDndArray(newArray); 
             return; 
-        } else { // if parents are not equal
+        } else if (activeParentId !== overParentId) { // if parents are not equal
             const childData = newArray.find(i => i.id === overParentId)?.data; 
 
             if (childData === undefined) {
