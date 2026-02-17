@@ -6,6 +6,7 @@ import FavoriteBoardButton from './FavoriteBoardButton/favoriteBoardButton';
 import FilterButton from './FilterButton/filterButton';
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import ShareButton from './ShareButton/shareButton';
+import BoardMenu from './BoardMenu/boardMenu';
 
 export default function BoardHeaderBar({
     boardColour, 
@@ -27,7 +28,7 @@ export default function BoardHeaderBar({
                 <ShareButton />
             </div>
             <div>
-                <button>...</button>
+                <BoardMenu />
             </div>
         </div>
     ); 
