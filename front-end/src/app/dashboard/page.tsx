@@ -1,6 +1,6 @@
 'use client'
 
-import { panelType, profileColour } from '@/Types/UIState';
+import { panelType, profileColour } from '@/app/dashboard/Types/UIState';
 import { useState } from 'react';
 import SearchBar from './components/Search/SearchBar/searchBar';
 import DashboardMenuButton from './components/DashboardOptions/DashboardMenu/dashboardMenuButton';

@@ -1,6 +1,6 @@
 'use client'
 
-import {  panelType } from '@/Types/UIState';
+import {  panelType } from '@/app/dashboard/Types/UIState';
 import styles from './newBoardOptions.module.css'; 
 import CloseButton from '@/Components/Buttons/closeButton';
 import { FormEvent, useActionState, useState } from 'react';

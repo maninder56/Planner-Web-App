@@ -3,7 +3,7 @@
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './searchBar.module.css'; 
-import { panelType } from '@/Types/UIState';
+import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
 

@@ -1,19 +1,25 @@
 
+/* .wrapper * {
+    border: solid 1px black;
+} */
+
 .wrapper {
-    --size: 40px; 
     margin: 5px;
-    height: var(--size);
-    width: var(--size);
+    height: 40px;  
+    width: 100px;  
     position: relative;
 }
 
 .mainButton {
     width: inherit;
     height: inherit;
+    
     border-radius: 10px;
-    cursor: pointer;
+    border: none;
 
-    /* background-color: rgba(0, 0, 0, 0.1); */
+    cursor: pointer;
+    
+    /* background-color: rgba(0, 0, 0, 0.1);  */
     background-color: transparent;
 
     display: flex;
@@ -25,9 +31,17 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+.mainButton header {
+    margin: auto;
+    
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: white;
+}
+
 .mainButton svg {
-    --svgSize: calc(var(--size) - 15px);
+    --svgSize: 30px;
     width: var(--svgSize);
     height: var(--svgSize);
-    margin: auto;
+    margin: auto 0;
 }

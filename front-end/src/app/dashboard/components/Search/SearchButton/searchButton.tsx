@@ -1,4 +1,4 @@
-import { panelType } from '@/Types/UIState';
+import { panelType } from '@/app/dashboard/Types/UIState';
 import { useEffect, useRef, useState } from 'react';
 
 import styles from './searchButton.module.css'; 

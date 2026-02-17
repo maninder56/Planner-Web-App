@@ -12,7 +12,9 @@ export default function FilterButton() {
                 onClick={e => {
                     e.stopPropagation(); 
                     setActivePanel(activePanel === 'filterBoardOptions' ? 'none' : 'filterBoardOptions'); 
-                }}>
+                }}
+            >
+                {/* filter logo */}
                 <svg width="100px" height="100px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 3H16V1H0V3Z" fill="#ffffff"/>
                     <path d="M2 7H14V5H2V7Z" fill="#ffffff"/>

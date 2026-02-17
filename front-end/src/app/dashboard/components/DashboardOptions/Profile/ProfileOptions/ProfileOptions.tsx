@@ -1,6 +1,6 @@
 'use client'
 
-import { panelType, profileColour } from '@/Types/UIState';
+import { panelType, profileColour } from '@/app/dashboard/Types/UIState';
 import IconButton from '@/Components/Buttons/iconButton';
 
 import styles from './ProfileOptions.module.css'; 
