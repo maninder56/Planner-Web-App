@@ -28,7 +28,7 @@ export default function BoardHeaderBar({
                 <ShareButton />
             </div>
             <div>
-                <BoardMenu />
+                <BoardMenu initialBoardColour={boardColour} />
             </div>
         </div>
     ); 

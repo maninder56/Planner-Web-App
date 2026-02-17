@@ -2,8 +2,15 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './boardMenu.module.css'; 
 import BoardMenuOptions from './boardMenuOptions';
+import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import FilterBoardOptions from '../FilterButton/filterButtonOptions';
+import ShareButtonOptions from '../ShareButton/shareButtonOptions';
 
-export default function BoardMenu() {
+export default function BoardMenu({
+    initialBoardColour
+}: {
+    initialBoardColour: BoardColour; 
+}) {
     const [activePanel, setActivePanel] = useActivePanel(); 
 
     return (
@@ -26,7 +33,22 @@ export default function BoardMenu() {
             </button>
             {
                 activePanel === 'boardMenuOptions' ? 
-                <BoardMenuOptions />
+                    <BoardMenuOptions initialBoardColour={initialBoardColour} initialFavoriteBoard={false} />
+                : null
+            }
+            {
+                activePanel === 'manageMembersOptions' ? 
+                    <div>Manage members options</div>
+                : null
+            }
+            {
+                activePanel === 'filterBoardOptions' ? 
+                    <FilterBoardOptions />
+                : null
+            }
+            {
+                activePanel === 'shareBoardOptions' ? 
+                    <ShareButtonOptions />
                 : null
             }
         </div>

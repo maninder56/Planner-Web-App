@@ -7,11 +7,12 @@ import { FormEvent, useActionState, useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 
 export default function NewBoardOptions() {
     const [activePanel, setActivePanel] = useActivePanel(); 
 
-    const colours: BoardColour[] = ['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink' ];
+    const colours: BoardColour[] = BoardColoursList; 
 
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 
