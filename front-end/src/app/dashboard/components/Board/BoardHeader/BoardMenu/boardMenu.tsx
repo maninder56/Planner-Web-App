@@ -5,6 +5,7 @@ import BoardMenuOptions from './boardMenuOptions';
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import FilterBoardOptions from '../FilterButton/filterButtonOptions';
 import ShareButtonOptions from '../ShareButton/shareButtonOptions';
+import ManageBoardMembersOptions from '../ManageBoardMembers/manageBoardMembersOptions';
 
 export default function BoardMenu({
     initialBoardColour
@@ -36,12 +37,12 @@ export default function BoardMenu({
                     <BoardMenuOptions initialBoardColour={initialBoardColour} initialFavoriteBoard={false} />
                 : null
             }
+            {
+                activePanel === 'manageMembersOptions' ? 
+                    <ManageBoardMembersOptions />
+                : null
+            }
             <div className={styles.smallScreenOptions}>
-                {
-                    activePanel === 'manageMembersOptions' ? 
-                        <div>Manage members options</div>
-                    : null
-                }
                 {
                     activePanel === 'filterBoardOptions' ? 
                         <FilterBoardOptions />

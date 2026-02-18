@@ -22,7 +22,6 @@ export default function ShareButton() {
                         <path d="m3.5 4.5h-1c-1.1045695 0-2 .8954305-2 2v7c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2v-7c0-1.1045695-.8954305-2-2-2h-1"/>
                     </g>
                 </svg>
-                <header>Share</header>
             </button>
             {
                 activePanel === 'shareBoardOptions' ? 

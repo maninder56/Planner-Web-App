@@ -6,7 +6,8 @@
 .wrapper {
     margin: 5px;
     height: 40px;  
-    width: 100px;  
+    height: 40px;
+    display: flex;
     position: relative;
 }
 
@@ -31,17 +32,10 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.mainButton header {
-    margin: auto;
-    
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: white;
-}
 
 .mainButton svg {
-    --svgSize: 30px;
+    --svgSize: 35px;
     width: var(--svgSize);
     height: var(--svgSize);
-    margin: auto 0;
+    margin: auto;
 }
