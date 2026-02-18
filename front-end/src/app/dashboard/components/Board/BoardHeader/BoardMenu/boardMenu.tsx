@@ -36,21 +36,23 @@ export default function BoardMenu({
                     <BoardMenuOptions initialBoardColour={initialBoardColour} initialFavoriteBoard={false} />
                 : null
             }
-            {
-                activePanel === 'manageMembersOptions' ? 
-                    <div>Manage members options</div>
-                : null
-            }
-            {
-                activePanel === 'filterBoardOptions' ? 
-                    <FilterBoardOptions />
-                : null
-            }
-            {
-                activePanel === 'shareBoardOptions' ? 
-                    <ShareButtonOptions />
-                : null
-            }
+            <div className={styles.smallScreenOptions}>
+                {
+                    activePanel === 'manageMembersOptions' ? 
+                        <div>Manage members options</div>
+                    : null
+                }
+                {
+                    activePanel === 'filterBoardOptions' ? 
+                        <FilterBoardOptions />
+                    : null
+                }
+                {
+                    activePanel === 'shareBoardOptions' ? 
+                        <ShareButtonOptions />
+                    : null
+                }
+            </div>
         </div>
     ); 
 }

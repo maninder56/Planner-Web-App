@@ -77,7 +77,6 @@ export default function BoardMenuOptions({
                         <span>Manage Members</span>
                     </button>
                     <div className={styles.smallScreenOptions}>
-                        s
                         <button onClick={e => {
                             e.stopPropagation(); 
                             handleFavoriteBoardButton(); 

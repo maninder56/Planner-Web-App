@@ -36,3 +36,13 @@
     width: 100%;
     height: 100%;
 }
+
+.smallScreenOptions {
+    display: block;
+}
+
+@media (min-width: 900) {
+    .smallScreenOptions {
+        display: none;
+    }
+}
