@@ -1,17 +1,18 @@
 'use client'
 
-import {  panelType } from '@/Types/UIState';
+import {  panelType } from '@/app/dashboard/Types/UIState';
 import styles from './newBoardOptions.module.css'; 
 import CloseButton from '@/Components/Buttons/closeButton';
 import { FormEvent, useActionState, useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
+import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 
 export default function NewBoardOptions() {
     const [activePanel, setActivePanel] = useActivePanel(); 
 
-    // temporary colour array, this needs to ba a argument
-    const colours = ['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink' ];
+    const colours: BoardColour[] = BoardColoursList; 
 
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 

@@ -1,0 +1,50 @@
+
+.wrapper {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px 10px 0px 0px;
+}
+
+
+.wrapper.soft-pink{
+    background-color: var(--soft-pink-bar);
+} 
+
+.wrapper.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.wrapper.aqua {
+    background-color: var(--aqua-bar);
+}
+
+
+.wrapper.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.wrapper.light-purple {
+    background-color: var(--light-purple);
+}
+
+
+.wrapper.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+
+.boardNameContainer {
+    flex: 1 1 auto;
+
+    display: flex;
+    justify-content: start;
+}
+
+
+
+.barOptionList {
+    flex: 0 1 auto;
+    display: flex;
+}
+

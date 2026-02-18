@@ -1,6 +1,6 @@
 'use client'
 
-import { panelType } from '@/Types/UIState';
+import { panelType } from '@/app/dashboard/Types/UIState';
 import styles from './dashboardMenuButton.module.css'; 
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import InnerPanelButton from '@/Components/Buttons/innerPanelButton';

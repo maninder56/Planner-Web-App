@@ -2,7 +2,7 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './profileButton.module.css'; 
 import ProfileIcon from '../ProfileIcon/profileIcon';
-import { profileColour } from '@/Types/UIState';
+import { profileColour } from '@/app/dashboard/Types/UIState';
 import ProfileOptions from '../ProfileOptions/ProfileOptions';
 
 

@@ -1,0 +1,151 @@
+
+.wrapper {
+    margin: 0px 10px;
+}
+
+.boardColour {
+    margin: 20px 0px;
+}
+
+.boardColour > header {
+    font-size: 0.9rem;
+}
+
+
+.colourGrid {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.colourGrid > div {
+    width: 50px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: solid 2px white;
+    transition: 
+        transform 0.15s ease;
+}
+
+.colourGrid > div:hover {
+    transform: scale(1.05);
+}
+
+
+/* board colours */
+
+.soft-pink{
+    background-color: var(--soft-pink);
+} 
+
+.soft-pink:hover, 
+.soft-pink.selectedBoardColour {
+    outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.light-mint-green:hover, 
+.light-mint-green.selectedBoardColour {
+    outline: solid var(--light-mint-green-outline);
+}
+
+.aqua {
+    background-color: var(--aqua);
+}
+
+.aqua:hover, 
+.aqua.selectedBoardColour {
+    outline: solid var(--aqua-outline);
+}
+
+.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.lavender-blue:hover, 
+.lavender-blue.selectedBoardColour {
+    outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple {
+    background-color: var(--light-purple);
+}
+
+.light-purple:hover, 
+.light-purple.selectedBoardColour {
+    outline: solid var(--light-purple-outline);
+}
+
+.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+.bright-pink:hover, 
+.bright-pink.selectedBoardColour {
+    outline: solid var(--bright-pink-outline);
+}
+
+
+
+
+.optionList button {
+    margin: 0;
+    margin-top: 2px;
+    padding: 10px;
+    width: 100%;
+
+    border: none;
+    border-radius: 10px;
+
+    background-color: transparent;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: start;
+}
+
+.optionList button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.optionList button svg {
+    --size: 20px; 
+    width: var(--size);
+    height: var(--size);
+}
+
+.optionList button span {
+    margin: auto;
+    margin-left: 5px;
+
+    font-size: 0.9rem;
+    text-wrap: nowrap;
+    color: black;
+}
+
+.deleteBoardButton {
+    margin-top: 30px;
+
+    display: flex;
+    justify-content: center;
+}
+
+
+/* For mobile version */
+/* min-width in which board header bar's option becomes visible */
+
+.smallScreenOptions {
+    display: block;
+}
+
+@media (min-width: 600px) {
+    .smallScreenOptions {
+        display: none;
+    }
+}
+

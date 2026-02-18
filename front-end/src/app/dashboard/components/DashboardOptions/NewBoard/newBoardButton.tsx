@@ -1,5 +1,5 @@
 
-import { panelType } from '@/Types/UIState';
+import { panelType } from '@/app/dashboard/Types/UIState';
 import styles from './newBoardButton.module.css'; 
 import Image from 'next/image';
 import NewBoardOptions from './newBoardOptions';

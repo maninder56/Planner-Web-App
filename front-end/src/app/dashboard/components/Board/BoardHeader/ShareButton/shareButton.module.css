@@ -1,0 +1,41 @@
+
+/* .wrapper * {
+    border: solid 1px black;
+} */
+
+.wrapper {
+    margin: 5px;
+    height: 40px;  
+    height: 40px;
+    display: flex;
+    position: relative;
+}
+
+.mainButton {
+    width: inherit;
+    height: inherit;
+    
+    border-radius: 10px;
+    border: none;
+
+    cursor: pointer;
+    
+    /* background-color: rgba(0, 0, 0, 0.1);  */
+    background-color: transparent;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.mainButton svg {
+    --svgSize: 35px;
+    width: var(--svgSize);
+    height: var(--svgSize);
+    margin: auto;
+}

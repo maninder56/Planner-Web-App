@@ -1,4 +1,4 @@
-import { profileColour } from '@/Types/UIState';
+import { profileColour } from '@/app/dashboard/Types/UIState';
 
 import styles from './profileIcon.module.css'; 
 
