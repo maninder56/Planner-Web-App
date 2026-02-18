@@ -19,7 +19,7 @@ export default function BoardHeaderBar({
                 <BoardNameInput initialName='My First board' />
             </div>
             <div className={styles.barOptionList}>
-                <div className={styles.bigScreenOptions}>
+                <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
                         <FavoriteBoardButton initialState={false} />
                     </div>

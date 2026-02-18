@@ -6,7 +6,7 @@
 
 .page {
     flex: 1 1 auto;
-    margin: 0px;
+    margin: 0px 3px;
     padding: 0;
     padding-top: 5px;
 
@@ -18,14 +18,13 @@
 
 .firstSection {
     flex: 0 1 auto;
-    margin: 0;
-    height: 70px;
+    margin: 5px 0px;
     display: flex;
     justify-content: space-between;
 }
 
 .firstSection > div {
-    margin: auto;
+    margin: auto 2px;
 }
 
 .appLogo {
@@ -63,12 +62,6 @@
     display: none;
 }
 
-
-@media (min-width: 350) {
-    .page {
-        margin: 0px 10px;
-    }
-}
 
 
 @media (min-width: 600) {
@@ -108,9 +101,6 @@
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    
-    border-radius: 10px;
-    overflow: hidden;
 }
 
 .mainContent > section {

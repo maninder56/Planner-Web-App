@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styles from './boardNameInput.module.css'; 
 
 

@@ -195,51 +195,27 @@ body {
 
 
 
+/* Board headerbar options visibility */
+/* min-width in which board header bar's option becomes visible */
 
-
-/* temporary styles for practice */
-
-.dndContainer {
-  display: flex;
-  justify-content: center;
+.boardHeaderBarOptionsVisibilityForSmallScreen {
+  display: block;
 }
 
-.droppable {
-  border: solid 1px black;
-  border-radius: 10px;
-  background-color: rgb(232, 232, 232);
-  width: 100px;
-  height: 100px;
-  margin: 100px;
-  display: flex;
+.boardHeaderBarOptionsVisibilityForBigScreen {
+  display: none;
 }
 
-.droppable.overDroppable {
-  background-color: lightcoral;
+@media (min-width: 600px) {
+
+  .boardHeaderBarOptionsVisibilityForSmallScreen {
+    display: none;
+  } 
+
+  .boardHeaderBarOptionsVisibilityForBigScreen {
+    display: flex;
+  }
 }
 
-.draggable {
-  width: 80px;
-  height: 50px;
-  margin: auto;
-  background-color: #21a394;
-  border: solid 1px black;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.draggable > div {
-
-}
-
-.draggable:hover{
-  cursor: grab;
-}
-
-.draggable:active {
-  cursor: grabbing;
-}
 
 

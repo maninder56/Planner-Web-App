@@ -76,7 +76,7 @@ export default function BoardMenuOptions({
                         </svg>
                         <span>Manage Members</span>
                     </button>
-                    <div className={styles.smallScreenOptions}>
+                    <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
                         <button onClick={e => {
                             e.stopPropagation(); 
                             handleFavoriteBoardButton(); 

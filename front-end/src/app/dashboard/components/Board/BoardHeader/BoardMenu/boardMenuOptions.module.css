@@ -137,12 +137,13 @@
 
 
 /* For mobile version */
+/* min-width in which board header bar's option becomes visible */
 
 .smallScreenOptions {
     display: block;
 }
 
-@media (min-width: 900) {
+@media (min-width: 600px) {
     .smallScreenOptions {
         display: none;
     }

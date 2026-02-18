@@ -1,6 +1,6 @@
 
 /* .wrapper * {
-    border: solid 1px;
+    border: solid 1px black;
 } */
 
 .wrapper {
@@ -8,14 +8,14 @@
 }
 
 .wrapper img {
-    width: 35px;
-    margin: auto 5px;
+    width: 30px;
+    margin: auto 0px;
 }
 
 .wrapper header {
     margin: auto 0px;
     padding: 0px;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 @media (min-width: 600) {

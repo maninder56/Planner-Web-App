@@ -3,6 +3,7 @@
     padding: 5px;
     display: flex;
     justify-content: space-between;
+    border-radius: 10px 10px 0px 0px;
 }
 
 
@@ -35,29 +36,15 @@
 
 .boardNameContainer {
     flex: 1 1 auto;
-    min-width: 0;
-    /* display: flex;
-    justify-content: start; */
-}
 
+    display: flex;
+    justify-content: start;
+}
 
 
 
 .barOptionList {
     flex: 0 1 auto;
     display: flex;
-}
-
-
-/* board hover options */
-
-.bigScreenOptions {
-    display: none;
-}
-
-@media (min-width: 900px) {
-    .bigScreenOptions {
-        display: flex;
-    }
 }
 

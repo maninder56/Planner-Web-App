@@ -42,7 +42,7 @@ export default function BoardMenu({
                     <ManageBoardMembersOptions />
                 : null
             }
-            <div className={styles.smallScreenOptions}>
+            <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
                 {
                     activePanel === 'filterBoardOptions' ? 
                         <FilterBoardOptions />
