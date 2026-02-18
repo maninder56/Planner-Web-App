@@ -150,7 +150,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </section>
-                    <main>
+                    <main className={styles.mainContent}>
                         <section>
                             <BoardHeaderBar boardColour={currentBoard.boardColour} />
                         </section>

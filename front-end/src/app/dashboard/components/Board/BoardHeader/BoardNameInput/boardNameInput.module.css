@@ -1,29 +1,43 @@
 
+.wrapper * {
+    border: solid 1px black;
+}
+
+
 .wrapper {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+
     margin: 5px;
     padding: 5px 10px;
+
     font-size: 1.2rem;
     font-weight: 600;
     text-align: center;
     color: white;
+
     border: none;
     border-radius: 10px;
     cursor: pointer;
+
     background-color: transparent;
     overflow: hidden;
-    width: max-content;
+
+    /* field-sizing: content; */
+    width: fit-content;
+    min-width: 0;
+    max-width: 100%;
+
+    transition: all 0.1s ease-in-out;
 }
 
 .wrapper:hover {
     background-color: rgb(255, 255, 255, 0.2);
 }
 
-.wrapper:focus-within {
-    background-color: white;
+.wrapper {
+    background-color: rgba(255, 255, 255, 0.9);
     color: black;
-    outline: solid 0.5px;
-    box-shadow: 0 0 5px black;
+    outline: solid 1.5px rgb(0, 0, 0);
 }
 
 

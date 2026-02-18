@@ -15,22 +15,24 @@ export default function BoardHeaderBar({
 }) {
     return (
         <div className={[styles.wrapper, styles[boardColour]].join(' ')}>
-            <div>
+            <div className={styles.boardNameContainer}>
                 <BoardNameInput initialName='My First board' />
             </div>
-            <div className={styles.bigScreenOptions}>
-                <div>
-                <FavoriteBoardButton initialState={false} />
+            <div className={styles.barOptionList}>
+                <div className={styles.bigScreenOptions}>
+                    <div>
+                        <FavoriteBoardButton initialState={false} />
+                    </div>
+                    <div>
+                        <FilterButton />
+                    </div>
+                    <div>
+                        <ShareButton />
+                    </div>
                 </div>
                 <div>
-                    <FilterButton />
+                    <BoardMenu initialBoardColour={boardColour} />
                 </div>
-                <div>
-                    <ShareButton />
-                </div>
-            </div>
-            <div>
-                <BoardMenu initialBoardColour={boardColour} />
             </div>
         </div>
     ); 
