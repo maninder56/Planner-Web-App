@@ -32,6 +32,7 @@ export type BoardList = z.infer<typeof BoardList>;
 const Board = z.object({
     id: z.number(), 
     title: z.string(),
+    favoriteBoard: z.boolean(), 
     boardColour: BoardColour,
     boardLists: z.array(BoardList),
 }); 
