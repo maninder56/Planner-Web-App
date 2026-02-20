@@ -1,30 +1,30 @@
 import { create } from "zustand";
-import { Board, BoardColour, CardPriority, ListColour } from "../../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, ListColour } from "../Types/boardTypes";
 
 
 
 type BoardData = {
     id: number, 
     title: string, 
-    favoriteBoard: boolean, 
+    idFavoriteBoard: boolean, 
     boardColour: BoardColour,
 }
 
-type ListId = number; 
-type CardId = number; 
+type ListId = `list-${number}`; 
+type CardId = `card-${number}`; 
 
-type List= {
+type List = {
     id: number, 
     title: string, 
     listColour: ListColour, 
     position: number,
-    CardIDs: CardId[],
+    CardIDsAndOrder: number[],
 }
 
 type Card = { 
     id: number,
     title: string, 
-    Description: string, 
+    description: string, 
     done: boolean, 
     priority: CardPriority,
     dueDate: Date, 
@@ -65,8 +65,9 @@ const useBoardStore = create<State & Action>((set) => ({
     })), 
 
     
+    
 
 }))
 
 
-export type { NormalisedBoardData, useBoardStore }; 
+export type { BoardData, ListId, List, CardId, Card, NormalisedBoardData, useBoardStore }; 

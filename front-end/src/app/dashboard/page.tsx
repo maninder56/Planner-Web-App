@@ -14,13 +14,13 @@ import SwitchBoardButton from './components/DashboardOptions/SwitchBoard/switchB
 import ProfileButton from './components/DashboardOptions/Profile/ProfileButton/profileButton';
 import BoardHeaderBar from './components/Board/BoardHeader/boardHeaderBar';
 import Button from '@/Components/Buttons/button';
-import { Board } from './Types/boardTypes';
+import { BoardDataFromAPI } from './Types/boardTypes';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
 
     // Main board object for managing current board
-    const currentBoard: Board = {
+    const currentBoard: BoardDataFromAPI = {
         id: 1,
         title: "Product Development Q1",
         boardColour: "soft-pink",
@@ -34,7 +34,7 @@ export default function Dashboard() {
             {
                 id: 1001,
                 title: "User authentication system",
-                Description: "Implement OAuth 2.0 login with Google and GitHub providers",
+                description: "Implement OAuth 2.0 login with Google and GitHub providers",
                 done: false,
                 priority: "High",
                 dueDate: "2026-03-15",
@@ -43,7 +43,7 @@ export default function Dashboard() {
             {
                 id: 1002,
                 title: "Design new landing page",
-                Description: "Create mockups and prototypes for homepage redesign",
+                description: "Create mockups and prototypes for homepage redesign",
                 done: false,
                 priority: "Medium",
                 dueDate: "2026-03-20",
@@ -52,7 +52,7 @@ export default function Dashboard() {
             {
                 id: 1003,
                 title: "Fix mobile responsiveness",
-                Description: "Address layout issues on tablets and mobile devices",
+                description: "Address layout issues on tablets and mobile devices",
                 done: false,
                 priority: "Low",
                 dueDate: "2026-03-25",
@@ -69,7 +69,7 @@ export default function Dashboard() {
             {
                 id: 1004,
                 title: "API documentation",
-                Description: "Complete API endpoints documentation using Swagger",
+                description: "Complete API endpoints documentation using Swagger",
                 done: false,
                 priority: "High",
                 dueDate: "2026-02-18",
@@ -78,7 +78,7 @@ export default function Dashboard() {
             {
                 id: 1005,
                 title: "Database optimization",
-                Description: "Add indexes and optimize slow queries",
+                description: "Add indexes and optimize slow queries",
                 done: false,
                 priority: "Medium",
                 dueDate: "2026-02-22",
@@ -95,7 +95,7 @@ export default function Dashboard() {
             {
                 id: 1006,
                 title: "Setup CI/CD pipeline",
-                Description: "Configure GitHub Actions for automated testing and deployment",
+                description: "Configure GitHub Actions for automated testing and deployment",
                 done: true,
                 priority: "High",
                 dueDate: "2026-02-10",
@@ -104,7 +104,7 @@ export default function Dashboard() {
             {
                 id: 1007,
                 title: "Create project roadmap",
-                Description: "Define milestones and deliverables for Q1",
+                description: "Define milestones and deliverables for Q1",
                 done: true,
                 priority: "Medium",
                 dueDate: "2026-02-05",
