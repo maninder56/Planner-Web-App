@@ -50,7 +50,7 @@ type Action = {
     hydrateBoard: (data: NormalisedBoardData) => void; 
 }
 
-const useBoardStore = create<State & Action>((set) => ({
+export const useBoardStore = create<State & Action>((set) => ({
     boardData: undefined, 
     lists: {}, 
     cards: {}, 
@@ -70,4 +70,4 @@ const useBoardStore = create<State & Action>((set) => ({
 }))
 
 
-export type { BoardData, ListId, List, CardId, Card, NormalisedBoardData, useBoardStore }; 
+export type { BoardData, ListId, List, CardId, Card, NormalisedBoardData }; 
