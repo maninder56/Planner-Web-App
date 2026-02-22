@@ -103,8 +103,13 @@
     flex-direction: column;
 }
 
-.mainContent > section {
+.mainContent > section:first-child {
+    flex: 0 1 auto;
+}
+
+.mainContent > section:last-child {
     flex: 1 1 auto;
+    display: flex;
 }
 
 

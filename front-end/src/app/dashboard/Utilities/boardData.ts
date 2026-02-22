@@ -10,13 +10,15 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
         boardColour: data.boardColour,
     }; 
 
+    // Sort the lists and cards in order by position
+
     let lists: Record<ListId, List> = {}; 
     let cards: Record<CardId, Card> = {}; 
-    let listOrder: number[] = []; 
+    let listOrder: ListId[] = []; 
 
     for (let list of data.boardLists) {
 
-        let cardIds = []; 
+        let cardIds: CardId[] = []; 
 
         for (let card of list.cardList) {
             cards[`card-${card.id}`] = {
@@ -29,7 +31,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
                 position: card.position,
             }; 
 
-            cardIds.push(card.id); 
+            cardIds.push(`card-${card.id}`); 
         }
 
         lists[`list-${list.id}`]  = {
@@ -40,7 +42,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
             CardIDsAndOrder: cardIds, 
         }; 
 
-        listOrder.push(list.id); 
+        listOrder.push(`list-${list.id}`); 
     }
 
     const normalisedData: NormalisedBoardData = {

@@ -18,7 +18,7 @@ type List = {
     title: string, 
     listColour: ListColour, 
     position: number,
-    CardIDsAndOrder: number[],
+    CardIDsAndOrder: CardId[],
 }
 
 type Card = { 
@@ -35,19 +35,21 @@ type NormalisedBoardData = {
     boardData: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
-    listOrder: number[], 
+    listOrder: ListId[], 
 }
 
 type State = {
     boardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
-    listOrder: number[], 
+    listOrder: ListId[], 
 }
 
 
 type Action = {
     hydrateBoard: (data: NormalisedBoardData) => void; 
+
+    setListOrder: (newListOrder: ListId[]) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -64,7 +66,7 @@ export const useBoardStore = create<State & Action>((set) => ({
         listOrder: data.listOrder, 
     })), 
 
-    
+    setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
 
 }))
