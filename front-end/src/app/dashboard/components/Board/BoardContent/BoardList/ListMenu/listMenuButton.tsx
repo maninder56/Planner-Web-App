@@ -4,6 +4,7 @@ import { ListId } from '@/app/dashboard/Store/boardStore';
 import styles from './listMenuButton.module.css'; 
 import { useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
+import ListMenuOptions from './listMenuOptions';
 
 export default function ListMenuButton({
     listId, 
@@ -43,7 +44,7 @@ export default function ListMenuButton({
             </button>
             {
                 activePanel === 'boardListMenuOptions' && listId === currentOpenListMenu ? 
-                    <div>menu options</div>
+                    <ListMenuOptions />
                 : null
             }
         </div>
