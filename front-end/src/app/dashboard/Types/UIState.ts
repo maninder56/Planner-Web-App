@@ -10,7 +10,8 @@ export type panelType =
     'filterBoardOptions'            | 
     'shareBoardOptions'             | 
     'boardMenuOptions'              |
-    'manageMembersOptions'; 
+    'manageMembersOptions'          | 
+    'boardListMenuOptions'; 
 
 export type profileColour = 'red' | 'blue' | 'green'; 
 

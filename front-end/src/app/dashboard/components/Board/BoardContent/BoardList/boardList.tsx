@@ -4,15 +4,21 @@ import {CollisionPriority} from '@dnd-kit/abstract';
 import styles from './boardList.module.css'; 
 import { ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import Image from 'next/image';
+import ListMenuButton from './ListMenu/listMenuButton';
+import { useState } from 'react';
 
 export default function BoardList({
     children, 
     listId, 
     index,
+    currentOpenListMenu,
+    setCurrentOpenListMenu,
 }: {
     children: React.ReactNode; 
     listId: ListId; 
     index: number; 
+    currentOpenListMenu: ListId | undefined; 
+    setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
 }) {
     const {ref, isDragging} = useSortable({
         id: listId,  
@@ -28,7 +34,7 @@ export default function BoardList({
             <div className={styles.header}>
                 <header>{listDetails.title}</header>
                 {/* Create list menu which only opens if list id and panel are matched */}
-                <button>list Menu</button>
+                <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu} />
             </div>
             <div className={styles.cards}>
                 {children}

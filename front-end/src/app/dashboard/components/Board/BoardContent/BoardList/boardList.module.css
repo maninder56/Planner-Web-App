@@ -29,11 +29,6 @@
 }
 
 
-
-.wrapper div {
-    margin: 10px 0px;
-}
-
 .header {
     display: flex;
     cursor: grab;
@@ -42,14 +37,16 @@
 .header > header {
     flex: 1 1 auto;
 
+    margin: auto;
     margin-left: 5px;
+    padding: 0;
 
     text-align: start;
     font-size: 1rem;
 }
 
 .cards {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 
 
