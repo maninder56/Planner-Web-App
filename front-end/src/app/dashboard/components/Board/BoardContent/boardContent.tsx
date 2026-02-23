@@ -10,8 +10,6 @@ export default function BoardContent() {
     const listOrder = useBoardStore((state) => state.listOrder); 
     const setListOrder = useBoardStore((state) => state.setListOrder);
     
-    const boardLists = useBoardStore((state) => state.lists); 
-    
 
     if (boardDetials === undefined) {
         // Add styles
@@ -28,25 +26,7 @@ export default function BoardContent() {
                 <div className={styles.lists}>
                     {
                         listOrder.map((listId, listIndex) => (
-                            <BoardList listId={listId} index={listIndex}>
-                                <div>
-                                    temp child
-                                </div>
-                            </BoardList>
-                        ))
-                    }
-                    {
-                        listOrder.map((listId, listIndex) => (
-                            <BoardList listId={listId} index={listIndex}>
-                                <div>
-                                    temp child
-                                </div>
-                            </BoardList>
-                        ))
-                    }
-                    {
-                        listOrder.map((listId, listIndex) => (
-                            <BoardList listId={listId} index={listIndex}>
+                            <BoardList listId={listId} index={listIndex} key={listId}>
                                 <div>
                                     temp child
                                 </div>
