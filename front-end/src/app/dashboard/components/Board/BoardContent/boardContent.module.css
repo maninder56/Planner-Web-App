@@ -1,7 +1,7 @@
-
+/* 
 .wrapper * {
     border: solid 1px black;
-}
+} */
 
 .wrapper {
     flex: 1 1 auto;
@@ -18,12 +18,15 @@
     flex: 1 1 auto;
 
     min-width: 0;
-    margin: 5px;
+    margin: 5px 0px;
+    margin-top: 20px;
+
+    padding: 20px 40px;
     
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 300px;
-    gap: 10px;
+    gap: 30px;
 
     overflow-y: hidden;
     overflow-x: scroll;
