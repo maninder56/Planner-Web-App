@@ -9,7 +9,12 @@ import BoardCard from './BoardCard/boardCard';
 
 export default function BoardContent() {
     const boardDetials = useBoardStore((state) => state.boardData); 
+    const listOrder = useBoardStore((state) => state.listOrder); 
+    const setListOrder = useBoardStore((state) => state.setListOrder);
+    const boardLists = useBoardStore((state) => state.lists); 
 
+    const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
+    
     if (boardDetials === undefined) {
         // Add styles
         return (
@@ -18,16 +23,6 @@ export default function BoardContent() {
             </div>
         ); 
     }
-
-
-
-    const listOrder = useBoardStore((state) => state.listOrder); 
-    const setListOrder = useBoardStore((state) => state.setListOrder);
-
-    const boardList = useBoardStore((state) => state.lists); 
-
-    const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
-    
 
 
     return (
@@ -46,7 +41,7 @@ export default function BoardContent() {
                             <BoardList listId={listId} index={listIndex} key={listId} 
                                 currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu}>
                                 {
-                                    boardList[listId].CardIDsAndOrder.map((cardId, index) => (
+                                    boardLists[listId].CardIDsAndOrder.map((cardId, index) => (
                                         <BoardCard cardId={cardId} index={index} key={cardId}/>
                                     ))
                                 }
