@@ -8,6 +8,7 @@ import ListMenuButton from './ListMenu/listMenuButton';
 import { useState } from 'react';
 import BoardCard from '../BoardCard/boardCard';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
+import { useDroppable } from '@dnd-kit/react';
 
 export default function BoardList({
     listId, 
@@ -24,10 +25,19 @@ export default function BoardList({
         id: listId,  
         index,
         type: 'boardList',
-        accept: ['boardCard', 'boardList'], 
+        accept: 'boardList', 
         collisionPriority: CollisionPriority.Low, 
         modifiers: [RestrictToHorizontalAxis],
     }); 
+
+    const {ref: dropRef} = useDroppable({
+        id: `drop${listId}`, 
+        type: 'cardDropZone', 
+        accept: 'boardCard', 
+        data: {
+            listId, 
+        }
+    })
 
     const listTitle = useBoardStore((state) => state.lists[listId].title); 
     const listCardsIdsAndOrder = useBoardStore((state) => state.lists[listId].CardIDsAndOrder); 
@@ -39,7 +49,7 @@ export default function BoardList({
                 {/* Create list menu which only opens if list id and panel are matched */}
                 <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu} />
             </div>
-            <div className={styles.cards}>
+            <div className={styles.cards} ref={dropRef}>
                 {
                     listCardsIdsAndOrder.map((cardId, index) => (
                         <BoardCard cardId={cardId} index={index} key={cardId} parentListId={listId} />

@@ -44,6 +44,14 @@ export default function BoardContent() {
                 } else if (source.type === 'boardList' && target.type === 'boardList') {
                     const newOrder = move(listOrder, event); 
                     setListOrder(newOrder);    
+                } else if (source.type === 'boardCard' && target.type === 'cardDropZone') {
+                    const sourceParentListId = source.data.parentListId;
+                    const targetListId = target.data.listId;
+
+                    const targetList = useBoardStore.getState().lists[targetListId];
+                    const targetIndex = targetList.CardIDsAndOrder.length;
+
+                    moveCard(source.id as CardId, sourceParentListId, targetListId, targetIndex );
                 }
             }}
             // onDragEnd={(event) => {

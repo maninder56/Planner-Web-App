@@ -1,7 +1,7 @@
 'use client'
 
 import { panelType, profileColour } from '@/app/dashboard/Types/UIState';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchBar from './components/Search/SearchBar/searchBar';
 import DashboardMenuButton from './components/DashboardOptions/DashboardMenu/dashboardMenuButton';
 
@@ -21,6 +21,9 @@ import BoardContent from './components/Board/BoardContent/boardContent';
 
 export default function Dashboard() {
     const [activePanel, setActivePanel] = useState<panelType>('none'); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
+    const hasHydrated = useRef(false); 
+
 
     // Main board object for managing current board
     const currentBoard: BoardDataFromAPI = {
@@ -119,8 +122,13 @@ export default function Dashboard() {
         ]
     }; 
 
-    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
-    hydrateBoard(NormaliseBoardData(currentBoard)); 
+    useEffect(() => {
+        if (!hasHydrated.current) {
+            hydrateBoard(NormaliseBoardData(currentBoard)); 
+            hasHydrated.current = true;             
+        }
+    },[])
+
     
     const tempUser: { name: string, email: string, colour: profileColour} = {
         name: 'Julius Caesar', email: 'caesa23r@gmail.com', colour: 'red'

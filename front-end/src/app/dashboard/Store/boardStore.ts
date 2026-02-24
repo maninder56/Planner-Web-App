@@ -61,12 +61,14 @@ export const useBoardStore = create<State & Action>((set) => ({
     listOrder: [],
 
 
-    hydrateBoard: (data) => set(() => ({
-        boardData: data.boardData, 
-        lists: data.lists, 
-        cards: data.cards, 
-        listOrder: data.listOrder, 
-    })), 
+    hydrateBoard: (data) => {
+      set(() => ({
+            boardData: data.boardData, 
+            lists: data.lists, 
+            cards: data.cards, 
+            listOrder: data.listOrder, 
+        }))
+    }, 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
