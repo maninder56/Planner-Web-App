@@ -70,10 +70,10 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
-    moveCard: (cardId, sourceListId, destinationListId, destinationIndex) => 
+    moveCard: (cardId, sourceListId, targetListId, targetIndex) => 
         set((state) => {
             // Moving in the same list
-            if (sourceListId === destinationListId) {
+            if (sourceListId === targetListId) {
                 const list = state.lists[sourceListId]; 
                 
                 const newCardOrder = [...list.CardIDsAndOrder]; 
@@ -84,7 +84,7 @@ export const useBoardStore = create<State & Action>((set) => ({
                 }
 
                 newCardOrder.splice(currentIndex, 1); 
-                newCardOrder.splice(destinationIndex, 0, cardId); 
+                newCardOrder.splice(targetIndex, 0, cardId); 
 
                 return {
                     lists: {
@@ -95,8 +95,27 @@ export const useBoardStore = create<State & Action>((set) => ({
                         }
                     }
                 }
-            } else {
-                return state; 
+            } 
+
+            const sourceList = state.lists[sourceListId]; 
+            const targetList = state.lists[targetListId]; 
+
+            const newSourceCardIds = sourceList.CardIDsAndOrder.filter(id => id !== cardId); 
+            const newTargetCardTds = [...targetList.CardIDsAndOrder]; 
+            newTargetCardTds.splice(targetIndex, 0, cardId); 
+
+            return {
+                lists: {
+                    ...state.lists, 
+                    [sourceListId]: {
+                        ...sourceList, 
+                        CardIDsAndOrder: newSourceCardIds,
+                    }, 
+                    [targetListId]: {
+                        ...targetList, 
+                        CardIDsAndOrder: newTargetCardTds,
+                    }
+                }
             }
         }), 
 
@@ -105,62 +124,3 @@ export const useBoardStore = create<State & Action>((set) => ({
 
 export type { BoardData, ListId, List, CardId, Card, NormalisedBoardData }; 
 
-
-/* 
-
-moveCard: (cardId, sourceListId, destinationListId, destinationIndex) =>
-  set((state) => {
-    if (sourceListId === destinationListId) {
-      const list = state.lists[sourceListId];
-      if (!list) return state;
-
-      const newCardIds = [...list.CardIDsAndOrder];
-      const currentIndex = newCardIds.indexOf(cardId);
-      if (currentIndex === -1) return state;
-
-      newCardIds.splice(currentIndex, 1);
-      newCardIds.splice(destinationIndex, 0, cardId);
-
-      return {
-        lists: {
-          ...state.lists,
-          [sourceListId]: {
-            ...list,
-            CardIDsAndOrder: newCardIds,
-          },
-        },
-      };
-    }
-
-    // Moving between lists
-    const sourceList = state.lists[sourceListId];
-    const destinationList = state.lists[destinationListId];
-    if (!sourceList || !destinationList) return state;
-
-    const newSourceCardIds = sourceList.CardIDsAndOrder.filter(
-      (id) => id !== cardId
-    );
-
-    const newDestinationCardIds = [...destinationList.CardIDsAndOrder];
-    newDestinationCardIds.splice(destinationIndex, 0, cardId);
-
-    return {
-      lists: {
-        ...state.lists,
-        [sourceListId]: {
-          ...sourceList,
-          CardIDsAndOrder: newSourceCardIds,
-        },
-        [destinationListId]: {
-          ...destinationList,
-          CardIDsAndOrder: newDestinationCardIds,
-        },
-      },
-    };
-  }),
-
-
-
-
-
-*/

@@ -17,8 +17,10 @@ export default function BoardCard({
         index, 
         type: 'boardCard', 
         accept: 'boardCard',
+        group: parentListId, 
         data: {
             parentListId,
+            index,
         }
     }); 
 

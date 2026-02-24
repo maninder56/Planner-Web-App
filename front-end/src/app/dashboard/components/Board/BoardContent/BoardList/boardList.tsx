@@ -24,7 +24,7 @@ export default function BoardList({
         id: listId,  
         index,
         type: 'boardList',
-        accept: 'boardList', 
+        accept: ['boardCard', 'boardList'], 
         collisionPriority: CollisionPriority.Low, 
         modifiers: [RestrictToHorizontalAxis],
     }); 
@@ -52,6 +52,7 @@ export default function BoardList({
                     <span>Add card button</span>
                 </button>
             </div>
+            <div>{JSON.stringify(listCardsIdsAndOrder)}</div>
         </div>
     ); 
 }

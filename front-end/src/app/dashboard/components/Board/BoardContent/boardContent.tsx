@@ -2,7 +2,7 @@
 import { DragDropEvents, DragDropManager, DragDropProvider, DragEndEvent, UseDraggableInput } from '@dnd-kit/react';
 import {move} from '@dnd-kit/helpers';
 import styles from './boardContent.module.css'; 
-import { List, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { CardId, List, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import BoardList from './BoardList/boardList';
 import { DragEventHandler, useState } from 'react';
 import BoardCard from './BoardCard/boardCard';
@@ -37,8 +37,10 @@ export default function BoardContent() {
                 }
 
                 if (source.type === 'boardCard' && target.type === 'boardCard') {
-                    // moveCard(source.id, )
-                    console.log(source); 
+                    const sourceParentListId = source.data.parentListId; 
+                    const targetParentListId = target.data.parentListId; 
+                    const targetIndex = target.data.index; 
+                    moveCard(source.id as CardId, sourceParentListId, targetParentListId, targetIndex); 
                 } else if (source.type === 'boardList' && target.type === 'boardList') {
                     const newOrder = move(listOrder, event); 
                     setListOrder(newOrder);    
@@ -57,6 +59,7 @@ export default function BoardContent() {
             // }}
         >
             <div className={[styles.wrapper, styles[boardDetials.boardColour]].join(' ')}>
+                <div>{JSON.stringify(listOrder)}</div>
                 <div className={styles.lists}>
                     {
                         listOrder.map((listId, listIndex) => (
