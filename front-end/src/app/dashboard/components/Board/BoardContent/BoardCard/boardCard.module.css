@@ -1,0 +1,13 @@
+
+.wrapper {
+    outline: solid 1px rgb(255, 0, 0);
+}
+
+.wrapper {
+    padding: 5px;
+    margin: 10px 0px;
+
+    border-radius: 10px;
+
+    background-color: rgba(255, 255, 255, 1);
+}

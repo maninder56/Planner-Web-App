@@ -1,18 +1,14 @@
 
-import { DragDropProvider } from '@dnd-kit/react';
+import { DragDropEvents, DragDropManager, DragDropProvider, DragEndEvent, UseDraggableInput } from '@dnd-kit/react';
+import {move} from '@dnd-kit/helpers';
 import styles from './boardContent.module.css'; 
-import { ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { List, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import BoardList from './BoardList/boardList';
-import { useState } from 'react';
+import { DragEventHandler, useState } from 'react';
+import BoardCard from './BoardCard/boardCard';
 
 export default function BoardContent() {
     const boardDetials = useBoardStore((state) => state.boardData); 
-
-    const listOrder = useBoardStore((state) => state.listOrder); 
-    const setListOrder = useBoardStore((state) => state.setListOrder);
-
-    const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
-    
 
     if (boardDetials === undefined) {
         // Add styles
@@ -23,17 +19,37 @@ export default function BoardContent() {
         ); 
     }
 
+
+
+    const listOrder = useBoardStore((state) => state.listOrder); 
+    const setListOrder = useBoardStore((state) => state.setListOrder);
+
+    const boardList = useBoardStore((state) => state.lists); 
+
+    const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
+    
+
+
     return (
-        <DragDropProvider>
+        <DragDropProvider
+            onDragEnd={(event) => {
+                const {source, target} = event.operation; 
+                if (source === null || target === null) {
+                    return;
+                }
+            }}
+        >
             <div className={[styles.wrapper, styles[boardDetials.boardColour]].join(' ')}>
                 <div className={styles.lists}>
                     {
                         listOrder.map((listId, listIndex) => (
                             <BoardList listId={listId} index={listIndex} key={listId} 
                                 currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu}>
-                                <div>
-                                    temp child
-                                </div>
+                                {
+                                    boardList[listId].CardIDsAndOrder.map((cardId, index) => (
+                                        <BoardCard cardId={cardId} index={index} key={cardId}/>
+                                    ))
+                                }
                             </BoardList>
                         ))
                     }

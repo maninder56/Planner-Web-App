@@ -24,6 +24,7 @@ export default function BoardList({
         id: listId,  
         index,
         type: 'boardList',
+        accept: ['boardList', 'boardCard'], 
         collisionPriority: CollisionPriority.Low, 
     }); 
 
