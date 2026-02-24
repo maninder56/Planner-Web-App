@@ -50,6 +50,8 @@ type Action = {
     hydrateBoard: (data: NormalisedBoardData) => void; 
 
     setListOrder: (newListOrder: ListId[]) => void; 
+
+    moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -68,8 +70,97 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
+    moveCard: (cardId, sourceListId, destinationListId, destinationIndex) => 
+        set((state) => {
+            // Moving in the same list
+            if (sourceListId === destinationListId) {
+                const list = state.lists[sourceListId]; 
+                
+                const newCardOrder = [...list.CardIDsAndOrder]; 
+                const currentIndex = newCardOrder.indexOf(cardId); 
+
+                if (currentIndex === -1) {
+                    return state; 
+                }
+
+                newCardOrder.splice(currentIndex, 1); 
+                newCardOrder.splice(destinationIndex, 0, cardId); 
+
+                return {
+                    lists: {
+                        ...state.lists, 
+                        [sourceListId]: {
+                            ...list, 
+                            CardIDsAndOrder: newCardOrder, 
+                        }
+                    }
+                }
+            } else {
+                return state; 
+            }
+        }), 
 
 }))
 
 
 export type { BoardData, ListId, List, CardId, Card, NormalisedBoardData }; 
+
+
+/* 
+
+moveCard: (cardId, sourceListId, destinationListId, destinationIndex) =>
+  set((state) => {
+    if (sourceListId === destinationListId) {
+      const list = state.lists[sourceListId];
+      if (!list) return state;
+
+      const newCardIds = [...list.CardIDsAndOrder];
+      const currentIndex = newCardIds.indexOf(cardId);
+      if (currentIndex === -1) return state;
+
+      newCardIds.splice(currentIndex, 1);
+      newCardIds.splice(destinationIndex, 0, cardId);
+
+      return {
+        lists: {
+          ...state.lists,
+          [sourceListId]: {
+            ...list,
+            CardIDsAndOrder: newCardIds,
+          },
+        },
+      };
+    }
+
+    // Moving between lists
+    const sourceList = state.lists[sourceListId];
+    const destinationList = state.lists[destinationListId];
+    if (!sourceList || !destinationList) return state;
+
+    const newSourceCardIds = sourceList.CardIDsAndOrder.filter(
+      (id) => id !== cardId
+    );
+
+    const newDestinationCardIds = [...destinationList.CardIDsAndOrder];
+    newDestinationCardIds.splice(destinationIndex, 0, cardId);
+
+    return {
+      lists: {
+        ...state.lists,
+        [sourceListId]: {
+          ...sourceList,
+          CardIDsAndOrder: newSourceCardIds,
+        },
+        [destinationListId]: {
+          ...destinationList,
+          CardIDsAndOrder: newDestinationCardIds,
+        },
+      },
+    };
+  }),
+
+
+
+
+
+*/
