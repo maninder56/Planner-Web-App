@@ -6,10 +6,11 @@ import BigHoverPanel from '@/Components/HoverPanels/BigHoverPanel/bigHoverPanel'
 import SearchBar from '../../Search/SearchBar/searchBar';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 
 export default function SwitchBoardOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [searchInput, setSearchInput] = useState(''); 
 

@@ -2,9 +2,10 @@
 import BigHoverPanel from '@/Components/HoverPanels/BigHoverPanel/bigHoverPanel';
 import styles from './shareButtonOptions.module.css'; 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function ShareButtonOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     
 
     return (

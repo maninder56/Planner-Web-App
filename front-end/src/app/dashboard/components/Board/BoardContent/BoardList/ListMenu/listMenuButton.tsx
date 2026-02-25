@@ -5,6 +5,7 @@ import styles from './listMenuButton.module.css';
 import { useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import ListMenuOptions from './listMenuOptions';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function ListMenuButton({
     listId, 
@@ -15,7 +16,8 @@ export default function ListMenuButton({
     currentOpenListMenu: ListId | undefined; 
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
 }) {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const isBoardListMenuOptionsOpen = useBoardUIStore((state) => state.activePanel === 'boardListMenuOptions'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
 
     return (
         <div className={styles.wrapper}>
@@ -24,7 +26,7 @@ export default function ListMenuButton({
                     e.stopPropagation(); 
 
                     if (currentOpenListMenu === listId) {
-                        setActivePanel(activePanel === 'boardListMenuOptions' ? 'none' : 'boardListMenuOptions');     
+                        setActivePanel(isBoardListMenuOptionsOpen ? 'none' : 'boardListMenuOptions');     
                     } else {
                         setActivePanel('boardListMenuOptions');     
                     }
@@ -43,7 +45,7 @@ export default function ListMenuButton({
                 </svg>
             </button>
             {
-                activePanel === 'boardListMenuOptions' && listId === currentOpenListMenu ? 
+                isBoardListMenuOptionsOpen && listId === currentOpenListMenu ? 
                     <ListMenuOptions />
                 : null
             }

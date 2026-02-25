@@ -18,9 +18,10 @@ import { BoardDataFromAPI } from './Types/boardTypes';
 import { useBoardStore } from './Store/boardStore';
 import { NormaliseBoardData } from './Utilities/boardData';
 import BoardContent from './components/Board/BoardContent/boardContent';
+import { useBoardUIStore } from './Store/boardUIStore';
 
 export default function Dashboard() {
-    const [activePanel, setActivePanel] = useState<panelType>('none'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const hasHydrated = useRef(false); 
 
@@ -122,12 +123,14 @@ export default function Dashboard() {
         ]
     }; 
 
-    useEffect(() => {
-        if (!hasHydrated.current) {
-            hydrateBoard(NormaliseBoardData(currentBoard)); 
-            hasHydrated.current = true;             
-        }
-    },[])
+    // useEffect(() => {
+    //     if (!hasHydrated.current) {
+    //         hydrateBoard(NormaliseBoardData(currentBoard)); 
+    //         hasHydrated.current = true;             
+    //     }
+    // },[]); 
+
+    hydrateBoard(NormaliseBoardData(currentBoard)); 
 
     
     const tempUser: { name: string, email: string, colour: profileColour} = {
@@ -135,45 +138,43 @@ export default function Dashboard() {
     }
 
     return (
-        <ActivePanelContext.Provider value={[activePanel, setActivePanel]}>
-            <div className={styles.page}
-                onClick={(e) => {
-                    e.stopPropagation(); 
-                    setActivePanel('none'); 
-                }}>
-                    {/* App logo search and profile options */}
-                    <section className={styles.firstSection}>
-                        <div className={styles.appLogo}>
-                            <AppLogo />
+        <div className={styles.page}
+            onClick={(e) => {
+                e.stopPropagation(); 
+                setActivePanel('none'); 
+            }}>
+                {/* App logo search and profile options */}
+                <section className={styles.firstSection}>
+                    <div className={styles.appLogo}>
+                        <AppLogo />
+                    </div>
+                    <div className={styles.searchWrapper}>
+                        <div className={styles.searchButton}>
+                            <SearchButton />
                         </div>
-                        <div className={styles.searchWrapper}>
-                            <div className={styles.searchButton}>
-                                <SearchButton />
-                            </div>
-                            <div className={styles.searchBar}>
-                                <SearchBar />
-                            </div>
+                        <div className={styles.searchBar}>
+                            <SearchBar />
                         </div>
-                        <div className={styles.dashboardMenuWrapper}>
-                            <div className={styles.dashboardMenu}>
-                                <DashboardMenuButton />
-                            </div>
-                            <div className={styles.dashboardOptions}>
-                                <NewBoardButton />
-                                <SwitchBoardButton />
-                                <ProfileButton userName={tempUser.name} userEmail={tempUser.email} iconColour={tempUser.colour} />
-                            </div>
+                    </div>
+                    <div className={styles.dashboardMenuWrapper}>
+                        <div className={styles.dashboardMenu}>
+                            <DashboardMenuButton />
                         </div>
+                        <div className={styles.dashboardOptions}>
+                            <NewBoardButton />
+                            <SwitchBoardButton />
+                            <ProfileButton userName={tempUser.name} userEmail={tempUser.email} iconColour={tempUser.colour} />
+                        </div>
+                    </div>
+                </section>
+                <main className={styles.mainContent}>
+                    <section>
+                        <BoardHeaderBar boardColour={currentBoard.boardColour} />
                     </section>
-                    <main className={styles.mainContent}>
-                        <section>
-                            <BoardHeaderBar boardColour={currentBoard.boardColour} />
-                        </section>
-                        <section>
-                            <BoardContent />
-                        </section>
-                    </main>
-            </div>
-        </ActivePanelContext.Provider>
+                    <section>
+                        <BoardContent />
+                    </section>
+                </main>
+        </div>
     ); 
 }
