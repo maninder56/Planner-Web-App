@@ -62,7 +62,7 @@ export default function BoardList({
                     <span>Add card button</span>
                 </button>
             </div>
-            <div>{JSON.stringify(listCardsIdsAndOrder)}</div>
+            {/* <div>{JSON.stringify(listCardsIdsAndOrder)}</div> */}
         </div>
     ); 
 }
