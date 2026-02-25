@@ -2,7 +2,7 @@
 import { useSortable, UseSortableInput} from '@dnd-kit/react/sortable';
 import {CollisionPriority} from '@dnd-kit/abstract';
 import styles from './boardList.module.css'; 
-import { ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import Image from 'next/image';
 import ListMenuButton from './ListMenu/listMenuButton';
 import { useState } from 'react';
@@ -15,11 +15,15 @@ export default function BoardList({
     index,
     currentOpenListMenu,
     setCurrentOpenListMenu,
+    cardDetailsPanelId, 
+    setCardDetailsPanelId, 
 }: {
     listId: ListId; 
     index: number; 
     currentOpenListMenu: ListId | undefined; 
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
+    cardDetailsPanelId?: CardId; 
+    setCardDetailsPanelId: (cardId?: CardId) => void; 
 }) {
     const {ref, isDragging} = useSortable({
         id: listId,  
@@ -52,7 +56,8 @@ export default function BoardList({
             <div className={styles.cards} ref={dropRef}>
                 {
                     listCardsIdsAndOrder.map((cardId, index) => (
-                        <BoardCard cardId={cardId} index={index} key={cardId} parentListId={listId} />
+                        <BoardCard cardId={cardId} index={index} key={cardId} parentListId={listId} 
+                            cardDetailsPanelId={cardDetailsPanelId} setCardDetailsPanelId={setCardDetailsPanelId} />
                     ))
                 }
             </div>

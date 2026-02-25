@@ -11,7 +11,8 @@ export type panelType =
     'shareBoardOptions'             | 
     'boardMenuOptions'              |
     'manageMembersOptions'          | 
-    'boardListMenuOptions'; 
+    'boardListMenuOptions'          | 
+    'cardDetailsPanel'; 
 
 export type profileColour = 'red' | 'blue' | 'green'; 
 

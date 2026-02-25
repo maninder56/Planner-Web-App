@@ -52,6 +52,9 @@ type Action = {
     setListOrder: (newListOrder: ListId[]) => void; 
 
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
+
+    // Card actions
+    setDoneOnCard: (cardId: CardId, done: boolean) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -120,6 +123,16 @@ export const useBoardStore = create<State & Action>((set) => ({
                 }
             }
         }), 
+
+        setDoneOnCard: (cardId, done) => set((state) => ({ 
+            cards: {
+                ...state.cards, 
+                [cardId]: {
+                    ...state.cards[cardId],
+                    done: done, 
+                }, 
+            }
+        })), 
 
 }))
 

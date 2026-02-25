@@ -16,6 +16,7 @@ export default function BoardContent() {
     const moveCard = useBoardStore((state) => state.moveCard); 
 
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
+    const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
     
     if (boardDetials === undefined) {
         // Add styles
@@ -73,7 +74,9 @@ export default function BoardContent() {
                         listOrder.map((listId, listIndex) => (
                             <BoardList listId={listId} index={listIndex} key={listId} 
                                 currentOpenListMenu={currentOpenListMenu} 
-                                setCurrentOpenListMenu={setCurrentOpenListMenu} />
+                                setCurrentOpenListMenu={setCurrentOpenListMenu}
+                                cardDetailsPanelId={cardDetailsPanelId}
+                                setCardDetailsPanelId={setCardDetailsPanelId} />
                         ))
                     }
                     <div className={styles.newListButtonContainer}>

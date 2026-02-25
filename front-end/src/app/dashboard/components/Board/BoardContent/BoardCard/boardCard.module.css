@@ -12,6 +12,14 @@
     background-color: rgba(255, 255, 255, 1);
 
     overflow: hidden;
+
+    cursor: pointer;
+}
+
+.wrapper:hover {
+    /* causes big hover panel to appear inside card */
+    /* transform: scale(1.02); */
+    transition: all 0.1s ease-in-out;
 }
 
 .wrapper > header {
@@ -24,12 +32,15 @@
 
 .wrapper > header > input {
     margin: auto 10px;
-    padding: 0;
 
     --size: 20px; 
     width: var(--size);
     height: var(--size);
 }
+
+/* .wrapper > header > input:hover {
+    outline: solid black 2px;
+} */
 
 .wrapper > header > h3 {
     margin: auto 0px;
