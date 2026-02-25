@@ -1,13 +1,40 @@
 
-.wrapper {
+.wrapper * {
     outline: solid 1px rgb(255, 0, 0);
 }
 
 .wrapper {
-    padding: 5px;
-    margin: 10px 0px;
+    padding: 0px;
+    margin: 20px 0px;
 
     border-radius: 10px;
 
     background-color: rgba(255, 255, 255, 1);
+
+    overflow: hidden;
+}
+
+.wrapper > header {
+    margin: 0px;
+    padding: 10px 0px;
+
+    display: flex;
+    background-color: rgb(255, 255, 0, 0.4);
+}
+
+.wrapper > header > input {
+    margin: auto 5px;
+    padding: 0;
+
+    --size: 20px; 
+    width: var(--size);
+    height: var(--size);
+}
+
+.wrapper > header > h3 {
+    margin: auto 0px;
+    padding: 0;
+
+    font-size: 1.2rem;
+    font-weight: 500;
 }

@@ -26,13 +26,27 @@ export default function BoardCard({
 
     const cardDetails = useBoardStore((state) => state.cards[cardId]); 
 
-
     return (
         <div className={styles.wrapper} ref={ref}>
-            <header>{cardDetails.title}</header>
-            <p>
-                {cardDetails.description}
-            </p>
+            <header>
+                <input type='checkbox' checked={cardDetails.done} />
+                <h3>{cardDetails.title}</h3>
+            </header>
+            <div>
+                <div>
+                    <p>{cardDetails.description}</p>
+                </div>
+                <div>
+                    <div>
+                        <span>Priority</span>
+                        <div>{cardDetails.priority} </div>
+                    </div>
+                    <div>
+                        <span>Due Date</span>
+                        <div>{cardDetails.dueDate.toString()}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     ); 
 }

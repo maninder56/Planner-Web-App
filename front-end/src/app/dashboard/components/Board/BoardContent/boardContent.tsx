@@ -67,7 +67,7 @@ export default function BoardContent() {
             // }}
         >
             <div className={[styles.wrapper, styles[boardDetials.boardColour]].join(' ')}>
-                <div>{JSON.stringify(listOrder)}</div>
+                {/* <div>{JSON.stringify(listOrder)}</div> */}
                 <div className={styles.lists}>
                     {
                         listOrder.map((listId, listIndex) => (
