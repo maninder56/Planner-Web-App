@@ -2,16 +2,18 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './filterButton.module.css'; 
 import FilterBoardOptions from './filterButtonOptions';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function FilterButton() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const isFilterBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'filterBoardOptions'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.mainButton}
                 onClick={e => {
                     e.stopPropagation(); 
-                    setActivePanel(activePanel === 'filterBoardOptions' ? 'none' : 'filterBoardOptions'); 
+                    setActivePanel(isFilterBoardOptionsOpen ? 'none' : 'filterBoardOptions'); 
                 }}
             >
                 {/* filter logo */}
@@ -23,7 +25,7 @@ export default function FilterButton() {
                 </svg>
             </div>
             {
-                activePanel === 'filterBoardOptions' ?
+                isFilterBoardOptionsOpen ?
                 <FilterBoardOptions />
                 : null
             }

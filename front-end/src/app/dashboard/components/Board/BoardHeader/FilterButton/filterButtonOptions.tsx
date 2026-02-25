@@ -5,9 +5,10 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/Components/Buttons/button';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function FilterBoardOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [searchInput, setSearchInput] = useState(''); 
 

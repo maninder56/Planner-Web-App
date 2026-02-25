@@ -6,20 +6,27 @@ import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import FilterBoardOptions from '../FilterButton/filterButtonOptions';
 import ShareButtonOptions from '../ShareButton/shareButtonOptions';
 import ManageBoardMembersOptions from '../ManageBoardMembers/manageBoardMembersOptions';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function BoardMenu({
     initialBoardColour
 }: {
     initialBoardColour: BoardColour; 
 }) {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const activePanel = useBoardUIStore((state) => state.activePanel); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
+
+    const isManageMembersOptionsOpen = activePanel === 'manageMembersOptions'; 
+    const isShareBoardOptionsOpen = activePanel === 'shareBoardOptions'; 
+    const isFilterBoardOptionsOpen = activePanel === 'filterBoardOptions'; 
+    const isBoardMenuOptionsOpen = activePanel === 'boardMenuOptions';  
 
     return (
         <div className={styles.wrapper}>
             <button className={styles.mainButton}
                 onClick={e => {
                     e.stopPropagation(); 
-                    setActivePanel(activePanel === 'boardMenuOptions' ? 'none' : 'boardMenuOptions'); 
+                    setActivePanel(isBoardMenuOptionsOpen ? 'none' : 'boardMenuOptions'); 
                 }}
             >
                 {/* menu logo */}
@@ -33,23 +40,23 @@ export default function BoardMenu({
                 </svg>
             </button>
             {
-                activePanel === 'boardMenuOptions' ? 
+                isBoardMenuOptionsOpen ? 
                     <BoardMenuOptions initialBoardColour={initialBoardColour} initialFavoriteBoard={false} />
                 : null
             }
             {
-                activePanel === 'manageMembersOptions' ? 
+                isManageMembersOptionsOpen ? 
                     <ManageBoardMembersOptions />
                 : null
             }
             <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
                 {
-                    activePanel === 'filterBoardOptions' ? 
+                    isFilterBoardOptionsOpen ? 
                         <FilterBoardOptions />
                     : null
                 }
                 {
-                    activePanel === 'shareBoardOptions' ? 
+                    isShareBoardOptionsOpen ? 
                         <ShareButtonOptions />
                     : null
                 }

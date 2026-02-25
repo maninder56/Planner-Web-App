@@ -8,9 +8,10 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function NewBoardOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const colours: BoardColour[] = BoardColoursList; 
 

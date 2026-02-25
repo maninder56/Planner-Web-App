@@ -2,16 +2,18 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './shareButton.module.css'; 
 import ShareButtonOptions from './shareButtonOptions';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function ShareButton() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const isShareBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'shareBoardOptions'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <div className={styles.wrapper}>
             <button className={styles.mainButton}
                 onClick={e => {
                     e.stopPropagation(); 
-                    setActivePanel(activePanel === 'shareBoardOptions' ? 'none' : 'shareBoardOptions'); 
+                    setActivePanel(isShareBoardOptionsOpen ? 'none' : 'shareBoardOptions'); 
                 }}
             >
                 {/* Share logo */}
@@ -24,7 +26,7 @@ export default function ShareButton() {
                 </svg>
             </button>
             {
-                activePanel === 'shareBoardOptions' ? 
+                isShareBoardOptionsOpen ? 
                 <ShareButtonOptions />
                 : null
             }

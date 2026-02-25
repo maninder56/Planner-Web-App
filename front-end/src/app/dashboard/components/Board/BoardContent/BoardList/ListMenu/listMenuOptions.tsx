@@ -2,10 +2,12 @@
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import styles from './listMenuOptions.module.css'; 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 
 export default function ListMenuOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
+    
     return (
         <HoverOptionsPanel title='List Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.wrapper}>
