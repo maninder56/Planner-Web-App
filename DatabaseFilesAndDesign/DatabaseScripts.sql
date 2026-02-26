@@ -18,3 +18,7 @@ SELECT
 FROM users U
 LEFT JOIN refreshtokens RT
     ON U.UserId = RT.UserId;
+
+
+SELECT  *
+FROM refreshtokens RT;
