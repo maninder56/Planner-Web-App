@@ -17,7 +17,7 @@ public class TokenProviderUtility
 
     public TokenProviderUtility(IConfiguration configuration)
     {
-        secretKey = configuration["JwtSecret"] ?? throw new InvalidOperationException("Failed to get JWT Secret from configuration");
+        secretKey = configuration["JwtSecretKey"] ?? throw new InvalidOperationException("Failed to get JWT Secret from configuration");
         tokenExpirationInMinutes = configuration.GetValue<int>("Jwt:ExpirationInMinutes", accessTokenDefaultLifeInMinutes);
         tokenIssuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Failed to get Token Issuer from configuration");
         tokenAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Failed to get Token Audience from configuration");

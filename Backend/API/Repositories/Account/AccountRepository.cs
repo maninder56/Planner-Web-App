@@ -124,6 +124,7 @@ public class AccountRepository : IAccountRepository
         try
         {
             var user = await database.Users
+                .Include(u => u.RefreshToken)
                 .FirstOrDefaultAsync(u => u.UserId == userId); 
 
             if (user is null)
@@ -155,6 +156,7 @@ public class AccountRepository : IAccountRepository
         try
         {
             var user = await database.Users
+                .Include(u => u.RefreshToken)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user is null)
