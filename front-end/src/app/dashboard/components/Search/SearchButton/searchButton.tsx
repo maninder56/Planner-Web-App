@@ -5,31 +5,33 @@ import styles from './searchButton.module.css';
 import CloseButton from '@/Components/Buttons/closeButton';
 import Image from 'next/image';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function SearchButton() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const isPanelOpen = useBoardUIStore((state) => state.activePanel === 'searchButtonPanel'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [searchInput, setSearchInput] = useState(''); 
     const inputRef = useRef<HTMLInputElement>(null); 
 
     useEffect(() => {
-        if (activePanel === 'searchButtonPanel' && inputRef.current) {
+        if (isPanelOpen && inputRef.current) {
             inputRef.current.focus(); 
         }
-    }, [activePanel])
+    }, [isPanelOpen])
 
     return (
         <div className={styles.wrapper}
             onClick={(e) => {
                 e.stopPropagation(); 
-                if (activePanel !== 'searchButtonPanel') {
+                if (!isPanelOpen) {
                     setActivePanel('searchButtonPanel'); 
                 }
             }}>
             <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
             <header>Search</header>
             {
-                activePanel === 'searchButtonPanel' ? 
+                isPanelOpen ? 
                 <div className={styles.searchPanel}
                     onClick={e => {
                         e.stopPropagation(); 

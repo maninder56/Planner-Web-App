@@ -10,30 +10,35 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import NewBoardOptions from '../NewBoard/newBoardOptions';
 import SwitchBoardOptions from '../SwitchBoard/switchBoardOptions';
 import DashboardMenuOptions from './dashboardMenuOptions';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function DashboardMenuButton() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const isDashboardMenuOptionsOpen = useBoardUIStore((state) => state.activePanel === 'dashboardMenuButtonOptions'); 
+    const isNewBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'newBoardOptions'); 
+    const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    
     return (
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.menuButton}
                 onClick={(e) => {
                     e.stopPropagation(); 
-                    setActivePanel(activePanel === 'dashboardMenuButtonOptions' ? 'none' : 'dashboardMenuButtonOptions'); 
+                    setActivePanel(isDashboardMenuOptionsOpen ? 'none' : 'dashboardMenuButtonOptions'); 
                 }}>
                 <Image src={'./menu-icon.svg'} alt='Menu icon' width={40} height={40} />
             </div>
             {
-                activePanel === 'dashboardMenuButtonOptions' ? 
+                isDashboardMenuOptionsOpen ? 
                 <DashboardMenuOptions />
                 : null
             }
             {
-                activePanel === 'newBoardOptions' ? 
+                isNewBoardOptionsOpen ? 
                 <NewBoardOptions /> 
                 : null
             }
             {
-                activePanel === 'switchBoardOptions' ? 
+                isSwitchBoardOptionsOpen ? 
                 <SwitchBoardOptions />
                 : null
             }

@@ -3,9 +3,10 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import styles from './dashboardMenuOptions.module.css'; 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import Image from 'next/image';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function DashboardMenuOptions() {
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <HoverOptionsPanel title='Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>

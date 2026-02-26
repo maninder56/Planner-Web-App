@@ -1,0 +1,56 @@
+import { BoardData, Card, CardId, List, ListId, NormalisedBoardData } from "../Store/boardStore";
+import { BoardDataFromAPI } from "../Types/boardTypes";
+
+
+export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData {
+    const boardData: BoardData = {
+        id: data.id, 
+        title: data.title, 
+        idFavoriteBoard: data.isFavoriteBoard, 
+        boardColour: data.boardColour,
+    }; 
+
+    // Sort the lists and cards in order by position
+
+    let lists: Record<ListId, List> = {}; 
+    let cards: Record<CardId, Card> = {}; 
+    let listOrder: ListId[] = []; 
+
+    for (let list of data.boardLists) {
+
+        let cardIds: CardId[] = []; 
+
+        for (let card of list.cardList) {
+            cards[`card-${card.id}`] = {
+                id: card.id, 
+                title: card.title, 
+                description: card.description, 
+                done: card.done, 
+                priority: card.priority, 
+                dueDate: card.dueDate, 
+                position: card.position,
+            }; 
+
+            cardIds.push(`card-${card.id}`); 
+        }
+
+        lists[`list-${list.id}`]  = {
+            id: list.id, 
+            title: list.title, 
+            listColour: list.listColour, 
+            position: list.position, 
+            CardIDsAndOrder: cardIds, 
+        }; 
+
+        listOrder.push(`list-${list.id}`); 
+    }
+
+    const normalisedData: NormalisedBoardData = {
+        boardData: boardData, 
+        lists: lists, 
+        cards: cards, 
+        listOrder: listOrder,
+    }; 
+
+    return normalisedData; 
+}

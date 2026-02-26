@@ -11,6 +11,7 @@ import InnerPanelButton from '@/Components/Buttons/innerPanelButton';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import Image from 'next/image';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function ProfileOptions({
     userName,
@@ -22,7 +23,7 @@ export default function ProfileOptions({
     iconColour: profileColour; 
 }) {
 
-    const [activePanel, setActivePanel] = useActivePanel(); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <HoverOptionsPanel title='Account' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>

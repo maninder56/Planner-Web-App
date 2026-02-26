@@ -1,0 +1,36 @@
+
+.wrapper {
+    --size: 30px; 
+    height: var(--size);
+    width: var(--size);
+    position: relative;
+}
+
+
+.mainButton {
+    margin: auto;
+    padding: 0;
+
+    width: inherit;
+    height: inherit;
+
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+
+    background-color: transparent;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mainButton svg {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}

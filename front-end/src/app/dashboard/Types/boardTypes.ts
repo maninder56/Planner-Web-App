@@ -12,10 +12,10 @@ export type CardPriority = z.infer<typeof CardPriority>;
 const Card = z.object({
     id: z.number(),
     title: z.string(), 
-    Description: z.string(), 
+    description: z.string(), 
     done: z.boolean(), 
     priority: CardPriority,
-    dueDate: z.iso.date(), 
+    dueDate: z.date(), 
     position: z.number(), 
 }); 
 export type Card = z.infer<typeof Card>; 
@@ -32,10 +32,11 @@ export type BoardList = z.infer<typeof BoardList>;
 const Board = z.object({
     id: z.number(), 
     title: z.string(),
+    isFavoriteBoard: z.boolean(), 
     boardColour: BoardColour,
     boardLists: z.array(BoardList),
 }); 
-export type Board = z.infer<typeof Board>; 
+export type BoardDataFromAPI = z.infer<typeof Board>; 
 
 
 

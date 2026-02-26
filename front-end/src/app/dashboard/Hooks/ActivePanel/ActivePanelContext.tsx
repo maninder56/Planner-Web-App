@@ -1,7 +1,7 @@
 import { panelType } from "@/app/dashboard/Types/UIState";
 import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 
-
+// No longer used
 export const ActivePanelContext = createContext<[panelType, Dispatch<SetStateAction<panelType>>] | null>(null); 
 
 export function useActivePanel() {

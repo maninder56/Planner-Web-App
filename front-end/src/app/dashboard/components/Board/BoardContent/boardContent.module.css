@@ -1,0 +1,68 @@
+
+/* .wrapper * {
+    outline: solid 1px red;
+} */
+
+.wrapper {
+    flex: 1 1 auto;
+
+    border-radius: 0px 0px 10px 10px;
+
+    display: flex;
+    overflow: hidden;
+}
+
+
+.lists {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    margin: 5px 0px;
+    margin-top: 20px;
+
+    padding: 20px 40px;
+    
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+    gap: 30px;
+
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+.newListButtonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+/* Board colours */
+
+.wrapper.soft-pink{
+    background-color: var(--soft-pink);
+} 
+
+.wrapper.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.wrapper.aqua {
+    background-color: var(--aqua);
+}
+
+
+.wrapper.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.wrapper.light-purple {
+    background-color: var(--light-purple);
+}
+
+
+.wrapper.bright-pink {
+    background-color: var(--bright-pink);
+}

@@ -1,0 +1,57 @@
+
+.wrapper {
+    padding: 10px;
+    height: fit-content;
+
+    border-radius: 10px;
+
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+@media (pointer: fine) {
+    .wrapper:hover {
+        /* background-color: rgba(0, 0, 0, 0.2); */
+    }
+}
+
+.wrapper.dragging {
+    
+}
+
+.wrapper:active {
+    /* box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.7);
+
+    background-color: rgba(0, 0, 0, 0.2);
+
+    cursor: grabbing;
+
+    transition: all 0.1s ease-in-out; */
+}
+
+
+.header {
+    display: flex;
+    cursor: grab;
+}
+
+.header > header {
+    flex: 1 1 auto;
+
+    margin: auto;
+    margin-left: 5px;
+    padding: 0;
+
+    text-align: start;
+    font-size: 1rem;
+}
+
+.cards {
+    margin-top: 10px;
+    min-height: 100px;
+}
+
+
+.addNewCardContainer {
+    display: flex;
+    justify-content: center;
+}
