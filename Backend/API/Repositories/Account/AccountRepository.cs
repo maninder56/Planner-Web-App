@@ -2,6 +2,7 @@
 using API.Models.Result;
 using API.Utilities;
 using DatabaseContext;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using MySqlConnector;
@@ -32,7 +33,10 @@ public class AccountRepository : IAccountRepository
             if (user == null)
             {
                 logger.LogWarning("Unable to find user with email: {Email}", email);
-                return Result<User, Error>.Failed(Error.NotFound); 
+                return Result<User, Error>.Failed(Error.NotFound, new ProblemDetails()
+                {
+                    Title = "Invalid Email", Detail = "User does not exists", 
+                }); 
             }
             else
             {
@@ -42,7 +46,7 @@ public class AccountRepository : IAccountRepository
         catch (Exception ex)
         {
             logger.LogError("Failed to get user details, Exception message: {ExceptionMessage}", ex.Message);
-            return Result<User, Error>.Failed(Error.InternalServerError); 
+            return Result<User, Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
         }
     }
 
@@ -62,7 +66,10 @@ public class AccountRepository : IAccountRepository
             if (token == null)
             {
                 logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
-                return Result<(User, RefreshToken), Error>.Failed(Error.NotFound); 
+                return Result<(User, RefreshToken), Error>.Failed(Error.NotFound, new ProblemDetails()
+                {
+                    Title = "Invalid Refresh token", 
+                }); 
             }
             else
             {
@@ -73,7 +80,7 @@ public class AccountRepository : IAccountRepository
         catch (Exception ex)
         {
             logger.LogError("Failed to get user and refresh token, Exception message: {ExceptionMessage}", ex.Message); 
-            return Result<(User, RefreshToken), Error>.Failed(Error.InternalServerError); 
+            return Result<(User, RefreshToken), Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
         }
     }
 
@@ -105,16 +112,19 @@ public class AccountRepository : IAccountRepository
             if (sqlEx is not null && sqlEx.Number == 1062) // Check if email was duplicate
             {
                 logger.LogError("Failed to Create new user account with email {Email} which already exists.", email);
-                return Result<CreatedUser, Error>.Failed(Error.BadRequest);
+                return Result<CreatedUser, Error>.Failed(Error.BadRequest, new ProblemDetails()
+                {
+                    Title = "Invalid Email", Detail = "An account exists for provided email; please use different email"
+                });
             }
 
             logger.LogError("Failed to Create New User account with email {Email}", email);
-            return Result<CreatedUser, Error>.Failed(Error.InternalServerError);
+            return Result<CreatedUser, Error>.Failed(Error.InternalServerError, new ProblemDetails());
         }
         catch (Exception ex)
         {
             logger.LogError("Failed to Create New User account with email {Email} and Exception message: {ExMessage}", email, ex.Message);
-            return Result<CreatedUser, Error>.Failed(Error.InternalServerError); 
+            return Result<CreatedUser, Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
         }
     }
 
@@ -130,7 +140,10 @@ public class AccountRepository : IAccountRepository
             if (user is null)
             {
                 logger.LogWarning("Failed to Save new refresh token, User id: {UserId} Invalid", userId);
-                return Result<Error>.Failed(Error.InternalServerError); 
+                return Result<Error>.Failed(Error.BadRequest, new ProblemDetails()
+                {
+                    Title = "Invalid User", Detail = "User does not exists", 
+                }); 
             }
 
             var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
@@ -144,7 +157,7 @@ public class AccountRepository : IAccountRepository
         catch (Exception ex)
         {
             logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError);
+            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails());
         }
     }
 
@@ -162,7 +175,10 @@ public class AccountRepository : IAccountRepository
             if (user is null)
             {
                 logger.LogWarning("Failed to update refresh token, User id: {UserId} Invalid", userId);
-                return Result<Error>.Failed(Error.InternalServerError);
+                return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails()
+                {
+                    Title = "Invalid User", Detail = "User does not exists", 
+                });
             }
 
             var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
@@ -176,7 +192,7 @@ public class AccountRepository : IAccountRepository
         catch (Exception ex)
         {
             logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError);
+            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails());
         }
     }
 
@@ -207,7 +223,7 @@ public class AccountRepository : IAccountRepository
         catch (Exception ex)
         {
             logger.LogWarning("Failed to delete refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError); 
+            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
         }
     }
 

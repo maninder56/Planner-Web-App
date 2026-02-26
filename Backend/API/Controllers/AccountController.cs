@@ -3,6 +3,7 @@ using API.Services.Account;
 using API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 
 namespace API.Controllers; 
@@ -39,7 +40,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return result.Error.ErrorToActionResult(); 
+            return result.Error.ErrorToActionResult(result.ProblemDetails);
         }
     }
 
@@ -59,7 +60,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return result.Error.ErrorToActionResult();
+            return result.Error.ErrorToActionResult(result.ProblemDetails);
         }
     }
 
@@ -85,7 +86,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return tokenResult.Error.ErrorToActionResult();
+            return tokenResult.Error.ErrorToActionResult(tokenResult.ProblemDetails);
         }
     }
 

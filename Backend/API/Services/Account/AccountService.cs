@@ -3,6 +3,7 @@ using API.Models.Account;
 using API.Models.Result;
 using API.Repositories.Account;
 using API.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services.Account; 
 
@@ -43,14 +44,17 @@ public class AccountService : IAccountService
 
         if (!userResult.Successful || userResult.Data == null)
         {
-            return Result<Tokens, Error>.Failed(userResult.Error); 
+            return Result<Tokens, Error>.Failed(userResult.Error, userResult.ProblemDetails); 
         }
 
         // verify password 
         if (!PasswordUtility.VerifyPassword(userResult.Data.PasswordHash, logInUser.Password))
         {
             logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
-            return Result<Tokens, Error>.Failed(Error.BadRequest);
+            return Result<Tokens, Error>.Failed(Error.BadRequest, new ProblemDetails()
+            {
+                Title = "Invalid password"
+            });
         }
 
         // create tokens 
@@ -84,7 +88,7 @@ public class AccountService : IAccountService
 
         if (!userSaved.Successful || userSaved.Data is null)
         {
-            return Result<Tokens, Error>.Failed(userSaved.Error); 
+            return Result<Tokens, Error>.Failed(userSaved.Error, userSaved.ProblemDetails); 
         }
 
         byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
@@ -114,7 +118,10 @@ public class AccountService : IAccountService
         if (refreshTokenInBase64 == null)
         {
             logger.LogWarning("Unable to find refresh token in cookies"); 
-            return Result<Tokens,Error>.Failed(Error.BadRequest);
+            return Result<Tokens,Error>.Failed(Error.BadRequest, new ProblemDetails()
+            {
+                Title = "Refresh token not found", Detail = "Unable to find refreh token form cookies"
+            });
         }
 
         // get user details by refreshtoken 
@@ -123,21 +130,27 @@ public class AccountService : IAccountService
 
         if (!userAndRefreshTokenResult.Successful || user == null || refreshToken == null)
         {
-            return Result<Tokens, Error>.Failed(userAndRefreshTokenResult.Error);
+            return Result<Tokens, Error>.Failed(userAndRefreshTokenResult.Error, userAndRefreshTokenResult.ProblemDetails);
         }
 
         // check if refreshtoken is expired
         if (refreshToken.ExpiresAt < DateTime.UtcNow)
         {
             logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email); 
-            return Result<Tokens, Error>.Failed(Error.Unauthorized); 
+            return Result<Tokens, Error>.Failed(Error.Unauthorized, new ProblemDetails()
+            {
+                Title = "Invalid Refresh token", Detail = "Refresh token expired", 
+            }); 
         }
 
         // Verify refresh tokens 
         if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
         {
             logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email); 
-            return Result<Tokens, Error>.Failed(Error.Unauthorized); 
+            return Result<Tokens, Error>.Failed(Error.Unauthorized, new ProblemDetails()
+            {
+                Title = "Invalid Refresh token",
+            }); 
         }
 
         // create new refresh token and jwt 

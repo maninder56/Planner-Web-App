@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 
 // Add database services
 builder.Services.AddDatabaseService(builder.Configuration);
@@ -30,6 +31,9 @@ database.Database.Migrate();
 database.SaveChanges();
 database.Dispose(); 
 scope.Dispose();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 
 // Configure the HTTP request pipeline.

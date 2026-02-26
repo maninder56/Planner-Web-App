@@ -1,34 +1,27 @@
 ﻿using API.Models.Result;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace API.Utilities; 
 
 public static class ApiErrorUtility
 {
-    public static IActionResult ErrorToActionResult(this Error error)
+    public static IActionResult ErrorToActionResult(this Error error, ProblemDetails problemDetails)
     {
-        switch(error)
+        return error switch
         {
-            case Error.BadRequest:
-                return new BadRequestObjectResult("Bad Request"); 
-
-            case Error.Unauthorized:
-                return new UnauthorizedObjectResult("Unauthorized");
-
-            case Error.NotFound:
-                return new NotFoundObjectResult("Not Found");
-
-            case Error.InternalServerError:
-            default:
-                return new ObjectResult(new ProblemDetails
-                    {
-                        Status = StatusCodes.Status500InternalServerError,
-                        Title = "Internal Server Error",
-                        Detail = "An unexpected error occured"
-                    })
+            Error.BadRequest => new BadRequestObjectResult(problemDetails), 
+            Error.Unauthorized => new UnauthorizedObjectResult(problemDetails),
+            Error.NotFound => new NotFoundObjectResult(problemDetails), 
+            Error.InternalServerError or _ => new ObjectResult(new ProblemDetails
                 {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                }; 
-        }
+                    Status = StatusCodes.Status500InternalServerError,
+                    Title = "Internal Server Error",
+                    Detail = "An unexpected error occured"
+                })
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            }
+        }; 
     }
 }
