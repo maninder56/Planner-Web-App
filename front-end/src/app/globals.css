@@ -71,11 +71,6 @@ body {
 }
 
 
-/* Interaction states */
-.button:hover:not(:disabled) {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  filter: brightness(1.05);
-}
 
 /* .button:active:not(:disabled) {
   transform: translateY(1px);
@@ -101,7 +96,7 @@ body {
 }
 
 .button.red {
-  background-color: #dc2626;
+  background-color: #eb2a2a;
   color: #ffffff;
 }
 
@@ -113,12 +108,22 @@ body {
 .button.transparent {
   background-color: #ffffff;
   color: #334155;
-  border: 1px solid #e2e8f0;
+  /* border: 1px solid #e2e8f0; */
 }
 
-.button.transparent:hover:not(:disabled) {
-  background-color: #f8fafc;
+@media (pointer: fine) {
+    /* Interaction states */
+  .button:hover:not(:disabled) {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.05);
+  }
+
+  .button.transparent:hover:not(:disabled) {
+    background-color: #f8fafc;
+  }
 }
+
+
 
 
 

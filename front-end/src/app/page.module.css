@@ -15,7 +15,7 @@
     z-index: 1;
     top: 0px;
     background-color: white;
-    box-shadow: 0px 0px 20px -10px black;
+    box-shadow: 0px 0px 10px -5px black;
 }
 
 .header {
@@ -45,6 +45,14 @@
     font-weight: 400;
 }
 
+.headerButtons {
+    display: flex;
+}
+
+.headerButtons > div {
+    margin: auto 5px;
+}
+
 @media (min-width: 370) {
     .header {
         padding: 10px 20px;
@@ -71,7 +79,7 @@
 
 .firstSection {
     /* background-color: var(--verylight-red-color); */
-    background: linear-gradient(rgb(255, 248, 248) 0%, rgba(255, 255, 255, 1) 100%); 
+    /* background: linear-gradient(rgb(255, 248, 248) 0%, rgba(255, 255, 255, 1) 100%);  */
     padding: 20px 5px;
     display: flex;
     justify-content: center;
@@ -187,7 +195,7 @@
 
 .thirdSection {
     /* background-color: var(--verylight-red-color); */
-    background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgb(255, 248, 248) 100%);
+    /* background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgb(255, 248, 248) 100%); */
     padding: 20px 5px;
     display: flex;
     justify-content: center;
@@ -251,7 +259,8 @@
 
 .page footer {
     padding: 10px 5px;
-    box-shadow: 0px 0px 20px -10px black; 
+    padding-bottom: 50px;
+    /* box-shadow: 0px 0px 20px -10px black;  */
     background-color: white;
     display: flex;
     justify-content: space-evenly;

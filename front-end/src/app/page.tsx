@@ -15,11 +15,13 @@ export default function Home() {
             <Image src={'/Site-Logo.svg'} alt='App logo' width={50} height={50} loading='eager'/>
             <h1>Planner</h1>
           </div>
-          <div>
-            <Link href={'/login'} className='button transparent'>Log in</Link>
-          </div>
-          <div>
-            <Link href={'/signup'} className='button red'>Sign up</Link>
+          <div className={styles.headerButtons}>
+            <div>
+              <Link href={'/login'} className='button transparent'>Log in</Link>
+            </div>
+            <div>
+              <Link href={'/signup'} className='button red'>Sign up</Link>
+            </div>
           </div>
         </header>
       </div>
