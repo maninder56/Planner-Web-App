@@ -88,7 +88,7 @@ export default function SignupForm({
                         setErrors({...errors, userName: undefined}); 
                     }
                 }}/>
-            <FormInput label='Email' placeholder='Enter your Email' maxLength={100} value={email} error={errors.email} type='text'
+            <FormInput label='Email' placeholder='Enter your Email' maxLength={200} value={email} error={errors.email} type='text'
                 setValue={(value) => {
                     setEmail(value); 
                     if (value === '') {

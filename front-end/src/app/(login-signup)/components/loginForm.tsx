@@ -60,7 +60,7 @@ export default function LoginForm({
         <form className={styles.form} onSubmit={handleFormSubmit}>
             <header>Log in to continue</header>
             <div className={styles.formError}>{formError}</div>
-            <FormInput label='Email' placeholder='Enter your email' maxLength={100} value={email} error={errors.email} type='text'
+            <FormInput label='Email' placeholder='Enter your email' maxLength={200} value={email} error={errors.email} type='text'
                 setValue={(value) => {
                     setEmail(value); 
                     if (value === '') {

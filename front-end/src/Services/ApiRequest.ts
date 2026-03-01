@@ -6,6 +6,23 @@ import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from 
 const apiUrl = process.env.NEXT_PUBLIC_APIURL; 
 
 
+
+export async function ApiRequest<R, D>(
+    request: (apiUrl: string, data: D) => Promise<ApiResult<R, ApiError>>, 
+    data: D,
+) {
+     if (apiUrl === undefined) {
+        console.error('Failed to load API URL'); 
+        return ApiRequestFailed('ApiUrlNotFound'); 
+    }
+
+    return await request(apiUrl, data); 
+} 
+
+
+
+
+
 // R: Response Data 
 // D: data for request function
 export async function ApiRequestWithRefreshTokenAttempt<R, D>({
