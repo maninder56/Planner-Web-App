@@ -19,7 +19,7 @@ export default function SignupForm({
     onSubmit, 
     formError, 
 }: {
-    onSubmit: () => Promise<void>; 
+    onSubmit: (useData: { name: string; email: string; password: string; }) => Promise<void>; 
     formError?: string; 
 }) {
 
@@ -68,7 +68,7 @@ export default function SignupForm({
 
         try {
             if (validateFormValues()) {
-                await onSubmit();  
+                await onSubmit({name: userName, email: email, password: password});  
             }
         } finally {
             setButtonsDisabled(false); 
@@ -118,7 +118,15 @@ export default function SignupForm({
                     }
                 }}/>
             <div className={styles.LoginLink}>
-                <Link href={'/login'}>Already have an account? Log in</Link>
+                <Link href={'/login'} className={buttonsDisabled ? styles.linkDisabled : undefined }
+                    onClick={e => {
+                        if (buttonsDisabled) {
+                            e.preventDefault(); 
+                        }
+                    }}
+                >
+                    Already have an account? Log in
+                </Link>
             </div>
             <div className={styles.signup}>
                 <button type='submit' className='button red' disabled={buttonsDisabled}>Sign up</button>

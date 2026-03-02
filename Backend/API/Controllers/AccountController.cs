@@ -35,7 +35,11 @@ public class AccountController : ControllerBase
 
         if (result.Successful && result.Data != null)
         {
-            cookiesUtility.SetNewTokensInsideCookies(HttpContext, result.Data); 
+            cookiesUtility.SetNewTokensInsideCookies(HttpContext, result.Data);
+
+            logger.LogInformation("User with email {email} successfully logged in at {time}",
+                newUser.Email, DateTime.UtcNow.ToString());
+
             return NoContent(); 
         }
         else

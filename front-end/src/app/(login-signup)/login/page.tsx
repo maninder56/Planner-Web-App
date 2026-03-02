@@ -13,8 +13,8 @@ import { appRoute } from '@/Types/appRoutes';
 export default function Login() {
     const [fromError, setFormError] = useState(''); 
 
-    async function handleFormSubmit(email: string, password: string ) {
-        const apiResult = await ApiRequest(LogInUserRequest, { email: email, password: password }); 
+    async function handleFormSubmit(userData: { email: string, password: string }) {
+        const apiResult = await ApiRequest(LogInUserRequest, userData); 
 
         if (apiResult.ok) {
             const dashboard: appRoute = '/dashboard'; 
@@ -23,8 +23,7 @@ export default function Login() {
             setFormError('Invalid Email Or Password'); 
         } else if (apiResult.error === 'BadRequest' || apiResult.error === 'NotFound') {
             setFormError('Invalid Email or Password'); 
-        }
-        else {
+        } else {
             setFormError('Something went wrong, Please try again later'); 
         }
     }
