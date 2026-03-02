@@ -21,7 +21,10 @@ export default function Login() {
             permanentRedirect(dashboard); 
         } else if (apiResult.error === 'Unauthorized'){
             setFormError('Invalid Email Or Password'); 
-        } else {
+        } else if (apiResult.error === 'BadRequest' || apiResult.error === 'NotFound') {
+            setFormError('Invalid Email or Password'); 
+        }
+        else {
             setFormError('Something went wrong, Please try again later'); 
         }
     }

@@ -33,9 +33,9 @@ public class AccountRepository : IAccountRepository
             if (user == null)
             {
                 logger.LogWarning("Unable to find user with email: {Email}", email);
-                return Result<User, Error>.Failed(Error.NotFound, new ProblemDetails()
+                return Result<User, Error>.Failed(Error.BadRequest, new ProblemDetails()
                 {
-                    Title = "Invalid Email", Detail = "User does not exists", 
+                    Title = "Invalid User Credentials", 
                 }); 
             }
             else
