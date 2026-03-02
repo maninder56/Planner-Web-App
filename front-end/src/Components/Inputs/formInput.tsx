@@ -30,7 +30,8 @@ export default function FormInput({
                 value={value}
                 placeholder={placeholder}
                 maxLength={maxLength}
-                onChange={(e) => setValue(e.target.value)} />
+                onChange={(e) => setValue(e.target.value)} 
+                autoComplete='on'/>
             <div>{error}</div>
         </div>
     ); 

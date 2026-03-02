@@ -1,4 +1,4 @@
-import { ApiError, ApiResult } from "@/Types/ApiTypes";
+import { ApiError, ApiResult } from "@/Types/apiTypes";
 
 export function ApiRequestSuccessfull<T>(data?: T): ApiResult<T, ApiError> {
     return { ok: true, data: data }; 

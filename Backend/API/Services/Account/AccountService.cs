@@ -53,7 +53,7 @@ public class AccountService : IAccountService
             logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
             return Result<Tokens, Error>.Failed(Error.BadRequest, new ProblemDetails()
             {
-                Title = "Invalid password"
+                Title = "Invalid User Credentials"
             });
         }
 
