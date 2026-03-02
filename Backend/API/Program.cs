@@ -13,6 +13,9 @@ builder.Services.AddDatabaseService(builder.Configuration);
 
 
 
+// CORS Policy
+builder.Services.AddCorsPolicy(builder.Configuration); 
+
 // Authentication service
 builder.Services.AddJWTBearerAuthentication(builder.Configuration);
 // Authorization service 
@@ -40,7 +43,14 @@ app.UseStatusCodePages();
 
 //app.UseHttpsRedirection();
 
+string corsPolicyName = builder.Configuration["CorsPolicy:PolicyName"] ??
+    throw new InvalidOperationException("Failed to get Cors policy name");
+
+app.UseCors(corsPolicyName);
+
+
 app.UseAuthorization();
+app.UseAuthorization(); 
 
 app.MapControllers();
 
