@@ -1,4 +1,4 @@
-import { ApiError, ApiResult } from "@/Types/ApiTypes";
+import { ApiError, ApiResult } from '@/Types/apiTypes';
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from "@/Utilities/ApiUtilities";
 
 
@@ -25,13 +25,10 @@ export async function ApiRequest<R, D>(
 
 // R: Response Data 
 // D: data for request function
-export async function ApiRequestWithRefreshTokenAttempt<R, D>({
-    request, 
-    data,
-}: {
-    request: (apiUrl: string, data?: D) => Promise<ApiResult<R, ApiError>>; 
-    data?: D; 
-}) {
+export async function ApiRequestWithRefreshTokenAttempt<R, D>(
+    request: (apiUrl: string, data?: D) => Promise<ApiResult<R, ApiError>>, 
+    data?: D,
+) {
     if (apiUrl === undefined) {
         console.error('Failed to load API URL'); 
         return ApiRequestFailed('ApiUrlNotFound'); 
