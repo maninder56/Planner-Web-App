@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, ListColour } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority } from "../Types/boardTypes";
 
 
 
@@ -16,7 +16,6 @@ type CardId = `card-${number}`;
 type List = {
     id: number, 
     title: string, 
-    listColour: ListColour, 
     position: number,
     CardIDsAndOrder: CardId[],
 }

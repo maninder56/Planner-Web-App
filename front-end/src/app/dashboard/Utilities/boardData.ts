@@ -37,7 +37,6 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
         lists[`list-${list.id}`]  = {
             id: list.id, 
             title: list.title, 
-            listColour: list.listColour, 
             position: list.position, 
             CardIDsAndOrder: cardIds, 
         }; 
