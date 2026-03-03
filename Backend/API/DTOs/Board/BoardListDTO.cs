@@ -2,16 +2,12 @@
 
 public class BoardListDTO
 {
-    //id: z.number(),
-    //title: z.string (), 
-    //position: z.number(), 
-    //cardList: z.array(Card),
 
-    public string BoardListId { get; init; }
+    public int BoardListId { get; init; }
 
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
-    public string ListPosition { get; init; }
+    public int ListPosition { get; init; }
 
-    public List<BoardCardDTO> CardList { get; init; }
+    public List<BoardCardDTO> CardList { get; init; } = new List<BoardCardDTO>();
 }
