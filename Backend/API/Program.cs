@@ -25,6 +25,9 @@ builder.Services.AddAuthorization();
 // Web app services 
 builder.Services.AddPlannerServices();
 
+
+
+
 var app = builder.Build();
 
 // Apply migrations
@@ -49,8 +52,9 @@ string corsPolicyName = builder.Configuration["CorsPolicy:PolicyName"] ??
 app.UseCors(corsPolicyName);
 
 
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseAuthorization(); 
+
 
 app.MapControllers();
 

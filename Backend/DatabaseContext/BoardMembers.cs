@@ -17,7 +17,7 @@ public class BoardMembers
     public int BoardId { get; set; }
     public int UserId { get; set; }
 
-    [StringLength(50)]
+    [Column(TypeName = "varchar(50)")]
     public Role Role { get; set; }
 
     public DateTime JoinedAt { get; set; }

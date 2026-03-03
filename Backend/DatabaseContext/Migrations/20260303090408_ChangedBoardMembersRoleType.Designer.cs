@@ -4,6 +4,7 @@ using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseContext.Migrations
 {
     [DbContext(typeof(PlannerContext))]
-    partial class PlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20260303090408_ChangedBoardMembersRoleType")]
+    partial class ChangedBoardMembersRoleType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,8 +50,6 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("BoardId");
 
-                    b.HasIndex("BackgroundColour");
-
                     b.ToTable("boards");
                 });
 
@@ -59,6 +60,11 @@ namespace DatabaseContext.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("BoardListId"));
+
+                    b.Property<string>("BackgroundColour")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -150,22 +156,6 @@ namespace DatabaseContext.Migrations
                     b.ToTable("cards");
                 });
 
-            modelBuilder.Entity("DatabaseContext.Colour", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("HexValue")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("colours");
-                });
-
             modelBuilder.Entity("DatabaseContext.RefreshToken", b =>
                 {
                     b.Property<int>("RefreshTokenId")
@@ -246,17 +236,6 @@ namespace DatabaseContext.Migrations
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("DatabaseContext.Board", b =>
-                {
-                    b.HasOne("DatabaseContext.Colour", "Colour")
-                        .WithMany()
-                        .HasForeignKey("BackgroundColour")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Colour");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardList", b =>

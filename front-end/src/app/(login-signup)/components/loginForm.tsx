@@ -18,7 +18,7 @@ export default function LoginForm({
     onSubmit, 
     formError, 
 }: {
-    onSubmit: (email: string, password: string) => Promise<void>; 
+    onSubmit: (userData: { email: string, password: string }) => Promise<void>; 
     formError?: string; 
 }) {
     const [email, setEmail] = useState(''); 
@@ -49,7 +49,7 @@ export default function LoginForm({
 
         try {
             if (validateFormValues()) {
-                await onSubmit(email, password); 
+                await onSubmit({email: email, password: password}); 
             }
         } finally {
             setButtonsDisabled(false); 
@@ -79,7 +79,15 @@ export default function LoginForm({
                     }
                 }} />
             <div className={styles.createAccountLink}>
-                <Link href={'/signup'}>Create New account</Link>
+                <Link href={'/signup'} className={buttonsDisabled ? styles.linkDisabled : undefined }
+                    onClick={e => {
+                        if (buttonsDisabled) {
+                            e.preventDefault(); 
+                        }
+                    }}
+                >
+                    Create New account
+                </Link>
             </div>
             <div className={styles.logIn}>
                 <button type='submit' className='button red' disabled={buttonsDisabled}>Log in</button>

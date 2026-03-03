@@ -17,11 +17,14 @@ public class Board
     [StringLength(100)]
     public string Name { get; set; } = null!;
 
+    [Column(TypeName = "date")]
+    public DateOnly CreatedAt { get; set; }
+
+    // Foreign Key
+    [ForeignKey(nameof(Colour))]
     [StringLength(30)]
     public string BackgroundColour { get; set; } = null!;
 
-    [Column(TypeName = "date")]
-    public DateOnly CreatedAt { get; set; }
 
     // Navigation Properties 
     public List<BoardMembers> BoardMembers { get; set; } = null!;
@@ -31,4 +34,6 @@ public class Board
     public List<BoardStar> BoardStars { get; set; } = [];
 
     public List<BoardList> Lists { get; set; } = []; 
+    
+    public Colour Colour { get; set; } = null!;
 }

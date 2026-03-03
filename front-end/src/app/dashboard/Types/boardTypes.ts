@@ -3,8 +3,6 @@ import * as z from 'zod';
 const BoardColour = z.literal(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
 export type BoardColour = z.infer<typeof BoardColour>; 
 
-const ListColour = z.literal(['not completed yet']); 
-export type ListColour = z.infer<typeof ListColour>; 
 
 const CardPriority = z.literal(['Low', 'Medium', 'High']); 
 export type CardPriority = z.infer<typeof CardPriority>; 
@@ -23,7 +21,6 @@ export type Card = z.infer<typeof Card>;
 const BoardList = z.object({
     id: z.number(),
     title: z.string(), 
-    listColour: ListColour,
     position: z.number(), 
     cardList: z.array(Card),
 }); 
