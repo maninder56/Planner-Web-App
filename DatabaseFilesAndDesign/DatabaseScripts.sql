@@ -20,6 +20,9 @@ FROM colours;
 SHOW COLUMNS
 FROM boards;
 
+SHOW COLUMNS
+FROM cards;
+
 SELECT *
 FROM users;
 
@@ -32,6 +35,8 @@ FROM boardmembers;
 SELECT *
 FROM boardstar;
 
+SELECT *
+FROM cards;
 
 SELECT
     U.Email,

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DatabaseContext.Types;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
@@ -48,5 +49,13 @@ public class PlannerContext : DbContext
         modelBuilder.Entity<Board>()
             .Property(b => b.CreatedAt)
             .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        modelBuilder.Entity<Card>()
+            .Property(c => c.DueDate)
+            .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        modelBuilder.Entity<Card>()
+            .Property(c => c.Priority)
+            .HasDefaultValue(Priority.Low); 
     }
 }

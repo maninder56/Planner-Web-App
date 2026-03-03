@@ -65,7 +65,60 @@ WHERE `UserId` = 1;
 
 
 
+START TRANSACTION;
+
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-10',
+    `Priority` = 'High',
+    `IsDone` = 0
+WHERE `CardId` = 1;
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-12',
+    `Priority` = 'Medium',
+    `IsDone` = 0
+WHERE `CardId` = 2;
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-15',
+    `Priority` = 'High',
+    `IsDone` = 0
+WHERE `CardId` = 3;
+
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-08',
+    `Priority` = 'High',
+    `IsDone` = 0
+WHERE `CardId` = 4;
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-09',
+    `Priority` = 'Medium',
+    `IsDone` = 0
+WHERE `CardId` = 5;
+
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-02',
+    `Priority` = 'Medium',
+    `IsDone` = 1
+WHERE `CardId` = 6;
+
+UPDATE `cards`
+SET
+    `DueDate` = '2026-03-02',
+    `Priority` = 'Low',
+    `IsDone` = 1
+WHERE `CardId` = 7;
 
 
 
-
+COMMIT ;
