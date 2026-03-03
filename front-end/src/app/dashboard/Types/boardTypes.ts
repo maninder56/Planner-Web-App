@@ -3,7 +3,7 @@ import * as z from 'zod';
 const BoardColour = z.literal(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
 export type BoardColour = z.infer<typeof BoardColour>; 
 
-const ListColour = z.literal(['not completed yet']); 
+const ListColour = z.literal(['none']); 
 export type ListColour = z.infer<typeof ListColour>; 
 
 const CardPriority = z.literal(['Low', 'Medium', 'High']); 
