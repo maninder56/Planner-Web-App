@@ -5,6 +5,10 @@ USE plannerwebapp;
 SHOW TABLES;
 
 SHOW COLUMNS
+FROM users;
+
+
+SHOW COLUMNS
 FROM refreshtokens;
 
 SHOW COLUMNS

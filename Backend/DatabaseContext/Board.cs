@@ -17,8 +17,7 @@ public class Board
     [StringLength(100)]
     public string Name { get; set; } = null!;
 
-    [Column(TypeName = "date")]
-    public DateOnly CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     // Foreign Key
     [ForeignKey(nameof(Colour))]

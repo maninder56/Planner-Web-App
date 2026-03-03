@@ -10,7 +10,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DatabaseContext;
 
 [Table("refreshtokens")]
-[Index(nameof(UserId), IsUnique = true)]
 [Index(nameof(TokenHash), IsUnique = true)]
 public class RefreshToken
 {
