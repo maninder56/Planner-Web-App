@@ -17,17 +17,16 @@ public class BoardList
     [StringLength(30)]
     public string Name { get; set; } = null!; 
 
-    [StringLength(30)]
-    public string BackgroundColour { get; set; } = null!;
-
     [Column(TypeName = "SMALLINT")]
     public int ListPosition { get; set; }
 
-    // Foreign key 
+    // Foreign keys
     public int BoardId { get; set; }
+
 
     // Navigation properties 
     public Board Board { get; set; } = null!;
 
-    public List<Card> Cards { get; set; } = []; 
+    public List<Card> Cards { get; set; } = [];
+
 }

@@ -19,6 +19,7 @@ public class PlannerContext : DbContext
     public DbSet<Board> Boards { get; set; }
     public DbSet<BoardList> BoardLists { get; set; }
     public DbSet<Card> Cards { get; set; }
+    public DbSet<Colour> Colours { get; set; }
 
 
     public PlannerContext() { }
