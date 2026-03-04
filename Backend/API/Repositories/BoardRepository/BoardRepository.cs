@@ -70,4 +70,18 @@ public class BoardRepository : IBoardRepository
         return Result<BoardDataDTO, Error>.Success(board);
     }
 
+    public async Task<Result<int, Error>> GetLastUsedBoardId(int userId)
+    {
+        var boardId = await database.Users
+            .Where(u => u.UserId == userId)
+            .Select(u => u.LastBoardId)
+            .SingleOrDefaultAsync();   
+
+        if (boardId is null)
+        {
+
+        }
+
+        throw new NotImplementedException(); 
+    }
 }
