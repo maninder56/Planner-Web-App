@@ -51,7 +51,7 @@ public class Result<T> : Result
     public static Result<T> Success(T data) => 
         new Result<T>(true, data);
 
-    new public static Result Failed (ErrorType errorType, string title, string? description = null) =>
+    new public static Result<T> Failed (ErrorType errorType, string title, string? description = null) =>
         new Result<T>(false, errorType, title, description);
 
 }
@@ -73,7 +73,7 @@ public class Result<T, T2> : Result<T>
     public static Result<T, T2> Success(T data, T2 data2) => 
         new Result<T, T2>(true, data, data2);
 
-    new public static Result Failed(ErrorType errorType, string title, string? description = null) => 
+    new public static Result<T, T2> Failed(ErrorType errorType, string title, string? description = null) => 
         new Result<T, T2>(false, errorType, title, description);
 }
 

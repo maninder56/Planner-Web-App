@@ -4,6 +4,7 @@ using API.Models.Result;
 using API.Repositories.Account;
 using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services.Account; 
 
@@ -37,24 +38,24 @@ public class AccountService : IAccountService
     // Read Operations
 
 
-    public async Task<Result<Tokens, ErrorType>> LogInUserAsync(LogInUserDTO logInUser)
+    public async Task<Result<Tokens>> LogInUserAsync(LogInUserDTO logInUser)
     {
+       
         // get user details by email
-        var userResult = await repository.GetUserDetailsByEmail(logInUser.Email);
+        var user = await repository.GetUserByEmail(logInUser.Email);
 
-        if (!userResult.Successful || userResult.Data == null)
+        if (user is null)
         {
-            return Result<Tokens, ErrorType>.Failed(userResult.Error, userResult.ProblemDetails); 
+            logger.LogWarning("Unable to find user with email: {Email}", logInUser.Email);
+            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials"); 
         }
 
         // verify password 
-        if (!PasswordUtility.VerifyPassword(userResult.Data.PasswordHash, logInUser.Password))
+        if (!PasswordUtility.VerifyPassword(user.PasswordHash, logInUser.Password))
         {
             logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
-            return Result<Tokens, ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
-            {
-                Title = "Invalid User Credentials"
-            });
+            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials");
+
         }
 
         // create tokens 
@@ -62,15 +63,16 @@ public class AccountService : IAccountService
 
         Tokens tokens = new Tokens
         {
-            AccessToken = tokenProviderUtility.Create(userResult.Data.UserId, userResult.Data.Email),
+            AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
             RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
         };
 
-        await repository.CreateNewRefreshTokenHashByUserIdAsync(userResult.Data.UserId,
-            refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+        await repository.CreateNewRefreshTokenHashByUserIdAsync(user.UserId,
+        refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 
         // return tokens for cookies
-        return Result<Tokens, ErrorType>.Success(tokens);
+        return Result<Tokens>.Success(tokens);
+
     }
 
 
@@ -80,29 +82,34 @@ public class AccountService : IAccountService
     // Create Operations
 
 
-    public async Task<Result<Tokens, ErrorType>> CreateNewUserAsync(NewUserDTO newUser)
+    public async Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser)
     {
-        string passwordHash = PasswordUtility.HashPassword(newUser.Password);
-
-        var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash); 
-
-        if (!userSaved.Successful || userSaved.Data is null)
+        try
         {
-            return Result<Tokens, ErrorType>.Failed(userSaved.Error, userSaved.ProblemDetails); 
+            string passwordHash = PasswordUtility.HashPassword(newUser.Password);
+
+            var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash);
+
+            if (userSaved is null)
+            {
+                logger.LogWarning("Failed to save user: {Email}", newUser.Email);
+                throw new DbUpdateException("Failed to save user"); 
+            }
+
+            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+
+            Tokens tokens = new Tokens
+            {
+                AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
+                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+            };
+
+            await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
+                refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+
+            return Result<Tokens, ErrorType>.Success(tokens);
         }
 
-        byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-
-        Tokens tokens = new Tokens
-        {
-            AccessToken = tokenProviderUtility.Create(userSaved.Data.UserId, newUser.Email),
-            RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
-        };
-
-        await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.Data.UserId,
-            refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
-
-        return Result<Tokens, ErrorType>.Success(tokens); 
     }
 
 

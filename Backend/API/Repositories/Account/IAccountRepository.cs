@@ -8,16 +8,17 @@ namespace API.Repositories.Account;
 public interface IAccountRepository
 {
     // Read Operations 
-    public Task<Result<User, ErrorType>> GetUserDetailsByEmail(string email);
-    public Task<Result<(User, RefreshToken), ErrorType>> GetUserAndRefreshToken(string refreshTokenInBase64);
+    public Task<User?> GetUserByEmail(string email);
+    public Task<User?> GetUserById(int id);
+    public Task<(User, RefreshToken)?> GetUserAndRefreshToken(string refreshTokenInBase64);
 
     // Create Operations
-    public Task<Result<CreatedUser, ErrorType>> CreateNewUserAsync(string username, string email, string passwordHash);
-    public Task<Result<ErrorType>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt);
+    public Task<User?> CreateNewUserAsync(string username, string email, string passwordHash);
+    public Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt);
 
     // Update Operations 
-    public Task<Result<ErrorType>> UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes); 
+    public Task UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes); 
 
     // Delete Operations
-    public Task<Result<ErrorType>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64);
+    public Task DeleteRefreshTokenHashAsync(string refreshTokenInBase64);
 }
