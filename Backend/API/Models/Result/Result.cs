@@ -35,9 +35,8 @@ public class Result
 
 
 public class Result<T> : Result 
-    where T : class
 {
-    public T? Data { get; } = null; 
+    public T? Data { get; } = default; 
 
     protected Result(bool success, T data) 
         : base(success)
@@ -58,10 +57,8 @@ public class Result<T> : Result
 }
 
 public class Result<T, T2> : Result<T> 
-    where T : class
-    where T2 : class
 {
-    public T2? Data2 { get; } = null; 
+    public T2? Data2 { get; } = default; 
 
     protected Result(bool success, T data, T2 data2)
         : base(success, data)
