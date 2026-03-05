@@ -104,13 +104,14 @@ public class AccountRepository : IAccountRepository
 
     public async Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
     {
-
         var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
         var tokenHash = RefreshTokenUtility.Encode(hashBytes);
 
-        var refreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt, UserId = userId };
+        User user = await database.Users
+            .Include(u => u.RefreshToken)
+            .FirstAsync(u => u.UserId == userId);
 
-        database.RefreshTokens.Add(refreshToken);   
+        user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt}; 
 
         await database.SaveChangesAsync();
     }

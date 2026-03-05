@@ -68,6 +68,7 @@ public class AccountService : IAccountService
             RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
         };
 
+
         await repository.CreateNewRefreshTokenHashByUserIdAsync(user.UserId,
         refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 

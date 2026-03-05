@@ -6,9 +6,15 @@ namespace API.Utilities;
 
 public static class ApiErrorUtility
 {
-    public static IActionResult ErrorToActionResult(this ErrorType error, ProblemDetails problemDetails)
+    public static IActionResult ErrorToActionResult(this Error error)
     {
-        return error switch
+        var problemDetails = new ProblemDetails()
+        { 
+            Title = error.Title, 
+            Detail = error.Description 
+        }; 
+
+        return error.Type switch
         {
             ErrorType.BadRequest => new BadRequestObjectResult(problemDetails), 
             ErrorType.Unauthorized => new UnauthorizedObjectResult(problemDetails),

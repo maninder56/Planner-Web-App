@@ -21,53 +21,54 @@ public class BoardRepository : IBoardRepository
 
     public async Task<Result<BoardDataDTO, ErrorType>> GetBoardData(int userId, int boardId)
     {
+        throw new NotImplementedException();
 
-        var isFavoriteBoard = await database.BoardStars
-            .AnyAsync(bs => bs.BoardId == boardId && bs.UserId == userId); 
+        //var isFavoriteBoard = await database.BoardStars
+        //    .AnyAsync(bs => bs.BoardId == boardId && bs.UserId == userId); 
 
-        var board = await database.Boards
-            .Where(b => b.BoardId == boardId)
-            .Select(b => new BoardDataDTO
-            {
-                BoardId = b.BoardId,
-                Name = b.Name,
-                IsFavoriteBoard = isFavoriteBoard,  
-                BackgroundColour = b.BackgroundColour
+        //var board = await database.Boards
+        //    .Where(b => b.BoardId == boardId)
+        //    .Select(b => new BoardDataDTO
+        //    {
+        //        BoardId = b.BoardId,
+        //        Name = b.Name,
+        //        IsFavoriteBoard = isFavoriteBoard,  
+        //        BackgroundColour = b.BackgroundColour
 
-            }).SingleOrDefaultAsync(); 
+        //    }).SingleOrDefaultAsync(); 
         
-        if (board is null)
-        {
-            return Result<BoardDataDTO, ErrorType>.Failed(ErrorType.NotFound, new ProblemDetails()
-            {
-                Title = "Board does not exists"
-            }); 
-        }
+        //if (board is null)
+        //{
+        //    return Result<BoardDataDTO, ErrorType>.Failed(ErrorType.NotFound, new ProblemDetails()
+        //    {
+        //        Title = "Board does not exists"
+        //    }); 
+        //}
 
-        var boardList = await database.BoardLists
-            .Where(bl => bl.BoardId == boardId)
-            .Select(bl => new BoardListDTO
-            {
-                BoardListId = bl.BoardListId,
-                Name = bl.Name,
-                ListPosition = bl.ListPosition,
-                CardList = bl.Cards
-                    .Where(c => c.BoardListId == bl.BoardListId)
-                    .Select(c => new BoardCardDTO
-                    {
-                        CardId = c.CardId,
-                        Title = c.Title,
-                        Description = c.Description,
-                        IsDone = c.IsDone,
-                        Priority = c.Priority.ToString(),
-                        DueDate = c.DueDate,
-                        CardPosition = c.CardPosition,
-                    }).ToList(),
-            }).ToListAsync();
+        //var boardList = await database.BoardLists
+        //    .Where(bl => bl.BoardId == boardId)
+        //    .Select(bl => new BoardListDTO
+        //    {
+        //        BoardListId = bl.BoardListId,
+        //        Name = bl.Name,
+        //        ListPosition = bl.ListPosition,
+        //        CardList = bl.Cards
+        //            .Where(c => c.BoardListId == bl.BoardListId)
+        //            .Select(c => new BoardCardDTO
+        //            {
+        //                CardId = c.CardId,
+        //                Title = c.Title,
+        //                Description = c.Description,
+        //                IsDone = c.IsDone,
+        //                Priority = c.Priority.ToString(),
+        //                DueDate = c.DueDate,
+        //                CardPosition = c.CardPosition,
+        //            }).ToList(),
+        //    }).ToListAsync();
 
-        board.BoardList = boardList;
+        //board.BoardList = boardList;
 
-        return Result<BoardDataDTO, ErrorType>.Success(board);
+        //return Result<BoardDataDTO, ErrorType>.Success(board);
     }
 
     public async Task<Result<int, ErrorType>> GetLastUsedBoardId(int userId)

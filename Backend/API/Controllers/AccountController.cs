@@ -44,7 +44,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return result.Error.ErrorToActionResult(result.ProblemDetails);
+            return result.Error.ErrorToActionResult();
         }
     }
 
@@ -64,7 +64,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return result.Error.ErrorToActionResult(result.ProblemDetails);
+            return result.Error.ErrorToActionResult();
         }
     }
 
@@ -90,7 +90,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return tokenResult.Error.ErrorToActionResult(tokenResult.ProblemDetails);
+            return tokenResult.Error.ErrorToActionResult();
         }
     }
 
