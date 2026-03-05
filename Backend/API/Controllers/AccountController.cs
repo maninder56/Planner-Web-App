@@ -1,9 +1,12 @@
 ﻿using API.DTOs.Account;
+using API.Models.Account;
+using API.Models.Result;
 using API.Services.Account;
 using API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace API.Controllers; 
@@ -72,7 +75,16 @@ public class AccountController : ControllerBase
     [HttpPost("logout")]
     public async Task<IActionResult> LogoutUserPostAsync()
     {
-        await accountService.LogoutUserAsync(HttpContext);
+        // get refresh token from httpcontext 
+        var refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(HttpContext);
+
+        if (refreshTokenInBase64 is null)
+        {
+            logger.LogWarning("Unable to find refresh token in cookies at user Logout");
+            return NoContent();
+        }
+
+        await accountService.LogoutUserAsync(refreshTokenInBase64);
         cookiesUtility.InvalidateCookies(HttpContext);
 
         return NoContent(); 
@@ -81,7 +93,17 @@ public class AccountController : ControllerBase
     [HttpPost("token/refresh")]
     public async Task<IActionResult> RefreshTokenPostAsync()
     {
-        var tokenResult = await accountService.UpdateRefreshTokenAsync(HttpContext);
+        // get refresh token from httpcontext 
+        var refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(HttpContext);
+
+        if (refreshTokenInBase64 is null)
+        {
+            logger.LogWarning("Unable to find refresh token in cookies");
+            Error error = new Error(ErrorType.BadRequest, "Refreh token not found", "Unable to find refreh token form cookies");
+            return error.ErrorToActionResult(); 
+        }
+
+        var tokenResult = await accountService.UpdateRefreshTokenAsync(refreshTokenInBase64);
 
         if (tokenResult.Successful && tokenResult.Data != null)
         {

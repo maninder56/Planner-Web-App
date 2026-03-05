@@ -13,8 +13,8 @@ public interface IAccountService
     public Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser);
 
     // Update operations 
-    public Task<Result<Tokens>> UpdateRefreshTokenAsync(HttpContext httpContext); 
+    public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64); 
 
     // delete operations
-    public Task<Result> LogoutUserAsync(HttpContext httpContext); 
+    public Task<Result> LogoutUserAsync(string refreshTokenInBase64); 
 }

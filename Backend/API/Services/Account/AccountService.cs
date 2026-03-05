@@ -117,17 +117,8 @@ public class AccountService : IAccountService
 
     // Update operations
 
-    public async Task<Result<Tokens>> UpdateRefreshTokenAsync(HttpContext httpContext)
+    public async Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64)
     {
-        // get refresh token from httpcontext 
-        var refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
-
-        if (refreshTokenInBase64 == null)
-        {
-            logger.LogWarning("Unable to find refresh token in cookies");
-            return Result<Tokens>.Failed(ErrorType.BadRequest, "Refreh token not found", "Unable to find refreh token form cookies"); 
-        }
-
         // get user details by refreshtoken 
         var userAndRefreshTokenResult = await repository.GetUserAndRefreshToken(refreshTokenInBase64);
 
@@ -175,22 +166,16 @@ public class AccountService : IAccountService
     // Delete operations
 
 
-    public async Task<Result> LogoutUserAsync(HttpContext httpContext)
+    public async Task<Result> LogoutUserAsync(string refreshTokenInBase64)
     {
-        string? refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
+        RefreshToken? refreshToken = await repository.GetRefreshToken(refreshTokenInBase64);
 
-        if (refreshTokenInBase64 is not null)
+        if (refreshToken is not null)
         {
-            RefreshToken? refreshToken = await repository.GetRefreshToken(refreshTokenInBase64);
-
-            if (refreshToken is not null)
-            {
-                await repository.DeleteRefreshTokenHashAsync(refreshToken);
-            }
+            await repository.DeleteRefreshTokenHashAsync(refreshToken);
         }
 
         return Result.Success(); 
-
     }
 
 
