@@ -19,7 +19,7 @@ public class BoardRepository : IBoardRepository
         this.database = database;
     }
 
-    public async Task<Result<BoardDataDTO, Error>> GetBoardData(int userId, int boardId)
+    public async Task<Result<BoardDataDTO, ErrorType>> GetBoardData(int userId, int boardId)
     {
 
         var isFavoriteBoard = await database.BoardStars
@@ -38,7 +38,7 @@ public class BoardRepository : IBoardRepository
         
         if (board is null)
         {
-            return Result<BoardDataDTO, Error>.Failed(Error.NotFound, new ProblemDetails()
+            return Result<BoardDataDTO, ErrorType>.Failed(ErrorType.NotFound, new ProblemDetails()
             {
                 Title = "Board does not exists"
             }); 
@@ -67,10 +67,10 @@ public class BoardRepository : IBoardRepository
 
         board.BoardList = boardList;
 
-        return Result<BoardDataDTO, Error>.Success(board);
+        return Result<BoardDataDTO, ErrorType>.Success(board);
     }
 
-    public async Task<Result<int, Error>> GetLastUsedBoardId(int userId)
+    public async Task<Result<int, ErrorType>> GetLastUsedBoardId(int userId)
     {
         var boardId = await database.Users
             .Where(u => u.UserId == userId)

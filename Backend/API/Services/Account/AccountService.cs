@@ -37,21 +37,21 @@ public class AccountService : IAccountService
     // Read Operations
 
 
-    public async Task<Result<Tokens, Error>> LogInUserAsync(LogInUserDTO logInUser)
+    public async Task<Result<Tokens, ErrorType>> LogInUserAsync(LogInUserDTO logInUser)
     {
         // get user details by email
         var userResult = await repository.GetUserDetailsByEmail(logInUser.Email);
 
         if (!userResult.Successful || userResult.Data == null)
         {
-            return Result<Tokens, Error>.Failed(userResult.Error, userResult.ProblemDetails); 
+            return Result<Tokens, ErrorType>.Failed(userResult.Error, userResult.ProblemDetails); 
         }
 
         // verify password 
         if (!PasswordUtility.VerifyPassword(userResult.Data.PasswordHash, logInUser.Password))
         {
             logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
-            return Result<Tokens, Error>.Failed(Error.BadRequest, new ProblemDetails()
+            return Result<Tokens, ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
             {
                 Title = "Invalid User Credentials"
             });
@@ -70,7 +70,7 @@ public class AccountService : IAccountService
             refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 
         // return tokens for cookies
-        return Result<Tokens, Error>.Success(tokens);
+        return Result<Tokens, ErrorType>.Success(tokens);
     }
 
 
@@ -80,7 +80,7 @@ public class AccountService : IAccountService
     // Create Operations
 
 
-    public async Task<Result<Tokens, Error>> CreateNewUserAsync(NewUserDTO newUser)
+    public async Task<Result<Tokens, ErrorType>> CreateNewUserAsync(NewUserDTO newUser)
     {
         string passwordHash = PasswordUtility.HashPassword(newUser.Password);
 
@@ -88,7 +88,7 @@ public class AccountService : IAccountService
 
         if (!userSaved.Successful || userSaved.Data is null)
         {
-            return Result<Tokens, Error>.Failed(userSaved.Error, userSaved.ProblemDetails); 
+            return Result<Tokens, ErrorType>.Failed(userSaved.Error, userSaved.ProblemDetails); 
         }
 
         byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
@@ -102,7 +102,7 @@ public class AccountService : IAccountService
         await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.Data.UserId,
             refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 
-        return Result<Tokens, Error>.Success(tokens); 
+        return Result<Tokens, ErrorType>.Success(tokens); 
     }
 
 
@@ -110,7 +110,7 @@ public class AccountService : IAccountService
 
     // Update operations
 
-    public async Task<Result<Tokens, Error>> UpdateRefreshTokenAsync(HttpContext httpContext)
+    public async Task<Result<Tokens, ErrorType>> UpdateRefreshTokenAsync(HttpContext httpContext)
     {
         // get refresh token from httpcontext 
         var refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
@@ -118,7 +118,7 @@ public class AccountService : IAccountService
         if (refreshTokenInBase64 == null)
         {
             logger.LogWarning("Unable to find refresh token in cookies"); 
-            return Result<Tokens,Error>.Failed(Error.BadRequest, new ProblemDetails()
+            return Result<Tokens,ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
             {
                 Title = "Refresh token not found", Detail = "Unable to find refreh token form cookies"
             });
@@ -130,14 +130,14 @@ public class AccountService : IAccountService
 
         if (!userAndRefreshTokenResult.Successful || user == null || refreshToken == null)
         {
-            return Result<Tokens, Error>.Failed(userAndRefreshTokenResult.Error, userAndRefreshTokenResult.ProblemDetails);
+            return Result<Tokens, ErrorType>.Failed(userAndRefreshTokenResult.Error, userAndRefreshTokenResult.ProblemDetails);
         }
 
         // check if refreshtoken is expired
         if (refreshToken.ExpiresAt < DateTime.UtcNow)
         {
             logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email); 
-            return Result<Tokens, Error>.Failed(Error.Unauthorized, new ProblemDetails()
+            return Result<Tokens, ErrorType>.Failed(ErrorType.Unauthorized, new ProblemDetails()
             {
                 Title = "Invalid Refresh token", Detail = "Refresh token expired", 
             }); 
@@ -147,7 +147,7 @@ public class AccountService : IAccountService
         if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
         {
             logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email); 
-            return Result<Tokens, Error>.Failed(Error.Unauthorized, new ProblemDetails()
+            return Result<Tokens, ErrorType>.Failed(ErrorType.Unauthorized, new ProblemDetails()
             {
                 Title = "Invalid Refresh token",
             }); 
@@ -166,7 +166,7 @@ public class AccountService : IAccountService
         await repository.UpdateRefreshTokenHashByUserIdAsync(user.UserId,refreshTokenBytes);
 
         // return tokens 
-        return Result<Tokens, Error>.Success(tokens);
+        return Result<Tokens, ErrorType>.Success(tokens);
     }
 
 
@@ -175,18 +175,18 @@ public class AccountService : IAccountService
     // Delete operations
 
 
-    public async Task<Result<Error>> LogoutUserAsync(HttpContext httpContext)
+    public async Task<Result<ErrorType>> LogoutUserAsync(HttpContext httpContext)
     {
         string? refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
 
         if (refreshTokenInBase64 == null)
         {
-            return Result<Error>.Success(); 
+            return Result<ErrorType>.Success(); 
         }
 
         await repository.DeleteRefreshTokenHashAsync(refreshTokenInBase64);
 
-        return Result<Error>.Success();
+        return Result<ErrorType>.Success();
     }
 
 

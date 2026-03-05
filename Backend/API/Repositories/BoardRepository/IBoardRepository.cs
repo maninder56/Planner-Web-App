@@ -7,6 +7,6 @@ namespace API.Repositories.BoardRepository;
 public interface IBoardRepository
 {
     // Read operations
-    public Task<Result<BoardDataDTO, Error>> GetBoardData(int userId, int boardId); 
-    public Task<Result<int, Error>> GetLastUsedBoardId(int userId);
+    public Task<Result<BoardDataDTO, ErrorType>> GetBoardData(int userId, int boardId); 
+    public Task<Result<int, ErrorType>> GetLastUsedBoardId(int userId);
 }

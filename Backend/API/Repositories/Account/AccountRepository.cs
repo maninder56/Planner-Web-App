@@ -23,7 +23,7 @@ public class AccountRepository : IAccountRepository
 
     // Read Operations
 
-    public async Task<Result<User, Error>> GetUserDetailsByEmail(string email)
+    public async Task<Result<User, ErrorType>> GetUserDetailsByEmail(string email)
     {
         try
         {
@@ -33,25 +33,25 @@ public class AccountRepository : IAccountRepository
             if (user == null)
             {
                 logger.LogWarning("Unable to find user with email: {Email}", email);
-                return Result<User, Error>.Failed(Error.BadRequest, new ProblemDetails()
+                return Result<User, ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
                 {
                     Title = "Invalid User Credentials", 
                 }); 
             }
             else
             {
-                return Result<User, Error>.Success(user);
+                return Result<User, ErrorType>.Success(user);
             }
         }
         catch (Exception ex)
         {
             logger.LogError("Failed to get user details, Exception message: {ExceptionMessage}", ex.Message);
-            return Result<User, Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
+            return Result<User, ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
         }
     }
 
 
-    public async Task<Result<(User, RefreshToken), Error>> GetUserAndRefreshToken(string refreshTokenInBase64)
+    public async Task<Result<(User, RefreshToken), ErrorType>> GetUserAndRefreshToken(string refreshTokenInBase64)
     {
         try
         {
@@ -66,28 +66,28 @@ public class AccountRepository : IAccountRepository
             if (token == null)
             {
                 logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
-                return Result<(User, RefreshToken), Error>.Failed(Error.NotFound, new ProblemDetails()
+                return Result<(User, RefreshToken), ErrorType>.Failed(ErrorType.NotFound, new ProblemDetails()
                 {
                     Title = "Invalid Refresh token", 
                 }); 
             }
             else
             {
-                return Result<(User, RefreshToken), Error>.Success((token.User, token)); 
+                return Result<(User, RefreshToken), ErrorType>.Success((token.User, token)); 
             }
 
         }
         catch (Exception ex)
         {
             logger.LogError("Failed to get user and refresh token, Exception message: {ExceptionMessage}", ex.Message); 
-            return Result<(User, RefreshToken), Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
+            return Result<(User, RefreshToken), ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
         }
     }
 
 
     // Create Operations
 
-    public async Task<Result<CreatedUser, Error>> CreateNewUserAsync(string username, string email, string passwordHash)
+    public async Task<Result<CreatedUser, ErrorType>> CreateNewUserAsync(string username, string email, string passwordHash)
     {
         try
         {
@@ -103,7 +103,7 @@ public class AccountRepository : IAccountRepository
             database.Users.Add(newUser);
             await database.SaveChangesAsync(); 
 
-            return Result<CreatedUser, Error>.Success(new CreatedUser { UserId = newUser.UserId, Email = email, Name = username });
+            return Result<CreatedUser, ErrorType>.Success(new CreatedUser { UserId = newUser.UserId, Email = email, Name = username });
         }
         catch(DbUpdateException ex)
         {
@@ -112,24 +112,24 @@ public class AccountRepository : IAccountRepository
             if (sqlEx is not null && sqlEx.Number == 1062) // Check if email was duplicate
             {
                 logger.LogError("Failed to Create new user account with email {Email} which already exists.", email);
-                return Result<CreatedUser, Error>.Failed(Error.BadRequest, new ProblemDetails()
+                return Result<CreatedUser, ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
                 {
                     Title = "Invalid Email", Detail = "An account exists for provided email; please use different email"
                 });
             }
 
             logger.LogError("Failed to Create New User account with email {Email}", email);
-            return Result<CreatedUser, Error>.Failed(Error.InternalServerError, new ProblemDetails());
+            return Result<CreatedUser, ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails());
         }
         catch (Exception ex)
         {
             logger.LogError("Failed to Create New User account with email {Email} and Exception message: {ExMessage}", email, ex.Message);
-            return Result<CreatedUser, Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
+            return Result<CreatedUser, ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
         }
     }
 
 
-    public async Task<Result<Error>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
+    public async Task<Result<ErrorType>> CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
     {
         try
         {
@@ -140,7 +140,7 @@ public class AccountRepository : IAccountRepository
             if (user is null)
             {
                 logger.LogWarning("Failed to Save new refresh token, User id: {UserId} Invalid", userId);
-                return Result<Error>.Failed(Error.BadRequest, new ProblemDetails()
+                return Result<ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
                 {
                     Title = "Invalid User", Detail = "User does not exists", 
                 }); 
@@ -152,19 +152,19 @@ public class AccountRepository : IAccountRepository
             user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt };
 
             await database.SaveChangesAsync(); 
-            return Result<Error>.Success();
+            return Result<ErrorType>.Success();
         }
         catch (Exception ex)
         {
             logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails());
+            return Result<ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails());
         }
     }
 
 
     // Update operations 
     
-    public async Task<Result<Error>> UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes)
+    public async Task<Result<ErrorType>> UpdateRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes)
     {
         try
         {
@@ -175,7 +175,7 @@ public class AccountRepository : IAccountRepository
             if (user is null)
             {
                 logger.LogWarning("Failed to update refresh token, User id: {UserId} Invalid", userId);
-                return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails()
+                return Result<ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails()
                 {
                     Title = "Invalid User", Detail = "User does not exists", 
                 });
@@ -187,19 +187,19 @@ public class AccountRepository : IAccountRepository
             user.RefreshToken.TokenHash = tokenHash;    
 
             await database.SaveChangesAsync();
-            return Result<Error>.Success();
+            return Result<ErrorType>.Success();
         }
         catch (Exception ex)
         {
             logger.LogWarning("Failed to save new refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails());
+            return Result<ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails());
         }
     }
 
 
     // Delete operations
 
-    public async Task<Result<Error>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64)
+    public async Task<Result<ErrorType>> DeleteRefreshTokenHashAsync(string refreshTokenInBase64)
     {
         try
         {
@@ -212,18 +212,18 @@ public class AccountRepository : IAccountRepository
 
             if (token == null)
             {
-                return Result<Error>.Success(); 
+                return Result<ErrorType>.Success(); 
             }
 
             database.RefreshTokens.Remove(token);
 
             await database.SaveChangesAsync(); 
-            return Result<Error>.Success();
+            return Result<ErrorType>.Success();
         }
         catch (Exception ex)
         {
             logger.LogWarning("Failed to delete refresh token, with Exception message: {ExceptionMessage}", ex.Message);
-            return Result<Error>.Failed(Error.InternalServerError, new ProblemDetails()); 
+            return Result<ErrorType>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
         }
     }
 

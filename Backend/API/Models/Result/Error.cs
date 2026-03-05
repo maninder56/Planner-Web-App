@@ -1,10 +1,3 @@
 ﻿namespace API.Models.Result; 
 
-public enum Error
-{
-    Unknown,
-    BadRequest,
-    Unauthorized,
-    NotFound,
-    InternalServerError
-}
+public record Error(ErrorType Type, string Title, string? Description = null); 

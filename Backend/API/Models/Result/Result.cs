@@ -3,58 +3,80 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace API.Models.Result; 
 
-public class Result<E> where E : Enum
+public class Result
 {
     public bool Successful { get; }
 
-    public E? Error { get; }
+    public Error Error { get; } = new Error(ErrorType.None, ""); 
 
-    public ProblemDetails ProblemDetails { get; } 
-
-    protected Result(bool success, E? error, ProblemDetails problemDetails)
+    protected Result(bool success)
     {
-        Successful = success; Error = error; ProblemDetails = problemDetails;
+        Successful = success;
     }
 
-    public static Result<E> Success() 
-        => new Result<E>(true, default, new ProblemDetails());
+    //protected Result(bool success, Error error)
+    //{
+    //    Successful = success; Error = error;
+    //}
 
-    public static Result<E> Failed(E error, ProblemDetails problemDetails) 
-        => new Result<E>(false, error, problemDetails);
+    protected Result(bool success, ErrorType errorType, string title, string? description = null)
+    {
+        Successful = success;
+        Error = new Error(errorType, title, description); 
+    }
+
+    public static Result Success() => new Result(true);
+
+    //public static Result Failed(Error error) => new Result(false, error);
+
+    public static Result Failed(ErrorType errorType, string title, string? descriptiton = null) 
+        => new Result(true, errorType, title, descriptiton);
 }
 
 
-public class Result<D, E> : Result<E> where E : Enum
+public class Result<T> : Result 
+    where T : class
 {
-    public D? Data { get; }
+    public T? Data { get; } = null; 
 
-    protected Result(bool success, D? data, E? error, ProblemDetails problemDetails) 
-        : base(success, error, problemDetails)
+    protected Result(bool success, T data) 
+        : base(success)
     {
         Data = data;
     }
 
-    public static Result<D, E> Success(D data) => 
-        new Result<D, E>(true, data, default, new ProblemDetails());
+    protected Result(bool success, ErrorType errorType, string title, string? description = null)
+        : base(success, errorType, title, description) { }
 
-    new public static Result<D, E> Failed(E error, ProblemDetails problemDetails) =>
-        new Result<D, E>(false, default, error, problemDetails);
+
+    public static Result<T> Success(T data) => 
+        new Result<T>(true, data);
+
+    new public static Result Failed (ErrorType errorType, string title, string? description = null) =>
+        new Result<T>(false, errorType, title, description);
+
 }
 
-public class Result<D, D2, E> : Result<D, E> where E : Enum
+public class Result<T, T2> : Result<T> 
+    where T : class
+    where T2 : class
 {
-    public D2? Data2 { get; }
+    public T2? Data2 { get; } = null; 
 
-    protected Result(bool success, D? data, D2? data2, E? error, ProblemDetails problemDetails) 
-        : base(success, data, error, problemDetails)
+    protected Result(bool success, T data, T2 data2)
+        : base(success, data)
     {
-        Data2 = data2;  
+        Data2 = data2;
     }
 
-    public static Result<D, D2, E> Success(D data, D2 data2) => 
-        new Result<D, D2, E>(true, data, data2, default, new ProblemDetails());
+    protected Result(bool success, ErrorType errorType, string title, string? description = null)
+        : base(success, errorType, title, description) { }
 
-    new public static Result<D, D2, E> Failed(E error, ProblemDetails problemDetails) => 
-        new Result<D, D2, E>(false, default, default, error, problemDetails);
+
+    public static Result<T, T2> Success(T data, T2 data2) => 
+        new Result<T, T2>(true, data, data2);
+
+    new public static Result Failed(ErrorType errorType, string title, string? description = null) => 
+        new Result<T, T2>(false, errorType, title, description);
 }
 
