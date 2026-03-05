@@ -3,6 +3,7 @@ using API.Models.Account;
 using API.Models.Result;
 using API.Repositories.Account;
 using API.Utilities;
+using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,32 +85,30 @@ public class AccountService : IAccountService
 
     public async Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser)
     {
-        try
+       
+        string passwordHash = PasswordUtility.HashPassword(newUser.Password);
+
+        var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash);
+
+        if (userSaved is null)
         {
-            string passwordHash = PasswordUtility.HashPassword(newUser.Password);
-
-            var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash);
-
-            if (userSaved is null)
-            {
-                logger.LogWarning("Failed to save user: {Email}", newUser.Email);
-                throw new DbUpdateException("Failed to save user"); 
-            }
-
-            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-
-            Tokens tokens = new Tokens
-            {
-                AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
-                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
-            };
-
-            await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
-                refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
-
-            return Result<Tokens, ErrorType>.Success(tokens);
+            logger.LogWarning("Failed to save new user user: {Email}", newUser.Email);
+            return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error"); 
         }
 
+        byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+
+        Tokens tokens = new Tokens
+        {
+            AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
+            RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+        };
+
+        await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
+            refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+
+        return Result<Tokens, ErrorType>.Success(tokens);
+        
     }
 
 
@@ -117,47 +116,40 @@ public class AccountService : IAccountService
 
     // Update operations
 
-    public async Task<Result<Tokens, ErrorType>> UpdateRefreshTokenAsync(HttpContext httpContext)
+    public async Task<Result<Tokens>> UpdateRefreshTokenAsync(HttpContext httpContext)
     {
         // get refresh token from httpcontext 
         var refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
 
         if (refreshTokenInBase64 == null)
         {
-            logger.LogWarning("Unable to find refresh token in cookies"); 
-            return Result<Tokens,ErrorType>.Failed(ErrorType.BadRequest, new ProblemDetails()
-            {
-                Title = "Refresh token not found", Detail = "Unable to find refreh token form cookies"
-            });
+            logger.LogWarning("Unable to find refresh token in cookies");
+            return Result<Tokens>.Failed(ErrorType.BadRequest, "Refreh token not found", "Unable to find refreh token form cookies"); 
         }
 
         // get user details by refreshtoken 
         var userAndRefreshTokenResult = await repository.GetUserAndRefreshToken(refreshTokenInBase64);
-        var (user, refreshToken) = userAndRefreshTokenResult.Data; 
 
-        if (!userAndRefreshTokenResult.Successful || user == null || refreshToken == null)
+        if (userAndRefreshTokenResult is null)
         {
-            return Result<Tokens, ErrorType>.Failed(userAndRefreshTokenResult.Error, userAndRefreshTokenResult.ProblemDetails);
+            logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
+            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid Refresh token"); 
         }
+
+        (User user, RefreshToken refreshToken) = userAndRefreshTokenResult.Value; 
 
         // check if refreshtoken is expired
         if (refreshToken.ExpiresAt < DateTime.UtcNow)
         {
-            logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email); 
-            return Result<Tokens, ErrorType>.Failed(ErrorType.Unauthorized, new ProblemDetails()
-            {
-                Title = "Invalid Refresh token", Detail = "Refresh token expired", 
-            }); 
+            logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email);
+            return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token", "Refresh token expired");
         }
 
         // Verify refresh tokens 
         if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
         {
-            logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email); 
-            return Result<Tokens, ErrorType>.Failed(ErrorType.Unauthorized, new ProblemDetails()
-            {
-                Title = "Invalid Refresh token",
-            }); 
+            logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email);
+            return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token");
         }
 
         // create new refresh token and jwt 
@@ -170,10 +162,10 @@ public class AccountService : IAccountService
             RefreshTokenExpiresAt = refreshToken.ExpiresAt
         }; 
 
-        await repository.UpdateRefreshTokenHashByUserIdAsync(user.UserId,refreshTokenBytes);
+        await repository.UpdateRefreshTokenHashAsync(refreshToken,refreshTokenBytes);
 
         // return tokens 
-        return Result<Tokens, ErrorType>.Success(tokens);
+        return Result<Tokens>.Success(tokens);
     }
 
 
@@ -182,18 +174,22 @@ public class AccountService : IAccountService
     // Delete operations
 
 
-    public async Task<Result<ErrorType>> LogoutUserAsync(HttpContext httpContext)
+    public async Task<Result> LogoutUserAsync(HttpContext httpContext)
     {
         string? refreshTokenInBase64 = cookiesUtility.GetRefreshTokenFromHttpContext(httpContext);
 
-        if (refreshTokenInBase64 == null)
+        if (refreshTokenInBase64 is not null)
         {
-            return Result<ErrorType>.Success(); 
+            RefreshToken? refreshToken = await repository.GetRefreshToken(refreshTokenInBase64);
+
+            if (refreshToken is not null)
+            {
+                await repository.DeleteRefreshTokenHashAsync(refreshToken);
+            }
         }
 
-        await repository.DeleteRefreshTokenHashAsync(refreshTokenInBase64);
+        return Result.Success(); 
 
-        return Result<ErrorType>.Success();
     }
 
 
