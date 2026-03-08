@@ -19,6 +19,7 @@ public static class ApiErrorUtility
             ErrorType.BadRequest => new BadRequestObjectResult(problemDetails), 
             ErrorType.Unauthorized => new UnauthorizedObjectResult(problemDetails),
             ErrorType.NotFound => new NotFoundObjectResult(problemDetails), 
+            ErrorType.Conflict => new ConflictObjectResult(problemDetails),
             ErrorType.InternalServerError or _ => new ObjectResult(new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,

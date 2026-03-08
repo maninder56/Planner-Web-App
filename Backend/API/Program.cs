@@ -1,11 +1,13 @@
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using API.ServiceRegistrationExtensions; 
+using API.ServiceRegistrationExtensions;
+using API.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 builder.Services.AddProblemDetails();
 
 // Add database services
@@ -26,7 +28,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddPlannerServices();
 
 
-
+// Global Exception handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 

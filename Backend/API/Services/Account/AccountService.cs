@@ -6,6 +6,7 @@ using API.Utilities;
 using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace API.Services.Account; 
 
@@ -86,30 +87,40 @@ public class AccountService : IAccountService
 
     public async Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser)
     {
-       
-        string passwordHash = PasswordUtility.HashPassword(newUser.Password);
-
-        var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash);
-
-        if (userSaved is null)
+        try
         {
-            logger.LogWarning("Failed to save new user user: {Email}", newUser.Email);
-            return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error"); 
+            string passwordHash = PasswordUtility.HashPassword(newUser.Password);
+
+            var userSaved = await repository.CreateNewUserAsync(newUser.Name, newUser.Email, passwordHash);
+
+            if (userSaved is null)
+            {
+                logger.LogWarning("Failed to save new user user: {Email}", newUser.Email);
+                return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error");
+            }
+
+            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+
+            Tokens tokens = new Tokens
+            {
+                AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
+                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+            };
+
+            await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
+                refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+
+            return Result<Tokens>.Success(tokens);
         }
-
-        byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-
-        Tokens tokens = new Tokens
+        catch (DbUpdateException ex) when (ex.GetBaseException() is MySqlException { Number: 1062 })
         {
-            AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
-            RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
-        };
-
-        await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
-            refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
-
-        return Result<Tokens, ErrorType>.Success(tokens);
-        
+            return Result<Tokens>.Failed(ErrorType.Conflict, 
+                "Duplicate value", "A record with this value already exists"); 
+        } 
+        catch(Exception ex)
+        {
+            return Result<Tokens>.Failed(ErrorType.InternalServerError, "An Unexpected error occured"); 
+        }
     }
 
 
