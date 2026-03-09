@@ -7,14 +7,14 @@ namespace API.Services.Account;
 public interface IAccountService
 {
     // Read operations
-    public Task<Result<Tokens, Error>> LogInUserAsync(LogInUserDTO logInUser); 
+    public Task<Result<Tokens>> LogInUserAsync(LogInUserDTO logInUser); 
 
     // Create operations
-    public Task<Result<Tokens, Error>> CreateNewUserAsync(NewUserDTO newUser);
+    public Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser);
 
     // Update operations 
-    public Task<Result<Tokens, Error>> UpdateRefreshTokenAsync(HttpContext httpContext); 
+    public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64); 
 
     // delete operations
-    public Task<Result<Error>> LogoutUserAsync(HttpContext httpContext); 
+    public Task<Result> LogoutUserAsync(string refreshTokenInBase64); 
 }

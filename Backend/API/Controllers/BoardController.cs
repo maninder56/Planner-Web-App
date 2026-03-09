@@ -11,4 +11,9 @@ public class BoardController : ControllerBase
     private ILogger<BoardController> logger;
     private CookiesUtility cookiesUtility; 
 
+    public BoardController(ILogger<BoardController> logger, CookiesUtility cookiesUtility)
+    {
+        this.logger = logger;
+        this.cookiesUtility = cookiesUtility;
+    }
 }

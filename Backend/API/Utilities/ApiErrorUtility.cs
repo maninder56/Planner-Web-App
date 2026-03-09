@@ -6,14 +6,21 @@ namespace API.Utilities;
 
 public static class ApiErrorUtility
 {
-    public static IActionResult ErrorToActionResult(this Error error, ProblemDetails problemDetails)
+    public static IActionResult ErrorToActionResult(this Error error)
     {
-        return error switch
+        var problemDetails = new ProblemDetails()
+        { 
+            Title = error.Title, 
+            Detail = error.Description 
+        }; 
+
+        return error.Type switch
         {
-            Error.BadRequest => new BadRequestObjectResult(problemDetails), 
-            Error.Unauthorized => new UnauthorizedObjectResult(problemDetails),
-            Error.NotFound => new NotFoundObjectResult(problemDetails), 
-            Error.InternalServerError or _ => new ObjectResult(new ProblemDetails
+            ErrorType.BadRequest => new BadRequestObjectResult(problemDetails), 
+            ErrorType.Unauthorized => new UnauthorizedObjectResult(problemDetails),
+            ErrorType.NotFound => new NotFoundObjectResult(problemDetails), 
+            ErrorType.Conflict => new ConflictObjectResult(problemDetails),
+            ErrorType.InternalServerError or _ => new ObjectResult(new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Title = "Internal Server Error",

@@ -5,5 +5,5 @@ namespace API.Services.BoardService;
 
 public interface IBoardService
 {
-    public Task<Result<BoardDataDTO, Error>> GetLastUsedBoardData(HttpContext httpContext); 
+    public Task<Result<BoardDataDTO>> GetLastUsedBoardData(int userId); 
 }
