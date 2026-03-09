@@ -7,7 +7,7 @@ namespace API.Queries.Boards;
 
 public class BoardQueries(PlannerContext database)
 {
-    public async Task<BoardDataDTO?> GetBoardData(int userId,  int boardId)
+    public async Task<BoardDataDTO?> GetBoardDataAsync(int userId,  int boardId)
     {
         var query = await database.BoardMembers.AsNoTracking()
             .WhereUserHasAccess(userId, boardId)
@@ -23,7 +23,7 @@ public class BoardQueries(PlannerContext database)
         return query; 
     }
 
-    public async Task<List<BoardListDTO>> GetBoardListDataAndCardsData(int boardId)
+    public async Task<List<BoardListDTO>> GetBoardListDataAndCardsDataAsync(int boardId)
     {
         var query = await database.BoardLists.AsNoTracking()
             .Where(bl => bl.BoardId == boardId)
@@ -49,7 +49,7 @@ public class BoardQueries(PlannerContext database)
         return query; 
     }
 
-    public async Task<int?> GetBoardIdOfLastUsedBoard(int userId)
+    public async Task<int?> GetBoardIdOfLastUsedBoardAsync(int userId)
     {
         var query = await database.Users.AsNoTracking()
             .Where(u => u.UserId == userId)

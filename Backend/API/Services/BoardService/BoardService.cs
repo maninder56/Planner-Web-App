@@ -6,25 +6,46 @@ namespace API.Services.BoardService;
 
 public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries) : IBoardService
 {
-    public async Task<Result<BoardDataDTO>> GetLastUsedBoardData(int userId)
+    public async Task<Result<BoardDataDTO>> GetLastUsedBoardDataAsync(int userId)
     {
-        var lastUsedBoardId = await boardQueries.GetBoardIdOfLastUsedBoard(userId);
+        var lastUsedBoardId = await boardQueries.GetBoardIdOfLastUsedBoardAsync(userId);
 
         if (lastUsedBoardId is null)
         {
             logger.LogWarning("Unable to find last board id of user with id: {Id}", userId);
-            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", "User does not have last used board"); 
+            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", 
+                "User does not have last used board"); 
         }
 
-        var boardData = await boardQueries.GetBoardData(userId, (int)lastUsedBoardId); 
+        var boardData = await boardQueries.GetBoardDataAsync(userId, (int)lastUsedBoardId); 
 
         if (boardData is null)
         {
             logger.LogWarning("Unable to find board with id {Id}", lastUsedBoardId);
-            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", "Can not find board data of last used board");
+            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", 
+                "Can not find board data of last used board");
         }
 
-        var boardListAndCardsData = await boardQueries.GetBoardListDataAndCardsData((int)lastUsedBoardId); 
+        var boardListAndCardsData = await boardQueries.GetBoardListDataAndCardsDataAsync((int)lastUsedBoardId); 
+
+        boardData.BoardList = boardListAndCardsData;
+
+        return Result<BoardDataDTO>.Success(boardData);
+    }
+
+
+    public async Task<Result<BoardDataDTO>> GetBoardDataAsync(int userId, int boardId)
+    {
+        var boardData = await boardQueries.GetBoardDataAsync(userId, boardId);
+
+        if (boardData is null)
+        {
+            logger.LogWarning("Unable to find board with id {Id}", boardId);
+            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found",
+                "Can not find board data");
+        }
+
+        var boardListAndCardsData = await boardQueries.GetBoardListDataAndCardsDataAsync(boardId);
 
         boardData.BoardList = boardListAndCardsData;
 
