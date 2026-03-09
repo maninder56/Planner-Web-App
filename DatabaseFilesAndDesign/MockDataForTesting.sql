@@ -11,8 +11,8 @@ INSERT INTO `colours` (`Name`, `HexValue`) VALUES
 
 
 -- Create new board
-INSERT INTO `boards` (`Name`, `BackgroundColour`, `CreatedAt`)
-VALUES ('Development Sprint Board', 'soft-pink', NOW());
+INSERT INTO `boards` (`Name`, `BackgroundColour`, `CreatedAt`, `UserId`)
+VALUES ('Development Sprint Board', 'soft-pink', NOW(), 1);
 
 -- Get newly created BoardId
 SET @BoardId = LAST_INSERT_ID();

@@ -38,6 +38,9 @@ FROM boardstar;
 SELECT *
 FROM cards;
 
+SELECT *
+FROM colours;
+
 SELECT
     U.Email,
     RT.TokenHash,
@@ -64,6 +67,15 @@ JOIN cards C
 
 
 
+SELECT
+    BM.Role,
+    U.Name AS UserName,
+    B.Name AS BoardName
+FROM boardmembers BM
+LEFT JOIN users U
+    ON BM.UserId = U.UserId
+LEFT JOIN boards B
+    ON BM.BoardId = B.BoardId;
 
 
 
