@@ -12,15 +12,14 @@ public class BoardQueries(PlannerContext database)
         var isFavoriteBoard = database.BoardStars
             .Any(bs => bs.BoardId == boardId && bs.UserId == userId);
 
-        var query = await database.Boards.AsNoTracking()
-            .Where(b => b.BoardId == boardId)
-            .Select(b => new BoardDataDTO
+        var query = await database.BoardMembers.AsNoTracking()
+            .WhereUserHasAccess(userId, boardId)
+            .Select(bm => new BoardDataDTO
             {
-                BoardId = b.BoardId,
-                Name = b.Name,
+                BoardId = bm.Board.BoardId,
+                Name = bm.Board.Name,
                 IsFavoriteBoard = isFavoriteBoard,
-                BackgroundColour = b.BackgroundColour
-
+                BackgroundColour = bm.Board.BackgroundColour,
             }).SingleOrDefaultAsync();
 
         return query; 
@@ -64,6 +63,9 @@ public class BoardQueries(PlannerContext database)
             return null;
         }
 
+        var isFavoriteBoard = database.BoardStars
+            .Any(bs => bs.BoardId == lastBoardId && bs.UserId == userId);
+
         var query = await database.BoardMembers.AsNoTracking()
             .WhereUserHasAccess(userId, (int)lastBoardId)
             .Select(bm => new BoardDataDTO
@@ -71,8 +73,7 @@ public class BoardQueries(PlannerContext database)
                 BoardId = bm.BoardId,
                 Name = bm.Board.Name,
                 BackgroundColour = bm.Board.BackgroundColour,
-                IsFavoriteBoard = database.BoardStars
-                    .Any(bs => bs.BoardId == bm.BoardId && bm.UserId == userId),
+                IsFavoriteBoard = isFavoriteBoard,
             }).SingleOrDefaultAsync(); 
 
         return query;
