@@ -1,4 +1,4 @@
-﻿using API.DTOs.Board;
+﻿using API.DTOs.Board.Responses;
 using API.Models.Result;
 using API.Queries.Boards;
 
@@ -6,14 +6,14 @@ namespace API.Services.BoardService;
 
 public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries) : IBoardService
 {
-    public async Task<Result<BoardDataDTO>> GetLastUsedBoardDataAsync(int userId)
+    public async Task<Result<BoardDataResponse>> GetLastUsedBoardDataAsync(int userId)
     {
         var lastUsedBoardId = await boardQueries.GetBoardIdOfLastUsedBoardAsync(userId);
 
         if (lastUsedBoardId is null)
         {
             logger.LogWarning("Unable to find last board id of user with id: {Id}", userId);
-            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", 
+            return Result<BoardDataResponse>.Failed(ErrorType.NotFound, "Resource Not found", 
                 "User does not have last used board"); 
         }
 
@@ -22,7 +22,7 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
         if (boardData is null)
         {
             logger.LogWarning("Unable to find board with id {Id}", lastUsedBoardId);
-            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found", 
+            return Result<BoardDataResponse>.Failed(ErrorType.NotFound, "Resource Not found", 
                 "Can not find board data of last used board");
         }
 
@@ -30,18 +30,18 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
 
         boardData.BoardList = boardListAndCardsData;
 
-        return Result<BoardDataDTO>.Success(boardData);
+        return Result<BoardDataResponse>.Success(boardData);
     }
 
 
-    public async Task<Result<BoardDataDTO>> GetBoardDataAsync(int userId, int boardId)
+    public async Task<Result<BoardDataResponse>> GetBoardDataAsync(int userId, int boardId)
     {
         var boardData = await boardQueries.GetBoardDataAsync(userId, boardId);
 
         if (boardData is null)
         {
             logger.LogWarning("Unable to find board with id {Id}", boardId);
-            return Result<BoardDataDTO>.Failed(ErrorType.NotFound, "Resource Not found",
+            return Result<BoardDataResponse>.Failed(ErrorType.NotFound, "Resource Not found",
                 "Can not find board data");
         }
 
@@ -49,6 +49,6 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
 
         boardData.BoardList = boardListAndCardsData;
 
-        return Result<BoardDataDTO>.Success(boardData);
+        return Result<BoardDataResponse>.Success(boardData);
     }
 }

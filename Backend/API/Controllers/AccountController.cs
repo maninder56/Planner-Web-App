@@ -1,4 +1,4 @@
-﻿using API.DTOs.Account;
+﻿using API.DTOs.Account.Requests;
 using API.Models.Account;
 using API.Models.Result;
 using API.Services.Account;
@@ -32,7 +32,7 @@ public class AccountController : ControllerBase
     // Account Routes
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateAccountPostAsync(NewUserDTO newUser)
+    public async Task<IActionResult> CreateAccountPostAsync(NewUserRequest newUser)
     {
         var result = await accountService.CreateNewUserAsync(newUser);
 
@@ -53,7 +53,7 @@ public class AccountController : ControllerBase
 
 
     [HttpPost("login")]
-    public async Task<IActionResult> LogInUserPostAsync(LogInUserDTO logInUser)
+    public async Task<IActionResult> LogInUserPostAsync(LogInUserRequest logInUser)
     {
         var result = await accountService.LogInUserAsync(logInUser); 
 
@@ -99,7 +99,8 @@ public class AccountController : ControllerBase
         if (refreshTokenInBase64 is null)
         {
             logger.LogWarning("Unable to find refresh token in cookies");
-            Error error = new Error(ErrorType.BadRequest, "Refreh token not found", "Unable to find refreh token form cookies");
+            Error error = new Error(ErrorType.BadRequest, "Refreh token not found", 
+                "Unable to find refreh token form cookies");
             return error.ErrorToActionResult(); 
         }
 

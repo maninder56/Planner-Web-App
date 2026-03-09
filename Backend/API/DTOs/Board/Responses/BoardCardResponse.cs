@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API.DTOs.Board; 
+namespace API.DTOs.Board.Responses; 
 
-public class BoardCardDTO
+public class BoardCardResponse
 {
     public int CardId { get; init; }
 

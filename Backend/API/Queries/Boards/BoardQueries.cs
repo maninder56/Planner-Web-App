@@ -1,4 +1,4 @@
-﻿using API.DTOs.Board;
+﻿using API.DTOs.Board.Responses;
 using API.Models.Result;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +7,11 @@ namespace API.Queries.Boards;
 
 public class BoardQueries(PlannerContext database)
 {
-    public async Task<BoardDataDTO?> GetBoardDataAsync(int userId,  int boardId)
+    public async Task<BoardDataResponse?> GetBoardDataAsync(int userId,  int boardId)
     {
         var query = await database.BoardMembers.AsNoTracking()
             .WhereUserHasAccess(userId, boardId)
-            .Select(bm => new BoardDataDTO
+            .Select(bm => new BoardDataResponse
             {
                 BoardId = bm.Board.BoardId,
                 Name = bm.Board.Name,
@@ -23,18 +23,18 @@ public class BoardQueries(PlannerContext database)
         return query; 
     }
 
-    public async Task<List<BoardListDTO>> GetBoardListDataAndCardsDataAsync(int boardId)
+    public async Task<List<BoardListResponse>> GetBoardListDataAndCardsDataAsync(int boardId)
     {
         var query = await database.BoardLists.AsNoTracking()
             .Where(bl => bl.BoardId == boardId)
-            .Select(bl => new BoardListDTO
+            .Select(bl => new BoardListResponse
             {
                 BoardListId = bl.BoardListId,
                 Name = bl.Name,
                 ListPosition = bl.ListPosition,
                 CardList = bl.Cards
                     .Where(c => c.BoardListId == bl.BoardListId)
-                    .Select(c => new BoardCardDTO
+                    .Select(c => new BoardCardResponse
                     {
                         CardId = c.CardId,
                         Title = c.Title,

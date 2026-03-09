@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Account; 
+namespace API.DTOs.Account.Requests; 
 
-public class LogInUserDTO
+public class LogInUserRequest
 {
     [Required]
     [EmailAddress]

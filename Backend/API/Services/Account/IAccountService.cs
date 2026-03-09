@@ -1,4 +1,4 @@
-﻿using API.DTOs.Account;
+﻿using API.DTOs.Account.Requests;
 using API.Models.Account;
 using API.Models.Result;
 
@@ -7,10 +7,10 @@ namespace API.Services.Account;
 public interface IAccountService
 {
     // Read operations
-    public Task<Result<Tokens>> LogInUserAsync(LogInUserDTO logInUser); 
+    public Task<Result<Tokens>> LogInUserAsync(LogInUserRequest logInUser); 
 
     // Create operations
-    public Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser);
+    public Task<Result<Tokens>> CreateNewUserAsync(NewUserRequest newUser);
 
     // Update operations 
     public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64); 

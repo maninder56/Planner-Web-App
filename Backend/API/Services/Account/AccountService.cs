@@ -1,4 +1,4 @@
-﻿using API.DTOs.Account;
+﻿using API.DTOs.Account.Requests;
 using API.Models.Account;
 using API.Models.Result;
 using API.Repositories.Account;
@@ -40,7 +40,7 @@ public class AccountService : IAccountService
     // Read Operations
 
 
-    public async Task<Result<Tokens>> LogInUserAsync(LogInUserDTO logInUser)
+    public async Task<Result<Tokens>> LogInUserAsync(LogInUserRequest logInUser)
     {
        
         // get user details by email
@@ -85,7 +85,7 @@ public class AccountService : IAccountService
     // Create Operations
 
 
-    public async Task<Result<Tokens>> CreateNewUserAsync(NewUserDTO newUser)
+    public async Task<Result<Tokens>> CreateNewUserAsync(NewUserRequest newUser)
     {
         try
         {

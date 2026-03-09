@@ -1,6 +1,6 @@
-﻿namespace API.DTOs.Board; 
+﻿namespace API.DTOs.Board.Responses; 
 
-public class BoardDataDTO
+public class BoardDataResponse
 {
   
     public int BoardId { get; init; } 
@@ -11,5 +11,5 @@ public class BoardDataDTO
 
     public required string BackgroundColour { get; init; }
 
-    public List<BoardListDTO> BoardList { get; set; } = new List<BoardListDTO>();
+    public List<BoardListResponse> BoardList { get; set; } = new List<BoardListResponse>();
 }
