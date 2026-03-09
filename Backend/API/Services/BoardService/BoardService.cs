@@ -1,4 +1,5 @@
-﻿using API.DTOs.Board.Responses;
+﻿using API.DTOs.Board.Requests;
+using API.DTOs.Board.Responses;
 using API.Models.Result;
 using API.Queries.Boards;
 
@@ -50,5 +51,11 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
         boardData.BoardList = boardListAndCardsData;
 
         return Result<BoardDataResponse>.Success(boardData);
+    }
+
+
+    public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(NewBoardRequest newBoard)
+    {
+        throw new NotImplementedException();
     }
 }

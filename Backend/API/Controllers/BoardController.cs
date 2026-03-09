@@ -1,4 +1,5 @@
-﻿using API.Models.Result;
+﻿using API.DTOs.Board.Requests;
+using API.Models.Result;
 using API.Queries.Boards;
 using API.Services.BoardService;
 using API.Utilities;
@@ -15,12 +16,12 @@ public class BoardController : ControllerBase
 {
     private ILogger<BoardController> logger;
     private CookiesUtility cookiesUtility; 
-    private BoardService boardService;
+    private IBoardService boardService;
 
     public BoardController(
         ILogger<BoardController> logger, 
         CookiesUtility cookiesUtility, 
-        BoardService boardService)
+        IBoardService boardService)
     {
         this.logger = logger;
         this.cookiesUtility = cookiesUtility;
@@ -76,5 +77,12 @@ public class BoardController : ControllerBase
         {
             return boardDataResult.Error.ErrorToActionResult();
         }
+    }
+
+
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateNewBoard(NewBoardRequest newBoardRequest)
+    {
+        throw new NotImplementedException();
     }
 }
