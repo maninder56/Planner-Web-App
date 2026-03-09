@@ -9,17 +9,15 @@ public class BoardQueries(PlannerContext database)
 {
     public async Task<BoardDataDTO?> GetBoardData(int userId,  int boardId)
     {
-        var isFavoriteBoard = database.BoardStars
-            .Any(bs => bs.BoardId == boardId && bs.UserId == userId);
-
         var query = await database.BoardMembers.AsNoTracking()
             .WhereUserHasAccess(userId, boardId)
             .Select(bm => new BoardDataDTO
             {
                 BoardId = bm.Board.BoardId,
                 Name = bm.Board.Name,
-                IsFavoriteBoard = isFavoriteBoard,
                 BackgroundColour = bm.Board.BackgroundColour,
+                IsFavoriteBoard = database.BoardStars
+                    .Any(bs => bs.BoardId == boardId && bs.UserId == userId),
             }).SingleOrDefaultAsync();
 
         return query; 
@@ -51,32 +49,13 @@ public class BoardQueries(PlannerContext database)
         return query; 
     }
 
-    public async Task<BoardDataDTO?> GetBoardIdOfLastUsedBoard(int userId)
+    public async Task<int?> GetBoardIdOfLastUsedBoard(int userId)
     {
-        var lastBoardId = await database.Users.AsNoTracking()
+        var query = await database.Users.AsNoTracking()
             .Where(u => u.UserId == userId)
             .Select(u => u.LastBoardId)
             .SingleOrDefaultAsync();
 
-        if (lastBoardId is null)
-        {
-            return null;
-        }
-
-        var isFavoriteBoard = database.BoardStars
-            .Any(bs => bs.BoardId == lastBoardId && bs.UserId == userId);
-
-        var query = await database.BoardMembers.AsNoTracking()
-            .WhereUserHasAccess(userId, (int)lastBoardId)
-            .Select(bm => new BoardDataDTO
-            {
-                BoardId = bm.BoardId,
-                Name = bm.Board.Name,
-                BackgroundColour = bm.Board.BackgroundColour,
-                IsFavoriteBoard = isFavoriteBoard,
-            }).SingleOrDefaultAsync(); 
-
         return query;
-            
     }
 }
