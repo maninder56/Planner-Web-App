@@ -2,10 +2,12 @@
 using API.DTOs.Board.Responses;
 using API.Models.Result;
 using API.Queries.Boards;
+using API.Repositories.BoardRepository;
+using DatabaseContext;
 
 namespace API.Services.BoardService;
 
-public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries) : IBoardService
+public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries, IBoardRepository boardRepository) : IBoardService
 {
     public async Task<Result<BoardDataResponse>> GetLastUsedBoardDataAsync(int userId)
     {
@@ -54,8 +56,22 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
 
 
-    public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(NewBoardRequest newBoard)
+    public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(NewBoardRequest newBoardRequest)
     {
-        throw new NotImplementedException();
+        var newBoard = new Board()
+        {
+            Name = newBoardRequest.Name,
+            BackgroundColour = newBoardRequest.BackgroundColour,
+        };
+
+        Board savedBoard = await boardRepository.CreateNewBoardAsync(newBoard);
+
+        return Result<BoardDataResponse>.Success(new BoardDataResponse()
+        {
+            BoardId = savedBoard.BoardId,
+            Name = newBoardRequest.Name,
+            BackgroundColour = newBoardRequest.BackgroundColour,
+            IsFavoriteBoard = false,
+        });  
     }
 }

@@ -27,6 +27,7 @@ public class BoardQueries(PlannerContext database)
     {
         var query = await database.BoardLists.AsNoTracking()
             .Where(bl => bl.BoardId == boardId)
+            .OrderBy(bl => bl.ListPosition)
             .Select(bl => new BoardListResponse
             {
                 BoardListId = bl.BoardListId,
@@ -34,6 +35,7 @@ public class BoardQueries(PlannerContext database)
                 ListPosition = bl.ListPosition,
                 CardList = bl.Cards
                     .Where(c => c.BoardListId == bl.BoardListId)
+                    .OrderBy(c => c.CardPosition)
                     .Select(c => new BoardCardResponse
                     {
                         CardId = c.CardId,

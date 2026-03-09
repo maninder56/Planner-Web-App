@@ -54,8 +54,8 @@ public class BoardController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetBoardAsync(int id)
+    [HttpGet("{id}", Name = "GetBoardById")]
+    public async Task<IActionResult> GetBoardByIdAsync(int id)
     {
         int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
 
@@ -81,8 +81,26 @@ public class BoardController : ControllerBase
 
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateNewBoard(NewBoardRequest newBoardRequest)
+    public async Task<IActionResult> CreateNewBoard([FromBody] NewBoardRequest newBoardRequest)
     {
-        throw new NotImplementedException();
+        var savedBoardResult = await boardService.CreateNewBoardAsync(newBoardRequest);
+
+        if (savedBoardResult.Successful)
+        {
+            int? boardId = savedBoardResult.Data?.BoardId;
+
+            if (boardId is int id)
+            {
+                return CreatedAtAction("GetBoardById", new { id = id }, savedBoardResult.Data);
+            }
+            else
+            {
+                return Created("GetBoardById", savedBoardResult.Data); 
+            }
+        }
+        else
+        {
+            return savedBoardResult.Error.ErrorToActionResult();
+        }
     }
 }

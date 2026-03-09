@@ -5,7 +5,7 @@ using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Repositories.Board;
+namespace API.Repositories.BoardRepository;
 
 public class BoardRepository : IBoardRepository
 {
@@ -19,5 +19,11 @@ public class BoardRepository : IBoardRepository
         this.database = database;
     }
 
+    public async Task<Board> CreateNewBoardAsync(Board newBoard)
+    {
+        database.Boards.Add(newBoard);
+        await database.SaveChangesAsync(); 
+        return newBoard;
+    }
     
 }
