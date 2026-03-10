@@ -1,12 +1,13 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole } from "../Types/boardTypes";
 
 
 
 type BoardData = {
     id: number, 
     title: string, 
-    idFavoriteBoard: boolean, 
+    idFavoriteBoard: boolean,
+    role: UserRole, 
     boardColour: BoardColour,
 }
 

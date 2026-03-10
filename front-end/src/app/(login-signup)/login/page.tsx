@@ -19,8 +19,6 @@ export default function Login() {
         if (apiResult.ok) {
             const dashboard: appRoute = '/dashboard'; 
             permanentRedirect(dashboard); 
-        } else if (apiResult.error === 'Unauthorized'){
-            setFormError('Invalid Email Or Password'); 
         } else if (apiResult.error === 'BadRequest' || apiResult.error === 'NotFound') {
             setFormError('Invalid Email or Password'); 
         } else {

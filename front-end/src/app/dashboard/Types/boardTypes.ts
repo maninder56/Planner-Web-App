@@ -3,6 +3,8 @@ import * as z from 'zod';
 const BoardColour = z.literal(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
 export type BoardColour = z.infer<typeof BoardColour>; 
 
+const UserRole = z.literal(['Owner', 'Member', 'Viewer']);
+export type UserRole = z.infer<typeof UserRole>; 
 
 const CardPriority = z.literal(['Low', 'Medium', 'High']); 
 export type CardPriority = z.infer<typeof CardPriority>; 
@@ -31,6 +33,7 @@ const Board = z.object({
     title: z.string(),
     isFavoriteBoard: z.boolean(), 
     boardColour: BoardColour,
+    role: UserRole,
     boardLists: z.array(BoardList),
 }); 
 export type BoardDataFromAPI = z.infer<typeof Board>; 

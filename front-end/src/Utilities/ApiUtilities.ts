@@ -19,6 +19,9 @@ export function ApiErrorFromStatusCode(statusCode: number) {
         case 404: 
         return ApiRequestFailed('NotFound');
 
+        case 409: 
+        return ApiRequestFailed('Conflict'); 
+
         case 500: 
         return ApiRequestFailed('InternalServerError');
 

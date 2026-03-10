@@ -32,11 +32,11 @@ export default function Dashboard() {
         title: "Product Development Q1",
         boardColour: "soft-pink",
         isFavoriteBoard: false, 
+        role: "Owner",
         boardLists: [
         {
             id: 101,
             title: "Backlog",
-            listColour: "not completed yet",
             position: 0,
             cardList: [
             {
@@ -71,7 +71,6 @@ export default function Dashboard() {
         {
             id: 102,
             title: "In Progress",
-            listColour: "not completed yet",
             position: 1,
             cardList: [
             {
@@ -97,7 +96,6 @@ export default function Dashboard() {
         {
             id: 103,
             title: "Done",
-            listColour: "not completed yet",
             position: 2,
             cardList: [
                 {

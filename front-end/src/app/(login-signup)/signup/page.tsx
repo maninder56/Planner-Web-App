@@ -16,8 +16,10 @@ export default function Signup() {
         if (apiResult.ok) {
             const dashboard: appRoute = '/dashboard'; 
             permanentRedirect(dashboard); 
-        } else if (apiResult.error === 'BadRequest'){
-            setFormError('Invalid Email, Please use another Email'); 
+        } else if (apiResult.error === 'Conflict'){
+            setFormError('An account with this email already exists.'); 
+        } else if (apiResult.error === 'BadRequest') {
+            setFormError('Invalid User details'); 
         } else {
             setFormError('Something went wrong, Please try again later'); 
         }

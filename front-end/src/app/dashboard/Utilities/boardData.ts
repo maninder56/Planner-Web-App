@@ -7,6 +7,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
         id: data.id, 
         title: data.title, 
         idFavoriteBoard: data.isFavoriteBoard, 
+        role: data.role,
         boardColour: data.boardColour,
     }; 
 
