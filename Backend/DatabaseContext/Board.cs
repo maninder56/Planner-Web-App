@@ -28,8 +28,6 @@ public class Board
     // Navigation Properties 
     public List<BoardMembers> BoardMembers { get; set; } = null!;
 
-    public User? User { get; set; }
-
     public List<BoardStar> BoardStars { get; set; } = [];
 
     public List<BoardList> Lists { get; set; } = []; 

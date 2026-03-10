@@ -37,7 +37,5 @@ public class User
 
     public List<BoardMembers> BoardMembers { get; set;  } = [];
 
-    public List<Board> Board { get; set; } = null!;
-
     public List<BoardStar> BoardStars { get; set; } = []; 
 }
