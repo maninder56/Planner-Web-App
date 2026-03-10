@@ -16,6 +16,7 @@ public class BoardQueries(PlannerContext database)
                 BoardId = bm.Board.BoardId,
                 Name = bm.Board.Name,
                 BackgroundColour = bm.Board.BackgroundColour,
+                Role = bm.Role,
                 IsFavoriteBoard = database.BoardStars
                     .Any(bs => bs.BoardId == boardId && bs.UserId == userId),
             }).SingleOrDefaultAsync();

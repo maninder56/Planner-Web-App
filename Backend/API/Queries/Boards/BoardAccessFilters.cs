@@ -5,8 +5,8 @@ namespace API.Queries.Boards;
 
 public static class BoardAccessFilters
 {
-    public static IQueryable<BoardMembers> WhereUserHasAccess(
-        this IQueryable<BoardMembers> query, 
+    public static IQueryable<BoardMember> WhereUserHasAccess(
+        this IQueryable<BoardMember> query, 
         int userId, 
         int boardId)
     {

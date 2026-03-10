@@ -4,6 +4,7 @@ using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
 using DatabaseContext;
+using DatabaseContext.Types;
 
 namespace API.Services.BoardService;
 
@@ -56,22 +57,30 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
 
 
-    public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(NewBoardRequest newBoardRequest)
+    public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest)
     {
-        var newBoard = new Board()
+        Board newBoard = new Board()
         {
             Name = newBoardRequest.Name,
             BackgroundColour = newBoardRequest.BackgroundColour,
         };
 
-        Board savedBoard = await boardRepository.CreateNewBoardAsync(newBoard);
+        BoardMember newBoardMember = new BoardMember()
+        {
+            UserId = userId,
+            Role = Role.Owner,
+            Board = newBoard,
+        };
+
+        BoardMember savedBoardMember = await boardRepository.CreateNewBoardMemberAsync(newBoardMember);
 
         return Result<BoardDataResponse>.Success(new BoardDataResponse()
         {
-            BoardId = savedBoard.BoardId,
-            Name = newBoardRequest.Name,
-            BackgroundColour = newBoardRequest.BackgroundColour,
+            BoardId = savedBoardMember.BoardId,
+            Name = savedBoardMember.Board.Name,
+            Role = savedBoardMember.Role,
+            BackgroundColour = savedBoardMember.Board.BackgroundColour, 
             IsFavoriteBoard = false,
-        });  
+        }); 
     }
 }

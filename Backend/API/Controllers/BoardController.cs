@@ -83,7 +83,17 @@ public class BoardController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateNewBoard([FromBody] NewBoardRequest newBoardRequest)
     {
-        var savedBoardResult = await boardService.CreateNewBoardAsync(newBoardRequest);
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var savedBoardResult = await boardService.CreateNewBoardAsync((int)userId, newBoardRequest);
 
         if (savedBoardResult.Successful)
         {

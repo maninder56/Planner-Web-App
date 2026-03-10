@@ -25,5 +25,12 @@ public class BoardRepository : IBoardRepository
         await database.SaveChangesAsync(); 
         return newBoard;
     }
+
+    public async Task<BoardMember> CreateNewBoardMemberAsync(BoardMember boardMembers)
+    {
+        database.BoardMembers.Add(boardMembers);
+        await database.SaveChangesAsync();
+        return boardMembers;
+    }
     
 }
