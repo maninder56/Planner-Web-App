@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Board.Requests; 
 
@@ -10,5 +11,6 @@ public class NewBoardRequest
 
     [Required]
     [StringLength(30)]
+    [ColourValidation]
     public required string BackgroundColour { get; set; }
 }
