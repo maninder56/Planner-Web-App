@@ -15,7 +15,7 @@ public class PlannerContext : DbContext
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<BoardMembers> BoardMembers { get; set; }
+    public DbSet<BoardMember> BoardMembers { get; set; }
     public DbSet<BoardStar> BoardStars { get; set; }
     public DbSet<Board> Boards { get; set; }
     public DbSet<BoardList> BoardLists { get; set; }

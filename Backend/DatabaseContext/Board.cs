@@ -26,7 +26,7 @@ public class Board
 
 
     // Navigation Properties 
-    public List<BoardMembers> BoardMembers { get; set; } = null!;
+    public List<BoardMember> BoardMembers { get; set; } = null!;
 
     public List<BoardStar> BoardStars { get; set; } = [];
 

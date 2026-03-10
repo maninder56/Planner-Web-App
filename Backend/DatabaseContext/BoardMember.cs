@@ -12,7 +12,7 @@ namespace DatabaseContext;
 
 [Table("boardmembers")]
 [PrimaryKey(nameof(BoardId), nameof(UserId))]
-public class BoardMembers
+public class BoardMember
 {
     public int BoardId { get; set; }
     public int UserId { get; set; }
