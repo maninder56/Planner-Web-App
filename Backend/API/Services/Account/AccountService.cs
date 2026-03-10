@@ -114,11 +114,14 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateException ex) when (ex.GetBaseException() is MySqlException { Number: 1062 })
         {
+            logger.LogWarning("User provided email which is already likned to an account, Email: {Email}", newUser.Email); 
             return Result<Tokens>.Failed(ErrorType.Conflict, 
                 "Duplicate value", "A record with this value already exists"); 
         } 
         catch(Exception ex)
         {
+            logger.LogWarning("Error occured while saving new user, User Email: {Email} Error Message: {ErrorMessage}", 
+                newUser.Email, ex.Message); 
             return Result<Tokens>.Failed(ErrorType.InternalServerError, "An Unexpected error occured"); 
         }
     }
