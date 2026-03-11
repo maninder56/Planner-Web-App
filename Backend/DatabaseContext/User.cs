@@ -22,8 +22,7 @@ public class User
     [StringLength(200)]
     public required string Email { get; set; }
 
-    [Column(TypeName = "date")]
-    public DateOnly CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public bool Guest { get; set; }
 
@@ -31,15 +30,12 @@ public class User
     public required string PasswordHash { get; set; }
 
     // Foreign Key
-    [ForeignKey(nameof(Board))] 
     public int? LastBoardId { get; set; }    
 
     // Navigation properties
     public RefreshToken RefreshToken { get; set; } = null!;
 
-    public List<BoardMembers> BoardMembers { get; set;  } = [];
-
-    public Board? Board { get; set; } = null!;
+    public List<BoardMember> BoardMembers { get; set;  } = [];
 
     public List<BoardStar> BoardStars { get; set; } = []; 
 }

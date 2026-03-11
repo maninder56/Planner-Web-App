@@ -35,9 +35,9 @@ namespace DatabaseContext.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)");
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.Property<string>("Name")
@@ -108,9 +108,9 @@ namespace DatabaseContext.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.HasKey("BoardId", "UserId");
@@ -137,6 +137,20 @@ namespace DatabaseContext.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(400)
                         .HasColumnType("varchar(400)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+                    b.Property<bool>("IsDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(20)")
+                        .HasDefaultValue("Low");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -209,9 +223,9 @@ namespace DatabaseContext.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserId"));
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.Property<string>("Email")
@@ -240,9 +254,6 @@ namespace DatabaseContext.Migrations
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("LastBoardId")
                         .IsUnique();
 
                     b.ToTable("users");
@@ -330,15 +341,6 @@ namespace DatabaseContext.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DatabaseContext.User", b =>
-                {
-                    b.HasOne("DatabaseContext.Board", "Board")
-                        .WithOne("User")
-                        .HasForeignKey("DatabaseContext.User", "LastBoardId");
-
-                    b.Navigation("Board");
-                });
-
             modelBuilder.Entity("DatabaseContext.Board", b =>
                 {
                     b.Navigation("BoardMembers");
@@ -346,8 +348,6 @@ namespace DatabaseContext.Migrations
                     b.Navigation("BoardStars");
 
                     b.Navigation("Lists");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardList", b =>

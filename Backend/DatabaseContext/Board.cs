@@ -17,8 +17,7 @@ public class Board
     [StringLength(100)]
     public string Name { get; set; } = null!;
 
-    [Column(TypeName = "date")]
-    public DateOnly CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     // Foreign Key
     [ForeignKey(nameof(Colour))]
@@ -27,9 +26,7 @@ public class Board
 
 
     // Navigation Properties 
-    public List<BoardMembers> BoardMembers { get; set; } = null!;
-
-    public User? User { get; set; }
+    public List<BoardMember> BoardMembers { get; set; } = null!;
 
     public List<BoardStar> BoardStars { get; set; } = [];
 

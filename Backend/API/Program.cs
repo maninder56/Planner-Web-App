@@ -1,11 +1,19 @@
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using API.ServiceRegistrationExtensions; 
+using API.ServiceRegistrationExtensions;
+using API.Handler;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    // Add json convertor for enum values
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());    
+    });
+
 builder.Services.AddProblemDetails();
 
 // Add database services
@@ -26,7 +34,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddPlannerServices();
 
 
-
+// Global Exception handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 

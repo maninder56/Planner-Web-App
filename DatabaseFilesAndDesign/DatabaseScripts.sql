@@ -5,6 +5,10 @@ USE plannerwebapp;
 SHOW TABLES;
 
 SHOW COLUMNS
+FROM users;
+
+
+SHOW COLUMNS
 FROM refreshtokens;
 
 SHOW COLUMNS
@@ -15,6 +19,9 @@ FROM colours;
 
 SHOW COLUMNS
 FROM boards;
+
+SHOW COLUMNS
+FROM cards;
 
 SELECT *
 FROM users;
@@ -28,6 +35,11 @@ FROM boardmembers;
 SELECT *
 FROM boardstar;
 
+SELECT *
+FROM cards;
+
+SELECT *
+FROM colours;
 
 SELECT
     U.Email,
@@ -55,6 +67,15 @@ JOIN cards C
 
 
 
+SELECT
+    BM.Role,
+    U.Name AS UserName,
+    B.Name AS BoardName
+FROM boardmembers BM
+LEFT JOIN users U
+    ON BM.UserId = U.UserId
+LEFT JOIN boards B
+    ON BM.BoardId = B.BoardId;
 
 
 

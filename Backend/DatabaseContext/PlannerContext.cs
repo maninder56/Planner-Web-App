@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DatabaseContext.Types;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,7 @@ public class PlannerContext : DbContext
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<BoardMembers> BoardMembers { get; set; }
+    public DbSet<BoardMember> BoardMembers { get; set; }
     public DbSet<BoardStar> BoardStars { get; set; }
     public DbSet<Board> Boards { get; set; }
     public DbSet<BoardList> BoardLists { get; set; }
@@ -48,5 +49,13 @@ public class PlannerContext : DbContext
         modelBuilder.Entity<Board>()
             .Property(b => b.CreatedAt)
             .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        modelBuilder.Entity<Card>()
+            .Property(c => c.DueDate)
+            .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        modelBuilder.Entity<Card>()
+            .Property(c => c.Priority)
+            .HasDefaultValue(Priority.Low); 
     }
 }

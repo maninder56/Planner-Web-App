@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Account; 
+namespace API.DTOs.Account.Requests; 
 
-public class NewUserDTO
+public class NewUserRequest
 {
     [Required]
     [StringLength(100)]

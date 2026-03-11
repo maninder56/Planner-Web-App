@@ -1,4 +1,6 @@
-﻿using API.Repositories.Account;
+﻿using API.Queries.Boards;
+using API.Repositories.Account;
+using API.Repositories.BoardRepository;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,9 @@ public static class DatabaseServiceRegistration
 
 
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IBoardRepository, BoardRepository>();
+
+        services.AddScoped<BoardQueries>();
 
         return services;
     }

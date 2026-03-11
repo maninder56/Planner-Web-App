@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DatabaseContext.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,6 +23,13 @@ public class Card
 
     [Column(TypeName = "SMALLINT")]
     public int CardPosition { get; set; }
+
+    public bool IsDone { get; set; }
+
+    public DateOnly DueDate { get; set; }
+
+    [Column(TypeName = "varchar(20)")]
+    public Priority Priority { get; set; }
 
     // Foreign key 
     public int BoardListId { get; set; }
