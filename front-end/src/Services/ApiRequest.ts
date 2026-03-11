@@ -1,4 +1,5 @@
-import { ApiError, ApiResult } from '@/Types/apiTypes';
+;
+import { ApiError, ApiResult } from "@/Types/ApiTypes";
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from "@/Utilities/ApiUtilities";
 
 
