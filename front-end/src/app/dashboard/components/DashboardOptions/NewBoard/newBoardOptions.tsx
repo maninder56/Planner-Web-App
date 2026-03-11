@@ -17,10 +17,24 @@ export default function NewBoardOptions() {
 
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 
+    const [buttonsDisabled, setButtonsDisabled] = useState(true); 
 
     function handleFormSubmit(e: FormEvent) {
         e.stopPropagation(); 
         e.preventDefault(); 
+
+        
+
+    }
+
+    function handleBoardNameChange(newValue: string) {
+        if (newValue === '') {
+            setButtonsDisabled(true); 
+        } else {
+            setButtonsDisabled(false); 
+        }
+
+        setBoardName(newValue); 
     }
 
     return (
@@ -41,10 +55,10 @@ export default function NewBoardOptions() {
                 <form onSubmit={handleFormSubmit} className={styles.boardNameForm}>
                     <div>
                         <label>Board Name</label>
-                        <input type='text' maxLength={50} value={boardName} onChange={e => setBoardName(e.target.value)} />
+                        <input type='text' maxLength={50} value={boardName} onChange={e => handleBoardNameChange(e.target.value)} />
                     </div>
                     <div className={styles.formButton}>
-                        <button type='submit' disabled={boardName === ''}>Create</button>
+                        <button type='submit' disabled={buttonsDisabled}>Create</button>
                     </div>
                 </form>
         </HoverOptionsPanel>

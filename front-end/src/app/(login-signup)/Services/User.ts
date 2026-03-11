@@ -1,11 +1,12 @@
+import { ApiFetchRequest } from "@/Services/ApiRequest";
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from "@/Utilities/ApiUtilities";
 
+const accountRoute = '/account'; 
 
 export async function LogInUserRequest(
-    apiUrl: string, 
     userData: { email: string; password: string; },
 ) {
-    const url = apiUrl + '/account/login'; 
+    const subUrl = accountRoute + '/login'; 
     const request: RequestInit = { 
         headers: {
             'Content-Type': 'application/json'
@@ -19,8 +20,7 @@ export async function LogInUserRequest(
     };
 
     try {
-
-        const response = await fetch(url, request); 
+        const response = await ApiFetchRequest(subUrl, request); 
 
         if (response.ok) {
             return ApiRequestSuccessfull(undefined); 
@@ -35,10 +35,9 @@ export async function LogInUserRequest(
 }
 
 export async function SignupUserRequest(
-    apiUrl: string, 
     userData: { name: string; email: string; password: string; }
 ) {
-    const url = apiUrl + '/account/create'; 
+    const subUrl = accountRoute + '/create'; 
     const request: RequestInit = { 
         headers: {
             'Content-Type': 'application/json'
@@ -53,8 +52,7 @@ export async function SignupUserRequest(
     };
 
     try {
-
-        const response = await fetch(url, request); 
+        const response = await ApiFetchRequest(subUrl, request); 
 
         if (response.ok) {
             return ApiRequestSuccessfull(undefined); 

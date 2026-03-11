@@ -9,7 +9,7 @@ export type UserRole = z.infer<typeof UserRole>;
 const CardPriority = z.literal(['Low', 'Medium', 'High']); 
 export type CardPriority = z.infer<typeof CardPriority>; 
 
-const Card = z.object({
+const CardSchema = z.object({
     id: z.number(),
     title: z.string(), 
     description: z.string(), 
@@ -18,25 +18,25 @@ const Card = z.object({
     dueDate: z.date(), 
     position: z.number(), 
 }); 
-export type Card = z.infer<typeof Card>; 
+export type Card = z.infer<typeof CardSchema>; 
 
-const BoardList = z.object({
+const BoardListSchema = z.object({
     id: z.number(),
     title: z.string(), 
     position: z.number(), 
-    cardList: z.array(Card),
+    cardList: z.array(CardSchema),
 }); 
-export type BoardList = z.infer<typeof BoardList>; 
+export type BoardList = z.infer<typeof BoardListSchema>; 
 
-const Board = z.object({
+export const BoardSchema = z.object({
     id: z.number(), 
     title: z.string(),
     isFavoriteBoard: z.boolean(), 
     boardColour: BoardColour,
     role: UserRole,
-    boardLists: z.array(BoardList),
+    boardLists: z.array(BoardListSchema),
 }); 
-export type BoardDataFromAPI = z.infer<typeof Board>; 
+export type BoardDataFromAPI = z.infer<typeof BoardSchema>; 
 
 
 

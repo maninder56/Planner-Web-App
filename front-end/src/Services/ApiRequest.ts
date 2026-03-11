@@ -6,19 +6,12 @@ import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from 
 const apiUrl = process.env.NEXT_PUBLIC_APIURL; 
 
 
-
-export async function ApiRequest<R, D>(
-    request: (apiUrl: string, data: D) => Promise<ApiResult<R, ApiError>>, 
-    data: D,
+export async function ApiFetchRequest(
+    subUrl: string, 
+    request: RequestInit,
 ) {
-     if (apiUrl === undefined) {
-        console.error('Failed to load API URL'); 
-        return ApiRequestFailed('ApiUrlNotFound'); 
-    }
-
-    return await request(apiUrl, data); 
-} 
-
+    return await fetch(apiUrl + subUrl, request); 
+}
 
 
 
@@ -26,41 +19,34 @@ export async function ApiRequest<R, D>(
 // R: Response Data 
 // D: data for request function
 export async function ApiRequestWithRefreshTokenAttempt<R, D>(
-    request: (apiUrl: string, data?: D) => Promise<ApiResult<R, ApiError>>, 
+    request: (data?: D) => Promise<ApiResult<R, ApiError>>, 
     data?: D,
 ) {
-    if (apiUrl === undefined) {
-        console.error('Failed to load API URL'); 
-        return ApiRequestFailed('ApiUrlNotFound'); 
-    }
-
-    const firstResponse = await request(apiUrl, data); 
+    const firstResponse = await request(data); 
 
     if (firstResponse.ok || firstResponse.error !== 'Unauthorized') {
         return firstResponse; 
     }
 
     // Make refresh token request
-    const refreshResponse = await RefreshTokensRequest(apiUrl); 
+    const refreshResponse = await RefreshTokensRequest(); 
 
     if (refreshResponse.ok) {
-        return await request(apiUrl, data); 
+        return await request(data); 
     } else {
         return refreshResponse; 
     }
 }
 
-export async function  RefreshTokensRequest(apiUrl: string) {
-    
-    const url = apiUrl + 'token/refresh';
+export async function  RefreshTokensRequest() {
+    const subUrl = 'token/refresh';
     const request: RequestInit = {
         method: 'POST', 
         credentials: 'include', 
     }; 
 
     try {
-
-        const response = await fetch(url, request); 
+        const response = await ApiFetchRequest(subUrl, request); 
 
         if (response.ok) {
             return ApiRequestSuccessfull(); 
