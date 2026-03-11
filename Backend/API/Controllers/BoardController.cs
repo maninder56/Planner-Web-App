@@ -113,4 +113,30 @@ public class BoardController : ControllerBase
             return savedBoardResult.Error.ErrorToActionResult();
         }
     }
+
+    [HttpGet("search/{keyword}")]
+    public async Task<IActionResult> SearchCardByName(string keyword)
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var searchResult = await boardService.SearchCardByName((int)userId, keyword); 
+
+        if (searchResult.Successful)
+        {
+            //logger.LogInformation(searchResult.Data.se); 
+            return Ok(searchResult.Data);   
+        }
+        else
+        {
+            return searchResult.Error.ErrorToActionResult();
+        }
+    }
 }

@@ -83,4 +83,12 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             IsFavoriteBoard = false,
         }); 
     }
+
+
+    public async Task<Result<SearchResponse>> SearchCardByName(int userId, string keyword)
+    {
+        SearchResponse searchResponse = await boardQueries.SearchCardsByKeyword(userId, keyword);
+
+        return Result<SearchResponse>.Success(searchResponse);
+    }
 }

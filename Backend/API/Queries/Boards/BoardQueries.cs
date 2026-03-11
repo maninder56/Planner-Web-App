@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Queries.Boards; 
 
-public class BoardQueries(PlannerContext database)
+public class BoardQueries(ILogger<BoardQueries> logger, PlannerContext database)
 {
     public async Task<BoardDataResponse?> GetBoardDataAsync(int userId,  int boardId)
     {
@@ -60,5 +60,30 @@ public class BoardQueries(PlannerContext database)
             .SingleOrDefaultAsync();
 
         return query;
+    }
+
+    public async Task<SearchResponse> SearchCardsByKeyword(int userId, string keyword)
+    {
+        var resultItems = await database.Cards.AsNoTracking()
+            .Where(c => c.Title.Contains(keyword)
+            &&
+                c.BoardList.Board.BoardMembers.Any(bm => bm.UserId == userId)
+                )
+            .Select(c => new SearchResultItem
+            { 
+                BoardId = c.BoardList.BoardId, 
+                CardId = c.CardId, 
+                CardName = c.Title
+            }).ToListAsync(); 
+
+        
+        logger.LogInformation($"Total items found: {resultItems.Count()}, {string.Join(", ", resultItems.Select(r => r.CardName))}");
+
+        SearchResponse response = new SearchResponse()
+        {
+            searchResults = resultItems,
+        }; 
+
+        return response;
     }
 }
