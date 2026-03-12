@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Queries.Boards; 
 
-public class BoardQueries(ILogger<BoardQueries> logger, PlannerContext database)
+public class BoardQueries(PlannerContext database)
 {
     public async Task<BoardDataResponse?> GetBoardDataAsync(int userId,  int boardId)
     {
