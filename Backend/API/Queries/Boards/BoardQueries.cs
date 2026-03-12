@@ -18,16 +18,37 @@ public class BoardQueries(PlannerContext database)
                 BackgroundColour = bm.Board.BackgroundColour,
                 Role = bm.Role,
                 IsFavoriteBoard = database.BoardStars
-                    .Any(bs => bs.BoardId == boardId && bs.UserId == userId),
+                    .Any(bs => bs.BoardId == boardId && bs.UserId == userId), 
+                BoardList = bm.Board.Lists
+                    .OrderBy(bl => bl.ListPosition)
+                    .Select(bl => new BoardListResponse
+                    {
+                        BoardListId = bl.BoardListId,
+                        Name = bl.Name,
+                        ListPosition = bl.ListPosition,
+                        CardList = bl.Cards
+                            .OrderBy(c => c.CardPosition)
+                            .Select(c => new BoardCardResponse
+                            {
+                                CardId = c.CardId,
+                                Title = c.Title,
+                                Description = c.Description,
+                                IsDone = c.IsDone,
+                                Priority = c.Priority.ToString(),
+                                DueDate = c.DueDate,
+                                CardPosition = c.CardPosition,
+                            }).ToList(),
+                    }).ToList(),
             }).SingleOrDefaultAsync();
 
         return query; 
     }
 
-    public async Task<List<BoardListResponse>> GetBoardListDataAndCardsDataAsync(int boardId)
+    public async Task<List<BoardListResponse>> GetBoardListDataAndCardsDataAsync(int userId, int boardId)
     {
         var query = await database.BoardLists.AsNoTracking()
-            .Where(bl => bl.BoardId == boardId)
+            .Where(bl => bl.BoardId == boardId && 
+                bl.Board.BoardMembers.Any(bm => bm.UserId == userId && bm.BoardId == boardId))
             .OrderBy(bl => bl.ListPosition)
             .Select(bl => new BoardListResponse
             {

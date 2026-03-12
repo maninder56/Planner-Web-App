@@ -28,6 +28,9 @@ public class BoardController : ControllerBase
         this.boardService = boardService;
     }
 
+
+    // Board Endpoints
+
     [HttpGet("lastusedboard")]
     public async Task<IActionResult> GetLastUsedBoardAsync()
     {
@@ -115,7 +118,20 @@ public class BoardController : ControllerBase
     }
 
 
-    [HttpGet("search")]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllBoards()
+    {
+        throw new NotImplementedException();
+    }
+
+
+
+
+
+
+    // Cards Endpoints
+
+    [HttpGet("card/search")]
     public async Task<IActionResult> SearchCardByKeyword(SearchRequest searchRequest)
     {
         int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);

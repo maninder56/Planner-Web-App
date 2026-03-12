@@ -30,10 +30,6 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
                 "Can not find board data of last used board");
         }
 
-        var boardListAndCardsData = await boardQueries.GetBoardListDataAndCardsDataAsync((int)lastUsedBoardId); 
-
-        boardData.BoardList = boardListAndCardsData;
-
         return Result<BoardDataResponse>.Success(boardData);
     }
 
@@ -48,10 +44,6 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             return Result<BoardDataResponse>.Failed(ErrorType.NotFound, "Resource Not found",
                 "Can not find board data");
         }
-
-        var boardListAndCardsData = await boardQueries.GetBoardListDataAndCardsDataAsync(boardId);
-
-        boardData.BoardList = boardListAndCardsData;
 
         return Result<BoardDataResponse>.Success(boardData);
     }
