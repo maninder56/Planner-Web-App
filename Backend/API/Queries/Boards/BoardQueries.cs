@@ -83,23 +83,4 @@ public class BoardQueries(PlannerContext database)
         return query;
     }
 
-    public async Task<SearchResponse> SearchCardsByKeyword(int userId, string keyword)
-    {
-        var resultItems = await database.Cards.AsNoTracking()
-            .Where(c => c.Title.Contains(keyword) && 
-                c.BoardList.Board.BoardMembers.Any(bm => bm.UserId == userId))
-            .Select(c => new SearchResultItem
-            { 
-                BoardId = c.BoardList.BoardId, 
-                CardId = c.CardId, 
-                CardName = c.Title
-            }).ToListAsync(); 
-
-        SearchResponse response = new SearchResponse()
-        {
-            searchResults = resultItems,
-        }; 
-
-        return response;
-    }
 }

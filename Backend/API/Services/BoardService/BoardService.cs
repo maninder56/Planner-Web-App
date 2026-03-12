@@ -76,18 +76,4 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
         }); 
     }
 
-
-    public async Task<Result<SearchResponse>> SearchCardByKeyword(int userId, string keyword)
-    {
-        SearchResponse searchResponse = await boardQueries.SearchCardsByKeyword(userId, keyword);
-
-        if (searchResponse.searchResults.Count == 0)
-        {
-            return Result<SearchResponse>.Failed(ErrorType.NotFound, "Unable to find keyword"); 
-        }
-        else
-        {
-            return Result<SearchResponse>.Success(searchResponse);
-        }
-    }
 }

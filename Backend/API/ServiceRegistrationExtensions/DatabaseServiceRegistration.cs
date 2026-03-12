@@ -1,6 +1,8 @@
 ﻿using API.Queries.Boards;
+using API.Queries.Cards;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
+using API.Services.CardService;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,8 +24,10 @@ public static class DatabaseServiceRegistration
 
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IBoardRepository, BoardRepository>();
+        services.AddScoped<ICardService, CardService>();
 
         services.AddScoped<BoardQueries>();
+        services.AddScoped<CardQueries>(); 
 
         return services;
     }
