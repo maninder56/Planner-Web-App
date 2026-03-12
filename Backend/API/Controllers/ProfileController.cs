@@ -1,4 +1,5 @@
-﻿using API.Models.Result;
+﻿using API.DTOs.Profile.Requests;
+using API.Models.Result;
 using API.Services.ProfileService;
 using API.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -36,5 +37,31 @@ public class ProfileController (ILogger<ProfileController> logger, CookiesUtilit
         {
             return profileResult.Error.ErrorToActionResult(); 
         }
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> UpdateUserName(NameChangeRequest nameChangeRequest)
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var nameChangeResult = await profileService.UpdateUserNameAsync((int)userId,nameChangeRequest.Name); 
+
+        if (nameChangeResult.Successful)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return nameChangeResult.Error.ErrorToActionResult();
+        }
+
     }
 }

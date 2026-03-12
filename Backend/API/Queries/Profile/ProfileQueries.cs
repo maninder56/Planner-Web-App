@@ -2,7 +2,7 @@
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Queries; 
+namespace API.Queries.Profile; 
 
 public class ProfileQueries (PlannerContext database)
 {

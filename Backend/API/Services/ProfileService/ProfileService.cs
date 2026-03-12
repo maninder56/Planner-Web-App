@@ -1,10 +1,16 @@
 ﻿using API.DTOs.Profile.Responses;
+using API.Exceptions;
 using API.Models.Result;
-using API.Queries;
+using API.Queries.Profile;
+using API.Repositories.Profile;
 
 namespace API.Services.ProfileService; 
 
-public class ProfileService (ILogger<ProfileService> logger, ProfileQueries profileQueries) : IProfileService
+public class ProfileService (
+    ILogger<ProfileService> logger, 
+    ProfileQueries profileQueries, 
+    IProfileRepository profileRepository) 
+    : IProfileService
 {
     public async Task<Result<ProfileInfoResponse>> GetUserProfileInfoAsync(int userId)
     {
@@ -18,6 +24,25 @@ public class ProfileService (ILogger<ProfileService> logger, ProfileQueries prof
         else
         {
             return Result<ProfileInfoResponse>.Success(userProfile);
+        }
+    }
+
+
+    public async Task<Result> UpdateUserNameAsync(int userId, string newName)
+    {
+        try
+        {
+            await profileRepository.UpdateUserNameAsync(userId, newName);
+            return Result.Success(); 
+        }
+        catch (NotFoundException ex)
+        {
+            return Result.Failed(ErrorType.NotFound, ex.Message);   
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update user name, exception message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected error"); 
         }
     }
 }
