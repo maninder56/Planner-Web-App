@@ -30,7 +30,7 @@ public class Result
     //public static Result Failed(Error error) => new Result(false, error);
 
     public static Result Failed(ErrorType errorType, string title, string? descriptiton = null) 
-        => new Result(true, errorType, title, descriptiton);
+        => new Result(false, errorType, title, descriptiton);
 }
 
 

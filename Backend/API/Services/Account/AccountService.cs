@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Account.Requests;
+using API.Exceptions;
 using API.Models.Account;
 using API.Models.Result;
 using API.Repositories.Account;
@@ -176,6 +177,48 @@ public class AccountService : IAccountService
 
 
 
+    public async Task<Result> ChangeUserPassword(int userId, string oldPassword, string newPassword)
+    {
+        try
+        {
+            User? user = await repository.GetUserById(userId); 
+
+            if (user is null)
+            {
+                return Result.Failed(ErrorType.NotFound, "User not found"); 
+            }
+
+            // verify password 
+            if (!PasswordUtility.VerifyPassword(user.PasswordHash, oldPassword))
+            {
+                logger.LogWarning("Failed to update user password, old password incorrect. User ID: {Id}", userId);
+                return Result.Failed(ErrorType.BadRequest, "Invalid User Credentials");
+            }
+
+            string newPasswordHash = PasswordUtility.HashPassword(newPassword);
+
+            await repository.UpdateUserPassword(userId, newPasswordHash);
+
+            await repository.DeleteRefreshTokenAsync(userId);
+
+            return Result.Success(); 
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to update user password, user not found");
+            return Result.Failed(ErrorType.NotFound, ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to updae user password, Exception message {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error"); 
+        }
+    }
+
+
+
+
+
 
     // Delete operations
 
@@ -192,5 +235,5 @@ public class AccountService : IAccountService
         return Result.Success(); 
     }
 
-
+ 
 }

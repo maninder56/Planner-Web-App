@@ -1,4 +1,5 @@
-﻿using API.Models.Account;
+﻿using API.Exceptions;
+using API.Models.Account;
 using API.Models.Result;
 using API.Utilities;
 using DatabaseContext;
@@ -78,27 +79,6 @@ public class AccountRepository : IAccountRepository
 
         return newUser; 
         
-        //catch(DbUpdateException ex)
-        //{
-        //    var sqlEx = ex.GetBaseException() as MySqlException;
-
-        //    if (sqlEx is not null && sqlEx.Number == 1062) // Check if email was duplicate
-        //    {
-        //        logger.LogError("Failed to Create new user account with email {Email} which already exists.", email);
-        //        return Result<CreatedUser>.Failed(ErrorType.BadRequest, new ProblemDetails()
-        //        {
-        //            Title = "Invalid Email", Detail = "An account exists for provided email; please use different email"
-        //        });
-        //    }
-
-        //    logger.LogError("Failed to Create New User account with email {Email}", email);
-        //    return Result<CreatedUser>.Failed(ErrorType.InternalServerError, new ProblemDetails());
-        //}
-        //catch (Exception ex)
-        //{
-        //    logger.LogError("Failed to Create New User account with email {Email} and Exception message: {ExMessage}", email, ex.Message);
-        //    return Result<CreatedUser>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
-        //}
     }
 
 
@@ -131,12 +111,31 @@ public class AccountRepository : IAccountRepository
     }
 
 
+    public async Task UpdateUserPassword(int userId, string newPasswordHash)
+    {
+        User user = await database.Users
+            .SingleOrDefaultAsync(u => u.UserId == userId)
+            ?? throw new NotFoundException("User not found");
+
+        user.PasswordHash = newPasswordHash; 
+
+        await database.SaveChangesAsync();  
+    }
+
+
     // Delete operations
 
     public async Task DeleteRefreshTokenHashAsync(RefreshToken refreshToken)
     {
         database.RefreshTokens.Remove(refreshToken);
         await database.SaveChangesAsync(); 
+    }
+
+    public async Task DeleteRefreshTokenAsync(int UserId)
+    {
+        await database.RefreshTokens
+            .Where(r => r.UserId == UserId)
+            .ExecuteDeleteAsync();
     }
 
 }

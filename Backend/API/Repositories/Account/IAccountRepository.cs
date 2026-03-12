@@ -18,8 +18,10 @@ public interface IAccountRepository
     public Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt);
 
     // Update Operations 
-    public Task UpdateRefreshTokenHashAsync(RefreshToken refreshToken, byte[] tokenBytes); 
+    public Task UpdateRefreshTokenHashAsync(RefreshToken refreshToken, byte[] tokenBytes);
+    public Task UpdateUserPassword(int userId, string newPasswordHash); 
 
     // Delete Operations
     public Task DeleteRefreshTokenHashAsync(RefreshToken refreshToken);
+    public Task DeleteRefreshTokenAsync(int UserId); 
 }

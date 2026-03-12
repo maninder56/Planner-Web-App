@@ -3,6 +3,7 @@ using API.Models.Account;
 using API.Models.Result;
 using API.Services.Account;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -124,6 +125,36 @@ public class AccountController : ControllerBase
     public IActionResult HelloGet()
     {
         return Ok(new { message = "Hello, from API" }); 
+    }
+
+
+    [Authorize]
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangeUserPassword(PasswordChangeRequest passwordChangeRequest)
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var passwordChangedResult = await accountService.ChangeUserPassword((int)userId,
+            passwordChangeRequest.OldPassword, passwordChangeRequest.NewPassword);
+
+        if (passwordChangedResult.Successful)
+        {
+            cookiesUtility.InvalidateCookies(HttpContext);
+            return NoContent(); 
+        }
+        else
+        {
+            return passwordChangedResult.Error.ErrorToActionResult();   
+        }
+
     }
 
 }
