@@ -75,5 +75,20 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             IsFavoriteBoard = false,
         }); 
     }
+    
+    
+    public async Task<Result<List<BoardDataResponse>>> GetAllBoards(int userId)
+    {
+        var boardList = await boardQueries.GetAllBoardsOfUserAsync(userId);
 
+        if (boardList.Count == 0)
+        {
+            return Result<List<BoardDataResponse>>.Failed(ErrorType.NotFound, "Can not find any board"); 
+        }
+        else
+        {
+            return Result<List<BoardDataResponse>>.Success(boardList);
+        }
+    }
+    
 }

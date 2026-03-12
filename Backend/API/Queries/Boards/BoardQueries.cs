@@ -83,4 +83,23 @@ public class BoardQueries(PlannerContext database)
         return query;
     }
 
+
+    public async Task<List<BoardDataResponse>> GetAllBoardsOfUserAsync(int userId)
+    {
+        var query = await database.BoardMembers.AsNoTracking()
+            .Where(bm => bm.UserId == userId)
+            .Select(bm => new BoardDataResponse
+            {
+                BoardId = bm.BoardId,
+                Name = bm.Board.Name,
+                BackgroundColour = bm.Board.BackgroundColour,
+                Role = bm.Role, 
+                IsFavoriteBoard = database.BoardStars
+                    .Any(bs => bs.BoardId == bm.BoardId && bs.UserId == userId),
+            }).ToListAsync(); 
+            
+        return query;
+    }
+
+
 }

@@ -8,6 +8,7 @@ public interface IBoardService
 {
     public Task<Result<BoardDataResponse>> GetLastUsedBoardDataAsync(int userId);
     public Task<Result<BoardDataResponse>> GetBoardDataAsync(int userId, int boardId);
+    public Task<Result<List<BoardDataResponse>>> GetAllBoards(int userId); 
 
     public Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest);
 }

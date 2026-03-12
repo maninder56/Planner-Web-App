@@ -35,7 +35,26 @@ public class BoardsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBoards()
     {
-        throw new NotImplementedException();
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var boardListResult = await boardService.GetAllBoards((int)userId);
+
+        if (boardListResult.Successful)
+        {
+            return Ok(boardListResult.Data);
+        }
+        else
+        {
+            return boardListResult.Error.ErrorToActionResult(); 
+        }
     }
 
 
