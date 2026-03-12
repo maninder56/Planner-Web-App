@@ -114,8 +114,9 @@ public class BoardController : ControllerBase
         }
     }
 
-    [HttpGet("search/{keyword}")]
-    public async Task<IActionResult> SearchCardByName(string keyword)
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchCardByKeyword(SearchRequest searchRequest)
     {
         int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
 
@@ -127,11 +128,10 @@ public class BoardController : ControllerBase
             return error.ErrorToActionResult();
         }
 
-        var searchResult = await boardService.SearchCardByName((int)userId, keyword); 
+        var searchResult = await boardService.SearchCardByKeyword((int)userId, searchRequest.keyword); 
 
         if (searchResult.Successful)
-        {
-            //logger.LogInformation(searchResult.Data.se); 
+        { 
             return Ok(searchResult.Data);   
         }
         else
