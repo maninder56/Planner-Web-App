@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Account.Requests; 
 
@@ -13,6 +14,7 @@ public class NewUserRequest
     public required string Email { get; set; }
 
     [Required]
-    [StringLength (100)]
+    [StringLength (100, MinimumLength = 8)]
+    [PasswordValidation]
     public required string Password { get; set; }    
 }
