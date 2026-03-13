@@ -1,5 +1,6 @@
 ﻿using API.Exceptions;
 using DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.Profile; 
 
@@ -14,5 +15,12 @@ public class ProfileRepository(PlannerContext database) : IProfileRepository
         user.Name = newName;
 
         await database.SaveChangesAsync();
+    }
+
+
+    public async Task DeleteProfileAsync(int userId)
+    {
+        await database.Users.Where(u => u.UserId == userId)
+            .ExecuteDeleteAsync(); 
     }
 }

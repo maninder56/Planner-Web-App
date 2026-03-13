@@ -62,6 +62,32 @@ public class ProfileController (ILogger<ProfileController> logger, CookiesUtilit
         {
             return nameChangeResult.Error.ErrorToActionResult();
         }
+    }
 
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProfile()
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var deleteProfileResult = await profileService.DeleteProfileAsync((int) userId);
+
+        if (deleteProfileResult.Successful)
+        {
+            cookiesUtility.InvalidateCookies(HttpContext); 
+            return NoContent();
+        }
+        else
+        {
+            return deleteProfileResult.Error.ErrorToActionResult();
+        }
     }
 }

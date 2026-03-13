@@ -3,6 +3,7 @@ using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Profile;
 using API.Repositories.Profile;
+using Pomelo.EntityFrameworkCore.MySql.Storage.Internal.Json;
 
 namespace API.Services.ProfileService; 
 
@@ -43,6 +44,21 @@ public class ProfileService (
         {
             logger.LogWarning("Failed to update user name, exception message: {ExceptionMessage}", ex.Message);
             return Result.Failed(ErrorType.InternalServerError, "Unexpected error"); 
+        }
+    }
+
+
+    public async Task<Result> DeleteProfileAsync(int userId)
+    {
+        try
+        {
+            await profileRepository.DeleteProfileAsync(userId);
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to delete user profile, exception message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected error");
         }
     }
 }
