@@ -36,35 +36,21 @@ public class AccountRepository : IAccountRepository
         .FirstOrDefaultAsync(u => u.UserId == id); 
 
 
-    public async Task<(User, RefreshToken)?> GetUserAndRefreshToken(string refreshTokenInBase64)
+    public async Task<(User, RefreshToken)?> GetUserAndRefreshToken(string base64TokenHash)
     {
-        var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
-
         var token = await database.RefreshTokens.AsNoTracking()
             .Include(r => r.User)
-            .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64);
+            .FirstOrDefaultAsync(r => r.TokenHash == base64TokenHash);
 
         return token is null ? null : (token.User, token); 
     }
 
-    public async Task<RefreshToken?> GetRefreshToken(string refreshTokenInBase64)
-    {
-        var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
-
-        return await database.RefreshTokens.AsNoTracking()
-            .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64);
-    }
 
 
     // Create Operations
 
     public async Task<User?> CreateNewUserAsync(string username, string email, string passwordHash)
     {
-        
         User newUser = new User
         {
             Name = username,
@@ -78,20 +64,17 @@ public class AccountRepository : IAccountRepository
         await database.SaveChangesAsync();
 
         return newUser; 
-        
     }
 
 
-    public async Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
+    public async Task CreateNewRefreshTokenAsync(int userId, string base64TokenHash, DateTime expiresAt)
     {
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
-        var tokenHash = RefreshTokenUtility.Encode(hashBytes);
-
         User user = await database.Users
             .Include(u => u.RefreshToken)
-            .FirstAsync(u => u.UserId == userId);
+            .FirstOrDefaultAsync(u => u.UserId == userId)
+            ?? throw new NotFoundException("User not found"); 
 
-        user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt}; 
+        user.RefreshToken = new RefreshToken() { TokenHash = base64TokenHash, ExpiresAt = expiresAt}; 
 
         await database.SaveChangesAsync();
     }
@@ -99,15 +82,15 @@ public class AccountRepository : IAccountRepository
 
     // Update operations 
     
-    public async Task UpdateRefreshTokenHashAsync(RefreshToken refreshToken, byte[] tokenBytes)
+    public async Task UpdateRefreshTokenAsync(int refreshTokenId, string newBase64TokenHash)
     {
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var tokenHash = RefreshTokenUtility.Encode(hashBytes);
+        RefreshToken refreshToken = await database.RefreshTokens
+            .FirstOrDefaultAsync(r => r.RefreshTokenId == refreshTokenId)
+            ?? throw new NotFoundException("Refresh token not found");
 
-        refreshToken.TokenHash = tokenHash;
-        database.RefreshTokens.Update(refreshToken);
-           
-        await database.SaveChangesAsync();       
+        refreshToken.TokenHash = newBase64TokenHash; 
+
+        await database.SaveChangesAsync();
     }
 
 
@@ -125,10 +108,11 @@ public class AccountRepository : IAccountRepository
 
     // Delete operations
 
-    public async Task DeleteRefreshTokenHashAsync(RefreshToken refreshToken)
+    public async Task DeleteRefreshTokenAsync(string base64TokenHash)
     {
-        database.RefreshTokens.Remove(refreshToken);
-        await database.SaveChangesAsync(); 
+        await database.RefreshTokens
+            .Where(r => r.TokenHash == base64TokenHash)
+            .ExecuteDeleteAsync();
     }
 
     public async Task DeleteRefreshTokenAsync(int UserId)
