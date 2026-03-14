@@ -29,8 +29,8 @@ public class BoardsController : ControllerBase
     }
 
 
-    // Board Endpoints
-
+    
+    // GET Requests
 
     [HttpGet]
     public async Task<IActionResult> GetAllBoards()
@@ -56,6 +56,65 @@ public class BoardsController : ControllerBase
             return boardListResult.Error.ErrorToActionResult(); 
         }
     }
+
+
+
+    [HttpGet("{id}", Name = "GetBoardById")]
+    public async Task<IActionResult> GetBoardByIdAsync(int id)
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var boardDataResult = await boardService.GetBoardDataAsync((int)userId, id);
+
+        if (boardDataResult.Successful)
+        {
+            return Ok(boardDataResult.Data);
+        }
+        else
+        {
+            return boardDataResult.Error.ErrorToActionResult();
+        }
+    }
+
+
+    [HttpGet("last-used")]
+    public async Task<IActionResult> GetLastUsedBoardAsync()
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var boardDataResult = await boardService.GetLastUsedBoardDataAsync((int)userId);
+
+        if (boardDataResult.Successful)
+        {
+            return Ok(boardDataResult.Data);
+        }
+        else
+        {
+            return boardDataResult.Error.ErrorToActionResult();
+        }
+    }
+
+
+
+
+
+    // POST Requests
 
 
     [HttpPost]
@@ -94,8 +153,8 @@ public class BoardsController : ControllerBase
 
 
 
-    [HttpGet("{id}", Name = "GetBoardById")]
-    public async Task<IActionResult> GetBoardByIdAsync(int id)
+    [HttpPost("{id}")]
+    public async Task<IActionResult> UpdateBoardInfo(int id, BoardInfoChangeRequest request)
     {
         int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
 
@@ -107,44 +166,17 @@ public class BoardsController : ControllerBase
             return error.ErrorToActionResult();
         }
 
-        var boardDataResult = await boardService.GetBoardDataAsync((int)userId, id);
+        var boardInfoChangeResult = await boardService.UpdateBoardInfoAsync((int)userId, id, request); 
 
-        if (boardDataResult.Successful)
+        if (boardInfoChangeResult.Successful)
         {
-            return Ok(boardDataResult.Data);
+            return Ok(boardInfoChangeResult.Data);
         }
         else
         {
-            return boardDataResult.Error.ErrorToActionResult();
+            return boardInfoChangeResult.Error.ErrorToActionResult();
         }
     }
-
-
-   
-
-    [HttpGet("last-used")]
-    public async Task<IActionResult> GetLastUsedBoardAsync()
-    {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext); 
-
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var boardDataResult = await boardService.GetLastUsedBoardDataAsync((int)userId);
-
-        if (boardDataResult.Successful)
-        {
-            return Ok(boardDataResult.Data);
-        }
-        else
-        {
-            return boardDataResult.Error.ErrorToActionResult(); 
-        }
-    }
+  
 
 }

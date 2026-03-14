@@ -1,5 +1,6 @@
 ﻿using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
+using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
@@ -88,6 +89,27 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
         else
         {
             return Result<List<BoardDataResponse>>.Success(boardList);
+        }
+    }
+
+
+    public async Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request)
+    {
+        try
+        {
+            BoardInfoResponse boardInfoResponse = await boardRepository.UpdateBoardInfoAsync(userId, boardId, request);
+
+            return Result<BoardInfoResponse>.Success(boardInfoResponse);
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to update board info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.NotFound, ex.Message);    
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update board info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error"); 
         }
     }
     

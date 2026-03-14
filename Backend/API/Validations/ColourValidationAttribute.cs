@@ -16,8 +16,15 @@ sealed public class ColourValidationAttribute : ValidationAttribute
         "soft-pink" 
     };
 
+    public bool AllowNull {  get; set; } = false;
+
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
+        if (AllowNull && value is null)
+        {
+            return ValidationResult.Success; 
+        }
+
         if (value is string colour && colours.Contains(colour))
         {
             return ValidationResult.Success;
