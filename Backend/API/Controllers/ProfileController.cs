@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Profile.Requests;
+using API.Extensions;
 using API.Models.Result;
 using API.Services.ProfileService;
 using API.Utilities;
@@ -17,17 +18,9 @@ public class ProfileController (ILogger<ProfileController> logger, CookiesUtilit
     [HttpGet]
     public async Task<IActionResult> GetUserProfileInfo()
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var profileResult = await profileService.GetUserProfileInfoAsync((int)userId);
+        var profileResult = await profileService.GetUserProfileInfoAsync(userId);
 
         if (profileResult.Successful)
         {
@@ -42,17 +35,9 @@ public class ProfileController (ILogger<ProfileController> logger, CookiesUtilit
     [HttpPatch]
     public async Task<IActionResult> UpdateUserName(NameChangeRequest nameChangeRequest)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var nameChangeResult = await profileService.UpdateUserNameAsync((int)userId,nameChangeRequest.Name); 
+        var nameChangeResult = await profileService.UpdateUserNameAsync(userId,nameChangeRequest.Name); 
 
         if (nameChangeResult.Successful)
         {
@@ -68,17 +53,9 @@ public class ProfileController (ILogger<ProfileController> logger, CookiesUtilit
     [HttpDelete]
     public async Task<IActionResult> DeleteProfile()
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var deleteProfileResult = await profileService.DeleteProfileAsync((int) userId);
+        var deleteProfileResult = await profileService.DeleteProfileAsync(userId);
 
         if (deleteProfileResult.Successful)
         {

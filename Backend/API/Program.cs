@@ -1,8 +1,11 @@
 using DatabaseContext;
+using DatabaseContext.Types; 
 using Microsoft.EntityFrameworkCore;
 using API.ServiceRegistrationExtensions;
 using API.Handler;
 using System.Text.Json.Serialization;
+using API.Policies.Requirements;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +31,14 @@ builder.Services.AddCorsPolicy(builder.Configuration);
 // Authentication service
 builder.Services.AddJWTBearerAuthentication(builder.Configuration);
 // Authorization service 
-builder.Services.AddAuthorization(); 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(
+        "CanEditBoard",
+        policyBuilder => policyBuilder.AddRequirements(
+            new BoardEditRequirement(Role.Owner, Role.Member)
+            )); 
+});
 
 
 // Web app services 

@@ -26,14 +26,8 @@ public class BoardRepository : IBoardRepository
         this.database = database;
     }
 
-    public async Task<Board> CreateNewBoardAsync(Board newBoard)
-    {
-        database.Boards.Add(newBoard);
-        await database.SaveChangesAsync(); 
-        return newBoard;
-    }
 
-    public async Task<BoardMember> CreateNewBoardMemberAsync(BoardMember boardMembers)
+    public async Task<BoardMember> CreateNewBoardAsync(BoardMember boardMembers)
     {
         database.BoardMembers.Add(boardMembers);
         await database.SaveChangesAsync();
@@ -43,9 +37,8 @@ public class BoardRepository : IBoardRepository
 
     public async Task<BoardInfoResponse> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request)
     {
-        BoardMember boardMember = await database.BoardMembers
-                .Include(bm => bm.Board)
-                .WhereUserHasAccess(userId, boardId)
+        Board board = await database.Boards
+                .Where(b => b.BoardId == boardId)   
                 .SingleOrDefaultAsync()
                 ?? throw new NotFoundException("Board not found");
 
@@ -58,13 +51,13 @@ public class BoardRepository : IBoardRepository
 
         if (request.BackgroundColour is not null)
         {
-            boardMember.Board.BackgroundColour = request.BackgroundColour;
+            board.BackgroundColour = request.BackgroundColour;
             boardInfoResponse.BackgroundColour = request.BackgroundColour;
         }
 
         if (request.Name is not null)
         {
-            boardMember.Board.Name = request.Name;
+            board.Name = request.Name;
             boardInfoResponse.Name = request.Name;
         }
 

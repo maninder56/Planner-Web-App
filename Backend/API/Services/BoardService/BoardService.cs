@@ -67,6 +67,19 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
 
 
+    public async Task<Result<BoardMember>> GetBoardMemberAsync(int userId, int boardId)
+    {
+        var boardMember = await boardQueries.GetBoardMemberAsync(userId, boardId);
+
+        if (boardMember is null)
+        {
+            return Result<BoardMember>.Failed(ErrorType.NotFound, "Board not found"); 
+        }
+
+        return Result<BoardMember>.Success(boardMember);
+    }
+
+
 
     // Create operations
 

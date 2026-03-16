@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Account.Requests;
+using API.Extensions;
 using API.Models.Account;
 using API.Models.Result;
 using API.Services.Account;
@@ -132,17 +133,9 @@ public class AccountController : ControllerBase
     [HttpPatch("password")]
     public async Task<IActionResult> ChangeUserPassword(PasswordChangeRequest passwordChangeRequest)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var passwordChangedResult = await accountService.ChangeUserPassword((int)userId,
+        var passwordChangedResult = await accountService.ChangeUserPassword(userId,
             passwordChangeRequest.OldPassword, passwordChangeRequest.NewPassword);
 
         if (passwordChangedResult.Successful)

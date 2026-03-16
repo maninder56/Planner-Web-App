@@ -1,12 +1,17 @@
 ﻿using API.DTOs.Board.Requests;
+using API.Extensions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
 using API.Services.BoardService;
 using API.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace API.Controllers;
 
@@ -18,15 +23,18 @@ public class BoardsController : ControllerBase
     private ILogger<BoardsController> logger;
     private CookiesUtility cookiesUtility; 
     private IBoardService boardService;
+    private IAuthorizationService authorizationService;
 
     public BoardsController(
         ILogger<BoardsController> logger, 
         CookiesUtility cookiesUtility, 
-        IBoardService boardService)
+        IBoardService boardService, 
+        IAuthorizationService authorizationService)
     {
         this.logger = logger;
         this.cookiesUtility = cookiesUtility;
         this.boardService = boardService;
+        this.authorizationService = authorizationService;
     }
 
 
@@ -36,17 +44,9 @@ public class BoardsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBoards()
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var boardListResult = await boardService.GetAllBoards((int)userId);
+        var boardListResult = await boardService.GetAllBoards(userId);
 
         if (boardListResult.Successful)
         {
@@ -63,17 +63,9 @@ public class BoardsController : ControllerBase
     [HttpGet("{id}", Name = "GetBoardById")]
     public async Task<IActionResult> GetBoardByIdAsync(int id)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var boardDataResult = await boardService.GetBoardDataAsync((int)userId, id);
+        var boardDataResult = await boardService.GetBoardDataAsync(userId, id);
 
         if (boardDataResult.Successful)
         {
@@ -89,17 +81,9 @@ public class BoardsController : ControllerBase
     [HttpGet("last-used")]
     public async Task<IActionResult> GetLastUsedBoardAsync()
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var boardDataResult = await boardService.GetLastUsedBoardDataAsync((int)userId);
+        var boardDataResult = await boardService.GetLastUsedBoardDataAsync(userId);
 
         if (boardDataResult.Successful)
         {
@@ -121,17 +105,9 @@ public class BoardsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateNewBoard([FromBody] NewBoardRequest newBoardRequest)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var savedBoardResult = await boardService.CreateNewBoardAsync((int)userId, newBoardRequest);
+        var savedBoardResult = await boardService.CreateNewBoardAsync(userId, newBoardRequest);
 
         if (savedBoardResult.Successful)
         {
@@ -157,17 +133,17 @@ public class BoardsController : ControllerBase
     [HttpPost("{id}")]
     public async Task<IActionResult> UpdateBoardInfo(int id, BoardInfoChangeRequest request)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId(); 
 
-        if (userId is null)
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, id, "CanEditBoard");
+
+        if (!authResult.Succeeded)
         {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
+            return Forbid(); 
         }
 
-        var boardInfoChangeResult = await boardService.UpdateBoardInfoAsync((int)userId, id, request); 
+        var boardInfoChangeResult = await boardService.UpdateBoardInfoAsync(userId, id, request); 
 
         if (boardInfoChangeResult.Successful)
         {
@@ -187,17 +163,9 @@ public class BoardsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBoardAsync(int id)
     {
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+        int userId = User.GetUserId();
 
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        var deleteResult = await boardService.DeleteBoardAsync((int)userId, id);
+        var deleteResult = await boardService.DeleteBoardAsync(userId, id);
 
         if (deleteResult.Successful)
         {

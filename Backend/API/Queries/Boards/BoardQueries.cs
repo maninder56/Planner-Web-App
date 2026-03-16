@@ -2,6 +2,7 @@
 using API.Models.Result;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace API.Queries.Boards; 
 
@@ -101,5 +102,12 @@ public class BoardQueries(PlannerContext database)
         return query;
     }
 
+
+    public async Task<BoardMember?> GetBoardMemberAsync(int userId, int boardId)
+    {
+        return await database.BoardMembers.AsNoTracking()
+            .WhereUserHasAccess(userId, boardId)
+            .SingleOrDefaultAsync(); 
+    }
 
 }
