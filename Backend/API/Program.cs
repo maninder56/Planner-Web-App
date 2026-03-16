@@ -11,7 +11,8 @@ builder.Services.AddControllers()
     // Add json convertor for enum values
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());    
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());   
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
 builder.Services.AddProblemDetails();

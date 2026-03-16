@@ -8,6 +8,8 @@ using API.Repositories.BoardRepository;
 using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
+using Pomelo.EntityFrameworkCore.MySql.Query.ExpressionVisitors.Internal;
 using System.Diagnostics.Eventing.Reader;
 
 namespace API.Repositories.BoardRepository;
@@ -52,14 +54,18 @@ public class BoardRepository : IBoardRepository
 
         bool isFavorite = boardStar is not null; 
 
+        BoardInfoResponse boardInfoResponse = new BoardInfoResponse();
+
         if (request.BackgroundColour is not null)
         {
             boardMember.Board.BackgroundColour = request.BackgroundColour;
+            boardInfoResponse.BackgroundColour = request.BackgroundColour;
         }
 
         if (request.Name is not null)
         {
             boardMember.Board.Name = request.Name;
+            boardInfoResponse.Name = request.Name;
         }
 
         if (request.IsFavoriteBoard is bool favorite)
@@ -74,16 +80,13 @@ public class BoardRepository : IBoardRepository
                 database.BoardStars.Remove(boardStar); 
                 isFavorite = false;
             }
+
+            boardInfoResponse.IsFavoriteBoard = favorite; 
         }
 
         await database.SaveChangesAsync();
 
-        return new BoardInfoResponse
-        {
-            Name = boardMember.Board.Name, 
-            BackgroundColour = boardMember.Board.BackgroundColour,
-            IsFavoriteBoard = isFavorite,
-        }; 
+        return boardInfoResponse; 
     }
     
 }
