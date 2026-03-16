@@ -9,8 +9,7 @@ namespace API.Repositories.BoardRepository;
 public interface IBoardRepository
 {
     // Create 
-    public Task<Board> CreateNewBoardAsync(Board newBoard);
-    public Task<BoardMember> CreateNewBoardMemberAsync(BoardMember boardMembers);
+    public Task<BoardMember> CreateNewBoardAsync(BoardMember boardMembers);
 
     // Update 
     public Task<BoardInfoResponse> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request);

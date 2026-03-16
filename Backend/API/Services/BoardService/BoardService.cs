@@ -11,6 +11,8 @@ namespace API.Services.BoardService;
 
 public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries, IBoardRepository boardRepository) : IBoardService
 {
+    // Read operations
+
     public async Task<Result<BoardDataResponse>> GetLastUsedBoardDataAsync(int userId)
     {
         var lastUsedBoardId = await boardQueries.GetBoardIdOfLastUsedBoardAsync(userId);
@@ -50,6 +52,24 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
 
 
+    public async Task<Result<List<BoardDataResponse>>> GetAllBoards(int userId)
+    {
+        var boardList = await boardQueries.GetAllBoardsOfUserAsync(userId);
+
+        if (boardList.Count == 0)
+        {
+            return Result<List<BoardDataResponse>>.Failed(ErrorType.NotFound, "Can not find any board");
+        }
+        else
+        {
+            return Result<List<BoardDataResponse>>.Success(boardList);
+        }
+    }
+
+
+
+    // Create operations
+
     public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest)
     {
         Board newBoard = new Board()
@@ -65,7 +85,7 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             Board = newBoard,
         };
 
-        BoardMember savedBoardMember = await boardRepository.CreateNewBoardMemberAsync(newBoardMember);
+        BoardMember savedBoardMember = await boardRepository.CreateNewBoardAsync(newBoardMember);
 
         return Result<BoardDataResponse>.Success(new BoardDataResponse()
         {
@@ -78,20 +98,8 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
     
     
-    public async Task<Result<List<BoardDataResponse>>> GetAllBoards(int userId)
-    {
-        var boardList = await boardQueries.GetAllBoardsOfUserAsync(userId);
 
-        if (boardList.Count == 0)
-        {
-            return Result<List<BoardDataResponse>>.Failed(ErrorType.NotFound, "Can not find any board"); 
-        }
-        else
-        {
-            return Result<List<BoardDataResponse>>.Success(boardList);
-        }
-    }
-
+    // Update operations
 
     public async Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request)
     {
@@ -114,6 +122,8 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
     
 
+
+    // Delete operations
 
     public async Task<Result> DeleteBoardAsync(int userId, int boardId)
     {
