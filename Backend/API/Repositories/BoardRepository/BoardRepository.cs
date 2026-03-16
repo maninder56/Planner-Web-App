@@ -88,5 +88,20 @@ public class BoardRepository : IBoardRepository
 
         return boardInfoResponse; 
     }
+
+
+    public async Task DeleteBoardAsync(int userId, int boardId)
+    {
+        Board board = await database.BoardMembers
+            .Include(bm => bm.Board)
+            .WhereUserHasAccess(userId, boardId)
+            .Select(bm => bm.Board)
+            .SingleOrDefaultAsync()
+            ?? throw new NotFoundException("Board not found"); 
+
+        database.Boards.Remove(board);
+
+        await database.SaveChangesAsync();
+    }
     
 }

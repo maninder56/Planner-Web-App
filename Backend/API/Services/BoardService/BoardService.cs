@@ -113,4 +113,26 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
         }
     }
     
+
+
+    public async Task<Result> DeleteBoardAsync(int userId, int boardId)
+    {
+        try
+        {
+            await boardRepository.DeleteBoardAsync(userId, boardId);
+
+            return Result.Success();
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to delete board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to delete board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
 }

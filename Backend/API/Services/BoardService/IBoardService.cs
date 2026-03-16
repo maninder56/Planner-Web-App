@@ -16,5 +16,9 @@ public interface IBoardService
     public Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest);
 
     // Update 
-    public Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request); 
+    public Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request);
+
+
+    // Delete 
+    public Task<Result> DeleteBoardAsync(int userId, int boardId); 
 }

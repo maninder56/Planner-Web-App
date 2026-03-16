@@ -13,5 +13,8 @@ public interface IBoardRepository
     public Task<BoardMember> CreateNewBoardMemberAsync(BoardMember boardMembers);
 
     // Update 
-    public Task<BoardInfoResponse> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request); 
+    public Task<BoardInfoResponse> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request);
+
+    // Delete
+    public Task DeleteBoardAsync(int userId, int boardId); 
 }

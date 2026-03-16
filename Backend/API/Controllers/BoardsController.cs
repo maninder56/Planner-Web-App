@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Board.Requests;
 using API.Models.Result;
 using API.Queries.Boards;
+using API.Repositories.BoardRepository;
 using API.Services.BoardService;
 using API.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -177,6 +178,35 @@ public class BoardsController : ControllerBase
             return boardInfoChangeResult.Error.ErrorToActionResult();
         }
     }
-  
+
+
+
+
+    // Delete requests
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBoardAsync(int id)
+    {
+        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
+
+        if (userId is null)
+        {
+            logger.LogWarning("Unable to find user id from access tokens");
+            Error error = new Error(ErrorType.BadRequest, "User id not found",
+                "Unable to find user");
+            return error.ErrorToActionResult();
+        }
+
+        var deleteResult = await boardService.DeleteBoardAsync((int)userId, id);
+
+        if (deleteResult.Successful)
+        {
+            return NoContent(); 
+        }
+        else
+        {
+            return deleteResult.Error.ErrorToActionResult();
+        }
+    }
 
 }
