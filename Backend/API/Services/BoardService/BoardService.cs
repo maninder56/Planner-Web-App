@@ -138,11 +138,11 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
 
     // Delete operations
 
-    public async Task<Result> DeleteBoardAsync(int userId, int boardId)
+    public async Task<Result> DeleteBoardAsync(int boardId)
     {
         try
         {
-            await boardRepository.DeleteBoardAsync(userId, boardId);
+            await boardRepository.DeleteBoardAsync(boardId);
 
             return Result.Success();
         }

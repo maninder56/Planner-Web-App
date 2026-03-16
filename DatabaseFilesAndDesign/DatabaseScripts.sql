@@ -78,4 +78,3 @@ LEFT JOIN boards B
     ON BM.BoardId = B.BoardId;
 
 
-

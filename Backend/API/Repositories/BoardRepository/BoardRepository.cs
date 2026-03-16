@@ -83,18 +83,10 @@ public class BoardRepository : IBoardRepository
     }
 
 
-    public async Task DeleteBoardAsync(int userId, int boardId)
+    public async Task DeleteBoardAsync(int boardId)
     {
-        Board board = await database.BoardMembers
-            .Include(bm => bm.Board)
-            .WhereUserHasAccess(userId, boardId)
-            .Select(bm => bm.Board)
-            .SingleOrDefaultAsync()
-            ?? throw new NotFoundException("Board not found"); 
-
-        database.Boards.Remove(board);
-
-        await database.SaveChangesAsync();
+        await database.Boards.Where(b => b.BoardId == boardId)
+            .ExecuteDeleteAsync();
     }
     
 }

@@ -22,5 +22,5 @@ public interface IBoardService
 
 
     // Delete 
-    public Task<Result> DeleteBoardAsync(int userId, int boardId); 
+    public Task<Result> DeleteBoardAsync(int boardId); 
 }

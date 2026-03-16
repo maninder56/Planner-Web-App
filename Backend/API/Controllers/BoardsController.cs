@@ -163,9 +163,15 @@ public class BoardsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBoardAsync(int id)
     {
-        int userId = User.GetUserId();
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, id, "CanDeleteBoard"); 
 
-        var deleteResult = await boardService.DeleteBoardAsync(userId, id);
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var deleteResult = await boardService.DeleteBoardAsync(id);
 
         if (deleteResult.Successful)
         {

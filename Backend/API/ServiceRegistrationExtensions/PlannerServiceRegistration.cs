@@ -19,7 +19,9 @@ public static class PlannerServiceRegistration
         services.AddScoped<ICardService, CardService>();
         services.AddScoped<IProfileService, ProfileService>();
 
+        // Authorization handlers
         services.AddScoped<IAuthorizationHandler, BoardEditHandler>(); 
+        services.AddScoped<IAuthorizationHandler, BoardDeleteHandler>();
 
         // Utilities
         services.AddSingleton<TokenProviderUtility>();

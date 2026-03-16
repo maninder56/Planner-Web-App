@@ -37,6 +37,12 @@ builder.Services.AddAuthorization(options =>
         "CanEditBoard",
         policyBuilder => policyBuilder.AddRequirements(
             new BoardEditRequirement(Role.Owner, Role.Member)
+            ));
+
+    options.AddPolicy(
+        "CanDeleteBoard",
+        policyBuilder => policyBuilder.AddRequirements(
+            new BoardDeleteRequirement(Role.Owner)
             )); 
 });
 
