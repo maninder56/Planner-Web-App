@@ -33,17 +33,8 @@ builder.Services.AddJWTBearerAuthentication(builder.Configuration);
 // Authorization service 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy(
-        "CanEditBoard",
-        policyBuilder => policyBuilder.AddRequirements(
-            new BoardEditRequirement(Role.Owner, Role.Member)
-            ));
-
-    options.AddPolicy(
-        "CanDeleteBoard",
-        policyBuilder => policyBuilder.AddRequirements(
-            new BoardDeleteRequirement(Role.Owner)
-            )); 
+    // Add policies
+    options.AddAuthorizationPolicies(); 
 });
 
 
