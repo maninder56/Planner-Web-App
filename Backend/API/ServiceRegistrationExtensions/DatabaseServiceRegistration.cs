@@ -3,6 +3,7 @@ using API.Queries.Cards;
 using API.Queries.Profile;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
+using API.Repositories.ListRepository;
 using API.Repositories.Profile;
 using API.Services.CardService;
 using API.Services.ProfileService;
@@ -28,6 +29,7 @@ public static class DatabaseServiceRegistration
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IBoardRepository, BoardRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();    
+        services.AddScoped<IListRepository, ListRepository>();
 
         services.AddScoped<BoardQueries>();
         services.AddScoped<CardQueries>(); 
