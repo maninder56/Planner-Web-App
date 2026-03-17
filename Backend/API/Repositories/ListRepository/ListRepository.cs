@@ -8,23 +8,18 @@ public class ListRepository (PlannerContext database) : IListRepository
     // Create operations 
     public async Task<BoardList> CreateNewBoardListAsync(int boardId, string listName)
     {
-        var boardLists = await database.BoardLists
+        var lastPosition = await database.BoardLists
             .Where(bl => bl.BoardId == boardId)
-            .OrderBy(bl => bl.ListPosition)
-            .ToListAsync();
+            .MaxAsync(bl => (int?)bl.ListPosition);
 
         BoardList boardList = new BoardList()
         {
             Name = listName,
-            ListPosition = 0, 
+            BoardId = boardId,
+            ListPosition = (lastPosition ?? -1) + 1, 
         };
 
-        if (boardLists.Count > 0 )
-        {
-            boardList.ListPosition = boardLists.Last().ListPosition + 1; 
-        }
-
-        boardLists.Add(boardList);
+        database.BoardLists.Add(boardList);
 
         await database.SaveChangesAsync();  
 
