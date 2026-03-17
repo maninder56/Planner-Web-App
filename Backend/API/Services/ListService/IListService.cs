@@ -6,5 +6,7 @@ namespace API.Services.ListService;
 
 public interface IListService
 {
-    public Task<Result<NewListResponse>> CreateNewListAsync(int boardId, NewListRequest request); 
+    public Task<Result<NewListResponse>> CreateNewListAsync(int boardId, NewListRequest request);
+
+    public Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request); 
 }

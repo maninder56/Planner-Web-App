@@ -130,7 +130,7 @@ public class BoardsController : ControllerBase
 
 
 
-    [HttpPost("{id}")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateBoardInfo(int id, BoardInfoChangeRequest request)
     {
         int userId = User.GetUserId(); 

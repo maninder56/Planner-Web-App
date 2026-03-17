@@ -4,5 +4,5 @@ public class NewListResponse
 {
     public required string Name { get; set; }
 
-    public int ListPosition { get; init; }
+    public int ListPosition { get; set; }
 }

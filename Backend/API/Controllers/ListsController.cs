@@ -41,4 +41,30 @@ public class ListsController(
             return newListResult.Error.ErrorToActionResult(); 
         }
     }
+
+
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateListInfoAsync(int boardId, int id, ChangeListInfoRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var changedList = await listService.UpdateListInfo(boardId, id, request);
+
+        if (changedList.Successful)
+        {
+            return Ok(changedList.Data);
+        }
+        else
+        {
+            return changedList.Error.ErrorToActionResult();
+        }
+    }
+
 }
