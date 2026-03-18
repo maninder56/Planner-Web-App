@@ -78,3 +78,19 @@ LEFT JOIN boards B
     ON BM.BoardId = B.BoardId;
 
 
+
+SELECT *
+FROM boards B
+JOIN boardlists BL
+    ON B.BoardId = BL.BoardId;
+
+
+
+
+SELECT *
+FROM boardlists
+WHERE BoardId = 38;
+
+
+
+

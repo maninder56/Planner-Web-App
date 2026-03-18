@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Board.Requests;
+using API.DTOs.Card.Requests;
 using API.Models.Result;
 using API.Services.BoardService;
 using API.Services.CardService;
@@ -11,26 +12,19 @@ using System.Web;
 namespace API.Controllers;
 
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/boards/{boardId}/lists/{listId}/[controller]")]
 [ApiController]
-public class CardsController : ControllerBase
+public class CardsController(
+    ILogger<CardsController> logger,
+    ICardService cardService, 
+    IAuthorizationService authorizationService, 
+    CookiesUtility cookiesUtility) : ControllerBase
 {
-    private ILogger<CardsController> logger;
-    private CookiesUtility cookiesUtility;
-    private ICardService cardService; 
     
-
-    public CardsController(ILogger<CardsController> logger, CookiesUtility cookiesUtility, ICardService cardService)
-    {
-        this.logger = logger;
-        this.cookiesUtility = cookiesUtility;
-        this.cardService = cardService;
-    }
-
-
     // Cards Endpoints
 
     [HttpGet]
+    [Route("/api/cards")]
     public async Task<IActionResult> SearchCardByKeyword([FromQuery] string? search)
     {
         var decodedSearch = HttpUtility.UrlDecode(search);
@@ -64,6 +58,30 @@ public class CardsController : ControllerBase
         else
         {
             return searchResult.Error.ErrorToActionResult();
+        }
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNewCardAsync(int boardId, int listId, NewCardRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var newCardResult = await cardService.CreateNewCardAsync(boardId, listId, request);
+
+        if (newCardResult.Successful)
+        {
+            return Ok(newCardResult.Data);
+        }
+        else
+        {
+            return newCardResult.Error.ErrorToActionResult();
         }
     }
 }
