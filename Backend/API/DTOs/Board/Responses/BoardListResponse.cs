@@ -9,5 +9,5 @@ public class BoardListResponse
 
     public int ListPosition { get; init; }
 
-    public List<BoardCardResponse> CardList { get; init; } = new List<BoardCardResponse>();
+    public List<BoardCardResponse>? CardList { get; init; }
 }
