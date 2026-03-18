@@ -42,7 +42,7 @@ public class ListsController(
         }
     }
 
-
+    // Patch requests
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateListInfoAsync(int boardId, int id, ChangeListInfoRequest request)
@@ -66,5 +66,33 @@ public class ListsController(
             return changedList.Error.ErrorToActionResult();
         }
     }
+
+
+    // Delete requests 
+
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteListAsync(int boardId, int id)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var deleteListResult = await listService.DeleteList(boardId, id);
+
+        if (deleteListResult.Successful)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return deleteListResult.Error.ErrorToActionResult();
+        }
+    }
+
 
 }

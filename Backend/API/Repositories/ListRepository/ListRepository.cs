@@ -46,4 +46,13 @@ public class ListRepository (PlannerContext database) : IListRepository
 
         return boardList;
     }
+
+    // Delete operations 
+
+    public async Task DeleteListAsync(int boardId, int listId)
+    {
+        await database.BoardLists
+            .Where(bl => bl.BoardId == boardId && bl.BoardListId == listId)
+            .ExecuteDeleteAsync();
+    }
 }

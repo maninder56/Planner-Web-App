@@ -9,6 +9,9 @@ namespace API.Services.ListService;
 
 public class ListService(ILogger<ListService> logger, IListRepository listRepository) : IListService
 {
+
+    // Create operations
+
     public async Task<Result<NewListResponse>> CreateNewListAsync(int boardId, NewListRequest request)
     {
         try
@@ -26,6 +29,9 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
             return Result<NewListResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }
+
+
+    // update operations
 
     public async Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request)
     {
@@ -50,6 +56,23 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
         catch (Exception ex)
         {
             logger.LogWarning("Failed to pudate list info, Exception Message: {ExceptionMessage}", ex.Message); 
+            return Result<ChangeListInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
+
+    // Delete operations
+
+    public async Task<Result> DeleteList(int boardId, int listId)
+    {
+        try
+        {
+            await listRepository.DeleteListAsync(boardId, listId);
+            return Result.Success(); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to delete list , Exception Message: {ExceptionMessage}", ex.Message);
             return Result<ChangeListInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }

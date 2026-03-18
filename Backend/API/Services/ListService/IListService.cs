@@ -8,5 +8,7 @@ public interface IListService
 {
     public Task<Result<NewListResponse>> CreateNewListAsync(int boardId, NewListRequest request);
 
-    public Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request); 
+    public Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request);
+
+    public Task<Result> DeleteList(int boardId, int listId); 
 }
