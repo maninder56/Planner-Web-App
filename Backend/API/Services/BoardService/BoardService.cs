@@ -130,7 +130,7 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
 
             if (request.IsFavoriteBoard is bool favorite)
             {
-                await boardRepository.UpdateBoardStar(userId, boardId, favorite); 
+                await boardRepository.UpdateBoardStarAsync(userId, boardId, favorite); 
             }
 
             return Result<BoardInfoResponse>.Success(new BoardInfoResponse
@@ -150,6 +150,22 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             logger.LogWarning("Failed to update board info, Exception Message: {ExceptionMessage}", ex.Message);
             return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error"); 
         }
+    }
+
+
+    public async Task<Result> UpdateLastUsedBoardAsync(int userId, LastUsedBoardChangeRequest request)
+    {
+        try
+        {
+            await boardRepository.UpdateLastUsedBoardAsync(userId, request.LastUsedBoardId);
+            return Result.Success(); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update last used board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+
     }
     
 

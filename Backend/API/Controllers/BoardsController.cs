@@ -155,6 +155,31 @@ public class BoardsController : ControllerBase
         }
     }
 
+    [HttpPatch("last-used")]
+    public async Task<IActionResult> UpdateUsedBoard(LastUsedBoardChangeRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, request.LastUsedBoardId, "CanViewBoard"); 
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        int userId = User.GetUserId();
+
+        var updateResult = await boardService.UpdateLastUsedBoardAsync(userId, request);
+
+        if (updateResult.Successful)
+        {
+            return NoContent(); 
+        }
+        else
+        {
+            return updateResult.Error.ErrorToActionResult();
+        }
+    }
+
 
 
 

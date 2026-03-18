@@ -20,6 +20,7 @@ public interface IBoardService
     // Update 
     public Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request);
 
+    public Task<Result> UpdateLastUsedBoardAsync(int userId, LastUsedBoardChangeRequest request); 
 
     // Delete 
     public Task<Result> DeleteBoardAsync(int boardId); 

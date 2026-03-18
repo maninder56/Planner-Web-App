@@ -24,6 +24,7 @@ public static class PlannerServiceRegistration
         // Authorization handlers
         services.AddScoped<IAuthorizationHandler, BoardEditHandler>(); 
         services.AddScoped<IAuthorizationHandler, BoardDeleteHandler>();
+        services.AddScoped<IAuthorizationHandler, BoardViewHandler>();
 
         // Utilities
         services.AddSingleton<TokenProviderUtility>();

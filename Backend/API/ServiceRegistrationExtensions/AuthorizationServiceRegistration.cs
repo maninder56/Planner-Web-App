@@ -10,6 +10,12 @@ public static class AuthorizationServiceRegistration
     public static AuthorizationOptions AddAuthorizationPolicies(this AuthorizationOptions options)
     {
         options.AddPolicy(
+            "CanViewBoard",
+            policyBuilder => policyBuilder.AddRequirements(
+                new BoardViewRequirement(Role.Owner, Role.Member, Role.Viewer)
+                ));  
+
+        options.AddPolicy(
         "CanEditBoard",
         policyBuilder => policyBuilder.AddRequirements(
             new BoardEditRequirement(Role.Owner, Role.Member)
