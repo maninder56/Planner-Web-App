@@ -47,6 +47,30 @@ public class ListRepository (PlannerContext database) : IListRepository
         return boardList;
     }
 
+
+
+    public async Task UpdateBoardListOrderAsync(int boardId, List<int> listIdsInOrder)
+    {
+        var boardLists = await database.BoardLists
+            .Where(bl => bl.BoardId == boardId)
+            .ToListAsync();
+
+        var positionMap = listIdsInOrder
+            .Select((id, index) => new { id, index })
+            .ToDictionary(x => x.id, x => x.index); 
+
+        foreach (var boardList in boardLists)
+        {
+            if (positionMap.TryGetValue(boardList.BoardListId, out var position))
+            {
+                boardList.ListPosition = position;
+            }
+        }
+
+        await database.SaveChangesAsync();
+    }
+
+
     // Delete operations 
 
     public async Task DeleteListAsync(int boardId, int listId)

@@ -9,5 +9,7 @@ public interface IListRepository
 
     public Task<BoardList> UpdateBoardListAsync(int boardId, int listId, ChangeListInfoRequest request);
 
-    public Task DeleteListAsync(int boardId, int listId); 
+    public Task DeleteListAsync(int boardId, int listId);
+
+    public Task UpdateBoardListOrderAsync(int boardId, List<int> listIdsInOrder); 
 }

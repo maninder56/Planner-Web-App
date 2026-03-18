@@ -68,6 +68,33 @@ public class ListsController(
     }
 
 
+    // Put requests
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateListOrderAsync(int boardId, ChangeListOrderRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var listOrderResult = await listService.UpdateListOrderAsync(boardId, request);
+
+        if (listOrderResult.Successful)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return listOrderResult.Error.ErrorToActionResult();
+        }
+    }
+
+
+
     // Delete requests 
 
 

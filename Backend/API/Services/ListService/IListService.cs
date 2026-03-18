@@ -10,5 +10,7 @@ public interface IListService
 
     public Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request);
 
+    public Task<Result> UpdateListOrderAsync(int boardId, ChangeListOrderRequest request); 
+
     public Task<Result> DeleteList(int boardId, int listId); 
 }

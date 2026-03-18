@@ -55,10 +55,39 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
         }
         catch (Exception ex)
         {
-            logger.LogWarning("Failed to pudate list info, Exception Message: {ExceptionMessage}", ex.Message); 
+            logger.LogWarning("Failed to update list info, Exception Message: {ExceptionMessage}", ex.Message); 
             return Result<ChangeListInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }
+
+
+    public async Task<Result> UpdateListOrderAsync(int boardId, ChangeListOrderRequest request)
+    {
+        try
+        {
+            if (!request.ListIdsInOrder.Any())
+            {
+                return Result.Failed(ErrorType.BadRequest, "list is empty"); 
+            }
+
+            if (request.ListIdsInOrder.Distinct().Count() != request.ListIdsInOrder.Count)
+            {
+                return Result.Failed(ErrorType.BadRequest, "Duplicate IDs are not allowed in list");
+            }
+
+            await listRepository.UpdateBoardListOrderAsync(boardId, request.ListIdsInOrder);
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to re order list , Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<ChangeListInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
+
+
 
 
     // Delete operations
