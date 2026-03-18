@@ -34,52 +34,41 @@ public class BoardRepository : IBoardRepository
         return boardMembers;
     }
 
-
-    public async Task<BoardInfoResponse> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request)
+    public async Task UpdateBoardInfoAsync(int userId, int boardId, string? newName, string? newBackgroundColour)
     {
         Board board = await database.Boards
-                .Where(b => b.BoardId == boardId)   
+                .Where(b => b.BoardId == boardId)
                 .SingleOrDefaultAsync()
                 ?? throw new NotFoundException("Board not found");
 
+        if (newName is not null)
+        {
+            board.Name = newName;
+        }
+
+        if (newBackgroundColour is not null)
+        {
+            board.BackgroundColour = newBackgroundColour;
+        }
+
+        await database.SaveChangesAsync(); 
+    }
+
+    public async Task UpdateBoardStar(int userId, int boardId, bool isFavorite)
+    {
         var boardStar = await database.BoardStars
-                .SingleOrDefaultAsync(bs => bs.UserId == userId && bs.BoardId == boardId);
+            .SingleOrDefaultAsync(bs => bs.UserId == userId && bs.BoardId == boardId);
 
-        bool isFavorite = boardStar is not null; 
-
-        BoardInfoResponse boardInfoResponse = new BoardInfoResponse();
-
-        if (request.BackgroundColour is not null)
+        if (isFavorite && boardStar is null)
         {
-            board.BackgroundColour = request.BackgroundColour;
-            boardInfoResponse.BackgroundColour = request.BackgroundColour;
+            database.BoardStars.Add(new BoardStar { UserId = userId, BoardId = boardId });
         }
-
-        if (request.Name is not null)
+        else if (!isFavorite && boardStar is not null)
         {
-            board.Name = request.Name;
-            boardInfoResponse.Name = request.Name;
-        }
-
-        if (request.IsFavoriteBoard is bool favorite)
-        {
-            if (favorite && boardStar is null)
-            {
-                database.BoardStars.Add(new BoardStar { UserId = userId, BoardId = boardId }); 
-                isFavorite = true;
-            }
-            else if (!favorite && boardStar is not null) 
-            {
-                database.BoardStars.Remove(boardStar); 
-                isFavorite = false;
-            }
-
-            boardInfoResponse.IsFavoriteBoard = favorite; 
+            database.BoardStars.Remove(boardStar); 
         }
 
         await database.SaveChangesAsync();
-
-        return boardInfoResponse; 
     }
 
 

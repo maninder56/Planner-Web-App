@@ -118,9 +118,27 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     {
         try
         {
-            BoardInfoResponse boardInfoResponse = await boardRepository.UpdateBoardInfoAsync(userId, boardId, request);
+            if (request.Name is null && request.BackgroundColour is null && request.IsFavoriteBoard is null)
+            {
+                return Result<BoardInfoResponse>.Failed(ErrorType.BadRequest, "No property provided to update"); 
+            }
 
-            return Result<BoardInfoResponse>.Success(boardInfoResponse);
+            if (request.Name is not null || request.BackgroundColour is not null)
+            {
+                await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);
+            }
+
+            if (request.IsFavoriteBoard is bool favorite)
+            {
+                await boardRepository.UpdateBoardStar(userId, boardId, favorite); 
+            }
+
+            return Result<BoardInfoResponse>.Success(new BoardInfoResponse
+            {
+                Name = request.Name ?? null, 
+                BackgroundColour = request.BackgroundColour ?? null,
+                IsFavoriteBoard = request.IsFavoriteBoard ?? null,
+            });
         }
         catch (NotFoundException ex)
         {
