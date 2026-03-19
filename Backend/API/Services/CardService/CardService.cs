@@ -60,4 +60,35 @@ public class CardService(ILogger<CardService> logger, CardQueries cardQueries, I
             return Result<CardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }
+
+
+    // Update operations
+    
+    public async Task<Result<UpdateCardResponse>> UpdateCardInfo(int boardId, int listId, int cardId, UpdateCardRequest request)
+    {
+        try
+        {
+            Card updatedCard = await cardRepository.UpdateCardAsync(boardId, listId, cardId, request);
+
+            return Result<UpdateCardResponse>.Success(new UpdateCardResponse
+            {
+                CardId = updatedCard.CardId,
+                Title = request.Title,
+                Description = request.Description,
+                IsDone = request.IsDone,
+                DueDate = request.DueDate,
+                Priority = request.Priority,
+            }); 
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to update card info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<UpdateCardResponse>.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update card info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<UpdateCardResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
 }

@@ -61,6 +61,7 @@ public class CardsController(
         }
     }
 
+    // Post 
 
     [HttpPost]
     public async Task<IActionResult> CreateNewCardAsync(int boardId, int listId, NewCardRequest request)
@@ -84,4 +85,32 @@ public class CardsController(
             return newCardResult.Error.ErrorToActionResult();
         }
     }
+
+
+    // Patch
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateCardInfo(int boardId, int listId, int id, UpdateCardRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard"); 
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var updateResult = await cardService.UpdateCardInfo(boardId, listId, id, request);
+
+        if (updateResult.Successful)
+        {
+            return Ok(updateResult.Data);
+        }
+        else
+        {
+            return updateResult.Error.ErrorToActionResult();
+        }
+    }
+
+
 }

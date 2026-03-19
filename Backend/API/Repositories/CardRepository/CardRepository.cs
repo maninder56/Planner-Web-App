@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Card.Requests;
 using API.Exceptions;
 using DatabaseContext;
+using DatabaseContext.Types; 
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.CardRepository; 
@@ -39,5 +40,46 @@ public class CardRepository (PlannerContext database) : ICardRepository
         await database.SaveChangesAsync();
 
         return newCard;
+    }
+
+
+    // Update Operations
+
+    public async Task<Card> UpdateCardAsync(int boardId, int listId, int cardId, UpdateCardRequest request)
+    {
+        Card card = await database.Cards
+            .SingleOrDefaultAsync(c =>
+                c.CardId == cardId &&
+                c.BoardList.BoardListId == listId && 
+                c.BoardList.BoardId == boardId)
+            ?? throw new NotFoundException("Card not found");
+
+        if (request.Title is string title)
+        {
+            card.Title = title;
+        }
+
+        if (request.Description is string description)
+        {
+            card.Description = description;
+        }
+
+        if (request.IsDone is bool isDone)
+        {
+            card.IsDone = isDone;
+        }
+
+        if (request.DueDate is DateOnly dateOnly)
+        {
+            card.DueDate = dateOnly;
+        }
+
+        if (request.Priority is Priority priority)
+        {
+            card.Priority = priority;
+        }
+
+        await database.SaveChangesAsync();
+        return card;
     }
 }
