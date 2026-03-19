@@ -118,11 +118,6 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     {
         try
         {
-            if (request.Name is null && request.BackgroundColour is null && request.IsFavoriteBoard is null)
-            {
-                return Result<BoardInfoResponse>.Failed(ErrorType.BadRequest, "No property provided to update"); 
-            }
-
             if (request.Name is not null || request.BackgroundColour is not null)
             {
                 await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);

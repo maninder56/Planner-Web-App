@@ -37,12 +37,8 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
     {
         try
         {
-            if (request.Name is null)
-            {
-                return Result<ChangeListInfoResponse>.Failed(ErrorType.BadRequest, "Empty object provided");
-            }
-
             BoardList changedBoardList = await listRepository.UpdateBoardListAsync(boardId, listId, request);
+
             return Result<ChangeListInfoResponse>.Success(new ChangeListInfoResponse
             {
                 Name = request.Name is not null ? changedBoardList.Name : null, 

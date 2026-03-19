@@ -2,11 +2,23 @@
 
 namespace API.DTOs.List.Requests; 
 
-public class ChangeListInfoRequest
+public class ChangeListInfoRequest : IValidatableObject
 {
     [StringLength(30)]
     public string? Name { get; set; }
 
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (Name is null)
+        {
+            yield return new ValidationResult(
+                "At least one field must be provided", 
+                [nameof(Name)]); 
+        }
+    }
+
     //[Range(0, int.MaxValue, ErrorMessage = "Position must be greater than -1")]
     //public int? ListPosition { get; set; }
+
+
 }
