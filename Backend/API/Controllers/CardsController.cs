@@ -23,8 +23,7 @@ public class CardsController(
     
     // Cards Endpoints
 
-    [HttpGet]
-    [Route("/api/cards")]
+    [HttpGet("/api/cards")]
     public async Task<IActionResult> SearchCardByKeyword([FromQuery] string? search)
     {
         var decodedSearch = HttpUtility.UrlDecode(search);
@@ -112,5 +111,29 @@ public class CardsController(
         }
     }
 
+
+    [HttpPatch("/api/boards/{boardId}/cards/re-order")]
+    public async Task<IActionResult> UpdateCardOrder(int boardId, UpdateCardOrderRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var updateResult = await cardService.UpdateCardOrderAsync(boardId, request);
+
+        if (updateResult.Successful)
+        {
+            return NoContent(); 
+        }
+        else
+        {
+            return updateResult.Error.ErrorToActionResult();
+        }
+    }
+    
 
 }

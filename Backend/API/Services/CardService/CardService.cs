@@ -91,4 +91,24 @@ public class CardService(ILogger<CardService> logger, CardQueries cardQueries, I
             return Result<UpdateCardResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }
+
+
+    public async Task<Result> UpdateCardOrderAsync(int boardId, UpdateCardOrderRequest request)
+    {
+        try
+        {
+            await cardRepository.UpdateCardOrderAsync(boardId, request);
+            return Result.Success(); 
+        }
+        catch (BadRequestException ex)
+        {
+            logger.LogWarning("Failed to update card order, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<UpdateCardResponse>.Failed(ErrorType.BadRequest, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update card order, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<UpdateCardResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
 }

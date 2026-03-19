@@ -70,7 +70,7 @@ public class ListsController(
 
     // Put requests
     
-    [HttpPut]
+    [HttpPut("re-order")]
     public async Task<IActionResult> UpdateListOrderAsync(int boardId, ChangeListOrderRequest request)
     {
         var authResult = await authorizationService.AuthorizeAsync(
