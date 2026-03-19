@@ -52,8 +52,13 @@ public class ListRepository (PlannerContext database) : IListRepository
     public async Task UpdateBoardListOrderAsync(int boardId, List<int> listIdsInOrder)
     {
         var boardLists = await database.BoardLists
-            .Where(bl => bl.BoardId == boardId)
+            .Where(bl => bl.BoardId == boardId && listIdsInOrder.Contains(bl.BoardListId))
             .ToListAsync();
+
+        if (listIdsInOrder.Count != boardLists.Count)
+        {
+            throw new BadRequestException("Invalid list IDs"); 
+        }
 
         var positionMap = listIdsInOrder
             .Select((id, index) => new { id, index })

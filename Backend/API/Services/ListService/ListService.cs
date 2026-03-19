@@ -75,9 +75,14 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
 
             return Result.Success();
         }
+        catch (BadRequestException ex)
+        {
+            logger.LogWarning("Failed to re order list, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<ChangeListInfoResponse>.Failed(ErrorType.BadRequest, ex.Message);
+        }
         catch (Exception ex)
         {
-            logger.LogWarning("Failed to re order list , Exception Message: {ExceptionMessage}", ex.Message);
+            logger.LogWarning("Failed to re order list, Exception Message: {ExceptionMessage}", ex.Message);
             return Result<ChangeListInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
     }
