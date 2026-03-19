@@ -68,7 +68,10 @@ public class ListRepository (PlannerContext database) : IListRepository
         {
             if (positionMap.TryGetValue(boardList.BoardListId, out var position))
             {
-                boardList.ListPosition = position;
+                if (boardList.ListPosition != position)
+                {
+                    boardList.ListPosition = position;
+                }
             }
         }
 
