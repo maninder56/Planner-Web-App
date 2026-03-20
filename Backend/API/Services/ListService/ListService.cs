@@ -61,16 +61,6 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
     {
         try
         {
-            if (!request.ListIdsInOrder.Any())
-            {
-                return Result.Failed(ErrorType.BadRequest, "list is empty"); 
-            }
-
-            if (request.ListIdsInOrder.Distinct().Count() != request.ListIdsInOrder.Count)
-            {
-                return Result.Failed(ErrorType.BadRequest, "Duplicate IDs are not allowed in list");
-            }
-
             await listRepository.UpdateBoardListOrderAsync(boardId, request.ListIdsInOrder);
 
             return Result.Success();
