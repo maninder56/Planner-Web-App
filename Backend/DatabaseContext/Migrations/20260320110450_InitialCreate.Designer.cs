@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseContext.Migrations
 {
     [DbContext(typeof(PlannerContext))]
-    [Migration("20260303090408_ChangedBoardMembersRoleType")]
-    partial class ChangedBoardMembersRoleType
+    [Migration("20260320110450_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,9 +38,9 @@ namespace DatabaseContext.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)");
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.Property<string>("Name")
@@ -49,6 +49,8 @@ namespace DatabaseContext.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("BoardId");
+
+                    b.HasIndex("BackgroundColour");
 
                     b.ToTable("boards");
                 });
@@ -60,11 +62,6 @@ namespace DatabaseContext.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("BoardListId"));
-
-                    b.Property<string>("BackgroundColour")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
 
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -79,12 +76,13 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("BoardListId");
 
-                    b.HasIndex("BoardId");
+                    b.HasIndex("BoardId", "ListPosition")
+                        .IsUnique();
 
                     b.ToTable("boardlists");
                 });
 
-            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+            modelBuilder.Entity("DatabaseContext.BoardMember", b =>
                 {
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -114,9 +112,9 @@ namespace DatabaseContext.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.HasKey("BoardId", "UserId");
@@ -144,6 +142,20 @@ namespace DatabaseContext.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("varchar(400)");
 
+                    b.Property<DateOnly>("DueDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+                    b.Property<bool>("IsDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(20)")
+                        .HasDefaultValue("Low");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -151,9 +163,26 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("CardId");
 
-                    b.HasIndex("BoardListId");
+                    b.HasIndex("BoardListId", "CardPosition")
+                        .IsUnique();
 
                     b.ToTable("cards");
+                });
+
+            modelBuilder.Entity("DatabaseContext.Colour", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("HexValue")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("colours");
                 });
 
             modelBuilder.Entity("DatabaseContext.RefreshToken", b =>
@@ -199,9 +228,9 @@ namespace DatabaseContext.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserId"));
 
-                    b.Property<DateOnly>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
                     b.Property<string>("Email")
@@ -232,10 +261,18 @@ namespace DatabaseContext.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("LastBoardId")
-                        .IsUnique();
-
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("DatabaseContext.Board", b =>
+                {
+                    b.HasOne("DatabaseContext.Colour", "Colour")
+                        .WithMany()
+                        .HasForeignKey("BackgroundColour")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colour");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardList", b =>
@@ -249,7 +286,7 @@ namespace DatabaseContext.Migrations
                     b.Navigation("Board");
                 });
 
-            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+            modelBuilder.Entity("DatabaseContext.BoardMember", b =>
                 {
                     b.HasOne("DatabaseContext.Board", "Board")
                         .WithMany("BoardMembers")
@@ -309,15 +346,6 @@ namespace DatabaseContext.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DatabaseContext.User", b =>
-                {
-                    b.HasOne("DatabaseContext.Board", "Board")
-                        .WithOne("User")
-                        .HasForeignKey("DatabaseContext.User", "LastBoardId");
-
-                    b.Navigation("Board");
-                });
-
             modelBuilder.Entity("DatabaseContext.Board", b =>
                 {
                     b.Navigation("BoardMembers");
@@ -325,8 +353,6 @@ namespace DatabaseContext.Migrations
                     b.Navigation("BoardStars");
 
                     b.Navigation("Lists");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DatabaseContext.BoardList", b =>

@@ -73,12 +73,13 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("BoardListId");
 
-                    b.HasIndex("BoardId");
+                    b.HasIndex("BoardId", "ListPosition")
+                        .IsUnique();
 
                     b.ToTable("boardlists");
                 });
 
-            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+            modelBuilder.Entity("DatabaseContext.BoardMember", b =>
                 {
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -159,7 +160,8 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("CardId");
 
-                    b.HasIndex("BoardListId");
+                    b.HasIndex("BoardListId", "CardPosition")
+                        .IsUnique();
 
                     b.ToTable("cards");
                 });
@@ -281,7 +283,7 @@ namespace DatabaseContext.Migrations
                     b.Navigation("Board");
                 });
 
-            modelBuilder.Entity("DatabaseContext.BoardMembers", b =>
+            modelBuilder.Entity("DatabaseContext.BoardMember", b =>
                 {
                     b.HasOne("DatabaseContext.Board", "Board")
                         .WithMany("BoardMembers")
