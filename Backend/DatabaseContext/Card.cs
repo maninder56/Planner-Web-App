@@ -1,4 +1,5 @@
 ﻿using DatabaseContext.Types;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 namespace DatabaseContext;
 
 [Table("cards")]
+[Index(nameof(BoardListId), nameof(CardPosition), IsUnique = true)]
 public class Card
 {
     [Key]
