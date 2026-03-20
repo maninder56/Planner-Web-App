@@ -1,4 +1,5 @@
-﻿using API.Models.Account;
+﻿using API.Exceptions;
+using API.Models.Account;
 using API.Models.Result;
 using API.Utilities;
 using DatabaseContext;
@@ -35,35 +36,21 @@ public class AccountRepository : IAccountRepository
         .FirstOrDefaultAsync(u => u.UserId == id); 
 
 
-    public async Task<(User, RefreshToken)?> GetUserAndRefreshToken(string refreshTokenInBase64)
+    public async Task<(User, RefreshToken)?> GetUserAndRefreshToken(string base64TokenHash)
     {
-        var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
-
         var token = await database.RefreshTokens.AsNoTracking()
             .Include(r => r.User)
-            .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64);
+            .FirstOrDefaultAsync(r => r.TokenHash == base64TokenHash);
 
         return token is null ? null : (token.User, token); 
     }
 
-    public async Task<RefreshToken?> GetRefreshToken(string refreshTokenInBase64)
-    {
-        var tokenBytes = RefreshTokenUtility.Decode(refreshTokenInBase64);
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var hashInBase64 = RefreshTokenUtility.Encode(hashBytes);
-
-        return await database.RefreshTokens.AsNoTracking()
-            .FirstOrDefaultAsync(r => r.TokenHash == hashInBase64);
-    }
 
 
     // Create Operations
 
     public async Task<User?> CreateNewUserAsync(string username, string email, string passwordHash)
     {
-        
         User newUser = new User
         {
             Name = username,
@@ -77,41 +64,17 @@ public class AccountRepository : IAccountRepository
         await database.SaveChangesAsync();
 
         return newUser; 
-        
-        //catch(DbUpdateException ex)
-        //{
-        //    var sqlEx = ex.GetBaseException() as MySqlException;
-
-        //    if (sqlEx is not null && sqlEx.Number == 1062) // Check if email was duplicate
-        //    {
-        //        logger.LogError("Failed to Create new user account with email {Email} which already exists.", email);
-        //        return Result<CreatedUser>.Failed(ErrorType.BadRequest, new ProblemDetails()
-        //        {
-        //            Title = "Invalid Email", Detail = "An account exists for provided email; please use different email"
-        //        });
-        //    }
-
-        //    logger.LogError("Failed to Create New User account with email {Email}", email);
-        //    return Result<CreatedUser>.Failed(ErrorType.InternalServerError, new ProblemDetails());
-        //}
-        //catch (Exception ex)
-        //{
-        //    logger.LogError("Failed to Create New User account with email {Email} and Exception message: {ExMessage}", email, ex.Message);
-        //    return Result<CreatedUser>.Failed(ErrorType.InternalServerError, new ProblemDetails()); 
-        //}
     }
 
 
-    public async Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt)
+    public async Task CreateNewRefreshTokenAsync(int userId, string base64TokenHash, DateTime expiresAt)
     {
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes); 
-        var tokenHash = RefreshTokenUtility.Encode(hashBytes);
-
         User user = await database.Users
             .Include(u => u.RefreshToken)
-            .FirstAsync(u => u.UserId == userId);
+            .FirstOrDefaultAsync(u => u.UserId == userId)
+            ?? throw new NotFoundException("User not found"); 
 
-        user.RefreshToken = new RefreshToken() { TokenHash = tokenHash, ExpiresAt = expiresAt}; 
+        user.RefreshToken = new RefreshToken() { TokenHash = base64TokenHash, ExpiresAt = expiresAt}; 
 
         await database.SaveChangesAsync();
     }
@@ -119,24 +82,44 @@ public class AccountRepository : IAccountRepository
 
     // Update operations 
     
-    public async Task UpdateRefreshTokenHashAsync(RefreshToken refreshToken, byte[] tokenBytes)
+    public async Task UpdateRefreshTokenAsync(int refreshTokenId, string newBase64TokenHash)
     {
-        var hashBytes = RefreshTokenUtility.HashRefreshToken(tokenBytes);
-        var tokenHash = RefreshTokenUtility.Encode(hashBytes);
+        RefreshToken refreshToken = await database.RefreshTokens
+            .FirstOrDefaultAsync(r => r.RefreshTokenId == refreshTokenId)
+            ?? throw new NotFoundException("Refresh token not found");
 
-        refreshToken.TokenHash = tokenHash;
-        database.RefreshTokens.Update(refreshToken);
-           
-        await database.SaveChangesAsync();       
+        refreshToken.TokenHash = newBase64TokenHash; 
+
+        await database.SaveChangesAsync();
+    }
+
+
+    public async Task UpdateUserPassword(int userId, string newPasswordHash)
+    {
+        User user = await database.Users
+            .SingleOrDefaultAsync(u => u.UserId == userId)
+            ?? throw new NotFoundException("User not found");
+
+        user.PasswordHash = newPasswordHash; 
+
+        await database.SaveChangesAsync();  
     }
 
 
     // Delete operations
 
-    public async Task DeleteRefreshTokenHashAsync(RefreshToken refreshToken)
+    public async Task DeleteRefreshTokenAsync(string base64TokenHash)
     {
-        database.RefreshTokens.Remove(refreshToken);
-        await database.SaveChangesAsync(); 
+        await database.RefreshTokens
+            .Where(r => r.TokenHash == base64TokenHash)
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task DeleteRefreshTokenAsync(int UserId)
+    {
+        await database.RefreshTokens
+            .Where(r => r.UserId == UserId)
+            .ExecuteDeleteAsync();
     }
 
 }

@@ -1,8 +1,10 @@
 ﻿using API.DTOs.Account.Requests;
+using API.Extensions;
 using API.Models.Account;
 using API.Models.Result;
 using API.Services.Account;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -124,6 +126,28 @@ public class AccountController : ControllerBase
     public IActionResult HelloGet()
     {
         return Ok(new { message = "Hello, from API" }); 
+    }
+
+
+    [Authorize]
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangeUserPassword(PasswordChangeRequest passwordChangeRequest)
+    {
+        int userId = User.GetUserId();
+
+        var passwordChangedResult = await accountService.ChangeUserPassword(userId,
+            passwordChangeRequest.OldPassword, passwordChangeRequest.NewPassword);
+
+        if (passwordChangedResult.Successful)
+        {
+            cookiesUtility.InvalidateCookies(HttpContext);
+            return NoContent(); 
+        }
+        else
+        {
+            return passwordChangedResult.Error.ErrorToActionResult();   
+        }
+
     }
 
 }

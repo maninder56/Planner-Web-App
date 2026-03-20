@@ -1,8 +1,11 @@
 using DatabaseContext;
+using DatabaseContext.Types; 
 using Microsoft.EntityFrameworkCore;
 using API.ServiceRegistrationExtensions;
 using API.Handler;
 using System.Text.Json.Serialization;
+using API.Policies.Requirements;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,8 @@ builder.Services.AddControllers()
     // Add json convertor for enum values
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());    
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());   
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
 builder.Services.AddProblemDetails();
@@ -27,7 +31,11 @@ builder.Services.AddCorsPolicy(builder.Configuration);
 // Authentication service
 builder.Services.AddJWTBearerAuthentication(builder.Configuration);
 // Authorization service 
-builder.Services.AddAuthorization(); 
+builder.Services.AddAuthorization(options =>
+{
+    // Add policies
+    options.AddAuthorizationPolicies(); 
+});
 
 
 // Web app services 

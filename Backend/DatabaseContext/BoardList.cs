@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace DatabaseContext;
 
 [Table("boardlists")]
+[Index(nameof(BoardId), nameof(ListPosition), IsUnique = true)]
 public class BoardList
 {
     [Key]

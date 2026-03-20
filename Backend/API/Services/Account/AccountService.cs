@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Account.Requests;
+using API.Exceptions;
 using API.Models.Account;
 using API.Models.Result;
 using API.Repositories.Account;
@@ -42,40 +43,52 @@ public class AccountService : IAccountService
 
     public async Task<Result<Tokens>> LogInUserAsync(LogInUserRequest logInUser)
     {
-       
-        // get user details by email
-        var user = await repository.GetUserByEmail(logInUser.Email);
-
-        if (user is null)
+        try
         {
-            logger.LogWarning("Unable to find user with email: {Email}", logInUser.Email);
-            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials"); 
+            // get user details by email
+            var user = await repository.GetUserByEmail(logInUser.Email);
+
+            if (user is null)
+            {
+                logger.LogWarning("Unable to find user with email: {Email}", logInUser.Email);
+                return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials");
+            }
+
+            // verify password 
+            if (!PasswordUtility.VerifyPassword(user.PasswordHash, logInUser.Password))
+            {
+                logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
+                return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials");
+
+            }
+
+            // create tokens 
+            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+            string base64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+
+            Tokens tokens = new Tokens
+            {
+                AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
+                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+            };
+
+
+            await repository.CreateNewRefreshTokenAsync(user.UserId, base64TokenHash, 
+                DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+
+            // return tokens for cookies
+            return Result<Tokens>.Success(tokens);
         }
-
-        // verify password 
-        if (!PasswordUtility.VerifyPassword(user.PasswordHash, logInUser.Password))
+        catch (NotFoundException ex)
         {
-            logger.LogWarning("Login failed for user with email: {Email}; Invalid password", logInUser.Email);
-            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid User Credentials");
-
+            logger.LogWarning("Failed to log user in, Exception message {ExceptionMessage}", ex.Message);
+            return Result<Tokens>.Failed(ErrorType.NotFound, ex.Message);
         }
-
-        // create tokens 
-        byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-
-        Tokens tokens = new Tokens
+        catch (Exception ex)
         {
-            AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
-            RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
-        };
-
-
-        await repository.CreateNewRefreshTokenHashByUserIdAsync(user.UserId,
-        refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
-
-        // return tokens for cookies
-        return Result<Tokens>.Success(tokens);
-
+            logger.LogWarning("Failed to log user in, an unexpected error occured Exception message {ExceptionMessage}", ex.Message);
+            return Result<Tokens>.Failed(ErrorType.InternalServerError, "Unexptected Error"); 
+        }
     }
 
 
@@ -99,7 +112,9 @@ public class AccountService : IAccountService
                 return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error");
             }
 
+            // Create tokens
             byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+            string base64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
 
             Tokens tokens = new Tokens
             {
@@ -107,8 +122,8 @@ public class AccountService : IAccountService
                 RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
             };
 
-            await repository.CreateNewRefreshTokenHashByUserIdAsync(userSaved.UserId,
-                refreshTokenBytes, DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+            await repository.CreateNewRefreshTokenAsync(userSaved.UserId, base64TokenHash, 
+                DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 
             return Result<Tokens>.Success(tokens);
         }
@@ -118,6 +133,11 @@ public class AccountService : IAccountService
             return Result<Tokens>.Failed(ErrorType.Conflict, 
                 "Duplicate value", "A record with this value already exists"); 
         } 
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to create new user, resource not found, Exception message {ExceptionMessage}", ex.Message);
+            return Result<Tokens>.Failed(ErrorType.NotFound, ex.Message);
+        }
         catch(Exception ex)
         {
             logger.LogWarning("Error occured while saving new user, User Email: {Email} Error Message: {ErrorMessage}", 
@@ -133,45 +153,104 @@ public class AccountService : IAccountService
 
     public async Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64)
     {
-        // get user details by refreshtoken 
-        var userAndRefreshTokenResult = await repository.GetUserAndRefreshToken(refreshTokenInBase64);
-
-        if (userAndRefreshTokenResult is null)
+        try
         {
-            logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
-            return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid Refresh token"); 
+            string base64TokenHash = RefreshTokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
+
+            // get user details by refreshtoken 
+            var userAndRefreshTokenResult = await repository.GetUserAndRefreshToken(base64TokenHash);
+
+            if (userAndRefreshTokenResult is null)
+            {
+                logger.LogWarning("Unable to find refresh token (base64): {RefreshToken}", refreshTokenInBase64);
+                return Result<Tokens>.Failed(ErrorType.BadRequest, "Invalid Refresh token");
+            }
+
+            (User user, RefreshToken refreshToken) = userAndRefreshTokenResult.Value;
+
+            // check if refreshtoken is expired
+            if (refreshToken.ExpiresAt < DateTime.UtcNow)
+            {
+                logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email);
+                return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token", "Refresh token expired");
+            }
+
+            // Verify refresh tokens 
+            if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
+            {
+                logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email);
+                return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token");
+            }
+
+            // create new refresh token and jwt 
+            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
+            string newBase64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+
+            Tokens tokens = new Tokens
+            {
+                AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
+                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes),
+                RefreshTokenExpiresAt = refreshToken.ExpiresAt
+            };
+
+            await repository.UpdateRefreshTokenAsync(refreshToken.RefreshTokenId, newBase64TokenHash);
+
+            // return tokens 
+            return Result<Tokens>.Success(tokens);
         }
-
-        (User user, RefreshToken refreshToken) = userAndRefreshTokenResult.Value; 
-
-        // check if refreshtoken is expired
-        if (refreshToken.ExpiresAt < DateTime.UtcNow)
+        catch (NotFoundException ex)
         {
-            logger.LogWarning("Refresh token expired for user with email: {Email}", user.Email);
-            return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token", "Refresh token expired");
+            logger.LogWarning("Failed to update refresh token, resource not found, Exception message {ExceptionMessage}", 
+                ex.Message);
+            return Result<Tokens>.Failed(ErrorType.NotFound, ex.Message);
         }
-
-        // Verify refresh tokens 
-        if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
+        catch (Exception ex)
         {
-            logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email);
-            return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token");
+            logger.LogWarning("Error occured while updating refresh token, Error Message: {ErrorMessage}", ex.Message);
+            return Result<Tokens>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
         }
+    }
 
-        // create new refresh token and jwt 
-        byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
 
-        Tokens tokens = new Tokens
+
+
+
+    public async Task<Result> ChangeUserPassword(int userId, string oldPassword, string newPassword)
+    {
+        try
         {
-            AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
-            RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes),
-            RefreshTokenExpiresAt = refreshToken.ExpiresAt
-        }; 
+            User? user = await repository.GetUserById(userId); 
 
-        await repository.UpdateRefreshTokenHashAsync(refreshToken,refreshTokenBytes);
+            if (user is null)
+            {
+                return Result.Failed(ErrorType.NotFound, "User not found"); 
+            }
 
-        // return tokens 
-        return Result<Tokens>.Success(tokens);
+            // verify password 
+            if (!PasswordUtility.VerifyPassword(user.PasswordHash, oldPassword))
+            {
+                logger.LogWarning("Failed to update user password, old password incorrect. User ID: {Id}", userId);
+                return Result.Failed(ErrorType.BadRequest, "Invalid User Credentials");
+            }
+
+            string newPasswordHash = PasswordUtility.HashPassword(newPassword);
+
+            await repository.UpdateUserPassword(userId, newPasswordHash);
+
+            await repository.DeleteRefreshTokenAsync(userId);
+
+            return Result.Success(); 
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to update user password, user not found");
+            return Result.Failed(ErrorType.NotFound, ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to updae user password, Exception message {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error"); 
+        }
     }
 
 
@@ -179,18 +258,14 @@ public class AccountService : IAccountService
 
     // Delete operations
 
-
     public async Task<Result> LogoutUserAsync(string refreshTokenInBase64)
     {
-        RefreshToken? refreshToken = await repository.GetRefreshToken(refreshTokenInBase64);
+        string base64TokenHash = RefreshTokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
 
-        if (refreshToken is not null)
-        {
-            await repository.DeleteRefreshTokenHashAsync(refreshToken);
-        }
+        await repository.DeleteRefreshTokenAsync(base64TokenHash);
 
         return Result.Success(); 
     }
 
-
+ 
 }

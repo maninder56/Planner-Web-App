@@ -16,5 +16,5 @@ public class BoardDataResponse
 
     public required Role Role { get; init; }
 
-    public List<BoardListResponse> BoardList { get; set; } = new List<BoardListResponse>();
+    public List<BoardListResponse>? BoardList { get; set; }
 }

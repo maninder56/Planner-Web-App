@@ -1,5 +1,6 @@
 ﻿using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
+using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
@@ -10,6 +11,8 @@ namespace API.Services.BoardService;
 
 public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries, IBoardRepository boardRepository) : IBoardService
 {
+    // Read operations
+
     public async Task<Result<BoardDataResponse>> GetLastUsedBoardDataAsync(int userId)
     {
         var lastUsedBoardId = await boardQueries.GetBoardIdOfLastUsedBoardAsync(userId);
@@ -49,6 +52,37 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
     }
 
 
+    public async Task<Result<List<BoardDataResponse>>> GetAllBoards(int userId)
+    {
+        var boardList = await boardQueries.GetAllBoardsOfUserAsync(userId);
+
+        if (boardList.Count == 0)
+        {
+            return Result<List<BoardDataResponse>>.Failed(ErrorType.NotFound, "Can not find any board");
+        }
+        else
+        {
+            return Result<List<BoardDataResponse>>.Success(boardList);
+        }
+    }
+
+
+    public async Task<Result<BoardMember>> GetBoardMemberAsync(int userId, int boardId)
+    {
+        var boardMember = await boardQueries.GetBoardMemberAsync(userId, boardId);
+
+        if (boardMember is null)
+        {
+            return Result<BoardMember>.Failed(ErrorType.NotFound, "Board not found"); 
+        }
+
+        return Result<BoardMember>.Success(boardMember);
+    }
+
+
+
+    // Create operations
+
     public async Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest)
     {
         Board newBoard = new Board()
@@ -64,7 +98,7 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             Board = newBoard,
         };
 
-        BoardMember savedBoardMember = await boardRepository.CreateNewBoardMemberAsync(newBoardMember);
+        BoardMember savedBoardMember = await boardRepository.CreateNewBoardAsync(newBoardMember);
 
         return Result<BoardDataResponse>.Success(new BoardDataResponse()
         {
@@ -74,6 +108,83 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             BackgroundColour = savedBoardMember.Board.BackgroundColour, 
             IsFavoriteBoard = false,
         }); 
+    }
+    
+    
+
+    // Update operations
+
+    public async Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request)
+    {
+        try
+        {
+            if (request.Name is not null || request.BackgroundColour is not null)
+            {
+                await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);
+            }
+
+            if (request.IsFavoriteBoard is bool favorite)
+            {
+                await boardRepository.UpdateBoardStarAsync(userId, boardId, favorite); 
+            }
+
+            return Result<BoardInfoResponse>.Success(new BoardInfoResponse
+            {
+                Name = request.Name ?? null, 
+                BackgroundColour = request.BackgroundColour ?? null,
+                IsFavoriteBoard = request.IsFavoriteBoard ?? null,
+            });
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to update board info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.NotFound, ex.Message);    
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update board info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error"); 
+        }
+    }
+
+
+    public async Task<Result> UpdateLastUsedBoardAsync(int userId, LastUsedBoardChangeRequest request)
+    {
+        try
+        {
+            await boardRepository.UpdateLastUsedBoardAsync(userId, request.LastUsedBoardId);
+            return Result.Success(); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to update last used board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+
+    }
+    
+
+
+    // Delete operations
+
+    public async Task<Result> DeleteBoardAsync(int boardId)
+    {
+        try
+        {
+            await boardRepository.DeleteBoardAsync(boardId);
+
+            return Result.Success();
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to delete board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to delete board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
     }
 
 }

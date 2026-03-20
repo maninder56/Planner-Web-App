@@ -10,16 +10,17 @@ public interface IAccountRepository
     // Read Operations 
     public Task<User?> GetUserByEmail(string email);
     public Task<User?> GetUserById(int id);
-    public Task<(User, RefreshToken)?> GetUserAndRefreshToken(string refreshTokenInBase64);
-    public Task<RefreshToken?> GetRefreshToken(string refreshTokenInBase64);
+    public Task<(User, RefreshToken)?> GetUserAndRefreshToken(string base64TokenHash);
 
     // Create Operations
     public Task<User?> CreateNewUserAsync(string username, string email, string passwordHash);
-    public Task CreateNewRefreshTokenHashByUserIdAsync(int userId, byte[] tokenBytes, DateTime expiresAt);
+    public Task CreateNewRefreshTokenAsync(int userId, string base64TokenHash, DateTime expiresAt);
 
     // Update Operations 
-    public Task UpdateRefreshTokenHashAsync(RefreshToken refreshToken, byte[] tokenBytes); 
+    public Task UpdateRefreshTokenAsync(int refreshTokenId, string newBase64TokenHash); 
+    public Task UpdateUserPassword(int userId, string newPasswordHash);
 
     // Delete Operations
-    public Task DeleteRefreshTokenHashAsync(RefreshToken refreshToken);
+    public Task DeleteRefreshTokenAsync(string base64TokenHash); 
+    public Task DeleteRefreshTokenAsync(int UserId); 
 }
