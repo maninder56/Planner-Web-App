@@ -6,6 +6,7 @@ import styles from './dashboardSearchBar.module.css';
 import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
+import SearchBar from '@/Components/Inputs/Search/searchBar';
 
 export default function DashboardSearchBar() {
     // const [activePanel, setActivePanel] = useActivePanel(); 
@@ -23,15 +24,11 @@ export default function DashboardSearchBar() {
                 // }
             }}>
             <div className={styles.search}>
-                <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
-                <input
-                    type='text'
-                    placeholder='Search' 
-                    maxLength={100}
-                    value={searchInput}
-                    // onFocus={() => setSearchFocused(true)}
+                <SearchBar
+                    maxLenght={100}
                     onBlur={() => setSearchInput('')}
-                    onChange={e => setSearchInput(e.target.value)}/>
+                    value={searchInput}
+                    setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {
                 searchInput.length > 0 ?

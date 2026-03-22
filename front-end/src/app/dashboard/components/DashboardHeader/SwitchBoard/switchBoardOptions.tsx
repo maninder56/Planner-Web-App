@@ -3,10 +3,10 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import styles from './switchBoardOptions.module.css'; 
 import { switchBoardItem } from '@/Types/board';
 import BigHoverPanel from '@/Components/HoverPanels/BigHoverPanel/bigHoverPanel';
-import SearchBar from '../DashboardSearch/DashboardSearchBar/dashboardSearchBar';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import SearchBar from '@/Components/Inputs/Search/searchBar';
 
 
 export default function SwitchBoardOptions() {
@@ -59,15 +59,9 @@ export default function SwitchBoardOptions() {
     return (
         <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
             <div className={styles.search}>
-                <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
-                <input
-                    type='text'
-                    placeholder='Search' 
-                    maxLength={100}
-                    value={searchInput}
-                    // onFocus={() => setSearchFocused(true)}
-                    // onBlur={() => setSearchInput('')}
-                    onChange={e => setSearchInput(e.target.value)}/>
+            <SearchBar
+                value={searchInput}
+                setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             <div className={styles.boards}>
                 {

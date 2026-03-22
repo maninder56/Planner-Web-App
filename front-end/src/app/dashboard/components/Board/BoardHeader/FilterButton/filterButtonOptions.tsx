@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/Components/Buttons/button';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import SearchBar from '@/Components/Inputs/Search/searchBar';
 
 export default function FilterBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -18,15 +19,10 @@ export default function FilterBoardOptions() {
     return (
         <HoverOptionsPanel title='Filter' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.search}>
-                <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
-                <input
-                    type='text'
-                    placeholder='Search this board' 
-                    maxLength={100}
+                <SearchBar 
+                    placeHolder='Search this board'
                     value={searchInput}
-                    // onFocus={() => setSearchFocused(true)}
-                    // onBlur={() => setSearchInput('')}
-                    onChange={e => setSearchInput(e.target.value)}/>
+                    setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             <div className={styles.checkOptions}>
                 <header>Card Status</header>

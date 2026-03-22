@@ -1,14 +1,21 @@
 
+import { FocusEventHandler, RefObject } from 'react';
 import styles from './searchBar.module.css'; 
 
 export default function SearchBar({
+    inputRef, 
     placeHolder, 
+    maxLenght, 
     value, 
+    onBlur,
     setValue,
 }: {
-    placeHolder?: string; 
+    inputRef?: RefObject<HTMLInputElement | null>; 
+    placeHolder?: string;  
+    maxLenght?: number; 
     value: string; 
     setValue: (newValue: string) => void; 
+    onBlur?: FocusEventHandler<HTMLInputElement>;
 }) {
     return (
         <div className={styles.wrapper}>
@@ -18,8 +25,11 @@ export default function SearchBar({
                 <path d="M17.029 16.53 19.5 19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <input 
+                ref={inputRef}
                 type='text'
+                maxLength={maxLenght === undefined ? 100 : maxLenght}
                 placeholder={placeHolder === undefined ? 'Search': placeHolder}
+                onBlur={onBlur}
                 value={value}
                 onChange={e => setValue(e.target.value)} />
         </div>

@@ -6,6 +6,7 @@ import CloseButton from '@/Components/Buttons/closeButton';
 import Image from 'next/image';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import SearchBar from '@/Components/Inputs/Search/searchBar';
 
 export default function DashboardSearchButton() {
     const isPanelOpen = useBoardUIStore((state) => state.activePanel === 'searchButtonPanel'); 
@@ -44,14 +45,11 @@ export default function DashboardSearchButton() {
                                 }} />
                         </div>
                         <div className={styles.searchBar}>
-                            <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
-                            <input
-                                ref={inputRef}
-                                type='text'
-                                placeholder='Search'
-                                maxLength={100}
+                            <SearchBar 
+                                inputRef={inputRef}
+                                maxLenght={100}
                                 value={searchInput}
-                                onChange={e => setSearchInput(e.target.value)} />
+                                setValue={(newValue) => setSearchInput(newValue)} />
                         </div>
                         {
                             searchInput.length > 0 ? 
