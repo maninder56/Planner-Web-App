@@ -2,12 +2,12 @@
 
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
-import styles from './searchBar.module.css'; 
+import styles from './dashboardSearchBar.module.css'; 
 import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function SearchBar() {
+export default function DashboardSearchBar() {
     // const [activePanel, setActivePanel] = useActivePanel(); 
     const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 

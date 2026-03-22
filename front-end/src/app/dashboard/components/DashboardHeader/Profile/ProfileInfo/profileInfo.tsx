@@ -1,6 +1,6 @@
 
 import { profileColour } from '@/app/dashboard/Types/UIState';
-import ProfileIcon from '../ProfileIcon/profileIcon';
+import ProfileIcon from '../../../DashboardHeader/Profile/ProfileIcon/profileIcon';
 import styles from './profileInfo.module.css'; 
 
 export default function ProfileInfo({

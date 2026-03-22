@@ -3,7 +3,7 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import styles from './switchBoardOptions.module.css'; 
 import { switchBoardItem } from '@/Types/board';
 import BigHoverPanel from '@/Components/HoverPanels/BigHoverPanel/bigHoverPanel';
-import SearchBar from '../../Search/SearchBar/searchBar';
+import SearchBar from '../DashboardSearch/DashboardSearchBar/dashboardSearchBar';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';

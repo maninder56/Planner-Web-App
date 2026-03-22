@@ -1,13 +1,13 @@
 import { panelType } from '@/app/dashboard/Types/UIState';
 import { useEffect, useRef, useState } from 'react';
 
-import styles from './searchButton.module.css'; 
+import styles from './dashboardSearchButton.module.css'; 
 import CloseButton from '@/Components/Buttons/closeButton';
 import Image from 'next/image';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
-export default function SearchButton() {
+export default function DashboardSearchButton() {
     const isPanelOpen = useBoardUIStore((state) => state.activePanel === 'searchButtonPanel'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
