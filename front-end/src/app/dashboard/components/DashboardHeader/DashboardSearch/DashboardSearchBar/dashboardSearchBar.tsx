@@ -2,12 +2,13 @@
 
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
-import styles from './searchBar.module.css'; 
+import styles from './dashboardSearchBar.module.css'; 
 import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
+import SearchBar from '@/Components/Inputs/Search/searchBar';
 
-export default function SearchBar() {
+export default function DashboardSearchBar() {
     // const [activePanel, setActivePanel] = useActivePanel(); 
     const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 
@@ -23,15 +24,11 @@ export default function SearchBar() {
                 // }
             }}>
             <div className={styles.search}>
-                <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
-                <input
-                    type='text'
-                    placeholder='Search' 
-                    maxLength={100}
-                    value={searchInput}
-                    // onFocus={() => setSearchFocused(true)}
+                <SearchBar
+                    maxLenght={100}
                     onBlur={() => setSearchInput('')}
-                    onChange={e => setSearchInput(e.target.value)}/>
+                    value={searchInput}
+                    setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {
                 searchInput.length > 0 ?
