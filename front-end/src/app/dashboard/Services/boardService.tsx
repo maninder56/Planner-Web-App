@@ -62,6 +62,7 @@ export async function CreateNewBoardRequest(name: string, colour: BoardColour) {
                 return ApiRequestSuccessfull(validData.data); 
             } else {
                 console.error('Invalid data recieved from API'); 
+                console.error(validData.error); 
                 return ApiRequestFailed('DataValidationFailed'); 
             }
 

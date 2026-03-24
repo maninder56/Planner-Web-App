@@ -4,11 +4,11 @@ import { BoardDataFromAPI } from "../Types/boardTypes";
 
 export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData {
     const boardData: BoardData = {
-        id: data.id, 
-        title: data.title, 
+        id: data.boardId, 
+        title: data.name, 
         idFavoriteBoard: data.isFavoriteBoard, 
         role: data.role,
-        boardColour: data.boardColour,
+        boardColour: data.backgroundColour,
     }; 
 
     // Sort the lists and cards in order by position
@@ -17,22 +17,35 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
     let cards: Record<CardId, Card> = {}; 
     let listOrder: ListId[] = []; 
 
+    let normalisedData: NormalisedBoardData = {
+        boardData: boardData, 
+        lists: lists, 
+        cards: cards, 
+        listOrder: listOrder,
+    }; 
+
+    if (data.boardLists === undefined) {
+        return normalisedData; 
+    }
+
     for (let list of data.boardLists) {
 
         let cardIds: CardId[] = []; 
 
-        for (let card of list.cardList) {
-            cards[`card-${card.id}`] = {
-                id: card.id, 
-                title: card.title, 
-                description: card.description, 
-                done: card.done, 
-                priority: card.priority, 
-                dueDate: card.dueDate, 
-                position: card.position,
-            }; 
+        if (list.cardList !== undefined) {
+            for (let card of list.cardList) {
+                cards[`card-${card.id}`] = {
+                    id: card.id, 
+                    title: card.title, 
+                    description: card.description, 
+                    done: card.done, 
+                    priority: card.priority, 
+                    dueDate: card.dueDate, 
+                    position: card.position,
+                }; 
 
-            cardIds.push(`card-${card.id}`); 
+                cardIds.push(`card-${card.id}`); 
+            }
         }
 
         lists[`list-${list.id}`]  = {
@@ -45,12 +58,9 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
         listOrder.push(`list-${list.id}`); 
     }
 
-    const normalisedData: NormalisedBoardData = {
-        boardData: boardData, 
-        lists: lists, 
-        cards: cards, 
-        listOrder: listOrder,
-    }; 
+    normalisedData.lists = lists; 
+    normalisedData.cards = cards; 
+    normalisedData.listOrder = listOrder; 
 
     return normalisedData; 
 }

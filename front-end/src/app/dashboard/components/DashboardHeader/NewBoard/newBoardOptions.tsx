@@ -34,6 +34,7 @@ export default function NewBoardOptions() {
             const result = await CreateNewBoardRequest(boardName, boardColour); 
             if (result.ok && result.data !== undefined) {
                 hydrateBoard(NormaliseBoardData(result.data)); 
+                setActivePanel('none'); 
             }
         } finally {
             setButtonsDisabled(false); 
