@@ -8,8 +8,10 @@ import { DragEventHandler, useState } from 'react';
 import BoardCard from './BoardCard/boardCard';
 import {RestrictToWindow, RestrictToElement} from '@dnd-kit/dom/modifiers';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
+import BoardContentSkeleton from './BoardContentSkeleton/boardContentSkeleton';
 
 export default function BoardContent() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const boardDetials = useBoardStore((state) => state.boardData); 
     const listOrder = useBoardStore((state) => state.listOrder); 
     const setListOrder = useBoardStore((state) => state.setListOrder);
@@ -18,15 +20,11 @@ export default function BoardContent() {
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
     const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
     
-    if (boardDetials === undefined) {
-        // Add styles
-        return (
-            <div className={styles.wrapper}>
-                No data available 
-            </div>
-        ); 
+    if (isBoardLoading) {
+        return <BoardContentSkeleton />
+    } else if (boardDetials === undefined) {
+        return <p>No data foudn</p>
     }
-
 
     return (
         <DragDropProvider

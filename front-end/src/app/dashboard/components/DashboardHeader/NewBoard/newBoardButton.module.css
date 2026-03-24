@@ -9,6 +9,7 @@
 .mainButton {
     width: inherit;
     height: inherit;
+    border: none;
     border-radius: 10px;
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.05);
@@ -21,10 +22,19 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+.mainButton:disabled {
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 .mainButton > img {
     width: 20px;
     height: 20px;
     margin-right: 10px;
+}
+
+.mainButton:disabled > img {
+    opacity: 0.5;
 }
 
 .mainButton > span {

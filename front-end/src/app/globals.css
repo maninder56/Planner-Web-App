@@ -226,3 +226,26 @@ body {
 
 
 
+/* Skeleton Styles */
+
+.skeletonBackground {
+  background-color: rgb(244, 244, 244);
+}
+
+.skeletonElement {
+  background-color: rgb(205, 205, 205);
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: rgb(205, 205, 205);
+  }
+
+  100% {
+    background-color: rgb(163, 163, 163);
+  }
+}
+
+
+

@@ -8,7 +8,7 @@ const boardRoute = '/boards';
 export async function LastUsedBoardRequest() {
     const subUrl = boardRoute + '/last-used'; 
     const request: RequestInit = {
-        method: 'POST', 
+        method: 'GET', 
         credentials: 'include',
     }; 
 

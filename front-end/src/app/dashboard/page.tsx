@@ -24,7 +24,7 @@ export default function Dashboard() {
                 setActivePanel('none'); 
             }}>
                 <DashboardHeader />
-                <Board />
+                <Board />   
         </div>
     ); 
 }

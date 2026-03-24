@@ -11,12 +11,16 @@ import BoardMenu from './BoardMenu/boardMenu';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { LastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+import BoardHeaderSkeleton from './BoardHeaderSkeleton/boardHeaderSkeleton';
 
 export default function BoardHeaderBar() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const boardData = useBoardStore((state) => state.boardData); 
 
-    if (boardData === undefined) {
-        return <p>No data found</p>
+    if (isBoardLoading) {
+        return <BoardHeaderSkeleton />
+    } else if (boardData === undefined) {
+        return <p>no data found</p>
     }
 
     return (

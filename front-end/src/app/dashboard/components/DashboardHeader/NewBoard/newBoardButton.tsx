@@ -5,22 +5,25 @@ import Image from 'next/image';
 import NewBoardOptions from './newBoardOptions';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 
 export default function NewBoardButton() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const isNewBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'newBoardOptions'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
-            <div className={styles.mainButton}
+            <button className={styles.mainButton}
+                disabled={isBoardLoading}
                 onClick={e => {
                     e.stopPropagation(); 
                     setActivePanel(isNewBoardOptionsOpen ? 'none' : 'newBoardOptions'); 
                 }}>
                 <Image src={'./plusSign.svg'} alt='plus sign icon' width={20} height={20} />
                 <span>New Board</span>
-            </div>
+            </button>
             {
                 isNewBoardOptionsOpen ? 
                 <NewBoardOptions />

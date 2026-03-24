@@ -12,18 +12,18 @@ export default function Board() {
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
 
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const dataRequest = await LastUsedBoardRequest(); 
-    //         if (dataRequest.ok && dataRequest.data !== undefined) {
-    //             hydrateBoard(NormaliseBoardData(dataRequest.data)); 
-    //         }
+    useEffect(() => {
+        const fetchData = async () => {
+            const dataRequest = await LastUsedBoardRequest(); 
+            if (dataRequest.ok && dataRequest.data !== undefined) {
+                hydrateBoard(NormaliseBoardData(dataRequest.data)); 
+            }
 
-    //         setBoardLoading(false); 
-    //     }; 
+            setBoardLoading(false); 
+        }; 
 
-    //     fetchData(); 
-    // }, []); 
+        fetchData(); 
+    }, []); 
 
 
     return (

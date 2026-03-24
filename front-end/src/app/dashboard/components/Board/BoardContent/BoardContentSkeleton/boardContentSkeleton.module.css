@@ -1,0 +1,38 @@
+
+.wrapper {
+    flex: 1 1 auto;
+    width: 100%;
+
+    border-radius: 0 0 10px 10px;
+
+    display: flex;
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+.wrapper ul {
+    flex: 1 0 auto;
+
+    list-style: none;
+    padding: 0;
+
+    margin: 20px;
+    background-color: rgb(231, 231, 231);
+    width: 250px;
+    height: 500px;
+
+    max-width: 250px;
+
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper li {
+    flex: 1 0 auto;
+    margin: 15px;
+
+    border-radius: 10px;
+}
