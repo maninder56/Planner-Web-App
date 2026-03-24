@@ -13,21 +13,21 @@ import { LastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 
 export default function BoardHeaderBar() {
-    const boardColour = useBoardStore((state) => state.boardData?.boardColour); 
+    const boardData = useBoardStore((state) => state.boardData); 
 
-    if (boardColour === undefined) {
+    if (boardData === undefined) {
         return <p>No data found</p>
     }
 
     return (
-        <div className={[styles.wrapper, styles[boardColour]].join(' ')}>
+        <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer}>
-                <BoardNameInput initialName='My First board' />
+                <BoardNameInput initialName={boardData.title} />
             </div>
             <div className={styles.barOptionList}>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
-                        <FavoriteBoardButton initialState={false} />
+                        <FavoriteBoardButton initialState={boardData.idFavoriteBoard} />
                     </div>
                     <div>
                         <FilterButton />
@@ -37,7 +37,7 @@ export default function BoardHeaderBar() {
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardColour} />
+                    <BoardMenu initialBoardColour={boardData.boardColour} />
                 </div>
             </div>
         </div>

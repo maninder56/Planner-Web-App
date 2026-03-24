@@ -7,8 +7,10 @@ import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
 import { useState } from 'react';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function DashboardSearchBar() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     // const [activePanel, setActivePanel] = useActivePanel(); 
     const [searchInput, setSearchInput] = useState(''); 
     // const [searchFocused, setSearchFocused] = useState(false); 
@@ -28,6 +30,7 @@ export default function DashboardSearchBar() {
                     maxLenght={100}
                     onBlur={() => setSearchInput('')}
                     value={searchInput}
+                    disabled={isBoardLoading}
                     setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {

@@ -7,9 +7,15 @@
     height: 100%;
     display: flex;
     border-radius: 10px;
+    border: none;
     cursor: pointer;
     background-color: rgba(0, 0, 0, 5%);
     width: fit-content;
+}
+
+.wrapper:disabled {
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 @media (min-width: 350px) {
@@ -24,6 +30,10 @@
 
 .wrapper > img {
     margin: auto;
+}
+
+.wrapper:disabled > img{
+    opacity: 0.2;
 }
 
 .wrapper > header {

@@ -6,6 +6,7 @@ export default function SearchBar({
     inputRef, 
     placeHolder, 
     maxLenght, 
+    disabled,
     value, 
     onBlur,
     setValue,
@@ -13,6 +14,7 @@ export default function SearchBar({
     inputRef?: RefObject<HTMLInputElement | null>; 
     placeHolder?: string;  
     maxLenght?: number; 
+    disabled?: boolean; 
     value: string; 
     setValue: (newValue: string) => void; 
     onBlur?: FocusEventHandler<HTMLInputElement>;
@@ -22,7 +24,7 @@ export default function SearchBar({
             <svg fill="none" viewBox="4.75 4.25 15.5 15.5">
                 <path clipRule="evenodd" d="M5.5 10.766a5.765 5.765 0 1 1 11.53 0 5.765 5.765 0 0 1-11.53 0" 
                     strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17.029 16.53 19.5 19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17.029 16.53 19.5 19" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <input 
                 ref={inputRef}
@@ -31,6 +33,7 @@ export default function SearchBar({
                 placeholder={placeHolder === undefined ? 'Search': placeHolder}
                 onBlur={onBlur}
                 value={value}
+                disabled={disabled}
                 onChange={e => setValue(e.target.value)} />
         </div>
     ); 

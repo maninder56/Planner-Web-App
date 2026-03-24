@@ -35,9 +35,14 @@
         stroke 0.2s ease-in-out; 
 }
 
+.wrapper:has(input:disabled) svg {
+    stroke: rgb(144, 144, 144);
+}
+
 .wrapper:focus-within svg {
     stroke: black;
 }
+
 
 
 .wrapper input {
@@ -49,6 +54,13 @@
     font-size: 1em;
     padding: 5px 2px;
 }
+
+.wrapper input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 
 .wrapper input:focus {
     outline: none;

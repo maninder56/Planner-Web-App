@@ -7,10 +7,12 @@ import Image from 'next/image';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function DashboardSearchButton() {
     const isPanelOpen = useBoardUIStore((state) => state.activePanel === 'searchButtonPanel'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
 
     const [searchInput, setSearchInput] = useState(''); 
     const inputRef = useRef<HTMLInputElement>(null); 
@@ -22,7 +24,8 @@ export default function DashboardSearchButton() {
     }, [isPanelOpen])
 
     return (
-        <div className={styles.wrapper}
+        <button className={styles.wrapper}
+            disabled={isBoardLoading}
             onClick={(e) => {
                 e.stopPropagation(); 
                 if (!isPanelOpen) {
@@ -66,6 +69,6 @@ export default function DashboardSearchButton() {
                 </div>
                 :null
             }
-        </div>
+        </button>
     ); 
 }

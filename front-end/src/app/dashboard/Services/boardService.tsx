@@ -3,10 +3,10 @@ import z from "zod";
 import { BoardSchema, BoardDataFromAPI } from "../Types/boardTypes";
 import { ApiFetchRequest } from "@/Services/ApiRequest";
 
-const boardRoute = '/board'; 
+const boardRoute = '/boards'; 
 
 export async function LastUsedBoardRequest() {
-    const subUrl = boardRoute + '/lastusedboard'; 
+    const subUrl = boardRoute + '/last-used'; 
     const request: RequestInit = {
         method: 'POST', 
         credentials: 'include',
