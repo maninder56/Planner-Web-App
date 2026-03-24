@@ -74,4 +74,3 @@ export async function CreateNewBoardRequest(name: string, colour: BoardColour) {
         return ApiRequestFailed('FetchRequestFailed'); 
     }
 }
-

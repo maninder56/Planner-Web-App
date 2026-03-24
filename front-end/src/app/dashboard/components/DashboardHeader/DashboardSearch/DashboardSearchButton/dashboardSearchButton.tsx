@@ -24,6 +24,7 @@ export default function DashboardSearchButton() {
     }, [isPanelOpen])
 
     return (
+        <>
         <button className={styles.wrapper}
             disabled={isBoardLoading}
             onClick={(e) => {
@@ -34,7 +35,8 @@ export default function DashboardSearchButton() {
             }}>
             <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
             <header>Search</header>
-            {
+        </button>
+        {
                 isPanelOpen ? 
                 <div className={styles.searchPanel}
                     onClick={e => {
@@ -69,6 +71,6 @@ export default function DashboardSearchButton() {
                 </div>
                 :null
             }
-        </button>
+        </>
     ); 
 }

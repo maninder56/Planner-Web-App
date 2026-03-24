@@ -13,9 +13,31 @@ import { useBoardUIStore } from './Store/boardUIStore';
 import DashboardHeader from './components/DashboardHeader/dashboardHeader';
 import { LastUsedBoardRequest } from './Services/boardService';
 import Board from './components/Board/board';
+import { UserProfileDataRequest } from '@/Services/userService';
+import { useUserStore } from './Store/userStore';
+import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const setUserProfile = useUserStore((state) => state.setUserData); 
+    const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
+    const setUserAuthenticated = useUserStore((state) => state.setUserAuthenticated); 
+
+    useEffect(() => {
+        async function fetchUserData() {
+            const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
+            if (result.ok && result.data !== undefined) {
+                setUserProfile(result.data); 
+                setUserAuthenticated(true); 
+            } else {
+                setUserAuthenticated(false); 
+            }
+
+            setUserProfileLoading(false); 
+        }
+
+        fetchUserData();
+    }, [])
 
     return (
         <div className={styles.page}
