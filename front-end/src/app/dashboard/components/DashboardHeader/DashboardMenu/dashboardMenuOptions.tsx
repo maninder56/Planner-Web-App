@@ -4,14 +4,18 @@ import styles from './dashboardMenuOptions.module.css';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function DashboardMenuOptions() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
         <HoverOptionsPanel title='Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.optionsList}>
-                <button onClick={e => {
+                <button 
+                    disabled={isBoardLoading}
+                    onClick={e => {
                     e.stopPropagation(); 
                     setActivePanel('newBoardOptions'); 
                 }}>

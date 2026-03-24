@@ -24,20 +24,26 @@ const BoardListSchema = z.object({
     id: z.number(),
     title: z.string(), 
     position: z.number(), 
-    cardList: z.array(CardSchema),
+    cardList: z.union([z.array(CardSchema), z.undefined()]) ,
 }); 
 export type BoardList = z.infer<typeof BoardListSchema>; 
 
 export const BoardSchema = z.object({
-    id: z.number(), 
-    title: z.string(),
+    boardId: z.number(), 
+    name: z.string(),
     isFavoriteBoard: z.boolean(), 
-    boardColour: BoardColour,
+    backgroundColour: BoardColour,
     role: UserRole,
-    boardLists: z.array(BoardListSchema),
+    boardLists: z.union([z.array(BoardListSchema), z.undefined()]) ,
 }); 
 export type BoardDataFromAPI = z.infer<typeof BoardSchema>; 
 
 
 
-
+// {
+//     "boardId": 5,
+//     "name": "qqq",
+//     "isFavoriteBoard": false,
+//     "backgroundColour": "light-purple",
+//     "role": "Owner"
+// }

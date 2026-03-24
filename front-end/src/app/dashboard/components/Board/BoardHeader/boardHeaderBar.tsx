@@ -1,3 +1,4 @@
+'use client'
 
 import { DashBoardHeaderColour } from '@/app/dashboard/Types/dashboardUI';
 import styles from './boardHeaderBar.module.css'; 
@@ -7,21 +8,30 @@ import FilterButton from './FilterButton/filterButton';
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import ShareButton from './ShareButton/shareButton';
 import BoardMenu from './BoardMenu/boardMenu';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { LastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
+import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+import BoardHeaderSkeleton from './BoardHeaderSkeleton/boardHeaderSkeleton';
 
-export default function BoardHeaderBar({
-    boardColour, 
-}: {
-    boardColour: BoardColour; 
-}) {
+export default function BoardHeaderBar() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
+    const boardData = useBoardStore((state) => state.boardData); 
+
+    if (isBoardLoading) {
+        return <BoardHeaderSkeleton />
+    } else if (boardData === undefined) {
+        return <p>no data found</p>
+    }
+
     return (
-        <div className={[styles.wrapper, styles[boardColour]].join(' ')}>
+        <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer}>
-                <BoardNameInput initialName='My First board' />
+                <BoardNameInput initialName={boardData.title} />
             </div>
             <div className={styles.barOptionList}>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
-                        <FavoriteBoardButton initialState={false} />
+                        <FavoriteBoardButton initialState={boardData.idFavoriteBoard} />
                     </div>
                     <div>
                         <FilterButton />
@@ -31,7 +41,7 @@ export default function BoardHeaderBar({
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardColour} />
+                    <BoardMenu initialBoardColour={boardData.boardColour} />
                 </div>
             </div>
         </div>

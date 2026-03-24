@@ -39,6 +39,7 @@ type NormalisedBoardData = {
 }
 
 type State = {
+    isBoardLoading: boolean; 
     boardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
@@ -47,6 +48,9 @@ type State = {
 
 
 type Action = {
+    setBoardLoading: (isLoading: boolean) => void; 
+
+
     hydrateBoard: (data: NormalisedBoardData) => void; 
 
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -58,11 +62,15 @@ type Action = {
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
+    isBoardLoading: true,
     boardData: undefined, 
     lists: {}, 
     cards: {}, 
     listOrder: [],
 
+    setBoardLoading: (isLoading) => {
+      set(() => ({ isBoardLoading: isLoading }))  
+    }, 
 
     hydrateBoard: (data) => {
       set(() => ({

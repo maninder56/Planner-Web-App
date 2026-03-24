@@ -28,10 +28,12 @@ export default function LoginForm({
 
     function validateFormValues(): boolean {
         const newErrors: errorInterface = {}; 
+        const newEmail = email.trim(); 
 
-        if (email === '') {
+
+        if (newEmail === '') {
             newErrors.email = 'Email is Required'; 
-        } else if (!ValidateEmail(email)) {
+        } else if (!ValidateEmail(newEmail)) {
             newErrors.email = 'Email is Invalid'; 
         }
 
@@ -39,6 +41,7 @@ export default function LoginForm({
             newErrors.password = 'Password is Required'; 
         }
 
+        setEmail(newEmail); 
         setErrors(newErrors); 
         return Object.keys(newErrors).length === 0; 
     }

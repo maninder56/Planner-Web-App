@@ -9,9 +9,13 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { CreateNewBoardRequest } from '@/app/dashboard/Services/boardService';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
 
     const colours: BoardColour[] = BoardColoursList; 
 
@@ -19,12 +23,22 @@ export default function NewBoardOptions() {
     const [boardName, setBoardName] = useState(''); 
     const [buttonsDisabled, setButtonsDisabled] = useState(true); 
 
-    function handleFormSubmit(e: FormEvent) {
+    async function handleFormSubmit(e: FormEvent) {
         e.stopPropagation(); 
         e.preventDefault(); 
 
-        
+        setButtonsDisabled(true); 
 
+        // need to handle errors from request
+        try {
+            const result = await CreateNewBoardRequest(boardName, boardColour); 
+            if (result.ok && result.data !== undefined) {
+                hydrateBoard(NormaliseBoardData(result.data)); 
+                setActivePanel('none'); 
+            }
+        } finally {
+            setButtonsDisabled(false); 
+        }
     }
 
     function handleBoardNameChange(newValue: string) {
