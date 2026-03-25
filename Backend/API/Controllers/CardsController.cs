@@ -1,5 +1,6 @@
 ﻿using API.DTOs.Board.Requests;
 using API.DTOs.Card.Requests;
+using API.Extensions;
 using API.Models.Result;
 using API.Services.BoardService;
 using API.Services.CardService;
@@ -17,8 +18,7 @@ namespace API.Controllers;
 public class CardsController(
     ILogger<CardsController> logger,
     ICardService cardService, 
-    IAuthorizationService authorizationService, 
-    CookiesUtility cookiesUtility) : ControllerBase
+    IAuthorizationService authorizationService) : ControllerBase
 {
     
     // Cards Endpoints
@@ -35,20 +35,8 @@ public class CardsController(
             return error.ErrorToActionResult();
         }
 
-        int? userId = await cookiesUtility.GetUserIdFromHttpContextAsync(HttpContext);
-
-        if (userId is null)
-        {
-            logger.LogWarning("Unable to find user id from access tokens");
-            Error error = new Error(ErrorType.BadRequest, "User id not found",
-                "Unable to find user");
-            return error.ErrorToActionResult();
-        }
-
-        logger.LogInformation($"uncoded search: {decodedSearch}"); 
-
         var searchResult = await cardService.SearchCardByKeyword(
-            (int)userId, decodedSearch);
+            User.GetUserId(), decodedSearch);
 
         if (searchResult.Successful)
         {
