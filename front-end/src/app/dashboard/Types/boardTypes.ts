@@ -38,6 +38,16 @@ export const BoardSchema = z.object({
 }); 
 export type BoardDataFromAPI = z.infer<typeof BoardSchema>; 
 
+export const BoardArraySchema = z.array(BoardSchema); 
+export type BoardArray = z.infer<typeof BoardArraySchema>; 
+
+export const BoardInfoSchema = z.object({
+    name: z.union([z.string(), z.undefined()]),
+    isFavoriteBoard: z.union([z.boolean(), z.undefined()]),
+    backgroundColour: z.union([BoardColour, z.undefined()]),
+});
+export type BoardInfo = z.infer<typeof BoardInfoSchema>; 
+
 
 
 // {

@@ -1,4 +1,4 @@
-import { ApiError, ApiResult } from "@/Types/apiTypes";
+import { ApiError, ApiResult } from '@/Types/ApiTypes';
 
 export function ApiRequestSuccessfull<T>(data?: T): ApiResult<T, ApiError> {
     return { ok: true, data: data }; 
@@ -15,6 +15,9 @@ export function ApiErrorFromStatusCode(statusCode: number) {
 
         case 401: 
         return ApiRequestFailed('Unauthorized');
+
+        case 403: 
+        return ApiRequestFailed('Forbidden'); 
 
         case 404: 
         return ApiRequestFailed('NotFound');
