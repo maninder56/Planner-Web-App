@@ -3,8 +3,62 @@ import { ApiFetchRequest } from "./ApiRequest";
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from "@/Utilities/ApiUtilities";
 
 
-const profileRoute = '/account/profile'; 
+const profileRoute = '/account/profile';
+const accountRoute = '/account';  
 
+
+// user account requests
+export async function LogoutUserRequest() {
+    const subUrl = accountRoute + '/logout'; 
+    const request: RequestInit = {
+        method: 'POST', 
+        credentials: 'include',
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+export async function ChangeUserPasswordRequest(oldPassword: string, newPassword: string) {
+    const subUrl = accountRoute + '/password'; 
+    const request: RequestInit = {
+        method: 'PATCH', 
+        credentials: 'include',
+        body: JSON.stringify({
+            OldPassword: oldPassword, 
+            NewPassword: newPassword,
+        }),
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+
+
+// User profile requests
 export async function UserProfileDataRequest() {
     const subUrl = profileRoute; 
     const request: RequestInit = {
@@ -27,6 +81,54 @@ export async function UserProfileDataRequest() {
                 return ApiRequestFailed('DataValidationFailed'); 
             }
 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+
+export async function UpdateUserNameRequest(newName: string) {
+    const subUrl = profileRoute; 
+    const request: RequestInit = {
+        method: 'PATCH', 
+        credentials: 'include',
+        body: JSON.stringify({
+            Name: newName, 
+        })
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+export async function DeleteUserProfileRequest() {
+    const subUrl = profileRoute; 
+    const request: RequestInit = {
+        method: 'DELETE', 
+        credentials: 'include',
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
         } else {
             return ApiErrorFromStatusCode(response.status); 
         }
