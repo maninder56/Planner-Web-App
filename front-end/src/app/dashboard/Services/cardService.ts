@@ -1,6 +1,7 @@
 import { ApiFetchRequest } from '@/Services/ApiRequest';
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from '@/Utilities/ApiUtilities';
 import { CardInfoSchema, CardUpdatedSchema, NewCard, UpdateCard, UpdateCardOrder } from '../Types/boardTypes';
+import { CardSearchResultSchema } from '../Types/cardTypes';
 
 
 const boardRoute = '/boards'; 
@@ -19,19 +20,16 @@ export async function SearchCardByKeywordRequest(keyword: string) {
         const response = await ApiFetchRequest(subUrl, request); 
 
         if (response.ok) {
-            // const data = await response.json(); 
-            // const validData = BoardArraySchema.safeParse(data); 
+            const data = await response.json(); 
+            const validData = CardSearchResultSchema.safeParse(data); 
 
-            // if (validData.success) {
-            //     return ApiRequestSuccessfull(validData.data); 
-            // } else {
-            //     console.error('Invalid data recieved from API'); 
-            //     console.error(validData.error); 
-            //     return ApiRequestFailed('DataValidationFailed'); 
-            // }
-            // validate later after rotue is improved
-            return ApiRequestSuccessfull(); 
-
+            if (validData.success) {
+                return ApiRequestSuccessfull(validData.data); 
+            } else {
+                console.error('Invalid data recieved from API'); 
+                console.error(validData.error); 
+                return ApiRequestFailed('DataValidationFailed'); 
+            }
         } else {
             return ApiErrorFromStatusCode(response.status); 
         }
