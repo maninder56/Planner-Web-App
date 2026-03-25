@@ -130,6 +130,8 @@ public class BoardsController : ControllerBase
 
 
 
+    // Patch Requests
+
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateBoardInfo(int id, BoardInfoChangeRequest request)
     {
