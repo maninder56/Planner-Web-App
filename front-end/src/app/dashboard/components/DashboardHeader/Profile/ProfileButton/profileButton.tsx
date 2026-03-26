@@ -22,7 +22,9 @@ export default function ProfileButton() {
     if (isProfileLoading) {
         return (
             <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
-                <ProfileButtonLoadingSkeleton />
+                <div className={styles.mainButton}>
+                    <ProfileButtonLoadingSkeleton />
+                </div>
             </div>
         ); 
     }
