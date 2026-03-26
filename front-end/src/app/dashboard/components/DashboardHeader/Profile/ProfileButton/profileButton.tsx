@@ -39,7 +39,7 @@ export default function ProfileButton() {
                     {
                         useData !== undefined ? 
                             <ProfileIcon userName={useData.Name} colour={profileColour} /> 
-                        : null // add anonymous profile icon
+                        : null
                     }
             </button>
             { isSwitchBoardOptionsOpen && (useData !== undefined) && 
