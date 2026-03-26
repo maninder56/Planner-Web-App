@@ -12,14 +12,13 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { UserProfile } from '@/Types/userTypes';
 
 export default function ProfileOptions({
-    userName,
-    userEmail,
+    userProfile,
     iconColour,
 }: {
-    userName: string;
-    userEmail: string;  
+    userProfile: UserProfile;   
     iconColour: profileColour; 
 }) {
 
@@ -29,7 +28,7 @@ export default function ProfileOptions({
         <HoverOptionsPanel title='Account' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.optionsList}>
                 <div>
-                    <ProfileInfo userName={userName} userEmail={userEmail} iconColour={iconColour} />
+                    <ProfileInfo userProfile={userProfile} iconColour={iconColour} />
                 </div>
                 <button>
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>

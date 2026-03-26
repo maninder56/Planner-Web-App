@@ -1,24 +1,24 @@
 import { UserProfile } from "@/Types/userTypes";
 import { create } from "zustand";
+import { profileColour } from "../Types/UIState";
 
 
 
 type State = {
     isUserDataLoading: boolean; 
-    isUserAuthenticated: boolean; 
     userData?: UserProfile
+    profileIconColour: profileColour; 
 }
 
 type Action = {
     setUserDataLoading: (isLoading: boolean) => void; 
     setUserData: (data: UserProfile) => void; 
-    setUserAuthenticated: (isAuthenticated: boolean) => void; 
 }
 
 export const useUserStore = create<State & Action>((set) => ({
     isUserDataLoading: true, 
-    isUserAuthenticated: false, 
     userData: undefined,
+    profileIconColour: 'red', // create function later to get random colour
 
     setUserDataLoading: (isLoading) => {
         set(() => ({ isUserDataLoading: isLoading }))
@@ -26,9 +26,5 @@ export const useUserStore = create<State & Action>((set) => ({
   
     setUserData: (data) => {
         set(() => ({ userData: data }))
-    },
-
-    setUserAuthenticated: (isAuthenticated) => {
-        set(() => ({ isUserAuthenticated: isAuthenticated}))
     }, 
 })); 

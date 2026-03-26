@@ -21,25 +21,7 @@ import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const setUserProfile = useUserStore((state) => state.setUserData); 
-    const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
-    const setUserAuthenticated = useUserStore((state) => state.setUserAuthenticated); 
-
-    useEffect(() => {
-        async function fetchUserData() {
-            const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
-            if (result.ok && result.data !== undefined) {
-                setUserProfile(result.data); 
-                setUserAuthenticated(true); 
-            } else {
-                setUserAuthenticated(false); 
-            }
-
-            setUserProfileLoading(false); 
-        }
-
-        fetchUserData();
-    }, [])
+    const isSessionExpired = useUserStore((state) => (state.userData === undefined) && !state.isUserDataLoading); 
 
     return (
         <div className={styles.page}
@@ -49,6 +31,11 @@ export default function Dashboard() {
             }}>
                 <DashboardHeader />
                 <Board />   
+                {
+                    isSessionExpired ? 
+                    <SessionExpired />
+                    : null
+                }
         </div>
     ); 
 }

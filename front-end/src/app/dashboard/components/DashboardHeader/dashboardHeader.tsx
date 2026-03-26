@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect } from 'react';
+import { useUserStore } from '../../Store/userStore';
 import AppLogo from './AppLogo/appLogo';
 import styles from './dashboardHeader.module.css'; 
 import DashboardMenuButton from './DashboardMenu/dashboardMenuButton';
@@ -6,8 +10,25 @@ import DashboardSearchButton from './DashboardSearch/DashboardSearchButton/dashb
 import NewBoardButton from './NewBoard/newBoardButton';
 import ProfileButton from './Profile/ProfileButton/profileButton';
 import SwitchBoardButton from './SwitchBoard/switchBoardButton';
+import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { UserProfileDataRequest } from '@/Services/userService';
 
 export default function DashboardHeader() {
+    const setUserProfile = useUserStore((state) => state.setUserData); 
+    const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
+
+    useEffect(() => {
+        async function fetchUserData() {
+            const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
+            if (result.ok && result.data !== undefined) {
+                setUserProfile(result.data);  
+            }  
+            setUserProfileLoading(false); 
+        }
+        fetchUserData();
+    }, [])
+
+
     return (
         <section className={styles.wrapper}>
             <div className={styles.appLogo}>
@@ -28,7 +49,7 @@ export default function DashboardHeader() {
                 <div className={styles.dashboardOptions}>
                     <NewBoardButton />
                     <SwitchBoardButton />
-                    <ProfileButton userName='temp user' userEmail='tempuser@gmail.com' iconColour='red' />
+                    <ProfileButton />
                 </div>
             </div>
         </section>

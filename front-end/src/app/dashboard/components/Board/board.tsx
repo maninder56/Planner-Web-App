@@ -6,6 +6,7 @@ import { NormaliseBoardData } from '../../Utilities/boardData';
 import styles from './board.module.css'; 
 import BoardContent from './BoardContent/boardContent';
 import BoardHeaderBar from './BoardHeader/boardHeaderBar';
+import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 
 export default function Board() {
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
@@ -14,7 +15,7 @@ export default function Board() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const dataRequest = await LastUsedBoardRequest(); 
+            const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
             if (dataRequest.ok && dataRequest.data !== undefined) {
                 hydrateBoard(NormaliseBoardData(dataRequest.data)); 
             }
