@@ -17,6 +17,7 @@ import { UserProfileDataRequest } from '@/Services/userService';
 import { useUserStore } from './Store/userStore';
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import HoverConfirmation from '@/Components/HoverConfirmation/hoverConfirmation';
+import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -48,7 +49,6 @@ export default function Dashboard() {
             }}>
                 <DashboardHeader />
                 <Board />   
-                <HoverConfirmation title='Session Expired' message='Please log back in ' onCancel={() => { }} onConfirmName='Login' onConfirm={() => { }} />
         </div>
     ); 
 }
