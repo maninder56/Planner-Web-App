@@ -20,7 +20,9 @@ export default function BoardHeaderBar() {
     if (isBoardLoading) {
         return <BoardHeaderSkeleton />
     } else if (boardData === undefined) {
-        return <p>no data found</p>
+        return (
+            <div className={[styles.wrapper, styles.noBoardSelected].join(' ')}></div>
+        ); 
     }
 
     return (

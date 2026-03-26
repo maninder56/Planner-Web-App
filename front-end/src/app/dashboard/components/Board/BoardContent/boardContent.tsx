@@ -8,7 +8,8 @@ import { DragEventHandler, useState } from 'react';
 import BoardCard from './BoardCard/boardCard';
 import {RestrictToWindow, RestrictToElement} from '@dnd-kit/dom/modifiers';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
-import BoardContentSkeleton from './BoardContentSkeleton/boardContentSkeleton';
+import BoardContentSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
+import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -21,9 +22,14 @@ export default function BoardContent() {
     const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
     
     if (isBoardLoading) {
-        return <BoardContentSkeleton />
+        return <BoardContentLoadingSkeleton />
     } else if (boardDetials === undefined) {
-        return <p>No data foudn</p>
+        return (
+            <div className={[styles.wrapper, styles.noBoardSelected].join(' ')}>
+                <header>No board selected</header>
+                <p>Please select a board or create new one.</p>
+            </div>
+        ); 
     }
 
     return (
