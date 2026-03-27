@@ -40,7 +40,7 @@ export async function ApiRequestWithRefreshTokenAttempt<R, D>(
 }
 
 export async function  RefreshTokensRequest() {
-    const subUrl = 'token/refresh';
+    const subUrl = '/account/token/refresh';
     const request: RequestInit = {
         method: 'POST', 
         credentials: 'include', 

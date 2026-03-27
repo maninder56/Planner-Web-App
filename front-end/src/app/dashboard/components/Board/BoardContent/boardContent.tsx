@@ -15,6 +15,7 @@ export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const boardDetials = useBoardStore((state) => state.boardData); 
     const listOrder = useBoardStore((state) => state.listOrder); 
+    const lastUsedBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
     const setListOrder = useBoardStore((state) => state.setListOrder);
     const moveCard = useBoardStore((state) => state.moveCard); 
 
@@ -23,11 +24,18 @@ export default function BoardContent() {
     
     if (isBoardLoading) {
         return <BoardContentLoadingSkeleton />
-    } else if (boardDetials === undefined) {
+    } else if (lastUsedBoardExists !== undefined && !lastUsedBoardExists) {
         return (
             <div className={[styles.wrapper, styles.noBoardSelected].join(' ')}>
                 <header>No board selected</header>
                 <p>Please select a board or create new one.</p>
+            </div>
+        ); 
+    } else if (boardDetials === undefined) {
+        return (
+            <div className={[styles.wrapper, styles.noBoardSelected].join(' ')}>
+                <header>Failed to load board data</header>
+                <p>Please select a board to try again.</p>
             </div>
         ); 
     }

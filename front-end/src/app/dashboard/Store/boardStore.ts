@@ -40,6 +40,7 @@ type NormalisedBoardData = {
 
 type State = {
     isBoardLoading: boolean; 
+    lastUsedBoardExists?: boolean; 
     boardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
@@ -49,14 +50,14 @@ type State = {
 
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
-
-
     hydrateBoard: (data: NormalisedBoardData) => void; 
 
+    setLastUsedBoardExists: (exists?: boolean) => void; 
+
+    // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
-
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
-
+    
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
 }
@@ -64,12 +65,17 @@ type Action = {
 export const useBoardStore = create<State & Action>((set) => ({
     isBoardLoading: true,
     boardData: undefined, 
+    lastUsedBoardExists: undefined, 
     lists: {}, 
     cards: {}, 
     listOrder: [],
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
+    }, 
+
+    setLastUsedBoardExists: (exists) => {
+        set(() => ({ lastUsedBoardExists: exists}))
     }, 
 
     hydrateBoard: (data) => {
