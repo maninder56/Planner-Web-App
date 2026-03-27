@@ -51,6 +51,7 @@ type State = {
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
     hydrateBoard: (data: NormalisedBoardData) => void; 
+    resetBoardData: () => void; 
 
     setLastUsedBoardExists: (exists?: boolean) => void; 
 
@@ -84,7 +85,16 @@ export const useBoardStore = create<State & Action>((set) => ({
             lists: data.lists, 
             cards: data.cards, 
             listOrder: data.listOrder, 
-        }))
+        })); 
+    }, 
+
+    resetBoardData: () => {
+        set(() => ({ 
+            boardData: undefined, 
+            lists: {}, 
+            cards: {}, 
+            listOrder: [], 
+         })); 
     }, 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 

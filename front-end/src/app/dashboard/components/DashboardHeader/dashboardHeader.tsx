@@ -22,7 +22,9 @@ export default function DashboardHeader() {
             const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
             if (result.ok && result.data !== undefined) {
                 setUserProfile(result.data);  
-            }  
+            } else {
+                setUserProfile(undefined); 
+            }
             setUserProfileLoading(false); 
         }
         fetchUserData();

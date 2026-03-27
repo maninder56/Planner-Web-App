@@ -13,7 +13,7 @@ type State = {
 
 type Action = {
     setUserDataLoading: (isLoading: boolean) => void; 
-    setUserData: (data: UserProfile) => void; 
+    setUserData: (data?: UserProfile) => void; 
 }
 
 export const useUserStore = create<State & Action>((set) => ({

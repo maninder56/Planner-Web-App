@@ -9,14 +9,16 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
-import { CreateNewBoardRequest } from '@/app/dashboard/Services/boardService';
+import { CreateNewBoardRequest, UpdateLastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
-import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
+    const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
+    const resetBoardData = useBoardStore((state) => state.resetBoardData); 
 
     const colours: BoardColour[] = BoardColoursList; 
 
@@ -31,21 +33,34 @@ export default function NewBoardOptions() {
 
         setButtonsDisabled(true); 
 
-        // need to handle errors from request
         try {
             const result = await ApiRequestWithRefreshTokenAttemptAndData(CreateNewBoardRequest, 
                 { name:boardName.trim(), colour:boardColour } ); 
             if (result.ok) {
                 if (result.data !== undefined) {
                     hydrateBoard(NormaliseBoardData(result.data)); 
-                    setActivePanel('none'); 
+                    setLastUsedBoard(result.data.boardId); 
                 }
+                else {
+                    resetBoardData(); 
+                }
+                
+                setActivePanel('none'); 
             } else {
                 setErrorMessage('Something Went wrong, Please try again.'); 
             }
         } finally {
             setButtonsDisabled(false); 
         }
+    }
+
+    async function setLastUsedBoard(boardId: number) {
+        const lastUsedBoardResult =  await ApiRequestWithRefreshTokenAttemptAndData(
+            UpdateLastUsedBoardRequest, boardId); 
+
+        if (lastUsedBoardResult.ok) {
+            setLastUsedBoardExists(true); 
+        } 
     }
 
     function handleBoardNameChange(newValue: string) {
