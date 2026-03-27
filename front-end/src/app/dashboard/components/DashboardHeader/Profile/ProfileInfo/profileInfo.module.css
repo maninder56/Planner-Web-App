@@ -36,8 +36,8 @@
 
 @media (min-width: 600) {
     .iconWrapper {
-        --size: 50px; 
-        font-size: 1.4rem;
+        --size: 45px; 
+        font-size: 1.2rem;
     }
 
     .userDetails p:first-child {

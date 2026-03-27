@@ -32,7 +32,7 @@ export default function Dashboard() {
                 <DashboardHeader />
                 <Board />   
                 {
-                    !isSessionExpired ? 
+                    isSessionExpired ? 
                     <SessionExpired />
                     : null
                 }

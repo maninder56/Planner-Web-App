@@ -10,12 +10,19 @@
 }
 
 .mainButton {
+    display: block;
     cursor: pointer;
+
+    margin: 0;
+    padding: 0;
+
     width: 35px;
     height: 35px;
 
     border: none;
     border-radius: 10px;
+
+    background-color: transparent;
 }
 
 .wrapper:hover {
