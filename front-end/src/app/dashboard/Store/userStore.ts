@@ -1,6 +1,7 @@
 import { UserProfile } from "@/Types/userTypes";
 import { create } from "zustand";
 import { profileColour } from "../Types/UIState";
+import { GetRandomUserProfileColour } from "../Utilities/user";
 
 
 
@@ -18,7 +19,7 @@ type Action = {
 export const useUserStore = create<State & Action>((set) => ({
     isUserDataLoading: true, 
     userData: undefined,
-    profileIconColour: 'red', // create function later to get random colour
+    profileIconColour: GetRandomUserProfileColour(3),
 
     setUserDataLoading: (isLoading) => {
         set(() => ({ isUserDataLoading: isLoading }))
