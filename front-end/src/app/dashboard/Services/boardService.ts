@@ -107,7 +107,7 @@ export async function LastUsedBoardRequest() {
 
 // Post Requests
 
-export async function CreateNewBoardRequest(name: string, colour: BoardColour) {
+export async function CreateNewBoardRequest(data: {name: string, colour: BoardColour}) {
     const subUrl = boardRoute; 
     const request: RequestInit = {
         headers: {
@@ -116,8 +116,8 @@ export async function CreateNewBoardRequest(name: string, colour: BoardColour) {
         method: 'POST', 
         credentials: 'include',
         body: JSON.stringify({
-            Name: name,
-            BackgroundColour: colour,
+            Name: data.name,
+            BackgroundColour: data.colour,
         }),
     }; 
 

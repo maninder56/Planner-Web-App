@@ -10,7 +10,7 @@ import DashboardSearchButton from './DashboardSearch/DashboardSearchButton/dashb
 import NewBoardButton from './NewBoard/newBoardButton';
 import ProfileButton from './Profile/ProfileButton/profileButton';
 import SwitchBoardButton from './SwitchBoard/switchBoardButton';
-import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UserProfileDataRequest } from '@/Services/userService';
 
 export default function DashboardHeader() {

@@ -19,9 +19,29 @@ export async function ApiFetchRequest(
 
 // R: Response Data 
 // D: data for request function
-export async function ApiRequestWithRefreshTokenAttempt<R, D>(
-    request: (data?: D) => Promise<ApiResult<R, ApiError>>, 
-    data?: D,
+export async function ApiRequestWithRefreshTokenAttempt<R>(
+    request: () => Promise<ApiResult<R, ApiError>>
+) {
+    const firstResponse = await request(); 
+
+    if (firstResponse.ok || firstResponse.error !== 'Unauthorized') {
+        return firstResponse; 
+    }
+
+    // Make refresh token request
+    const refreshResponse = await RefreshTokensRequest(); 
+
+    if (refreshResponse.ok) {
+        return await request(); 
+    } else {
+        return refreshResponse; 
+    }
+}
+
+
+export async function ApiRequestWithRefreshTokenAttemptAndData<R, D>(
+    request: (data: D) => Promise<ApiResult<R, ApiError>>, 
+    data: D,
 ) {
     const firstResponse = await request(data); 
 
@@ -38,6 +58,9 @@ export async function ApiRequestWithRefreshTokenAttempt<R, D>(
         return refreshResponse; 
     }
 }
+
+
+
 
 export async function  RefreshTokensRequest() {
     const subUrl = '/account/token/refresh';

@@ -12,6 +12,7 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { CreateNewBoardRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -22,6 +23,7 @@ export default function NewBoardOptions() {
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 
     const [buttonsDisabled, setButtonsDisabled] = useState(true); 
+    const [errorMessage, setErrorMessage] = useState(''); 
 
     async function handleFormSubmit(e: FormEvent) {
         e.stopPropagation(); 
@@ -31,10 +33,15 @@ export default function NewBoardOptions() {
 
         // need to handle errors from request
         try {
-            const result = await CreateNewBoardRequest(boardName, boardColour); 
-            if (result.ok && result.data !== undefined) {
-                hydrateBoard(NormaliseBoardData(result.data)); 
-                setActivePanel('none'); 
+            const result = await ApiRequestWithRefreshTokenAttemptAndData(CreateNewBoardRequest, 
+                { name:boardName.trim(), colour:boardColour } ); 
+            if (result.ok) {
+                if (result.data !== undefined) {
+                    hydrateBoard(NormaliseBoardData(result.data)); 
+                    setActivePanel('none'); 
+                }
+            } else {
+                setErrorMessage('Something Went wrong, Please try again.'); 
             }
         } finally {
             setButtonsDisabled(false); 
@@ -70,6 +77,9 @@ export default function NewBoardOptions() {
                     <div>
                         <label>Board Name</label>
                         <input type='text' maxLength={50} value={boardName} onChange={e => handleBoardNameChange(e.target.value)} />
+                    </div>
+                    <div className={styles.errorMessage}>
+                        <p>{errorMessage}</p>
                     </div>
                     <div className={styles.formButton}>
                         <button type='submit' disabled={buttonsDisabled}>Create</button>
