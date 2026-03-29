@@ -11,6 +11,7 @@ import SwitchBoardOptionsLoadingSkeleton from './SwitchBoardOptionsLoadingSkelet
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import { GetAllBoardsRequest } from '@/app/dashboard/Services/boardService';
 import { BoardArray } from '@/app/dashboard/Types/boardTypes';
+import Button from '@/Components/Buttons/button';
 
 type BoardsState = {
     owned: BoardArray, 
@@ -25,9 +26,7 @@ export default function SwitchBoardOptions() {
 
     const [searchInput, setSearchInput] = useState(''); 
 
-    const [boards, setBoards] = useState<BoardsState>({
-        owned: [], member: [], viewer: [], numberOfTotalBoards: 0,
-    });
+    const [boards, setBoards] = useState<BoardsState | undefined>();
 
     function splitBoardArrayIntoGroups(array: BoardArray) {
         const ownedBoards: BoardArray = []; 
@@ -59,27 +58,39 @@ export default function SwitchBoardOptions() {
         }; 
     }
 
+    async function fetchBoardData() {
+        // const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
+
+        // if (result.ok) {
+        //     if (result.data !== undefined) {
+
+        //     }
+        // }
+
+        setLoading(true); 
+        await new Promise(r => setTimeout(r, 1000)); 
+        setLoading(false); 
+    }
+
     useEffect(() => {
-        async function fetchData() {
-            // const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
-
-            // if (result.ok) {
-            //     if (result.data !== undefined) {
-
-            //     }
-            // }
-
-            await new Promise(r => setTimeout(r, 3000)); 
-            setLoading(false); 
-        }; 
-
-        fetchData(); 
+        fetchBoardData();  
     }, [])
 
     if (loading) {
         return (
             <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
                 <SwitchBoardOptionsLoadingSkeleton />
+            </BigHoverPanel>
+        ); 
+    }
+
+    if (boards === undefined) {
+        return (
+            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+                <div className={styles.failedToLoadBoards}>
+                    <header>Failed to load boards, Please try again.</header>
+                    <Button name='Try again' color='red' onClick={fetchBoardData} />
+                </div>
             </BigHoverPanel>
         ); 
     }
