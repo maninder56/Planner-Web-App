@@ -28,7 +28,7 @@ export default function SwitchBoardOptions() {
 
     const [boards, setBoards] = useState<BoardsState | undefined>();
 
-    function splitBoardArrayIntoGroups(array: BoardArray) {
+    function splitBoardArrayIntoGroups(array: BoardArray): BoardsState {
         const ownedBoards: BoardArray = []; 
         const memberBoards: BoardArray = []; 
         const viewerBoards: BoardArray = []; 
@@ -51,28 +51,32 @@ export default function SwitchBoardOptions() {
         }
 
         return {
-            ownedBoards: ownedBoards, 
-            memberBoards: memberBoards, 
-            viewerBoards: viewerBoards,
+            owned: ownedBoards, 
+            member: memberBoards, 
+            viewer: viewerBoards,
             numberOfTotalBoards: numberOfTotalBoards,
         }; 
     }
 
     async function fetchBoardData() {
-        // const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
-
-        // if (result.ok) {
-        //     if (result.data !== undefined) {
-
-        //     }
-        // }
-
-        setLoading(true); 
-        await new Promise(r => setTimeout(r, 1000)); 
-        setLoading(false); 
+        console.log('fetchBoardData called');
+        setLoading(true);    
+        
+        try {
+            const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
+             console.log('API Response:', result);  
+            if (result.ok && result.data !== undefined) {
+                setBoards(splitBoardArrayIntoGroups(result.data));                 
+            } else {
+                setBoards(undefined); 
+            }
+        } finally {
+            setLoading(false); 
+        }
     }
 
     useEffect(() => {
+        console.log('useEffect called');
         fetchBoardData();  
     }, [])
 
@@ -117,8 +121,9 @@ export default function SwitchBoardOptions() {
             </div>
             {
                 boards.owned.length > 0 ? 
+                <>
+                <header>Manage these boards</header>
                 <div className={styles.boards}>
-                    <header>Manage these boards</header>
                     {
                         boards.owned.map((b) => 
                             <div key={b.boardId} className={styles[b.backgroundColour]}>
@@ -128,12 +133,14 @@ export default function SwitchBoardOptions() {
                         )
                     }
                 </div>
+                </>
                 : null
             }
             {
                 boards.member.length > 0 ? 
+                <>
+                <header>Collaborate on these boards</header>
                 <div className={styles.boards}>
-                    <header>Collaborate on these boards</header>
                     {
                         boards.member.map((b) =>    
                             <div key={b.boardId} className={styles[b.backgroundColour]}>
@@ -143,12 +150,14 @@ export default function SwitchBoardOptions() {
                         )
                     }
                 </div>
+                </>
                 : null
             }
             {
                 boards.viewer.length > 0 ? 
+                <>
+                <header>View these boards</header>
                 <div className={styles.boards}>
-                    <header>View these boards</header>
                     {
                         boards.viewer.map(b => 
                             <div key={b.boardId} className={styles[b.backgroundColour]}>
@@ -158,6 +167,7 @@ export default function SwitchBoardOptions() {
                         )
                     }
                 </div>
+                </>
                 : null
             }
         </BigHoverPanel>
