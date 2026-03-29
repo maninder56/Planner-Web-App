@@ -16,6 +16,7 @@ type BoardsState = {
     owned: BoardArray, 
     member: BoardArray, 
     viewer: BoardArray, 
+    numberOfTotalBoards: number,
 }; 
 
 export default function SwitchBoardOptions() {
@@ -25,13 +26,14 @@ export default function SwitchBoardOptions() {
     const [searchInput, setSearchInput] = useState(''); 
 
     const [boards, setBoards] = useState<BoardsState>({
-        owned: [], member: [], viewer: []
+        owned: [], member: [], viewer: [], numberOfTotalBoards: 0,
     });
 
     function splitBoardArrayIntoGroups(array: BoardArray) {
         const ownedBoards: BoardArray = []; 
         const memberBoards: BoardArray = []; 
         const viewerBoards: BoardArray = []; 
+        const numberOfTotalBoards = array.length; 
 
         for (let item of array) {
             switch(item.role) {
@@ -53,23 +55,26 @@ export default function SwitchBoardOptions() {
             ownedBoards: ownedBoards, 
             memberBoards: memberBoards, 
             viewerBoards: viewerBoards,
+            numberOfTotalBoards: numberOfTotalBoards,
         }; 
     }
 
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
+    useEffect(() => {
+        async function fetchData() {
+            // const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
 
-    //         if (result.ok) {
-    //             if (result.data !== undefined) {
+            // if (result.ok) {
+            //     if (result.data !== undefined) {
 
-    //             }
-    //         }
+            //     }
+            // }
 
-    //     }; 
+            await new Promise(r => setTimeout(r, 3000)); 
+            setLoading(false); 
+        }; 
 
-    //     fetchData(); 
-    // }, [])
+        fetchData(); 
+    }, [])
 
     if (loading) {
         return (
@@ -78,6 +83,18 @@ export default function SwitchBoardOptions() {
             </BigHoverPanel>
         ); 
     }
+
+    if (boards.numberOfTotalBoards === 0) {
+        return (
+            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+                <div className={styles.noBoardsAvailable}>
+                    <header>No Boards Available</header>
+                    <p>You don’t have any boards yet. Create a new board or ask your team to share one with you.</p>
+                </div>
+            </BigHoverPanel>
+        ); 
+    }
+    
 
     return (
         <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
@@ -90,7 +107,7 @@ export default function SwitchBoardOptions() {
             {
                 boards.owned.length > 0 ? 
                 <div className={styles.boards}>
-                    <header>Your Boards</header>
+                    <header>Manage these boards</header>
                     {
                         boards.owned.map((b) => 
                             <div key={b.boardId} className={styles[b.backgroundColour]}>
@@ -105,7 +122,7 @@ export default function SwitchBoardOptions() {
             {
                 boards.member.length > 0 ? 
                 <div className={styles.boards}>
-                    <header>Your Boards</header>
+                    <header>Collaborate on these boards</header>
                     {
                         boards.member.map((b) =>    
                             <div key={b.boardId} className={styles[b.backgroundColour]}>
@@ -118,9 +135,9 @@ export default function SwitchBoardOptions() {
                 : null
             }
             {
-                boards.member.length > 0 ? 
+                boards.viewer.length > 0 ? 
                 <div className={styles.boards}>
-                    <header>Your Boards</header>
+                    <header>View these boards</header>
                     {
                         boards.viewer.map(b => 
                             <div key={b.boardId} className={styles[b.backgroundColour]}>

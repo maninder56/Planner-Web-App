@@ -1,10 +1,29 @@
 
+
+.noBoardsAvailable {
+  height: 200px;
+
+  margin-top: 50px;
+
+  text-align: center;
+}
+
+.noBoardsAvailable header {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.noBoardsAvailable p {
+  font-size: 1rem;
+}
+
+
+
 .search {
     margin: 20px 0px;
     font-size: 1rem;
     height: 40px;
 }
-
 
 
 
