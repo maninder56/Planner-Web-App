@@ -8,7 +8,15 @@ import { useEffect, useState } from 'react';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
 import SwitchBoardOptionsLoadingSkeleton from './SwitchBoardOptionsLoadingSkeleton/SwitchBoardOptionsLoadingSkeleton';
+import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { GetAllBoardsRequest } from '@/app/dashboard/Services/boardService';
+import { BoardArray } from '@/app/dashboard/Types/boardTypes';
 
+type BoardsState = {
+    owned: BoardArray, 
+    member: BoardArray, 
+    viewer: BoardArray, 
+}; 
 
 export default function SwitchBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -16,79 +24,113 @@ export default function SwitchBoardOptions() {
 
     const [searchInput, setSearchInput] = useState(''); 
 
-    // temporary boards info 
-    const boards: switchBoardItem[] = [
-        {
-            name: 'My first Board', 
-            colour: 'soft-pink'
-        }, 
-        {
-            name: 'recipe app', 
-            colour: 'light-mint-green'
-        }, 
-        {
-            name: 'planner web app', 
-            colour: 'lavender-blue'
-        }, 
-        {
-            name: 'Ocean Notes',
-            colour: 'aqua',
-        },
-        {
-            name: 'Design Ideas',
-            colour: 'light-purple',
-        },
-        {
-            name: 'Marketing Campaign',
-            colour: 'bright-pink',
-        },
+    const [boards, setBoards] = useState<BoardsState>({
+        owned: [], member: [], viewer: []
+    });
 
-        // optional: duplicates to see repetition / UI scaling
-        {
-            name: 'Daily Tasks',
-            colour: 'soft-pink',
-        },
-        {
-            name: 'Fitness Tracker',
-            colour: 'aqua',
-        },
-        {
-            name: 'This is going to be a long name of the board, This is going to be a long name of the board, This is going to be a long name of the board', 
-            colour: 'light-purple',
+    function splitBoardArrayIntoGroups(array: BoardArray) {
+        const ownedBoards: BoardArray = []; 
+        const memberBoards: BoardArray = []; 
+        const viewerBoards: BoardArray = []; 
+
+        for (let item of array) {
+            switch(item.role) {
+                case 'Owner': 
+                    ownedBoards.push(item); 
+                    break; 
+                
+                case 'Member': 
+                    memberBoards.push(item); 
+                    break; 
+                
+                case 'Viewer': 
+                default: 
+                    viewerBoards.push(item); 
+            }
         }
-    ]; 
 
-    useEffect(() => {
-        async function fetchData() {
-            
+        return {
+            ownedBoards: ownedBoards, 
+            memberBoards: memberBoards, 
+            viewerBoards: viewerBoards,
         }; 
+    }
 
-        fetchData(); 
-    }, [])
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
+
+    //         if (result.ok) {
+    //             if (result.data !== undefined) {
+
+    //             }
+    //         }
+
+    //     }; 
+
+    //     fetchData(); 
+    // }, [])
+
+    if (loading) {
+        return (
+            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+                <SwitchBoardOptionsLoadingSkeleton />
+            </BigHoverPanel>
+        ); 
+    }
 
     return (
         <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
             <div className={styles.search}>
-            <SearchBar
-                disabled={loading}
-                value={searchInput}
-                setValue={(newValue) => setSearchInput(newValue)} />
+                <SearchBar
+                    disabled={loading}
+                    value={searchInput}
+                    setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {
-                loading ? 
-                <SwitchBoardOptionsLoadingSkeleton />
-                : 
+                boards.owned.length > 0 ? 
                 <div className={styles.boards}>
+                    <header>Your Boards</header>
                     {
-                        boards.map((b, i) => {
-                            return (
-                                <div key={i} className={styles[b.colour]}>
-                                    <span>{b.name}</span>
-                                </div>
-                            ); 
-                        })
+                        boards.owned.map((b) => 
+                            <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                {b.isFavoriteBoard && <span>star svg</span>}
+                                <span>{b.name}</span>
+                            </div>
+                        )
                     }
-                </div>   
+                </div>
+                : null
+            }
+            {
+                boards.member.length > 0 ? 
+                <div className={styles.boards}>
+                    <header>Your Boards</header>
+                    {
+                        boards.member.map((b) =>    
+                            <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                {b.isFavoriteBoard && <span>star svg</span>}
+                                <span>{b.name}</span>
+                            </div>
+                        )
+                    }
+                </div>
+                : null
+            }
+            {
+                boards.member.length > 0 ? 
+                <div className={styles.boards}>
+                    <header>Your Boards</header>
+                    {
+                        boards.viewer.map(b => 
+                            <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                {b.isFavoriteBoard && <span>star svg</span>}
+                                <span>{b.name}</span>
+                            </div>
+                        )
+                    }
+                </div>
+                : null
             }
         </BigHoverPanel>
     ); 
