@@ -58,14 +58,21 @@
 }
 
 .boards > div {
-  cursor: pointer;
+  position: relative;
   height: 100px;
+
   border-radius: 10px;
+  
   display: flex;
-  justify-content: center;
+  justify-content: end;
   align-items: end;
+
+  cursor: pointer;
+  
   box-shadow: 0 0 10px -5px black;
+  
   overflow: hidden;
+  
   transition: 
       transform 0.1s ease-out,
       outline 0.05s ease-out, 
@@ -78,17 +85,28 @@
     box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
 }
 
+.boards svg {
+  position: absolute;
+  top: 10;
+  right: 10;
+}
+
 .boards span {
     flex: 1 1 auto;
+    
+    padding: 10px;
+
+    font-size: 0.8rem;
     text-align: center;
+
     background-color: rgba(0, 0, 0, 0.8);
     color: rgb(255, 255, 255);
-    font-size: 0.8rem;
-    padding: 10px;
+
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 
 
 
