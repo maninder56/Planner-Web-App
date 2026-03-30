@@ -33,6 +33,32 @@ export default function SwitchBoardOptions() {
                                         fill="gold" stroke="#000" />
                                 </svg>
     
+    const filteredBoards = filterBoards(searchInput, boards); 
+
+    function filterBoards(search: string, boards?: BoardsState): BoardsState | undefined {
+
+        if (boards === undefined || boards.numberOfTotalBoards === 0 || searchInput.trim() === '') {
+            return boards; 
+        }
+
+        const searchLower = search.trim().toLowerCase(); 
+
+        const filterArray = (arr: BoardArray) => 
+            arr.filter(b => b.name.toLowerCase().includes(searchLower)); 
+
+        const owner = filterArray(boards.owned); 
+        const member = filterArray(boards.member); 
+        const viewer = filterArray(boards.viewer); 
+        const numberOfTotalBoards = owner.length + member.length + viewer.length; 
+
+        return {
+            owned: owner, 
+            member: member, 
+            viewer: viewer, 
+            numberOfTotalBoards: numberOfTotalBoards,
+        }
+    }
+
     function splitBoardArrayIntoGroups(array: BoardArray): BoardsState {
         const ownedBoards: BoardArray = []; 
         const memberBoards: BoardArray = []; 
@@ -116,6 +142,23 @@ export default function SwitchBoardOptions() {
             </BigHoverPanel>
         ); 
     }
+
+    if (filteredBoards !== undefined && filteredBoards.numberOfTotalBoards === 0) {
+        return (
+            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+                <div className={styles.search}>
+                    <SearchBar
+                        disabled={loading}
+                        value={searchInput}
+                        setValue={(newValue) => setSearchInput(newValue)} />
+                </div>
+                <div className={styles.noBoardsFound}>
+                    <header>No boards found</header>
+                    <p>We couldn’t find any boards matching your search. Try a different name or check your spelling.</p>
+                </div>
+            </BigHoverPanel>
+        ); 
+    }
     
 
     return (
@@ -127,55 +170,60 @@ export default function SwitchBoardOptions() {
                     setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {
-                boards.owned.length > 0 ? 
+                filteredBoards === undefined ? null : 
                 <>
-                <header className={styles.groupHeader}>Manage these boards</header>
-                <div className={styles.boards}>
-                    {
-                        boards.owned.map((b) => 
-                            <div key={b.boardId} className={styles[b.backgroundColour]}>
-                                {b.isFavoriteBoard && favouriteBoardStar}
-                                <span>{b.name}</span>
-                            </div>
-                        )
-                    }
-                </div>
+                {
+                    filteredBoards.owned.length > 0 ? 
+                    <>
+                    <header className={styles.groupHeader}>Manage these boards</header>
+                    <div className={styles.boards}>
+                        {
+                            filteredBoards.owned.map((b) => 
+                                <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                    {b.isFavoriteBoard && favouriteBoardStar}
+                                    <span>{b.name}</span>
+                                </div>
+                            )
+                        }
+                    </div>
+                    </>
+                    : null
+                }
+                {
+                    filteredBoards.member.length > 0 ? 
+                    <>
+                    <header className={styles.groupHeader}>Collaborate on these boards</header>
+                    <div className={styles.boards}>
+                        {
+                            filteredBoards.member.map((b) =>    
+                                <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                    {b.isFavoriteBoard && favouriteBoardStar}
+                                    <span>{b.name}</span>
+                                </div>
+                            )
+                        }
+                    </div>
+                    </>
+                    : null
+                }
+                {
+                    filteredBoards.viewer.length > 0 ? 
+                    <>
+                    <header className={styles.groupHeader}>View these boards</header>
+                    <div className={styles.boards}>
+                        {
+                            filteredBoards.viewer.map(b => 
+                                <div key={b.boardId} className={styles[b.backgroundColour]}>
+                                    {b.isFavoriteBoard && favouriteBoardStar}
+                                    <span>{b.name}</span>
+                                </div>
+                            )
+                        }
+                    </div>
+                    </>
+                    : null
+                }
                 </>
-                : null
-            }
-            {
-                boards.member.length > 0 ? 
-                <>
-                <header className={styles.groupHeader}>Collaborate on these boards</header>
-                <div className={styles.boards}>
-                    {
-                        boards.member.map((b) =>    
-                            <div key={b.boardId} className={styles[b.backgroundColour]}>
-                                {b.isFavoriteBoard && favouriteBoardStar}
-                                <span>{b.name}</span>
-                            </div>
-                        )
-                    }
-                </div>
-                </>
-                : null
-            }
-            {
-                boards.viewer.length > 0 ? 
-                <>
-                <header className={styles.groupHeader}>View these boards</header>
-                <div className={styles.boards}>
-                    {
-                        boards.viewer.map(b => 
-                            <div key={b.boardId} className={styles[b.backgroundColour]}>
-                                {b.isFavoriteBoard && favouriteBoardStar}
-                                <span>{b.name}</span>
-                            </div>
-                        )
-                    }
-                </div>
-                </>
-                : null
             }
         </BigHoverPanel>
     ); 
