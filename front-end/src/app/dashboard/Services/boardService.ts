@@ -53,7 +53,7 @@ export async function GetBoardRequest(boardId: number) {
 
         if (response.ok) {
             const data = await response.json(); 
-            const validData = BoardArraySchema.safeParse(data); 
+            const validData = BoardSchema.safeParse(data); 
 
             if (validData.success) {
                 return ApiRequestSuccessfull(validData.data); 
