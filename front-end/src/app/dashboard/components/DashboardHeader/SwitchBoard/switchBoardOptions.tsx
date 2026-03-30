@@ -22,7 +22,7 @@ type BoardsState = {
 
 export default function SwitchBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(false); 
 
     const [searchInput, setSearchInput] = useState(''); 
 
@@ -67,6 +67,8 @@ export default function SwitchBoardOptions() {
              console.log('API Response:', result);  
             if (result.ok && result.data !== undefined) {
                 setBoards(splitBoardArrayIntoGroups(result.data));                 
+            } else if (!result.ok && result.error === 'NotFound') {
+                setBoards({owned: [], member: [], viewer: [], numberOfTotalBoards: 0}); 
             } else {
                 setBoards(undefined); 
             }
@@ -75,10 +77,10 @@ export default function SwitchBoardOptions() {
         }
     }
 
-    useEffect(() => {
-        console.log('useEffect called');
-        fetchBoardData();  
-    }, [])
+    // useEffect(() => {
+    //     console.log('useEffect called');
+    //     fetchBoardData();  
+    // }, [])
 
     if (loading) {
         return (
@@ -122,7 +124,7 @@ export default function SwitchBoardOptions() {
             {
                 boards.owned.length > 0 ? 
                 <>
-                <header>Manage these boards</header>
+                <header className={styles.groupHeader}>Manage these boards</header>
                 <div className={styles.boards}>
                     {
                         boards.owned.map((b) => 
@@ -139,7 +141,7 @@ export default function SwitchBoardOptions() {
             {
                 boards.member.length > 0 ? 
                 <>
-                <header>Collaborate on these boards</header>
+                <header className={styles.groupHeader}>Collaborate on these boards</header>
                 <div className={styles.boards}>
                     {
                         boards.member.map((b) =>    
@@ -156,7 +158,7 @@ export default function SwitchBoardOptions() {
             {
                 boards.viewer.length > 0 ? 
                 <>
-                <header>View these boards</header>
+                <header className={styles.groupHeader}>View these boards</header>
                 <div className={styles.boards}>
                     {
                         boards.viewer.map(b => 
