@@ -37,11 +37,7 @@ export default function DashboardMenuButton() {
                 <NewBoardOptions /> 
                 : null
             }
-            {
-                isSwitchBoardOptionsOpen ? 
-                <SwitchBoardOptions />
-                : null
-            }
+            <SwitchBoardOptions isOpen={isSwitchBoardOptionsOpen} />
         </div>
     ); 
 }

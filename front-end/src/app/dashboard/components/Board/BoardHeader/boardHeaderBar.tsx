@@ -15,7 +15,7 @@ import BoardHeaderSkeleton from './BoardHeaderSkeleton/boardHeaderSkeleton';
 
 export default function BoardHeaderBar() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
-    const boardData = useBoardStore((state) => state.boardData); 
+    const boardData = useBoardStore((state) => state.currentBoardData); 
 
     if (isBoardLoading) {
         return <BoardHeaderSkeleton />

@@ -22,25 +22,39 @@ type BoardsState = {
     numberOfTotalBoards: number,
 }; 
 
-export default function SwitchBoardOptions() {
+export default function SwitchBoardOptions({
+    isOpen, 
+}: {
+    isOpen: boolean; 
+}) {
+    if (!isOpen) {
+        return null; 
+    }
+
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
-    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
-    const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const errorMessage = useBoardUIStore((state) => state.switchBoardOptionsErrorMessage); 
     const setErrorMessage = useBoardUIStore((state) => state.setSwitchBoardOptionsErrorMessage); 
+
+    const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
+    const boards = useBoardStore((state) => state.boards); 
+    const setBoards = useBoardStore((state) => state.setBoards); 
+    const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
+
     const [loading, setLoading] = useState(false); 
     const [searchInput, setSearchInput] = useState(''); 
-    const [boards, setBoards] = useState<BoardsState | undefined>();
-    const filteredBoards = filterBoards(searchInput, boards); 
+    const boardsState: BoardsState | undefined = boards && splitBoardArrayIntoGroups(boards); 
+    const filteredBoards = filterBoards(searchInput, boardsState); 
+    
     const favouriteBoardStar = <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11.245 4.174c.232-.666.347-.999.518-1.091a.5.5 0 0 1 .475 0c.171.092.287.425.518 1.091l1.53 4.402c.066.19.1.285.159.355a.5.5 0 0 0 .195.142c.085.034.185.036.386.04l4.66.096c.705.014 1.057.021 1.198.155a.5.5 0 0 1 .146.452c-.035.191-.315.404-.877.83l-3.714 2.816c-.16.12-.24.181-.289.26a.5.5 0 0 0-.074.229c-.007.092.022.188.08.38l1.35 4.46c.204.676.306 1.013.222 1.188a.5.5 0 0 1-.384.28c-.193.025-.482-.176-1.06-.579l-3.826-2.662c-.165-.114-.247-.172-.337-.194a.5.5 0 0 0-.24 0c-.09.022-.173.08-.337.194L7.718 19.68c-.579.403-.868.604-1.06.578a.5.5 0 0 1-.385-.279c-.084-.175.018-.512.222-1.187l1.35-4.461c.058-.192.087-.288.08-.38a.5.5 0 0 0-.074-.23c-.049-.078-.128-.138-.288-.26l-3.714-2.815c-.562-.426-.843-.639-.878-.83a.5.5 0 0 1 .147-.452c.14-.134.493-.141 1.198-.155l4.66-.095c.2-.005.3-.007.386-.041a.5.5 0 0 0 .195-.142c.059-.07.092-.165.158-.355z" 
                                         fill="gold" stroke="#000" />
                                 </svg>
 
+
     function filterBoards(search: string, boards?: BoardsState): BoardsState | undefined {
 
-        if (boards === undefined || boards.numberOfTotalBoards === 0 || searchInput.trim() === '') {
+        if (boards === undefined || boards.numberOfTotalBoards === 0 || search.trim() === '') {
             return boards; 
         }
 
@@ -100,9 +114,9 @@ export default function SwitchBoardOptions() {
             const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
              console.log('API Response:', result);  
             if (result.ok && result.data !== undefined) {
-                setBoards(splitBoardArrayIntoGroups(result.data));                 
+                setBoards(result.data);                 
             } else if (!result.ok && result.error === 'NotFound') {
-                setBoards({owned: [], member: [], viewer: [], numberOfTotalBoards: 0}); 
+                setBoards([]); 
             } else {
                 setBoards(undefined); 
             }
@@ -147,6 +161,10 @@ export default function SwitchBoardOptions() {
     }
 
     useEffect(() => {
+        if (boards) {
+            return; 
+        }
+
         console.log('useEffect called');
         fetchBoardData();  
     }, [])
@@ -170,29 +188,12 @@ export default function SwitchBoardOptions() {
         ); 
     }
 
-    if (boards.numberOfTotalBoards === 0) {
+    if (boards.length === 0) {
         return (
             <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.noBoardsAvailable}>
                     <header>No Boards Available</header>
                     <p>You don’t have any boards yet. Create a new board or ask your team to share one with you.</p>
-                </div>
-            </BigHoverPanel>
-        ); 
-    }
-
-    if (filteredBoards !== undefined && filteredBoards.numberOfTotalBoards === 0) {
-        return (
-            <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
-                <div className={styles.search}>
-                    <SearchBar
-                        disabled={loading}
-                        value={searchInput}
-                        setValue={(newValue) => setSearchInput(newValue)} />
-                </div>
-                <div className={styles.noBoardsFound}>
-                    <header>No boards found</header>
-                    <p>We couldn’t find any boards matching your search. Try a different name or check your spelling.</p>
                 </div>
             </BigHoverPanel>
         ); 
@@ -208,6 +209,13 @@ export default function SwitchBoardOptions() {
                     value={searchInput}
                     setValue={(newValue) => setSearchInput(newValue)} />
             </div>
+            {
+                filteredBoards.numberOfTotalBoards !== 0 ? null : 
+                <div className={styles.noBoardsFound}>
+                    <header>No boards found</header>
+                    <p>We couldn’t find any boards matching your search. Try a different name or check your spelling.</p>
+                </div>
+            }
             {
                 filteredBoards.owned.length === 0 ? null : 
                 <>

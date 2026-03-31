@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray } from "../Types/boardTypes";
 
 
 
@@ -41,7 +41,8 @@ type NormalisedBoardData = {
 type State = {
     isBoardLoading: boolean; 
     lastUsedBoardExists?: boolean; 
-    boardData?: BoardData, 
+    boards?: BoardArray; 
+    currentBoardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
     listOrder: ListId[], 
@@ -50,6 +51,8 @@ type State = {
 
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
+    setBoards: (boards?: BoardArray) => void; 
+    AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
 
@@ -65,7 +68,8 @@ type Action = {
 
 export const useBoardStore = create<State & Action>((set) => ({
     isBoardLoading: true,
-    boardData: undefined, 
+    boards: undefined, 
+    currentBoardData: undefined, 
     lastUsedBoardExists: undefined, 
     lists: {}, 
     cards: {}, 
@@ -79,9 +83,17 @@ export const useBoardStore = create<State & Action>((set) => ({
         set(() => ({ lastUsedBoardExists: exists}))
     }, 
 
+    setBoards: (boards) => set(() => ({
+        boards: boards,
+    })),
+
+    AddNewBoardToBoardArray: (board) => set((state) => ({
+        boards: state.boards === undefined ? [board] : [...state.boards, board],
+    })), 
+
     hydrateBoard: (data) => {
       set(() => ({
-            boardData: data.boardData, 
+            currentBoardData: data.boardData, 
             lists: data.lists, 
             cards: data.cards, 
             listOrder: data.listOrder, 
@@ -90,7 +102,7 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     resetBoardData: () => {
         set(() => ({ 
-            boardData: undefined, 
+            currentBoardData: undefined, 
             lists: {}, 
             cards: {}, 
             listOrder: [], 
