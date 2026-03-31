@@ -170,8 +170,6 @@ export default function SwitchBoardOptions() {
             console.log('useEffect called');
             fetchBoardData();  
         }
-        console.log('MOUNTED');
-    return () => console.log('UNMOUNTED');
     }, [boards]); 
 
     if (loading) {

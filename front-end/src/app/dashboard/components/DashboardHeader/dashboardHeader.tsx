@@ -12,10 +12,14 @@ import ProfileButton from './Profile/ProfileButton/profileButton';
 import SwitchBoardButton from './SwitchBoard/switchBoardButton';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UserProfileDataRequest } from '@/Services/userService';
+import { useBoardUIStore } from '../../Store/boardUIStore';
+import SwitchBoardOptions from './SwitchBoard/switchBoardOptions';
 
 export default function DashboardHeader() {
     const setUserProfile = useUserStore((state) => state.setUserData); 
     const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
+
+    const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
 
     useEffect(() => {
         async function fetchUserData() {
@@ -54,6 +58,7 @@ export default function DashboardHeader() {
                     <ProfileButton />
                 </div>
             </div>
+            {isSwitchBoardOptionsOpen && <SwitchBoardOptions/> }
         </section>
     ); 
 }
