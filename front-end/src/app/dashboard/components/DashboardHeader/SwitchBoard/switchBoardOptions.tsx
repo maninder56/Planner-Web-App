@@ -27,7 +27,8 @@ export default function SwitchBoardOptions() {
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
-    const [errorMessage, setErrorMessage] = useState(''); 
+    const errorMessage = useBoardUIStore((state) => state.switchBoardOptionsErrorMessage); 
+    const setErrorMessage = useBoardUIStore((state) => state.setSwitchBoardOptionsErrorMessage); 
     const [loading, setLoading] = useState(false); 
     const [searchInput, setSearchInput] = useState(''); 
     const [boards, setBoards] = useState<BoardsState | undefined>();
@@ -120,6 +121,7 @@ export default function SwitchBoardOptions() {
             if (result.ok && result.data !== undefined) {
                 hydrateBoard(NormaliseBoardData(result.data)); 
                 setLastUsedBoard(boardId); 
+                setErrorMessage(undefined); 
             } else {
                 setActivePanel('switchBoardOptions'); 
                 setErrorMessage('Failed to switch board, Please try again.'); 
@@ -131,31 +133,35 @@ export default function SwitchBoardOptions() {
     }
 
     async function setLastUsedBoard(boardId: number) {
-            const lastUsedBoardResult =  await ApiRequestWithRefreshTokenAttemptAndData(
-                UpdateLastUsedBoardRequest, boardId); 
-    
-            if (lastUsedBoardResult.ok) {
-                setLastUsedBoardExists(true); 
-            } 
-        }
-    
+        const lastUsedBoardResult =  await ApiRequestWithRefreshTokenAttemptAndData(
+            UpdateLastUsedBoardRequest, boardId); 
 
-    // useEffect(() => {
-    //     console.log('useEffect called');
-    //     fetchBoardData();  
-    // }, [])
+        if (lastUsedBoardResult.ok) {
+            setLastUsedBoardExists(true); 
+        } 
+    }
+
+    function handleCloseButton() {
+        setActivePanel('none'); 
+        setErrorMessage(undefined); 
+    }
+
+    useEffect(() => {
+        console.log('useEffect called');
+        fetchBoardData();  
+    }, [])
 
     if (loading) {
         return (
-            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+            <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <SwitchBoardOptionsLoadingSkeleton />
             </BigHoverPanel>
         ); 
     }
 
-    if (boards === undefined) {
+    if (boards === undefined || filteredBoards === undefined) {
         return (
-            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+            <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.failedToLoadBoards}>
                     <header>Failed to load boards, Please try again.</header>
                     <Button name='Try again' color='red' onClick={fetchBoardData} />
@@ -166,7 +172,7 @@ export default function SwitchBoardOptions() {
 
     if (boards.numberOfTotalBoards === 0) {
         return (
-            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+            <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.noBoardsAvailable}>
                     <header>No Boards Available</header>
                     <p>You don’t have any boards yet. Create a new board or ask your team to share one with you.</p>
@@ -177,7 +183,7 @@ export default function SwitchBoardOptions() {
 
     if (filteredBoards !== undefined && filteredBoards.numberOfTotalBoards === 0) {
         return (
-            <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
+            <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.search}>
                     <SearchBar
                         disabled={loading}
@@ -194,8 +200,8 @@ export default function SwitchBoardOptions() {
     
 
     return (
-        <BigHoverPanel title='Switch board' onCloseClick={() => setActivePanel('none') }>
-            <div>{errorMessage}</div>
+        <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
+            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
             <div className={styles.search}>
                 <SearchBar
                     disabled={loading}
@@ -203,62 +209,54 @@ export default function SwitchBoardOptions() {
                     setValue={(newValue) => setSearchInput(newValue)} />
             </div>
             {
-                filteredBoards === undefined ? null : 
+                filteredBoards.owned.length === 0 ? null : 
                 <>
-                {
-                    filteredBoards.owned.length > 0 ? 
-                    <>
-                    <header className={styles.groupHeader}>Manage these boards</header>
-                    <div className={styles.boards}>
-                        {
-                            filteredBoards.owned.map((b) => 
-                                <div key={b.boardId} className={styles[b.backgroundColour]}
-                                    onClick={() => handleBoardClick(b.boardId)}>
-                                    {b.isFavoriteBoard && favouriteBoardStar}
-                                    <span>{b.name}</span>
-                                </div>
-                            )
-                        }
-                    </div>
-                    </>
-                    : null
-                }
-                {
-                    filteredBoards.member.length > 0 ? 
-                    <>
-                    <header className={styles.groupHeader}>Collaborate on these boards</header>
-                    <div className={styles.boards}>
-                        {
-                            filteredBoards.member.map((b) =>    
-                                <div key={b.boardId} className={styles[b.backgroundColour]}
-                                    onClick={() => handleBoardClick(b.boardId)}>
-                                    {b.isFavoriteBoard && favouriteBoardStar}
-                                    <span>{b.name}</span>
-                                </div>
-                            )
-                        }
-                    </div>
-                    </>
-                    : null
-                }
-                {
-                    filteredBoards.viewer.length > 0 ? 
-                    <>
-                    <header className={styles.groupHeader}>View these boards</header>
-                    <div className={styles.boards}>
-                        {
-                            filteredBoards.viewer.map(b => 
-                                <div key={b.boardId} className={styles[b.backgroundColour]}
-                                    onClick={() => handleBoardClick(b.boardId)}>
-                                    {b.isFavoriteBoard && favouriteBoardStar}
-                                    <span>{b.name}</span>
-                                </div>
-                            )
-                        }
-                    </div>
-                    </>
-                    : null
-                }
+                <header className={styles.groupHeader}>Manage these boards</header>
+                <div className={styles.boards}>
+                    {
+                        filteredBoards.owned.map((b) => 
+                            <div key={b.boardId} className={styles[b.backgroundColour]}
+                                onClick={() => handleBoardClick(b.boardId)}>
+                                {b.isFavoriteBoard && favouriteBoardStar}
+                                <span>{b.name}</span>
+                            </div>
+                        )
+                    }
+                </div>
+                </>
+            }
+            {
+                filteredBoards.member.length === 0 ? null : 
+                <>
+                <header className={styles.groupHeader}>Collaborate on these boards</header>
+                <div className={styles.boards}>
+                    {
+                        filteredBoards.member.map((b) =>    
+                            <div key={b.boardId} className={styles[b.backgroundColour]}
+                                onClick={() => handleBoardClick(b.boardId)}>
+                                {b.isFavoriteBoard && favouriteBoardStar}
+                                <span>{b.name}</span>
+                            </div>
+                        )
+                    }
+                </div>
+                </>
+            }
+            {
+                filteredBoards.viewer.length === 0 ? null : 
+                <>
+                <header className={styles.groupHeader}>View these boards</header>
+                <div className={styles.boards}>
+                    {
+                        filteredBoards.viewer.map(b => 
+                            <div key={b.boardId} className={styles[b.backgroundColour]}
+                                onClick={() => handleBoardClick(b.boardId)}>
+                                {b.isFavoriteBoard && favouriteBoardStar}
+                                <span>{b.name}</span>
+                            </div>
+                        )
+                    }
+                </div>
                 </>
             }
         </BigHoverPanel>
