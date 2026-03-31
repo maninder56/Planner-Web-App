@@ -41,7 +41,7 @@ type NormalisedBoardData = {
 type State = {
     isBoardLoading: boolean; 
     lastUsedBoardExists?: boolean; 
-    boards?: BoardArray; 
+    boards: BoardArray | null; 
     currentBoardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
@@ -51,7 +51,7 @@ type State = {
 
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
-    setBoards: (boards?: BoardArray) => void; 
+    setBoards: (boards: BoardArray) => void; 
     AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
@@ -68,7 +68,7 @@ type Action = {
 
 export const useBoardStore = create<State & Action>((set) => ({
     isBoardLoading: true,
-    boards: undefined, 
+    boards: null, 
     currentBoardData: undefined, 
     lastUsedBoardExists: undefined, 
     lists: {}, 
@@ -88,7 +88,7 @@ export const useBoardStore = create<State & Action>((set) => ({
     })),
 
     AddNewBoardToBoardArray: (board) => set((state) => ({
-        boards: state.boards === undefined ? [board] : [...state.boards, board],
+        boards: state.boards === null ? [board] : [...state.boards, board],
     })), 
 
     hydrateBoard: (data) => {

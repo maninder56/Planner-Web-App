@@ -23,7 +23,7 @@ export default function SwitchBoardButton() {
                 <Image src={'./switchBoard.svg'} alt='switch board icon' width={20} height={20} />
                 <span>Switch Board</span>
             </button>
-            <SwitchBoardOptions isOpen={isSwitchBoardOptionsOpen} />
+            {isSwitchBoardOptionsOpen && <SwitchBoardOptions/> }
         </div>
     ); 
 }

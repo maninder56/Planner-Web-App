@@ -4,7 +4,7 @@ import styles from './switchBoardOptions.module.css';
 import { switchBoardItem } from '@/Types/board';
 import BigHoverPanel from '@/Components/HoverPanels/BigHoverPanel/bigHoverPanel';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
 import SwitchBoardOptionsLoadingSkeleton from './SwitchBoardOptionsLoadingSkeleton/SwitchBoardOptionsLoadingSkeleton';
@@ -22,15 +22,7 @@ type BoardsState = {
     numberOfTotalBoards: number,
 }; 
 
-export default function SwitchBoardOptions({
-    isOpen, 
-}: {
-    isOpen: boolean; 
-}) {
-    if (!isOpen) {
-        return null; 
-    }
-
+export default function SwitchBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const errorMessage = useBoardUIStore((state) => state.switchBoardOptionsErrorMessage); 
     const setErrorMessage = useBoardUIStore((state) => state.setSwitchBoardOptionsErrorMessage); 
@@ -42,8 +34,10 @@ export default function SwitchBoardOptions({
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
 
     const [loading, setLoading] = useState(false); 
+    const [failedToLoadBoards, setFailedToLoadBoards] = useState(false); 
     const [searchInput, setSearchInput] = useState(''); 
-    const boardsState: BoardsState | undefined = boards && splitBoardArrayIntoGroups(boards); 
+
+    const boardsState: BoardsState = splitBoardArrayIntoGroups(boards); 
     const filteredBoards = filterBoards(searchInput, boardsState); 
     
     const favouriteBoardStar = <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,10 +45,9 @@ export default function SwitchBoardOptions({
                                         fill="gold" stroke="#000" />
                                 </svg>
 
+    function filterBoards(search: string, boards: BoardsState): BoardsState {
 
-    function filterBoards(search: string, boards?: BoardsState): BoardsState | undefined {
-
-        if (boards === undefined || boards.numberOfTotalBoards === 0 || search.trim() === '') {
+        if (boards.numberOfTotalBoards === 0 || search.trim() === '') {
             return boards; 
         }
 
@@ -76,11 +69,20 @@ export default function SwitchBoardOptions({
         }
     }
 
-    function splitBoardArrayIntoGroups(array: BoardArray): BoardsState {
+    function splitBoardArrayIntoGroups(array: BoardArray | null): BoardsState {
         const ownedBoards: BoardArray = []; 
         const memberBoards: BoardArray = []; 
         const viewerBoards: BoardArray = []; 
-        const numberOfTotalBoards = array.length; 
+        const numberOfTotalBoards = 0; 
+
+        if (array === null) {
+            return {
+                owned: ownedBoards, 
+                member: memberBoards, 
+                viewer: viewerBoards,
+                numberOfTotalBoards: numberOfTotalBoards,
+            }
+        }
 
         for (let item of array) {
             switch(item.role) {
@@ -102,31 +104,12 @@ export default function SwitchBoardOptions({
             owned: ownedBoards, 
             member: memberBoards, 
             viewer: viewerBoards,
-            numberOfTotalBoards: numberOfTotalBoards,
+            numberOfTotalBoards: array.length,
         }; 
     }
 
-    async function fetchBoardData() {
-        console.log('fetchBoardData called');
-        setLoading(true);    
-        
-        try {
-            const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
-             console.log('API Response:', result);  
-            if (result.ok && result.data !== undefined) {
-                setBoards(result.data);                 
-            } else if (!result.ok && result.error === 'NotFound') {
-                setBoards([]); 
-            } else {
-                setBoards(undefined); 
-            }
-        } finally {
-            setLoading(false); 
-        }
-    }
 
     async function handleBoardClick(boardId: number) {
-        setActivePanel('none'); 
         setBoardLoading(true); 
         
         try {
@@ -136,8 +119,8 @@ export default function SwitchBoardOptions({
                 hydrateBoard(NormaliseBoardData(result.data)); 
                 setLastUsedBoard(boardId); 
                 setErrorMessage(undefined); 
+                setActivePanel('none');     
             } else {
-                setActivePanel('switchBoardOptions'); 
                 setErrorMessage('Failed to switch board, Please try again.'); 
             }
 
@@ -160,14 +143,36 @@ export default function SwitchBoardOptions({
         setErrorMessage(undefined); 
     }
 
-    useEffect(() => {
-        if (boards) {
-            return; 
-        }
+    async function fetchBoardData() {
+        console.log('fetchBoardData called');
+        setLoading(true);    
+        setFailedToLoadBoards(false); 
 
-        console.log('useEffect called');
-        fetchBoardData();  
-    }, [])
+        
+        try {
+            const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
+             console.log('API Response:', result);  
+            if (result.ok && result.data !== undefined) {
+                setBoards(result.data);                 
+            } else if (!result.ok && result.error === 'NotFound') {
+                setBoards([]);  
+            } else {
+                setBoards([]); 
+                setFailedToLoadBoards(true);
+            }
+        } finally {
+            setLoading(false); 
+        }
+    }
+
+    useEffect(() => {
+        if (boards === null) {
+            console.log('useEffect called');
+            fetchBoardData();  
+        }
+        console.log('MOUNTED');
+    return () => console.log('UNMOUNTED');
+    }, [boards]); 
 
     if (loading) {
         return (
@@ -177,7 +182,7 @@ export default function SwitchBoardOptions({
         ); 
     }
 
-    if (boards === undefined || filteredBoards === undefined) {
+    if (failedToLoadBoards) {  
         return (
             <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.failedToLoadBoards}>
@@ -188,7 +193,7 @@ export default function SwitchBoardOptions({
         ); 
     }
 
-    if (boards.length === 0) {
+    if (boards !== null && boards.length === 0) {
         return (
             <BigHoverPanel title='Switch board' onCloseClick={handleCloseButton}>
                 <div className={styles.noBoardsAvailable}>

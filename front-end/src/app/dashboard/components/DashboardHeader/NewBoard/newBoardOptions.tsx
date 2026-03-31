@@ -19,6 +19,7 @@ export default function NewBoardOptions() {
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const resetBoardData = useBoardStore((state) => state.resetBoardData); 
+    const addNewBoard = useBoardStore((state) => state.AddNewBoardToBoardArray); 
 
     const colours: BoardColour[] = BoardColoursList; 
 
@@ -40,6 +41,7 @@ export default function NewBoardOptions() {
                 if (result.data !== undefined) {
                     hydrateBoard(NormaliseBoardData(result.data)); 
                     setLastUsedBoard(result.data.boardId); 
+                    addNewBoard(result.data); 
                 }
                 else {
                     resetBoardData(); 
