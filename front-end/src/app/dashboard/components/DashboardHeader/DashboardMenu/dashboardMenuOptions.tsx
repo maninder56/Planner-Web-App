@@ -1,3 +1,4 @@
+'use client'
 
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
 import styles from './dashboardMenuOptions.module.css'; 
@@ -5,10 +6,14 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { permanentRedirect, redirect } from 'next/navigation';
+import { AppRoute } from '@/Types/appRoutes';
 
 export default function DashboardMenuOptions() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const profileRoute: AppRoute = '/profile'; 
 
     return (
         <HoverOptionsPanel title='Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
@@ -29,7 +34,10 @@ export default function DashboardMenuOptions() {
                     <Image src={'./switchBoard.svg'} alt='switch board icon' width={20}  height={20}/>
                     <span>Switch board</span>
                 </button>
-                <button>
+                <button onClick={(e) => {
+                    e.stopPropagation(); 
+                    permanentRedirect(profileRoute);
+                }}>
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>
                     <span>Profile</span>
                 </button>

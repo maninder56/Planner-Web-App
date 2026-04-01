@@ -1,5 +1,7 @@
 
-export type appRoute = 
-    '/dashboard'    | 
-    '/login'        | 
-    '/signup'       ; 
+export type AppRoute = 
+    '/dashboard'        | 
+    '/login'            | 
+    '/signup'           |
+    '/profile'          | 
+    '/changepassword'   ; 

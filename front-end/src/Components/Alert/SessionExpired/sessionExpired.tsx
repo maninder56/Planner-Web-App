@@ -3,10 +3,10 @@
 import HoverConfirmation from '@/Components/HoverConfirmation/hoverConfirmation';
 import styles from './sessionExpired.module.css'; 
 import { permanentRedirect } from 'next/navigation';
-import { appRoute } from '@/Types/appRoutes';
+import { AppRoute } from '@/Types/appRoutes';
 
 export default function SessionExpired() {
-    const logInRoute: appRoute = '/login'; 
+    const logInRoute: AppRoute = '/login'; 
     return (
         <HoverConfirmation 
             title='Session Expired' 

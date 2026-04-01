@@ -6,7 +6,7 @@ import { useState } from 'react';
 import LoginForm from '../components/loginForm';
 import { LogInUserRequest } from '../Services/User';
 import { permanentRedirect } from 'next/navigation';
-import { appRoute } from '@/Types/appRoutes';
+import { AppRoute } from '@/Types/appRoutes';
 
 
 export default function Login() {
@@ -16,7 +16,7 @@ export default function Login() {
         const apiResult = await LogInUserRequest(userData); 
 
         if (apiResult.ok) {
-            const dashboard: appRoute = '/dashboard'; 
+            const dashboard: AppRoute = '/dashboard'; 
             permanentRedirect(dashboard); 
         } else if (apiResult.error === 'BadRequest' || apiResult.error === 'NotFound') {
             setFormError('Invalid Email or Password'); 

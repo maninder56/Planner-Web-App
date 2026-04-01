@@ -3,7 +3,7 @@
 import { useState } from "react";
 import SignupForm from "../components/signupForm";
 import { SignupUserRequest } from "../Services/User";
-import { appRoute } from "@/Types/appRoutes";
+import { AppRoute } from "@/Types/appRoutes";
 import { permanentRedirect } from "next/navigation";
 
 export default function Signup() {
@@ -13,7 +13,7 @@ export default function Signup() {
         const apiResult = await SignupUserRequest(useData); 
 
         if (apiResult.ok) {
-            const dashboard: appRoute = '/dashboard'; 
+            const dashboard: AppRoute = '/dashboard'; 
             permanentRedirect(dashboard); 
         } else if (apiResult.error === 'Conflict'){
             setFormError('An account with this email already exists.'); 

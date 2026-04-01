@@ -1,0 +1,10 @@
+
+
+.userDataFailedToLoad {
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.userDataFailedToLoad button {
+    font-size: 1rem;
+}

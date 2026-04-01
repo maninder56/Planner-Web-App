@@ -1,7 +1,5 @@
 'use client'
 
-import { panelType, profileColour } from '@/app/dashboard/Types/UIState';
-import IconButton from '@/Components/Buttons/iconButton';
 
 import styles from './ProfileOptions.module.css'; 
 import ProfileIcon from '../ProfileIcon/profileIcon';
@@ -13,6 +11,9 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { UserProfile } from '@/Types/userTypes';
+import { profileColour } from '@/Utilities/user';
+import { permanentRedirect, redirect } from 'next/navigation';
+import { AppRoute } from '@/Types/appRoutes';
 
 export default function ProfileOptions({
     userProfile,
@@ -23,6 +24,7 @@ export default function ProfileOptions({
 }) {
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const profileRoute: AppRoute = '/profile'; 
 
     return (
         <HoverOptionsPanel title='Account' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
@@ -30,7 +32,9 @@ export default function ProfileOptions({
                 <div>
                     <ProfileInfo userProfile={userProfile} iconColour={iconColour} />
                 </div>
-                <button>
+                <button onClick={() => {
+                    permanentRedirect(profileRoute);
+                }}>
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>
                     <span>Profile</span>
                 </button>
