@@ -1,7 +1,7 @@
 
-.wrapper * {
+/* .wrapper * {
     border: solid 1px rgb(255, 0, 0);
-}
+} */
 
 .wrapper {
     flex: 1 1 auto; 
@@ -31,7 +31,8 @@
 .dashboardLink {
     position: absolute;
     top: 20px; 
-    right: 10px;
+    /* right: 10px; */
+    left: 10px;
 
     font-size: 1rem;
 }
@@ -52,7 +53,6 @@
 
 .appLogo svg {
     margin: auto 10px;
-
 }
 
 .appLogo h1 {
@@ -65,7 +65,7 @@
 
 .content {
     margin-bottom: 50px;
-    border: solid 2px blue;
+    /* border: solid 2px blue; */
 }
 
 .content * {
@@ -77,10 +77,6 @@
 
     .wrapper main {
         margin-top: 8vh;
-    }
-
-    .wrapper section {
-        /* margin: 20px; */
     }
 
     .appLogo svg {

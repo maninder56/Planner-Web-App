@@ -1,18 +1,18 @@
 
 import Link from 'next/link';
 import styles from './layout.module.css'; 
-import { appRoute } from '@/Types/appRoutes';
+import { AppRoute } from '@/Types/appRoutes';
 
 export default function Layout({
     children,
 }: {
     children: React.ReactNode
 }) { 
-    const dashboardRoute: appRoute = '/dashboard'; 
+    const dashboardRoute: AppRoute = '/dashboard'; 
     return (
         <div className={styles.wrapper}>
             <main>
-                <Link href={dashboardRoute} className={[styles.dashboardLink, 'button red'].join(' ')}>Dashboard</Link>
+                {/* <Link href={dashboardRoute} className={[styles.dashboardLink, 'button red'].join(' ')}>&#129136; Dashboard</Link> */}
                 <section>
                     <div className={styles.appLogo}>
                         <svg width="50" xmlns="http://www.w3.org/2000/svg" height="50" viewBox="0 0 100 100" fill="none">
@@ -22,7 +22,6 @@ export default function Layout({
                         <h1>Planner</h1>
                     </div>
                     <div className={styles.content}>
-                        content
                         {children}
                     </div>
                 </section>
