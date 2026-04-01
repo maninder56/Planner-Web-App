@@ -16,10 +16,12 @@ import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAnd
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const resetBoardData = useBoardStore((state) => state.resetBoardData); 
     const addNewBoard = useBoardStore((state) => state.AddNewBoardToBoardArray); 
+    const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
 
     const colours: BoardColour[] = BoardColoursList; 
 
@@ -32,6 +34,7 @@ export default function NewBoardOptions() {
         e.stopPropagation(); 
         e.preventDefault(); 
 
+        setBoardLoading(true); 
         setButtonsDisabled(true); 
 
         try {
@@ -52,7 +55,8 @@ export default function NewBoardOptions() {
                 setErrorMessage('Something Went wrong, Please try again.'); 
             }
         } finally {
-            setButtonsDisabled(false); 
+            setButtonsDisabled(false);
+            setBoardLoading(false); 
         }
     }
 
