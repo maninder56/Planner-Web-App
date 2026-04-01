@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray } from "../Types/boardTypes";
 
 
 
@@ -41,7 +41,8 @@ type NormalisedBoardData = {
 type State = {
     isBoardLoading: boolean; 
     lastUsedBoardExists?: boolean; 
-    boardData?: BoardData, 
+    boards: BoardArray | null; 
+    currentBoardData?: BoardData, 
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
     listOrder: ListId[], 
@@ -50,7 +51,10 @@ type State = {
 
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
+    setBoards: (boards: BoardArray) => void; 
+    AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
     hydrateBoard: (data: NormalisedBoardData) => void; 
+    resetBoardData: () => void; 
 
     setLastUsedBoardExists: (exists?: boolean) => void; 
 
@@ -64,7 +68,8 @@ type Action = {
 
 export const useBoardStore = create<State & Action>((set) => ({
     isBoardLoading: true,
-    boardData: undefined, 
+    boards: null, 
+    currentBoardData: undefined, 
     lastUsedBoardExists: undefined, 
     lists: {}, 
     cards: {}, 
@@ -78,13 +83,30 @@ export const useBoardStore = create<State & Action>((set) => ({
         set(() => ({ lastUsedBoardExists: exists}))
     }, 
 
+    setBoards: (boards) => set(() => ({
+        boards: boards,
+    })),
+
+    AddNewBoardToBoardArray: (board) => set((state) => ({
+        boards: state.boards === null ? [board] : [...state.boards, board],
+    })), 
+
     hydrateBoard: (data) => {
       set(() => ({
-            boardData: data.boardData, 
+            currentBoardData: data.boardData, 
             lists: data.lists, 
             cards: data.cards, 
             listOrder: data.listOrder, 
-        }))
+        })); 
+    }, 
+
+    resetBoardData: () => {
+        set(() => ({ 
+            currentBoardData: undefined, 
+            lists: {}, 
+            cards: {}, 
+            listOrder: [], 
+         })); 
     }, 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 

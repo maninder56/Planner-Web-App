@@ -15,7 +15,6 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 export default function DashboardMenuButton() {
     const isDashboardMenuOptionsOpen = useBoardUIStore((state) => state.activePanel === 'dashboardMenuButtonOptions'); 
     const isNewBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'newBoardOptions'); 
-    const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     
     return (
@@ -35,11 +34,6 @@ export default function DashboardMenuButton() {
             {
                 isNewBoardOptionsOpen ? 
                 <NewBoardOptions /> 
-                : null
-            }
-            {
-                isSwitchBoardOptionsOpen ? 
-                <SwitchBoardOptions />
                 : null
             }
         </div>

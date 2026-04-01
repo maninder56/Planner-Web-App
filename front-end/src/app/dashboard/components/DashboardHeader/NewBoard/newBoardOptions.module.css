@@ -94,9 +94,6 @@
     margin-top: 30px;
 }
 
-.boardNameForm > div {
-    margin-top: 20px;
-}
 
 .boardNameForm label {
     font-size: 0.9rem;
@@ -112,6 +109,8 @@
 .formButton {
     display: flex;
     justify-content: center;
+
+    margin-top: 15px;
 }
 
 .formButton button {
@@ -151,4 +150,17 @@
     background-color: #c7c9e8;
 }
 
+
+.errorMessage {
+    font-size: 1rem;
+    color: red;
+    text-align: center;
+
+    margin-top: 10px;
+}
+
+.errorMessage p {
+    padding: 0;
+    margin: 0;
+}
 

@@ -15,11 +15,11 @@ export default function ProfileInfo({
     return (
         <div className={styles.wrapper}>
             <div className={styles.iconWrapper}>
-                <ProfileIcon userName={userProfile.Name} colour={iconColour} />
+                <ProfileIcon userName={userProfile.name} colour={iconColour} />
             </div>
             <div className={styles.userDetails}>
-                <p>{userProfile.Name}</p>
-                <p>{userProfile.Email}</p>
+                <p>{userProfile.name}</p>
+                <p>{userProfile.email}</p>
             </div>
         </div>
     ); 

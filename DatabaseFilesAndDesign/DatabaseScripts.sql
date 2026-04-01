@@ -91,6 +91,14 @@ SELECT *
 FROM boardlists
 WHERE BoardId = 38;
 
+SELECT *
+FROM boardmembers BM
+JOIN boards B
+    ON BM.BoardId = B.BoardId
+WHERE BM.UserId = 1;
+
+SELECT *
+FROM boardstar;
 
 
 

@@ -38,7 +38,7 @@ export default function ProfileButton() {
                 }}>
                     {
                         useData !== undefined ? 
-                            <ProfileIcon userName={useData.Name} colour={profileColour} /> 
+                            <ProfileIcon userName={useData.name} colour={profileColour} /> 
                         : null
                     }
             </button>

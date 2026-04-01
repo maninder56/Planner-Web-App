@@ -13,7 +13,7 @@ import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardCont
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
-    const boardDetials = useBoardStore((state) => state.boardData); 
+    const boardDetials = useBoardStore((state) => state.currentBoardData); 
     const listOrder = useBoardStore((state) => state.listOrder); 
     const lastUsedBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
     const setListOrder = useBoardStore((state) => state.setListOrder);

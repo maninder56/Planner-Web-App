@@ -15,7 +15,7 @@ import { LastUsedBoardRequest } from './Services/boardService';
 import Board from './components/Board/board';
 import { UserProfileDataRequest } from '@/Services/userService';
 import { useUserStore } from './Store/userStore';
-import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import HoverConfirmation from '@/Components/HoverConfirmation/hoverConfirmation';
 import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
@@ -32,7 +32,7 @@ export default function Dashboard() {
                 <DashboardHeader />
                 <Board />   
                 {
-                    !isSessionExpired ? 
+                    isSessionExpired ? 
                     <SessionExpired />
                     : null
                 }

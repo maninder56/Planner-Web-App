@@ -10,19 +10,25 @@ import DashboardSearchButton from './DashboardSearch/DashboardSearchButton/dashb
 import NewBoardButton from './NewBoard/newBoardButton';
 import ProfileButton from './Profile/ProfileButton/profileButton';
 import SwitchBoardButton from './SwitchBoard/switchBoardButton';
-import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UserProfileDataRequest } from '@/Services/userService';
+import { useBoardUIStore } from '../../Store/boardUIStore';
+import SwitchBoardOptions from './SwitchBoard/switchBoardOptions';
 
 export default function DashboardHeader() {
     const setUserProfile = useUserStore((state) => state.setUserData); 
     const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
+
+    const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
 
     useEffect(() => {
         async function fetchUserData() {
             const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
             if (result.ok && result.data !== undefined) {
                 setUserProfile(result.data);  
-            }  
+            } else {
+                setUserProfile(undefined); 
+            }
             setUserProfileLoading(false); 
         }
         fetchUserData();
@@ -52,6 +58,7 @@ export default function DashboardHeader() {
                     <ProfileButton />
                 </div>
             </div>
+            {isSwitchBoardOptionsOpen && <SwitchBoardOptions/> }
         </section>
     ); 
 }

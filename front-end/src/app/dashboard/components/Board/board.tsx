@@ -6,7 +6,7 @@ import { NormaliseBoardData } from '../../Utilities/boardData';
 import styles from './board.module.css'; 
 import BoardContent from './BoardContent/boardContent';
 import BoardHeaderBar from './BoardHeader/boardHeaderBar';
-import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { useBoardUIStore } from '../../Store/boardUIStore';
 
 export default function Board() {
