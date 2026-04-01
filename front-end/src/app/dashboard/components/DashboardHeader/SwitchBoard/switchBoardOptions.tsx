@@ -144,14 +144,12 @@ export default function SwitchBoardOptions() {
     }
 
     async function fetchBoardData() {
-        console.log('fetchBoardData called');
         setLoading(true);    
         setFailedToLoadBoards(false); 
 
         
         try {
             const result = await ApiRequestWithRefreshTokenAttempt(GetAllBoardsRequest); 
-             console.log('API Response:', result);  
             if (result.ok && result.data !== undefined) {
                 setBoards(result.data);                 
             } else if (!result.ok && result.error === 'NotFound') {
@@ -167,10 +165,9 @@ export default function SwitchBoardOptions() {
 
     useEffect(() => {
         if (boards === null) {
-            console.log('useEffect called');
             fetchBoardData();  
         }
-    }, [boards]); 
+    }, []); 
 
     if (loading) {
         return (
