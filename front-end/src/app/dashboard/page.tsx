@@ -1,22 +1,11 @@
 'use client'
 
-import { panelType, profileColour } from '@/app/dashboard/Types/UIState';
-import { Suspense, useEffect, useRef, useState } from 'react';
 
 import styles from './page.module.css'; 
-import BoardHeaderBar from './components/Board/BoardHeader/boardHeaderBar';
-import { BoardDataFromAPI } from './Types/boardTypes';
-import { useBoardStore } from './Store/boardStore';
-import { NormaliseBoardData } from './Utilities/boardData';
-import BoardContent from './components/Board/BoardContent/boardContent';
 import { useBoardUIStore } from './Store/boardUIStore';
 import DashboardHeader from './components/DashboardHeader/dashboardHeader';
-import { LastUsedBoardRequest } from './Services/boardService';
 import Board from './components/Board/board';
-import { UserProfileDataRequest } from '@/Services/userService';
-import { useUserStore } from './Store/userStore';
-import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
-import HoverConfirmation from '@/Components/HoverConfirmation/hoverConfirmation';
+import { useUserStore } from '../../Store/userStore';
 import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
 export default function Dashboard() {

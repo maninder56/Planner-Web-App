@@ -2,10 +2,10 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './profileButton.module.css'; 
 import ProfileIcon from '../ProfileIcon/profileIcon';
-import { profileColour } from '@/app/dashboard/Types/UIState';
+
 import ProfileOptions from '../ProfileOptions/ProfileOptions';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
-import { useUserStore } from '@/app/dashboard/Store/userStore';
+import { useUserStore } from '@/Store/userStore';
 import ProfileButtonLoadingSkeleton from './ProfileButtonLoadingSkeleton/profileButtonLoadingSkeleton';
 
 

@@ -1,0 +1,94 @@
+
+.wrapper * {
+    border: solid 1px rgb(255, 0, 0);
+}
+
+.wrapper {
+    flex: 1 1 auto; 
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+
+
+.wrapper main {
+    flex: 1 1 auto;
+    position: relative;
+
+    margin: 5px;
+    margin-top: 5vh;
+    max-width: 600px;
+
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: center;
+
+    box-shadow: 0px 0px 20px -15px black;
+}
+
+.dashboardLink {
+    position: absolute;
+    top: 20px; 
+    right: 10px;
+
+    font-size: 1rem;
+}
+
+.wrapper section {
+    flex: 1 1 auto;
+    margin: 60px 5px;
+    max-width: 400px;
+}
+
+.appLogo {
+    margin: 10px 0px;
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.appLogo svg {
+    margin: auto 10px;
+
+}
+
+.appLogo h1 {
+    padding: 0;
+    margin: auto 0;
+    font-weight: 400;
+    font-size: 1.8rem;
+}
+
+
+.content {
+    margin-bottom: 50px;
+    border: solid 2px blue;
+}
+
+.content * {
+    border: none;
+}
+
+
+@media (min-width: 500) {
+
+    .wrapper main {
+        margin-top: 8vh;
+    }
+
+    .wrapper section {
+        /* margin: 20px; */
+    }
+
+    .appLogo svg {
+        width: 60px;
+        height: 60px;
+    }
+
+    .appLogo h1 {
+        font-size: 2rem;
+    }
+}

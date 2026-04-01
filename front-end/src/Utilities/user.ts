@@ -1,4 +1,5 @@
-import { profileColour } from "../Types/UIState";
+
+export type profileColour = 'red' | 'blue' | 'green'; 
 
 export function GetRandomUserProfileColour(numberOfColours: number): profileColour {
     const randomNumber = Math.floor(Math.random() * numberOfColours); 

@@ -1,7 +1,7 @@
 import { UserProfile } from "@/Types/userTypes";
 import { create } from "zustand";
-import { profileColour } from "../Types/UIState";
-import { GetRandomUserProfileColour } from "../Utilities/user";
+
+import { GetRandomUserProfileColour, profileColour } from "@/Utilities/user";
 
 
 
