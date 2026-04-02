@@ -111,6 +111,12 @@ body {
   /* border: 1px solid #e2e8f0; */
 }
 
+.button.transparent-with-outline {
+  background-color: transparent;
+  color: #334155;
+  outline: solid 1.5px rgb(183, 183, 183);
+}
+
 .button.transparent.light-outline {
   outline: solid 1.5px rgb(183, 183, 183);
 }

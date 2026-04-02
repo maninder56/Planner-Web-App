@@ -1,2 +1,2 @@
 
-export type ButtonColourType = 'red' | 'transparent' | 'black' | 'blue'; 
+export type ButtonColourType = 'red' | 'transparent' | 'transparent-with-outline' | 'black' | 'blue'; 

@@ -2,7 +2,7 @@
 
 import { useUserStore } from '@/Store/userStore';
 import styles from './page.module.css'; 
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import FormInput from '@/Components/Inputs/formInput';
 import Loading from './loading';
 import Button from '@/Components/Buttons/button';
@@ -10,6 +10,9 @@ import Link from 'next/link';
 import { AppRoute } from '@/Types/appRoutes';
 import { useBoardStore } from '../dashboard/Store/boardStore';
 import { useBoardUIStore } from '../dashboard/Store/boardUIStore';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { UpdateUserNameRequest, UserProfileDataRequest } from '@/Services/userService';
+import { permanentRedirect } from 'next/navigation';
 
 
 interface errorsInterface {
@@ -23,22 +26,62 @@ export default function Page () {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [loading, setLoading] = useState(true); 
-    const [userName, setUserName] = useState(userData?.name ?? ''); 
+    const [userName, setUserName] = useState(''); 
     const [fromErrors, setFormErrors] = useState<errorsInterface>({}); 
     const [buttonsDisabled, setButtonsDisabled] = useState(false); 
 
     const changePasswordRoute: AppRoute = '/changepassword'; 
     const dashboardRoute: AppRoute = '/dashboard'; 
 
-    function handleFormSubmit() {
+    function validateFormValues() {
+        let error: string | undefined = undefined; 
+        const name = userName.trim(); 
 
+        if (userData === undefined) {
+            return false; 
+        }
+
+        if (name === '') {
+            error = 'User name is Required'; 
+        } else if (name === userData?.name) {
+            error = 'User name is unchanged'; 
+        }
+
+        setFormErrors({...fromErrors, userName: error}); 
+        return error === undefined; 
+    }
+
+    async function handleFormSubmit(e: FormEvent) {
+        e.preventDefault(); 
+        setButtonsDisabled(true); 
+
+        try {
+            if (validateFormValues() && userData !== undefined) {
+                const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateUserNameRequest, userName); 
+                if (request.ok) {
+                    setUserData({name: userName, email: userData.email}); 
+                } else {
+                    setFormErrors({...fromErrors, formSubmitError: 'Failed to update user profile, please try again'}); 
+                }
+            }
+
+        } finally {
+            setButtonsDisabled(false); 
+        }
     }
 
     async function fetchData() {
         setLoading(true); 
 
         try {
-            await new Promise(r => setTimeout(r, 5000)); 
+            const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
+            if (result.ok && result.data !== undefined) {
+                setUserData(result.data); 
+                setUserName(result.data.name); 
+            } else {
+                setUserData(undefined); 
+            }
+
         } finally {
             setLoading(false)
         }
@@ -46,10 +89,17 @@ export default function Page () {
 
     useEffect(() => {
         setActivePanel('none'); 
-    })
+
+        if (!userData) {
+            fetchData(); 
+        } else {
+            setUserName(userData.name); 
+            setLoading(false); 
+        }
+    }, [])
 
 
-    if (loading && userData === undefined) {
+    if (loading) {
         return (
             <div className={styles.wrapper}>
                 <Loading />
@@ -69,7 +119,7 @@ export default function Page () {
     return (
         <div className={styles.wrapper}>
             <form onSubmit={handleFormSubmit}>
-                <header>Profile</header>
+                <header className={styles.profileHeader}>Profile</header>
                 <div className={styles.formError}>{fromErrors.formSubmitError}</div>
                 <FormInput label='User Name' placeholder='Your Name' maxLength={100} value={userName} error={fromErrors.userName} type='text'
                     setValue={(value) => {
@@ -84,16 +134,21 @@ export default function Page () {
                     <header>Email</header>
                     <p>{userData.email}</p>
                 </div>
-                <div>
-                    <button className='button blue' type='submit' 
-                        disabled={buttonsDisabled || userName === userData.name}
-                    >Save</button>
+                <button className={[styles.saveButton, 'button blue'].join(' ')} type='submit' 
+                    disabled={buttonsDisabled || userName.trim() === userData.name || userName.trim() === ''}
+                >Save</button>
+                <div className={styles.changePassword}>
+                    <Button name='Change Password' color='blue' disabled={buttonsDisabled} onClick={() => { }} />
                 </div>
-                <Link className={[styles.changePassword, 'button blue'].join(' ')} href={changePasswordRoute}>Change Password</Link>
-                <div>
+                <div className={styles.deleteAccount}>
                     <Button name='Delete Account' color='red' disabled={buttonsDisabled} onClick={() => { }} />
                 </div>
-                <Link href={dashboardRoute} className={[styles.dashboardLink, 'button transparent light-outline'].join(' ')}>Dashboard</Link>
+                <div className={styles.dashboardButton}>
+                    <Button name='Go to Dashboard' color='transparent-with-outline' disabled={buttonsDisabled} 
+                        onClick={() => { 
+                            permanentRedirect(dashboardRoute); 
+                        }} />
+                </div>
             </form>
         </div>
     ); 

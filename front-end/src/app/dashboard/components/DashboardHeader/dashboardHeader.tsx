@@ -34,6 +34,7 @@ export default function DashboardHeader() {
     }
 
     useEffect(() => {
+        // need to check if user data is undefined or not rather than loadign check
         if (!profileLoaded) {
             fetchUserData();
         }

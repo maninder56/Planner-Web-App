@@ -1,4 +1,7 @@
 
+/* .wrapper * {
+    border: solid 1px red;
+} */
 
 .userDataFailedToLoad {
     text-align: center;
@@ -7,4 +10,64 @@
 
 .userDataFailedToLoad button {
     font-size: 1rem;
+}
+
+
+.profileHeader {
+    margin-top: 30px;
+
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.formError {
+    margin-top: 10px;
+
+    min-height: 1.1rem;
+
+    font-size: 1rem;
+    text-align: center;
+    color: red;
+}
+
+
+.fromElement {
+    margin: 10px;
+    margin-left: 15px;
+
+    font-size: 1rem;
+}
+
+.fromElement p {
+    margin-left: 5px;
+}
+
+.saveButton {
+    display: block;
+    margin: 30px auto;
+    margin-top: 40px;
+}
+
+.changePassword {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.deleteAccount {
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboardButton {
+    display: flex;
+    justify-content: center;
+}
+
+
+@media (min-width: 600) {
+    .profileHeader {
+        font-size: 1.6rem;
+    }
 }
