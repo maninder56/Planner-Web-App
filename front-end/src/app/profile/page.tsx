@@ -13,6 +13,7 @@ import { useBoardUIStore } from '../dashboard/Store/boardUIStore';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateUserNameRequest, UserProfileDataRequest } from '@/Services/userService';
 import { permanentRedirect } from 'next/navigation';
+import DeleteAccountDialogBox from './components/deleteAccountDialogBox/deleteAccountDialogBox';
 
 
 interface errorsInterface {
@@ -29,6 +30,7 @@ export default function Page () {
     const [userName, setUserName] = useState(''); 
     const [fromErrors, setFormErrors] = useState<errorsInterface>({}); 
     const [buttonsDisabled, setButtonsDisabled] = useState(false); 
+    const [showDeleteDialogBox, setShowDeleteDialogBox] = useState(false); 
 
     const changePasswordRoute: AppRoute = '/changepassword'; 
     const dashboardRoute: AppRoute = '/dashboard'; 
@@ -141,7 +143,7 @@ export default function Page () {
                     <Button name='Change Password' color='blue' disabled={buttonsDisabled} onClick={() => { }} />
                 </div>
                 <div className={styles.deleteAccount}>
-                    <Button name='Delete Account' color='red' disabled={buttonsDisabled} onClick={() => { }} />
+                    <Button name='Delete Account' color='red' disabled={buttonsDisabled} onClick={() => setShowDeleteDialogBox(true)} />
                 </div>
                 <div className={styles.dashboardButton}>
                     <Button name='Go to Dashboard' color='transparent-with-outline' disabled={buttonsDisabled} 
@@ -150,6 +152,7 @@ export default function Page () {
                         }} />
                 </div>
             </form>
+            {showDeleteDialogBox && <DeleteAccountDialogBox onCancle={() => setShowDeleteDialogBox(false)} />}
         </div>
     ); 
 }

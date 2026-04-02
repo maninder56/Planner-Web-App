@@ -9,12 +9,14 @@ export default function HoverConfirmation({
     onCancel, 
     onConfirmName,
     onConfirm,
+    confirmationError,
 }: {
     title: string; 
     message: string; 
     onCancel?: () => void;
     onConfirmName: string;  
     onConfirm: () => Promise<void> | void; 
+    confirmationError?: string; 
 }) {
 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
@@ -33,11 +35,12 @@ export default function HoverConfirmation({
         <div className={styles.wrapper}>
             <div className={styles.confirmation}>
                 <header>{title}</header>
+                <p className={styles.confirmationError}>{confirmationError}</p>
                 <p>{message}</p>
                 <div className={styles.buttons}>
                     {
                         onCancel !== undefined ? 
-                        <button className={`button transparent light-outline`} onClick={() => oncancel} disabled={buttonDisabled}>Cancel</button>
+                        <button className={`button transparent light-outline`} onClick={() => onCancel()} disabled={buttonDisabled}>Cancel</button>
                         : null 
                     }
                     <Button name={onConfirmName} color='red' onClick={handleOnConfirm} disabled={buttonDisabled} />
