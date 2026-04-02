@@ -6,6 +6,13 @@
     padding: 0;
 }
 
+.error {
+    font-size: 0.9rem;
+    color: red;
+    text-align: center;
+    margin: 2px 0;
+}
+
 .optionsList > hr {
     color: rgb(0, 0, 0, 0.1);
 }

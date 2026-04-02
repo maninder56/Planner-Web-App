@@ -14,6 +14,9 @@ import { UserProfile } from '@/Types/userTypes';
 import { profileColour } from '@/Utilities/user';
 import { permanentRedirect, redirect } from 'next/navigation';
 import { AppRoute } from '@/Types/appRoutes';
+import { useState } from 'react';
+import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
+import { LogoutUserRequest } from '@/Services/userService';
 
 export default function ProfileOptions({
     userProfile,
@@ -24,22 +27,46 @@ export default function ProfileOptions({
 }) {
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    
+    const [buttonDisabled, setButtonDisabled] = useState(false); 
+    const [error, setError] = useState(''); 
+    
     const profileRoute: AppRoute = '/profile'; 
+    const homeRoute: AppRoute = '/'; 
+
+    async function handleLogout() {
+        setButtonDisabled(true); 
+
+        try {
+            const result = await ApiRequestWithRefreshTokenAttempt(LogoutUserRequest); 
+            if (result.ok) {
+                permanentRedirect(homeRoute); 
+            } else {
+                setError('Log out failed, please try again.'); 
+            }
+
+        } finally {
+            setButtonDisabled(false); 
+        }
+    }
 
     return (
         <HoverOptionsPanel title='Account' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.optionsList}>
+                <div className={styles.error}>{error}</div>
                 <div>
                     <ProfileInfo userProfile={userProfile} iconColour={iconColour} />
                 </div>
-                <button onClick={() => {
-                    permanentRedirect(profileRoute);
-                }}>
+                <button disabled={buttonDisabled}
+                    onClick={() => {
+                        permanentRedirect(profileRoute);
+                    }}
+                >
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>
                     <span>Profile</span>
                 </button>
                 <hr />
-                <button>
+                <button disabled={buttonDisabled} onClick={handleLogout}>
                     <Image src={'./logout-icon.svg'} alt='logout icon' width={20}  height={20}/>
                     <span>Logout</span>
                 </button>

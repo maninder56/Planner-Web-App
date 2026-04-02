@@ -6,6 +6,13 @@
     padding: 0;
 }
 
+.error {
+    font-size: 0.9rem;
+    color: red;
+    text-align: center;
+    margin: 2px 0;
+}
+
 .optionsList > hr {
     color: rgb(0, 0, 0, 0.1);
 }
@@ -25,6 +32,12 @@
 
 .optionsList > button:hover {
     background-color: rgba(0, 0, 0, 5%);
+}
+
+.optionsList > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 
