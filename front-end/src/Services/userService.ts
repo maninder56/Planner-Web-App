@@ -30,7 +30,7 @@ export async function LogoutUserRequest() {
 }
 
 
-export async function ChangeUserPasswordRequest(oldPassword: string, newPassword: string) {
+export async function ChangeUserPasswordRequest(data: {oldPassword: string, newPassword: string}) {
     const subUrl = accountRoute + '/password'; 
     const request: RequestInit = {
         headers: {
@@ -39,8 +39,8 @@ export async function ChangeUserPasswordRequest(oldPassword: string, newPassword
         method: 'PATCH', 
         credentials: 'include',
         body: JSON.stringify({
-            OldPassword: oldPassword, 
-            NewPassword: newPassword,
+            OldPassword: data.oldPassword, 
+            NewPassword: data.newPassword,
         }),
     }; 
 

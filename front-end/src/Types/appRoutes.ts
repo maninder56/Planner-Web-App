@@ -5,4 +5,4 @@ export type AppRoute =
     '/login'            | 
     '/signup'           |
     '/profile'          | 
-    '/changepassword'   ; 
+    '/profile/changepassword'   ; 

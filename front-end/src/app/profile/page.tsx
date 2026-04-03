@@ -36,7 +36,7 @@ export default function Page () {
     const [buttonsDisabled, setButtonsDisabled] = useState(false); 
     const [showDeleteDialogBox, setShowDeleteDialogBox] = useState(false); 
 
-    const changePasswordRoute: AppRoute = '/changepassword'; 
+    const changePasswordRoute: AppRoute = '/profile/changepassword'; 
     const dashboardRoute: AppRoute = '/dashboard'; 
 
     function validateFormValues() {
@@ -151,7 +151,9 @@ export default function Page () {
                     disabled={buttonsDisabled || userName.trim() === userData.name || userName.trim() === ''}
                 >Save</button>
                 <div className={styles.changePassword}>
-                    <Button name='Change Password' color='blue' disabled={buttonsDisabled} onClick={() => { }} />
+                    <Button name='Change Password' color='blue' disabled={buttonsDisabled} onClick={() => {
+                        permanentRedirect(changePasswordRoute); 
+                     }} />
                 </div>
                 <div className={styles.deleteAccount}>
                     <Button name='Delete Account' color='red' disabled={buttonsDisabled} onClick={() => setShowDeleteDialogBox(true)} />
