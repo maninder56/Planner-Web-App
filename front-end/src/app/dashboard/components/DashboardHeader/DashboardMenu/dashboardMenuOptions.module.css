@@ -4,6 +4,7 @@
 .optionsList {
     margin: 0;
     padding: 0;
+    min-width: 150px;
 }
 
 .error {

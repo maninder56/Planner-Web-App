@@ -19,10 +19,10 @@ import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import { LogoutUserRequest } from '@/Services/userService';
 
 export default function ProfileOptions({
-    userProfile,
+    userData,
     iconColour,
 }: {
-    userProfile: UserProfile;   
+    userData?: UserProfile;   
     iconColour: profileColour; 
 }) {
 
@@ -55,7 +55,7 @@ export default function ProfileOptions({
             <div className={styles.optionsList}>
                 <div className={styles.error}>{error}</div>
                 <div>
-                    <ProfileInfo userProfile={userProfile} iconColour={iconColour} />
+                    {userData && <ProfileInfo userProfile={userData} iconColour={iconColour} />}
                 </div>
                 <button disabled={buttonDisabled}
                     onClick={() => {

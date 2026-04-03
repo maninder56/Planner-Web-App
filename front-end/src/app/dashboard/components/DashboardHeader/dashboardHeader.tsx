@@ -16,30 +16,7 @@ import { useBoardUIStore } from '../../Store/boardUIStore';
 import SwitchBoardOptions from './SwitchBoard/switchBoardOptions';
 
 export default function DashboardHeader() {
-    const setUserProfile = useUserStore((state) => state.setUserData); 
-    const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
-    const profileLoaded = useUserStore((state) => state.userData !== undefined); 
-
     const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
-
-    async function fetchUserData() {
-        setUserProfileLoading(true); 
-        const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
-        if (result.ok && result.data !== undefined) {
-            setUserProfile(result.data);  
-        } else {
-            setUserProfile(undefined); 
-        }
-        setUserProfileLoading(false); 
-    }
-
-    useEffect(() => {
-        // need to check if user data is undefined or not rather than loadign check
-        if (!profileLoaded) {
-            fetchUserData();
-        }
-    }, [])
-
 
     return (
         <section className={styles.wrapper}>

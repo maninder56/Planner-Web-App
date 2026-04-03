@@ -6,26 +6,26 @@ import { GetRandomUserProfileColour, profileColour } from "@/Utilities/user";
 
 
 type State = {
-    isUserDataLoading: boolean; 
-    userData?: UserProfile
+    sessionExpired: boolean; 
+    userData?: UserProfile; 
     profileIconColour: profileColour; 
 }
 
 type Action = {
-    setUserDataLoading: (isLoading: boolean) => void; 
+    setSessionExpired: (expired: boolean) => void; 
     setUserData: (data?: UserProfile) => void; 
 }
 
 export const useUserStore = create<State & Action>((set) => ({
-    isUserDataLoading: true, 
+    sessionExpired: false, 
     userData: undefined,
     profileIconColour: GetRandomUserProfileColour(3),
-
-    setUserDataLoading: (isLoading) => {
-        set(() => ({ isUserDataLoading: isLoading }))
-    },
   
-    setUserData: (data) => {
-        set(() => ({ userData: data }))
-    }, 
+    setSessionExpired: (expired) => set(() => ({
+        sessionExpired: expired,
+    })),
+    
+    setUserData: (data) => set(() => ({ 
+        userData: data 
+    })), 
 })); 

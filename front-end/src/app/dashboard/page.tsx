@@ -10,7 +10,7 @@ import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const isSessionExpired = useUserStore((state) => (state.userData === undefined) && !state.isUserDataLoading); 
+    const isSessionExpired = useUserStore((state) => state.sessionExpired); 
 
     return (
         <div className={styles.page}
