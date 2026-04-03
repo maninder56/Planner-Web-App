@@ -4,6 +4,7 @@ import styles from './hoverConfirmation.module.css';
 import Button from '../Buttons/button';
 
 export default function HoverConfirmation({
+    className,
     title, 
     message,
     onCancel, 
@@ -11,6 +12,7 @@ export default function HoverConfirmation({
     onConfirm,
     confirmationError,
 }: {
+    className?: string; 
     title: string; 
     message: string; 
     onCancel?: () => void;
@@ -32,7 +34,7 @@ export default function HoverConfirmation({
     }
 
     return (
-        <div className={styles.wrapper}>
+        <div className={[styles.wrapper, className ?? ''].join(' ')}>
             <div className={styles.confirmation}>
                 <header>{title}</header>
                 <p className={styles.confirmationError}>{confirmationError}</p>

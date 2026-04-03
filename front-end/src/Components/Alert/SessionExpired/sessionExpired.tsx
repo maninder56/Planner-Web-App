@@ -9,6 +9,7 @@ export default function SessionExpired() {
     const logInRoute: AppRoute = '/login'; 
     return (
         <HoverConfirmation 
+            className={styles.hoverConfirmation}
             title='Session Expired' 
             message='Your session has expired. Please log in again to continue.' 
             onConfirmName='Login' 

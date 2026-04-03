@@ -14,6 +14,7 @@ import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAnd
 import { UpdateUserNameRequest, UserProfileDataRequest } from '@/Services/userService';
 import { permanentRedirect } from 'next/navigation';
 import DeleteAccountDialogBox from './components/deleteAccountDialogBox/deleteAccountDialogBox';
+import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
 
 interface errorsInterface {
@@ -24,6 +25,9 @@ interface errorsInterface {
 export default function Page () {
     const userData = useUserStore((state) => state.userData); 
     const setUserData = useUserStore((state) => state.setUserData); 
+    const sessionExpired = useUserStore((state) => state.sessionExpired); 
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [loading, setLoading] = useState(true); 
@@ -62,6 +66,8 @@ export default function Page () {
                 const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateUserNameRequest, userName); 
                 if (request.ok) {
                     setUserData({name: userName, email: userData.email}); 
+                } else if (request.error === 'Unauthorized') {
+                    setSessionExpired(true);
                 } else {
                     setFormErrors({...fromErrors, formSubmitError: 'Failed to update user profile, please try again'}); 
                 }
@@ -80,8 +86,12 @@ export default function Page () {
             if (result.ok && result.data !== undefined) {
                 setUserData(result.data); 
                 setUserName(result.data.name); 
+            } else if (!result.ok && result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+                setUserData(undefined); 
             } else {
                 setUserData(undefined); 
+                await new Promise(r => setTimeout(r, 1000)); 
             }
 
         } finally {
@@ -114,6 +124,7 @@ export default function Page () {
             <div className={styles.userDataFailedToLoad}>
                 <p>Failed to load user data</p>
                 <Button name='Try again' color='red' disabled={buttonsDisabled} onClick={fetchData} />
+                {sessionExpired && <SessionExpired /> }
             </div>
         ); 
     }
@@ -152,6 +163,7 @@ export default function Page () {
                         }} />
                 </div>
             </form>
+            {sessionExpired && <SessionExpired /> }
             {showDeleteDialogBox && <DeleteAccountDialogBox onCancle={() => setShowDeleteDialogBox(false)} />}
         </div>
     ); 

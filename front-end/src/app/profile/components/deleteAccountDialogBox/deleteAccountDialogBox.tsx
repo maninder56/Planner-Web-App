@@ -5,6 +5,7 @@ import { DeleteUserProfileRequest } from '@/Services/userService';
 import { useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
 import { AppRoute } from '@/Types/appRoutes';
+import { useUserStore } from '@/Store/userStore';
 
 
 export default function DeleteAccountDialogBox({
@@ -13,7 +14,7 @@ export default function DeleteAccountDialogBox({
     onCancle: () => void; 
 }) {
 
-    // need to add session expired property to change and set
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const [confirmError, setConfirmError] = useState(''); 
     const homeRoute: AppRoute = '/'; 
@@ -23,7 +24,7 @@ export default function DeleteAccountDialogBox({
         if (result.ok) {
             permanentRedirect(homeRoute); 
         } else if (result.error === 'Unauthorized') {
-            // set session expired to true
+            setSessionExpired(true); 
             setConfirmError('Request failed, plesae try again'); 
         } else {
             setConfirmError('Request failed, plesae try again'); 
