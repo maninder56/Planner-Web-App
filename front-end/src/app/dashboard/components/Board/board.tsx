@@ -14,24 +14,27 @@ export default function Board() {
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
+    const lastBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
+
+    async function fetchData() {
+        const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
+        if (dataRequest.ok) {
+            if (dataRequest.data !== undefined) {
+                hydrateBoard(NormaliseBoardData(dataRequest.data)); 
+                setLastUsedBoardExists(true); 
+            }
+        } else if (dataRequest.error === 'NotFound') {
+            setLastUsedBoardExists(false); 
+            setActivePanel('switchBoardOptions'); 
+        }
+
+        setBoardLoading(false); 
+    }
 
     useEffect(() => {
-        const fetchData = async () => {
-            const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
-            if (dataRequest.ok) {
-                if (dataRequest.data !== undefined) {
-                    hydrateBoard(NormaliseBoardData(dataRequest.data)); 
-                    setLastUsedBoardExists(true); 
-                }
-            } else if (dataRequest.error === 'NotFound') {
-                setLastUsedBoardExists(false); 
-                setActivePanel('switchBoardOptions'); 
-            }
-
-            setBoardLoading(false); 
-        }; 
-
-        fetchData(); 
+        if (!lastBoardExists) {
+            fetchData(); 
+        }
     }, []); 
 
 

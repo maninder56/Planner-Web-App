@@ -102,7 +102,10 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     resetBoardData: () => {
         set(() => ({ 
+            isBoardLoading: true,
+            boards: null, 
             currentBoardData: undefined, 
+            lastUsedBoardExists: undefined,
             lists: {}, 
             cards: {}, 
             listOrder: [], 

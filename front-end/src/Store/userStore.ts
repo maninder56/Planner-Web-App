@@ -14,6 +14,7 @@ type State = {
 type Action = {
     setSessionExpired: (expired: boolean) => void; 
     setUserData: (data?: UserProfile) => void; 
+    resetUserData: () => void; 
 }
 
 export const useUserStore = create<State & Action>((set) => ({
@@ -27,5 +28,11 @@ export const useUserStore = create<State & Action>((set) => ({
     
     setUserData: (data) => set(() => ({ 
         userData: data 
+    })), 
+
+    resetUserData: () => set(() => ({
+        sessionExpired: false, 
+        userData: undefined, 
+        profileIconColour: GetRandomUserProfileColour(3),
     })), 
 })); 

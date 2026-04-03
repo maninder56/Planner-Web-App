@@ -11,10 +11,13 @@ import { AppRoute } from '@/Types/appRoutes';
 import { useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import { LogoutUserRequest } from '@/Services/userService';
+import { useUserStore } from '@/Store/userStore';
 
 export default function DashboardMenuOptions() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const resetBoardData = useBoardStore((state) => state.resetBoardData); 
+    const resetUserData = useUserStore((state) => state.resetUserData); 
 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [error, setError] = useState(''); 
@@ -28,6 +31,8 @@ export default function DashboardMenuOptions() {
         try {
             const result = await ApiRequestWithRefreshTokenAttempt(LogoutUserRequest); 
             if (result.ok) {
+                resetBoardData(); 
+                resetUserData(); 
                 permanentRedirect(homeRoute); 
             } else {
                 setError('Log out failed, please try again.'); 

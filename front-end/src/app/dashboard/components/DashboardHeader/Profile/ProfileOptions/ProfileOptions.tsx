@@ -17,6 +17,8 @@ import { AppRoute } from '@/Types/appRoutes';
 import { useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import { LogoutUserRequest } from '@/Services/userService';
+import { useUserStore } from '@/Store/userStore';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function ProfileOptions({
     userData,
@@ -25,6 +27,8 @@ export default function ProfileOptions({
     userData?: UserProfile;   
     iconColour: profileColour; 
 }) {
+    const resetBoardData = useBoardStore((state) => state.resetBoardData); 
+    const resetUserData = useUserStore((state) => state.resetUserData); 
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     
@@ -40,6 +44,8 @@ export default function ProfileOptions({
         try {
             const result = await ApiRequestWithRefreshTokenAttempt(LogoutUserRequest); 
             if (result.ok) {
+                resetBoardData(); 
+                resetUserData(); 
                 permanentRedirect(homeRoute); 
             } else {
                 setError('Log out failed, please try again.'); 
