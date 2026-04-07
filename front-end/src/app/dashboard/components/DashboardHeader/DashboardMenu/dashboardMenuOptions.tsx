@@ -6,7 +6,7 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
-import { permanentRedirect, redirect } from 'next/navigation';
+import { permanentRedirect, redirect, useRouter } from 'next/navigation';
 import { AppRoute } from '@/Types/appRoutes';
 import { useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
@@ -21,6 +21,8 @@ export default function DashboardMenuOptions() {
 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [error, setError] = useState(''); 
+
+    const router = useRouter(); 
     
     const profileRoute: AppRoute = '/profile'; 
     const homeRoute: AppRoute = '/'; 
@@ -69,7 +71,7 @@ export default function DashboardMenuOptions() {
                     disabled={buttonDisabled}
                     onClick={(e) => {
                         e.stopPropagation(); 
-                        permanentRedirect(profileRoute);
+                        router.push(profileRoute); 
                 }}>
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>
                     <span>Profile</span>

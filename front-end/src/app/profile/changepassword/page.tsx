@@ -9,7 +9,7 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { AppRoute } from '@/Types/appRoutes';
 import { ValidatePassword } from '@/Utilities/validations';
 import Button from '@/Components/Buttons/button';
-import { permanentRedirect } from 'next/navigation';
+import { permanentRedirect, useRouter } from 'next/navigation';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { ChangeUserPasswordRequest } from '@/Services/userService';
 import PasswordchangedDialogBox from './components/passwordChangedDialogBox';
@@ -27,6 +27,8 @@ export default function Page () {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const router = useRouter(); 
 
     const [oldPassword, setOldPassword] = useState(''); 
     const [newPassword, setNewPassword] = useState(''); 
@@ -177,7 +179,7 @@ export default function Page () {
                     }}/>
                 <div className={styles.buttons}>
                     <Button name='Cancel' color='transparent-with-outline' disabled={buttonsDisabled} onClick={() => {
-                        permanentRedirect(profileRoute); 
+                        router.push(profileRoute); 
                     }} />
                     <button className={[styles.saveButton, 'button blue'].join(' ')} type='submit'
                         disabled={buttonsDisabled || disableSaveButton()}

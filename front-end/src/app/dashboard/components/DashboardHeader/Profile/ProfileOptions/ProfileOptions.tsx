@@ -12,7 +12,7 @@ import Image from 'next/image';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { UserProfile } from '@/Types/userTypes';
 import { profileColour } from '@/Utilities/user';
-import { permanentRedirect, redirect } from 'next/navigation';
+import { permanentRedirect, redirect, useRouter } from 'next/navigation';
 import { AppRoute } from '@/Types/appRoutes';
 import { useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
@@ -34,6 +34,8 @@ export default function ProfileOptions({
     
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [error, setError] = useState(''); 
+
+    const router = useRouter(); 
     
     const profileRoute: AppRoute = '/profile'; 
     const homeRoute: AppRoute = '/'; 
@@ -65,7 +67,7 @@ export default function ProfileOptions({
                 </div>
                 <button disabled={buttonDisabled}
                     onClick={() => {
-                        permanentRedirect(profileRoute);
+                        router.push(profileRoute); 
                     }}
                 >
                     <Image src={'./profile-icon.svg'} alt='profile icon' width={20}  height={20}/>

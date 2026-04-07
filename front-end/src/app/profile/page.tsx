@@ -12,7 +12,7 @@ import { useBoardStore } from '../dashboard/Store/boardStore';
 import { useBoardUIStore } from '../dashboard/Store/boardUIStore';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateUserNameRequest, UserProfileDataRequest } from '@/Services/userService';
-import { permanentRedirect } from 'next/navigation';
+import { permanentRedirect, useRouter } from 'next/navigation';
 import DeleteAccountDialogBox from './components/deleteAccountDialogBox/deleteAccountDialogBox';
 import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
 
@@ -29,6 +29,8 @@ export default function Page () {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const router = useRouter(); 
 
     const [loading, setLoading] = useState(true); 
     const [userName, setUserName] = useState(''); 
@@ -152,17 +154,11 @@ export default function Page () {
                 >Save</button>
                 <div className={styles.changePassword}>
                     <Button name='Change Password' color='blue' disabled={buttonsDisabled} onClick={() => {
-                        permanentRedirect(changePasswordRoute); 
+                        router.push(changePasswordRoute); 
                      }} />
                 </div>
                 <div className={styles.deleteAccount}>
                     <Button name='Delete Account' color='red' disabled={buttonsDisabled} onClick={() => setShowDeleteDialogBox(true)} />
-                </div>
-                <div className={styles.dashboardButton}>
-                    <Button name='Go to Dashboard' color='transparent-with-outline' disabled={buttonsDisabled} 
-                        onClick={() => { 
-                            permanentRedirect(dashboardRoute); 
-                        }} />
                 </div>
             </form>
             {sessionExpired && <SessionExpired /> }

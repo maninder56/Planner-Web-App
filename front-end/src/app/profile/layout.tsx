@@ -1,18 +1,28 @@
+'use client'
 
 import Link from 'next/link';
 import styles from './layout.module.css'; 
 import { AppRoute } from '@/Types/appRoutes';
+import Button from '@/Components/Buttons/button';
+import { useRouter } from 'next/navigation';
 
 export default function Layout({
     children,
 }: {
     children: React.ReactNode
 }) { 
+    const router = useRouter(); 
+
     const dashboardRoute: AppRoute = '/dashboard'; 
     return (
         <div className={styles.wrapper}>
             <main>
-                {/* <Link href={dashboardRoute} className={[styles.dashboardLink, 'button red'].join(' ')}>&#129136; Dashboard</Link> */}
+                <div className={styles.dashboardButton}>
+                    <Button name={`&#129136; Dashboard`} color='transparent-with-outline'
+                        onClick={() => { 
+                            router.push(dashboardRoute); 
+                        }} />
+                </div>
                 <section>
                     <div className={styles.appLogo}>
                         <svg width="50" xmlns="http://www.w3.org/2000/svg" height="50" viewBox="0 0 100 100" fill="none">
