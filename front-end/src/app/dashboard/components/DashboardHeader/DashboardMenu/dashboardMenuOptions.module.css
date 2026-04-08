@@ -41,6 +41,11 @@
     box-shadow: none;
 }
 
+.optionsList > button > svg {
+    width: 20px;
+    height: 20px;
+}
+
 
 .optionsList > button > span {
     text-wrap: nowrap;

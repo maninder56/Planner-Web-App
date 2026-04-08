@@ -5,7 +5,7 @@
 
 
 .header,
-.appHeading > img, 
+.appHeading > svg, 
 .appHeading > h1 {
     transition: all 0.5s ease-in-out;
 }
@@ -32,7 +32,7 @@
     display: inline-flex;
 }
 
-.appHeading > img {
+.appHeading > svg {
     width: 30px;
     height: 30px;
     margin: auto 0;
@@ -58,7 +58,7 @@
         padding: 10px 20px;
     }
 
-    .appHeading > img {
+    .appHeading > svg {
         width: 40px;
         height: 40px;
     }
@@ -279,7 +279,7 @@
     display: flex;
 }
 
-.footerAppHeading > img {
+.footerAppHeading > svg {
     width: 30px;
     height: 30px;
     margin: auto 0;

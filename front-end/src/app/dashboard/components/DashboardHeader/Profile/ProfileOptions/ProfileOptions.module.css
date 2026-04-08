@@ -31,6 +31,7 @@
     width: 100%;
 }
 
+
 .optionsList > button:hover {
     background-color: rgba(0, 0, 0, 5%);
 }
@@ -39,6 +40,11 @@
     opacity: 0.5;
     cursor: not-allowed;
     box-shadow: none;
+}
+
+.optionsList > button > svg {
+    width: 20px;
+    height: 20px;
 }
 
 

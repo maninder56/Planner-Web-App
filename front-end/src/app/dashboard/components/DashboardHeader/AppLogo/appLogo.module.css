@@ -7,7 +7,7 @@
     display: flex;
 }
 
-.wrapper img {
+.wrapper svg {
     width: 30px;
     height: auto;
     margin: auto 0px;
@@ -15,12 +15,13 @@
 
 .wrapper header {
     margin: auto 0px;
+    margin-left: 1px;
     padding: 0px;
     font-size: 1.4rem;
 }
 
 @media (min-width: 600) {
-    .wrapper img {
+    .wrapper svg {
         width: 50px;
     }
 
