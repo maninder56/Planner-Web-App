@@ -150,8 +150,8 @@ export async function CreateNewBoardRequest(data: {name: string, colour: BoardCo
 
 // Patch Requests
 
-export async function UpdateBoardInfoRequest(boardId: number, boardInfo: BoardInfo) {
-    const subUrl = boardRoute + `/${boardId}`; 
+export async function UpdateBoardInfoRequest(data: { boardId: number, boardInfo: BoardInfo }) {
+    const subUrl = boardRoute + `/${data.boardId}`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
@@ -159,9 +159,9 @@ export async function UpdateBoardInfoRequest(boardId: number, boardInfo: BoardIn
         method: 'PATCH', 
         credentials: 'include',
         body: JSON.stringify({
-            Name: boardInfo.name, 
-            IsFavoriteBoard: boardInfo.isFavoriteBoard, 
-            BackgroundColour: boardInfo.backgroundColour,      
+            Name: data.boardInfo.name, 
+            IsFavoriteBoard: data.boardInfo.isFavoriteBoard, 
+            BackgroundColour: data.boardInfo.backgroundColour,      
         }),
     }; 
 
