@@ -14,5 +14,4 @@ export type panelType =
     'boardListMenuOptions'          | 
     'cardDetailsPanel'; 
 
-export type profileColour = 'red' | 'blue' | 'green'; 
 

@@ -4,6 +4,14 @@
 .optionsList {
     margin: 0;
     padding: 0;
+    min-width: 150px;
+}
+
+.error {
+    font-size: 0.9rem;
+    color: red;
+    text-align: center;
+    margin: 2px 0;
 }
 
 .optionsList > hr {
@@ -23,8 +31,20 @@
     width: 100%;
 }
 
+
 .optionsList > button:hover {
     background-color: rgba(0, 0, 0, 5%);
+}
+
+.optionsList > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.optionsList > button > svg {
+    width: 20px;
+    height: 20px;
 }
 
 

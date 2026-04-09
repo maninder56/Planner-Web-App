@@ -52,9 +52,14 @@ type State = {
 type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
     setBoards: (boards: BoardArray) => void; 
-    AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
+
+    setCurrentBoardName: (boardName: string) => void; 
+
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
+    
+    AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
+    resetBoardArray: () => void; 
 
     setLastUsedBoardExists: (exists?: boolean) => void; 
 
@@ -87,8 +92,17 @@ export const useBoardStore = create<State & Action>((set) => ({
         boards: boards,
     })),
 
+    setCurrentBoardName: (name) => set((state) => ({
+        currentBoardData: state.currentBoardData === undefined ? undefined : 
+            { ...state.currentBoardData, title: name }
+    })), 
+
     AddNewBoardToBoardArray: (board) => set((state) => ({
         boards: state.boards === null ? [board] : [...state.boards, board],
+    })), 
+
+    resetBoardArray: () => set(() => ({
+        boards: null, 
     })), 
 
     hydrateBoard: (data) => {
@@ -102,7 +116,10 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     resetBoardData: () => {
         set(() => ({ 
+            isBoardLoading: true,
+            boards: null, 
             currentBoardData: undefined, 
+            lastUsedBoardExists: undefined,
             lists: {}, 
             cards: {}, 
             listOrder: [], 

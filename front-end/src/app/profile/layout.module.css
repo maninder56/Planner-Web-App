@@ -1,78 +1,89 @@
 
+/* .wrapper * {
+    border: solid 1px rgb(255, 0, 0);
+} */
 
-.page {
-    flex: 1 1 auto;
+.wrapper {
+    flex: 1 1 auto; 
     display: flex;
     justify-content: center;
     align-items: start;
 }
 
-.page main {
+
+
+.wrapper main {
+    flex: 1 1 auto;
+    position: relative;
+
     margin: 5px;
     margin-top: 5vh;
     max-width: 600px;
 
-    /* background-color: rgba(255, 248, 248);  */
     border-radius: 30px;
 
-    flex: 1 1 auto;
     display: flex;
     justify-content: center;
 
     box-shadow: 0px 0px 20px -15px black;
 }
 
+.dashboardButton {
+    position: absolute;
+    top: 20px; 
+    left: 20px;
+    font-size: 1rem;
+}
 
-.page section {
+
+.wrapper section {
     flex: 1 1 auto;
-    margin: 20px 5px;
+    margin: 60px 5px;
     max-width: 400px;
 }
 
 .appLogo {
     margin: 10px 0px;
     margin-bottom: 20px;
+
     display: flex;
     justify-content: center;
 }
 
-.appLogo > svg {
-    width: 50px;
-    height: 50px;
+.appLogo svg {
     margin: auto 10px;
 }
 
-.appLogo > h1 {
+.appLogo h1 {
     padding: 0;
     margin: auto 0;
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 
 .content {
     margin-bottom: 50px;
+    /* border: solid 2px blue; */
+}
+
+.content * {
+    border: none;
 }
 
 
 @media (min-width: 500) {
 
-    .page main {
+    .wrapper main {
         margin-top: 8vh;
     }
 
-    .page section {
-        margin: 20px;
-    }
-
-    .appLogo > svg {
+    .appLogo svg {
         width: 60px;
         height: 60px;
-        margin: auto 10px;
     }
 
-    .appLogo > h1 {
-        font-size: 2.5rem;
+    .appLogo h1 {
+        font-size: 2rem;
     }
-
 }

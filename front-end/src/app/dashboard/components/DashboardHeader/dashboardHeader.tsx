@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react';
-import { useUserStore } from '../../Store/userStore';
+import { useUserStore } from '../../../../Store/userStore';
 import AppLogo from './AppLogo/appLogo';
 import styles from './dashboardHeader.module.css'; 
 import DashboardMenuButton from './DashboardMenu/dashboardMenuButton';
@@ -16,24 +16,7 @@ import { useBoardUIStore } from '../../Store/boardUIStore';
 import SwitchBoardOptions from './SwitchBoard/switchBoardOptions';
 
 export default function DashboardHeader() {
-    const setUserProfile = useUserStore((state) => state.setUserData); 
-    const setUserProfileLoading = useUserStore((state) => state.setUserDataLoading); 
-
     const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
-
-    useEffect(() => {
-        async function fetchUserData() {
-            const result = await ApiRequestWithRefreshTokenAttempt(UserProfileDataRequest); 
-            if (result.ok && result.data !== undefined) {
-                setUserProfile(result.data);  
-            } else {
-                setUserProfile(undefined); 
-            }
-            setUserProfileLoading(false); 
-        }
-        fetchUserData();
-    }, [])
-
 
     return (
         <section className={styles.wrapper}>

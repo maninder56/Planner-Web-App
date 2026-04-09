@@ -33,7 +33,11 @@ export default function DashboardSearchButton() {
                     setActivePanel('searchButtonPanel'); 
                 }
             }}>
-            <Image src={'./search-icon.svg'} alt='search icon' width={30} height={30} />
+            <svg fill="none" viewBox="4.75 4.25 15.5 15.5" width="50" height="50">
+                <path clipRule="evenodd" d="M5.5 10.766a5.765 5.765 0 1 1 11.53 0 5.765 5.765 0 0 1-11.53 0" 
+                    strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M17.029 16.53 19.5 19" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             <header>Search</header>
         </button>
         {

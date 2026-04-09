@@ -24,7 +24,10 @@ export default function DashboardMenuButton() {
                     e.stopPropagation(); 
                     setActivePanel(isDashboardMenuOptionsOpen ? 'none' : 'dashboardMenuButtonOptions'); 
                 }}>
-                <Image src={'./menu-icon.svg'} alt='Menu icon' width={40} height={40} />
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" 
+                        stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
             {
                 isDashboardMenuOptionsOpen ? 

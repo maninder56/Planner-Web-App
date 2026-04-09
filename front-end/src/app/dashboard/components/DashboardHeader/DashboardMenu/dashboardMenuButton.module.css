@@ -20,7 +20,7 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.menuButton > img {
+.menuButton > svg {
     width: 35px;
     height: 35px;
 }

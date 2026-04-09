@@ -30,14 +30,17 @@ export async function LogoutUserRequest() {
 }
 
 
-export async function ChangeUserPasswordRequest(oldPassword: string, newPassword: string) {
+export async function ChangeUserPasswordRequest(data: {oldPassword: string, newPassword: string}) {
     const subUrl = accountRoute + '/password'; 
     const request: RequestInit = {
+        headers: {
+            'Content-Type': 'application/json',
+        }, 
         method: 'PATCH', 
         credentials: 'include',
         body: JSON.stringify({
-            OldPassword: oldPassword, 
-            NewPassword: newPassword,
+            OldPassword: data.oldPassword, 
+            NewPassword: data.newPassword,
         }),
     }; 
 
@@ -95,6 +98,9 @@ export async function UserProfileDataRequest() {
 export async function UpdateUserNameRequest(newName: string) {
     const subUrl = profileRoute; 
     const request: RequestInit = {
+        headers: {
+            'Content-Type': 'application/json',
+        }, 
         method: 'PATCH', 
         credentials: 'include',
         body: JSON.stringify({

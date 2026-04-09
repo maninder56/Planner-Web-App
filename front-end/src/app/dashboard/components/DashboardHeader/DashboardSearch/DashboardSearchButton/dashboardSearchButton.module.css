@@ -28,11 +28,18 @@
     background-color: rgba(0,0,0, 10%);
 }
 
-.wrapper > img {
-    margin: auto;
+.wrapper > svg {
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    stroke: rgb(94, 94, 94);
 }
 
-.wrapper:disabled > img{
+.wrapper:hover > svg {
+    stroke: black;
+}
+
+.wrapper:disabled > svg {
     opacity: 0.2;
 }
 

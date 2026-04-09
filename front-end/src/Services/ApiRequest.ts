@@ -34,7 +34,7 @@ export async function ApiRequestWithRefreshTokenAttempt<R>(
     if (refreshResponse.ok) {
         return await request(); 
     } else {
-        return refreshResponse; 
+        return firstResponse; 
     }
 }
 
@@ -55,7 +55,7 @@ export async function ApiRequestWithRefreshTokenAttemptAndData<R, D>(
     if (refreshResponse.ok) {
         return await request(data); 
     } else {
-        return refreshResponse; 
+        return firstResponse; 
     }
 }
 
