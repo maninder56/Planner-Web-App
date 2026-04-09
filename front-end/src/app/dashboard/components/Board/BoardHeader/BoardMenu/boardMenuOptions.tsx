@@ -97,26 +97,27 @@ export default function BoardMenuOptions({
     return (
         <HoverOptionsPanel title='Board Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.wrapper}>
-                <div className={styles.boardColour}>
+                <div className={[styles.boardColour, styles.disabled].join(' ')}>
                     <header>Change Background Colour</header>
                     <div className={styles.colourGrid}>
                         {
                             availableColours.map(colour => {
                                 const selectedColour = colour === boardColour ? styles.selectedBoardColour : null; 
                                 return (
-                                    <div key={colour} 
+                                    <button key={colour} 
+                                        disabled={viewOnlyBoard}
                                         className={[styles[colour], selectedColour].join(' ')} 
                                         onClick={e => {
                                             e.stopPropagation(); 
                                             handleBoardColourChange(colour); 
-                                        }}></div>
+                                        }}></button>
                                 )
                             })
                         }
                     </div>
                 </div>
                 <div className={styles.optionList}>
-                    <button onClick={e => {
+                    <button disabled={viewOnlyBoard} onClick={e => {
                         e.stopPropagation(); 
                         setActivePanel('manageMembersOptions'); 
                     }}>
@@ -138,7 +139,7 @@ export default function BoardMenuOptions({
                         <span>Manage Members</span>
                     </button>
                     <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
-                        <button onClick={e => {
+                        <button disabled={viewOnlyBoard} onClick={e => {
                             e.stopPropagation(); 
                             handleFavoriteBoardButton(); 
                         }}>
@@ -164,7 +165,7 @@ export default function BoardMenuOptions({
                             </svg>
                             <span>Filter</span>
                         </button>
-                        <button onClick={e => {
+                        <button disabled={viewOnlyBoard} onClick={e => {
                             e.stopPropagation();
                             setActivePanel('shareBoardOptions'); 
                         }}>
@@ -181,7 +182,7 @@ export default function BoardMenuOptions({
                     </div>
                 </div>
                 <div className={styles.deleteBoardButton}>
-                    <Button name='Delete Board' color='red' onClick={() => { setShowDeleteBoard(true) }} />
+                    <Button disabled={viewOnlyBoard} name='Delete Board' color='red' onClick={() => { setShowDeleteBoard(true) }} />
                 </div>
             </div>
             {showDeleteBoard && <DeleteBoardDialogBox boardId={boardId} onCancel={() => setShowDeleteBoard(false)}/>}

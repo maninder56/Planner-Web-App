@@ -41,7 +41,7 @@ export default function BoardHeaderBar() {
                         <FilterButton />
                     </div>
                     <div>
-                        <ShareButton />
+                        <ShareButton userRole={boardData.role}/>
                     </div>
                 </div>
                 <div>

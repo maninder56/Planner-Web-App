@@ -3,14 +3,22 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import styles from './shareButton.module.css'; 
 import ShareButtonOptions from './shareButtonOptions';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { UserRole } from '@/app/dashboard/Types/boardTypes';
 
-export default function ShareButton() {
+export default function ShareButton({
+    userRole, 
+}: {
+    userRole: UserRole; 
+}) {
     const isShareBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'shareBoardOptions'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const viewOnlyBoard = userRole === 'Viewer'; 
 
     return (
         <div className={styles.wrapper}>
             <button className={styles.mainButton}
+                disabled={viewOnlyBoard}
                 onClick={e => {
                     e.stopPropagation(); 
                     setActivePanel(isShareBoardOptionsOpen ? 'none' : 'shareBoardOptions'); 
