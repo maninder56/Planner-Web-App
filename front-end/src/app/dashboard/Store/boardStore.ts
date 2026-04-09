@@ -58,6 +58,8 @@ type Action = {
     setCurrentBoardFavourite: (isFavourite: boolean) => void; 
     setCurrentBoardColour: (colour: BoardColour) => void; 
 
+    resetCurrentBoardData: () => void; 
+
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
     
@@ -125,7 +127,12 @@ export const useBoardStore = create<State & Action>((set) => ({
             { ...state.currentBoardData, boardColour: colour }
     })), 
 
-
+    resetCurrentBoardData: () => set(() => ({
+        currentBoardData: undefined, 
+        lists: {}, 
+        cards: {}, 
+        listOrder: [], 
+    })), 
     
 
     hydrateBoard: (data) => {

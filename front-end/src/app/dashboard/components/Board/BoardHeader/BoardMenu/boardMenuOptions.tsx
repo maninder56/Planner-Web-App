@@ -11,6 +11,7 @@ import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
+import DeleteBoardDialogBox from './DeleteBoardDialogBox/deleteBoardDialogBox';
 
 export default function BoardMenuOptions({
     boardId, 
@@ -20,20 +21,21 @@ export default function BoardMenuOptions({
     userRole: UserRole; 
 }) {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
     const boardColour = useBoardStore((state) => state.currentBoardData?.boardColour); 
     const setBoardColour = useBoardStore((state) => state.setCurrentBoardColour); 
-    
     const favouriteBoard = useBoardStore((state) => state.currentBoardData?.idFavouriteBoard); 
     const setFavouriteBoard = useBoardStore((state) => state.setCurrentBoardFavourite); 
-    
-    const availableColours: BoardColour[] = BoardColoursList; 
-
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
-    
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const [showDeleteBoard, setShowDeleteBoard] = useState(false);
+
+    const availableColours: BoardColour[] = BoardColoursList; 
     
     const viewOnlyBoard = userRole === 'Viewer'; 
+
 
     async function handleBoardColourChange(newColour: BoardColour) {
         if (boardColour === undefined || newColour === boardColour) {
@@ -179,9 +181,10 @@ export default function BoardMenuOptions({
                     </div>
                 </div>
                 <div className={styles.deleteBoardButton}>
-                    <Button name='Delete Board' color='red' onClick={() => {}} />
+                    <Button name='Delete Board' color='red' onClick={() => { setShowDeleteBoard(true) }} />
                 </div>
             </div>
+            {showDeleteBoard && <DeleteBoardDialogBox boardId={boardId} onCancel={() => setShowDeleteBoard(false)}/>}
         </HoverOptionsPanel>
     ); 
 }
