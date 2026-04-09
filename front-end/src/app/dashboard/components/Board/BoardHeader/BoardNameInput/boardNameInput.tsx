@@ -5,6 +5,7 @@ import styles from './boardNameInput.module.css';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { useUserStore } from '@/Store/userStore';
 
 
 export default function BoardNameInput({
@@ -18,6 +19,7 @@ export default function BoardNameInput({
     const [input, setInput] = useState(boardName); 
     const setCurrentBoardName = useBoardStore((state) => state.setCurrentBoardName); 
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     
     function handleInputChange(value: string) {
         setInput(value); 
@@ -41,7 +43,11 @@ export default function BoardNameInput({
         if (request.ok) {
             setCurrentBoardName(input); 
             resetBoardArray();
+        } else if (request.error === 'Unauthorized') {
+            setSessionExpired(true); 
+            setInput(boardName); 
         } else {
+            // set global board error
             setInput(boardName); 
         }
     }
