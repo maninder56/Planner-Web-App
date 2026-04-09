@@ -38,10 +38,6 @@
     outline: solid 1.5px rgb(0, 0, 0);
 }
 
-.error {
-    font-size: 1rem;
-
-}
 
 .wrapper:disabled {
     cursor: not-allowed;

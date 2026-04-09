@@ -6,7 +6,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
     const boardData: BoardData = {
         id: data.boardId, 
         title: data.name, 
-        idFavoriteBoard: data.isFavoriteBoard, 
+        idFavouriteBoard: data.isFavoriteBoard, 
         role: data.role,
         boardColour: data.backgroundColour,
     }; 

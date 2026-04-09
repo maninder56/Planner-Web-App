@@ -33,7 +33,7 @@ export default function BoardHeaderBar() {
             <div className={styles.barOptionList}>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
-                        <FavoriteBoardButton initialState={boardData.idFavoriteBoard} />
+                        <FavoriteBoardButton boardId={boardData.id} userRole={boardData.role} />
                     </div>
                     <div>
                         <FilterButton />
@@ -43,7 +43,8 @@ export default function BoardHeaderBar() {
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardData.boardColour} />
+                    <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} 
+                        initialFavoriteBoard={boardData.idFavouriteBoard} />
                 </div>
             </div>
         </div>

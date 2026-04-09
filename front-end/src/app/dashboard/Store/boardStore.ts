@@ -6,7 +6,7 @@ import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray } fro
 type BoardData = {
     id: number, 
     title: string, 
-    idFavoriteBoard: boolean,
+    idFavouriteBoard: boolean,
     role: UserRole, 
     boardColour: BoardColour,
 }
@@ -55,6 +55,7 @@ type Action = {
     setBoards: (boards: BoardArray) => void; 
 
     setCurrentBoardName: (boardName: string) => void; 
+    setCurrentBoardFavourite: (isFavourite: boolean) => void; 
 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
@@ -92,14 +93,10 @@ export const useBoardStore = create<State & Action>((set) => ({
         set(() => ({ lastUsedBoardExists: exists}))
     }, 
 
+    // set all the boards user has access to
     setBoards: (boards) => set(() => ({
         boards: boards,
     })),
-
-    setCurrentBoardName: (name) => set((state) => ({
-        currentBoardData: state.currentBoardData === undefined ? undefined : 
-            { ...state.currentBoardData, title: name }
-    })), 
 
     AddNewBoardToBoardArray: (board) => set((state) => ({
         boards: state.boards === null ? [board] : [...state.boards, board],
@@ -108,6 +105,22 @@ export const useBoardStore = create<State & Action>((set) => ({
     resetBoardArray: () => set(() => ({
         boards: null, 
     })), 
+
+
+
+    // set current board data 
+    setCurrentBoardName: (name) => set((state) => ({
+        currentBoardData: state.currentBoardData === undefined ? undefined : 
+            { ...state.currentBoardData, title: name }
+    })), 
+
+    setCurrentBoardFavourite: (isFavourite) => set((state) => ({
+        currentBoardData: state.currentBoardData === undefined ? undefined : 
+            { ...state.currentBoardData, idFavouriteBoard: isFavourite }
+    })), 
+
+
+    
 
     hydrateBoard: (data) => {
       set(() => ({

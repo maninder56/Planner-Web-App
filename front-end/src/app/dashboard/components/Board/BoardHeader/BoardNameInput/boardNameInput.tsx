@@ -20,10 +20,13 @@ export default function BoardNameInput({
 }) {
     const boardName = initialName; 
     const [input, setInput] = useState(boardName); 
+    
     const setCurrentBoardName = useBoardStore((state) => state.setCurrentBoardName); 
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
+
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
     const disableInput = userRole === 'Viewer'; 
     
     function handleInputChange(value: string) {
