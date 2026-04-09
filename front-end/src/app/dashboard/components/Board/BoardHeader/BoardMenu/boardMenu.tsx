@@ -12,12 +12,10 @@ export default function BoardMenu({
     initialBoardColour, 
     boardId, 
     userRole,
-    initialFavoriteBoard, 
 }: {
     initialBoardColour: BoardColour; 
     boardId: number; 
     userRole: UserRole; 
-    initialFavoriteBoard: boolean; 
 }) {
     const activePanel = useBoardUIStore((state) => state.activePanel); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
@@ -46,7 +44,7 @@ export default function BoardMenu({
                 </svg>
             </button>
             { isBoardMenuOptionsOpen && <BoardMenuOptions 
-                initialBoardColour={initialBoardColour} initialFavoriteBoard={initialFavoriteBoard}
+                initialBoardColour={initialBoardColour}
                 boardId={boardId} userRole={userRole} /> }
 
             { isManageMembersOptionsOpen && <ManageBoardMembersOptions /> }

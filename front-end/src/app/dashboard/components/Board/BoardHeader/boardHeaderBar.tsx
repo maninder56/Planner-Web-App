@@ -25,6 +25,8 @@ export default function BoardHeaderBar() {
         ); 
     }
 
+    const viewOnly = boardData.role === 'Viewer'; 
+
     return (
         <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer}>
@@ -43,8 +45,7 @@ export default function BoardHeaderBar() {
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} 
-                        initialFavoriteBoard={boardData.idFavouriteBoard} />
+                    <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} />
                 </div>
             </div>
         </div>

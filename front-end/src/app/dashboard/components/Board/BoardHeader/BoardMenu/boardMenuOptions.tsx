@@ -14,18 +14,18 @@ import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 
 export default function BoardMenuOptions({
     initialBoardColour,
-    initialFavoriteBoard,
     boardId, 
     userRole,
 }: {
     initialBoardColour: BoardColour; 
-    initialFavoriteBoard: boolean; 
     boardId: number; 
     userRole: UserRole; 
 }) {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const [boardColour, setBoardColour] = useState(initialBoardColour); 
-    const [favouriteBoard, setFavouriteBoard] = useState(initialFavoriteBoard); 
+    
+    const favouriteBoard = useBoardStore((state) => state.currentBoardData?.idFavouriteBoard); 
+    const setFavouriteBoard = useBoardStore((state) => state.setCurrentBoardFavourite); 
     
     const availableColours: BoardColour[] = BoardColoursList; 
 
@@ -45,6 +45,11 @@ export default function BoardMenuOptions({
     }
 
     async function handleFavoriteBoardButton() {
+        if (favouriteBoard === undefined) {
+            return; 
+        }
+
+
         const nextFavorite = !favouriteBoard; 
         setFavouriteBoard(nextFavorite); 
 
@@ -60,10 +65,10 @@ export default function BoardMenuOptions({
             resetBoardArray();
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
-            setFavouriteBoard(initialFavoriteBoard); 
+            setFavouriteBoard(!nextFavorite); 
         } else {
             setBoardError('Failed to set board favourite, please try again.'); 
-            setFavouriteBoard(initialFavoriteBoard); 
+            setFavouriteBoard(!nextFavorite); 
         }
     }
 
