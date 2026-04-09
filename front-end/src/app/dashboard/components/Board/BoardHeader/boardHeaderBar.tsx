@@ -28,7 +28,7 @@ export default function BoardHeaderBar() {
     return (
         <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer}>
-                <BoardNameInput initialName={boardData.title} boardId={boardData.id} />
+                <BoardNameInput initialName={boardData.title} boardId={boardData.id} userRole={boardData.role} />
             </div>
             <div className={styles.barOptionList}>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>

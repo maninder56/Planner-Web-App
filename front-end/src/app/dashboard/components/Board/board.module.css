@@ -12,6 +12,16 @@
     min-height: 0;
 }
 
+.error {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2px;
+
+    text-align: center;
+    font-size: 0.8rem;
+    color: red;
+}
+
 .mainContent > section:first-child {
     flex: 0 1 auto;
 }

@@ -28,7 +28,7 @@
     transition: all 0.1s ease-in-out;
 }
 
-.wrapper:hover {
+.wrapper:hover:not(:disabled) {
     background-color: rgb(255, 255, 255, 0.2);
 }
 
@@ -41,6 +41,10 @@
 .error {
     font-size: 1rem;
 
+}
+
+.wrapper:disabled {
+    cursor: not-allowed;
 }
 
 

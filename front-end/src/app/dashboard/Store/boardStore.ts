@@ -46,6 +46,7 @@ type State = {
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
     listOrder: ListId[], 
+    boardError: string; 
 }
 
 
@@ -63,6 +64,8 @@ type Action = {
 
     setLastUsedBoardExists: (exists?: boolean) => void; 
 
+    setBoardError: (error: string) => void; 
+
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
@@ -79,6 +82,7 @@ export const useBoardStore = create<State & Action>((set) => ({
     lists: {}, 
     cards: {}, 
     listOrder: [],
+    boardError: '', 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -125,6 +129,10 @@ export const useBoardStore = create<State & Action>((set) => ({
             listOrder: [], 
          })); 
     }, 
+
+    setBoardError: (error) => set(() => ({
+        boardError: error, 
+    })), 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     

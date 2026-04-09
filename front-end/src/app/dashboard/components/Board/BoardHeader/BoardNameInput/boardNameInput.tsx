@@ -6,20 +6,25 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
+import { UserRole } from '@/app/dashboard/Types/boardTypes';
 
 
 export default function BoardNameInput({
     initialName,
     boardId, 
+    userRole, 
 }: {
     initialName: string; 
-    boardId: number
+    boardId: number; 
+    userRole: UserRole; 
 }) {
     const boardName = initialName; 
     const [input, setInput] = useState(boardName); 
     const setCurrentBoardName = useBoardStore((state) => state.setCurrentBoardName); 
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
+    const setBoardError = useBoardStore((state) => state.setBoardError); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+    const disableInput = userRole === 'Viewer'; 
     
     function handleInputChange(value: string) {
         setInput(value); 
@@ -47,7 +52,7 @@ export default function BoardNameInput({
             setSessionExpired(true); 
             setInput(boardName); 
         } else {
-            // set global board error
+            setBoardError('Failed to change board name, please try again.'); 
             setInput(boardName); 
         }
     }
@@ -59,6 +64,7 @@ export default function BoardNameInput({
             type='text'
             maxLength={50}
             value={input}
+            disabled={disableInput}
             onClick={e => { e.stopPropagation(); }}
             onChange={e => handleInputChange(e.target.value)}
             onBlur={handleOnBlur}/>

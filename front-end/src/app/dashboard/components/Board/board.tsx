@@ -11,10 +11,12 @@ import { useBoardUIStore } from '../../Store/boardUIStore';
 
 export default function Board() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const lastBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
+    const boardError = useBoardStore((state) => state.boardError); 
 
     async function fetchData() {
         const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
@@ -40,6 +42,7 @@ export default function Board() {
 
     return (
         <main className={styles.mainContent}>
+            <span className={styles.error}>{boardError}</span>
             <section>
                 <BoardHeaderBar />
             </section>
