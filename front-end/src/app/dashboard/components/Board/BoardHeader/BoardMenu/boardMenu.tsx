@@ -43,9 +43,7 @@ export default function BoardMenu({
                         stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </button>
-            { isBoardMenuOptionsOpen && <BoardMenuOptions 
-                initialBoardColour={initialBoardColour}
-                boardId={boardId} userRole={userRole} /> }
+            { isBoardMenuOptionsOpen && <BoardMenuOptions boardId={boardId} userRole={userRole} /> }
 
             { isManageMembersOptionsOpen && <ManageBoardMembersOptions /> }
 

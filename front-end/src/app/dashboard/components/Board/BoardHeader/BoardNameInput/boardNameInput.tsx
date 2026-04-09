@@ -20,7 +20,7 @@ export default function BoardNameInput({
 }) {
     const boardName = initialName; 
     const [input, setInput] = useState(boardName); 
-    
+
     const setCurrentBoardName = useBoardStore((state) => state.setCurrentBoardName); 
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
@@ -51,6 +51,7 @@ export default function BoardNameInput({
         if (request.ok) {
             setCurrentBoardName(input); 
             resetBoardArray();
+            setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
             setInput(boardName); 

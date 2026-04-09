@@ -42,6 +42,7 @@ export default function FavoriteBoardButton({
 
         if (request.ok) {
             resetBoardArray();
+            setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
             setFavouriteBoard(!nextFavorite); 

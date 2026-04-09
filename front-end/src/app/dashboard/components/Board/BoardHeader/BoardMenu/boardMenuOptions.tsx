@@ -13,16 +13,15 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 
 export default function BoardMenuOptions({
-    initialBoardColour,
     boardId, 
     userRole,
 }: {
-    initialBoardColour: BoardColour; 
     boardId: number; 
     userRole: UserRole; 
 }) {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const [boardColour, setBoardColour] = useState(initialBoardColour); 
+    const boardColour = useBoardStore((state) => state.currentBoardData?.boardColour); 
+    const setBoardColour = useBoardStore((state) => state.setCurrentBoardColour); 
     
     const favouriteBoard = useBoardStore((state) => state.currentBoardData?.idFavouriteBoard); 
     const setFavouriteBoard = useBoardStore((state) => state.setCurrentBoardFavourite); 
@@ -36,12 +35,32 @@ export default function BoardMenuOptions({
     
     const viewOnlyBoard = userRole === 'Viewer'; 
 
-    function handleBoardColourChange(newColour: BoardColour) {
-        if (newColour === boardColour) {
+    async function handleBoardColourChange(newColour: BoardColour) {
+        if (boardColour === undefined || newColour === boardColour) {
             return; 
         }
 
+        const oldColour = boardColour; 
         setBoardColour(newColour); 
+
+        const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateBoardInfoRequest, 
+            { boardId: boardId, boardInfo: {
+                name: undefined,
+                isFavoriteBoard: undefined,
+                backgroundColour: newColour,
+            }}
+        ); 
+
+        if (request.ok) {
+            setBoardError(''); 
+            resetBoardArray();
+        } else if (request.error === 'Unauthorized') {
+            setSessionExpired(true); 
+            setBoardColour(oldColour); 
+        } else {
+            setBoardError('Failed to change board colour, please try again.'); 
+            setBoardColour(oldColour); 
+        }
     }
 
     async function handleFavoriteBoardButton() {
@@ -63,6 +82,7 @@ export default function BoardMenuOptions({
 
         if (request.ok) {
             resetBoardArray();
+            setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
             setFavouriteBoard(!nextFavorite); 
