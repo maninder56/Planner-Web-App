@@ -24,8 +24,14 @@
     align-items: center;
 }
 
-.wrapper:hover {
+.wrapper:hover:not(:disabled) {
     background-color: rgb(255, 255, 255, 0.2);
+}
+
+
+.wrapper:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .wrapper > svg {

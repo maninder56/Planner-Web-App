@@ -25,25 +25,27 @@ export default function BoardHeaderBar() {
         ); 
     }
 
+    const viewOnly = boardData.role === 'Viewer'; 
+
     return (
         <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer}>
-                <BoardNameInput initialName={boardData.title} boardId={boardData.id} />
+                <BoardNameInput initialName={boardData.title} boardId={boardData.id} userRole={boardData.role} />
             </div>
             <div className={styles.barOptionList}>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
-                        <FavoriteBoardButton initialState={boardData.idFavoriteBoard} />
+                        <FavoriteBoardButton boardId={boardData.id} userRole={boardData.role} />
                     </div>
                     <div>
                         <FilterButton />
                     </div>
                     <div>
-                        <ShareButton />
+                        <ShareButton userRole={boardData.role}/>
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardData.boardColour} />
+                    <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} />
                 </div>
             </div>
         </div>

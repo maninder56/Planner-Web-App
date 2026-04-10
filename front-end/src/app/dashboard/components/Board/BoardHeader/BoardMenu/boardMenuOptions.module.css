@@ -3,6 +3,12 @@
     margin: 0px 10px;
 }
 
+.wrapper button:disabled, 
+.wrapper .disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .boardColour {
     margin: 20px 0px;
 }
@@ -19,7 +25,7 @@
     gap: 10px;
 }
 
-.colourGrid > div {
+.colourGrid button {
     width: 50px;
     height: 30px;
     border-radius: 10px;
@@ -29,67 +35,9 @@
         transform 0.15s ease;
 }
 
-.colourGrid > div:hover {
+.colourGrid > button:hover:not(:disabled) {
     transform: scale(1.05);
 }
-
-
-/* board colours */
-
-.soft-pink{
-    background-color: var(--soft-pink);
-} 
-
-.soft-pink:hover, 
-.soft-pink.selectedBoardColour {
-    outline: solid var(--soft-pink-outline);
-}
-
-.light-mint-green {
-    background-color: var(--light-mint-green);
-}
-
-.light-mint-green:hover, 
-.light-mint-green.selectedBoardColour {
-    outline: solid var(--light-mint-green-outline);
-}
-
-.aqua {
-    background-color: var(--aqua);
-}
-
-.aqua:hover, 
-.aqua.selectedBoardColour {
-    outline: solid var(--aqua-outline);
-}
-
-.lavender-blue {
-    background-color: var(--lavender-blue);
-}
-
-.lavender-blue:hover, 
-.lavender-blue.selectedBoardColour {
-    outline: solid var(--lavender-blue-outline);
-}
-
-.light-purple {
-    background-color: var(--light-purple);
-}
-
-.light-purple:hover, 
-.light-purple.selectedBoardColour {
-    outline: solid var(--light-purple-outline);
-}
-
-.bright-pink {
-    background-color: var(--bright-pink);
-}
-
-.bright-pink:hover, 
-.bright-pink.selectedBoardColour {
-    outline: solid var(--bright-pink-outline);
-}
-
 
 
 
@@ -149,3 +97,60 @@
     }
 }
 
+
+
+/* board colours */
+
+.soft-pink{
+    background-color: var(--soft-pink);
+} 
+
+.soft-pink:hover:not(:disabled), 
+.soft-pink.selectedBoardColour {
+    outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.light-mint-green:hover:not(:disabled), 
+.light-mint-green.selectedBoardColour {
+    outline: solid var(--light-mint-green-outline);
+}
+
+.aqua {
+    background-color: var(--aqua);
+}
+
+.aqua:hover:not(:disabled), 
+.aqua.selectedBoardColour {
+    outline: solid var(--aqua-outline);
+}
+
+.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.lavender-blue:hover:not(:disabled), 
+.lavender-blue.selectedBoardColour {
+    outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple {
+    background-color: var(--light-purple);
+}
+
+.light-purple:hover:not(:disabled), 
+.light-purple.selectedBoardColour {
+    outline: solid var(--light-purple-outline);
+}
+
+.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+.bright-pink:hover:not(:disabled), 
+.bright-pink.selectedBoardColour {
+    outline: solid var(--bright-pink-outline);
+}

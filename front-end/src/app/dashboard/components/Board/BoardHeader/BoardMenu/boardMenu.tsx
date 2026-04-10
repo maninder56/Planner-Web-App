@@ -2,16 +2,20 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './boardMenu.module.css'; 
 import BoardMenuOptions from './boardMenuOptions';
-import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import { BoardColour, UserRole } from '@/app/dashboard/Types/boardTypes';
 import FilterBoardOptions from '../FilterButton/filterButtonOptions';
 import ShareButtonOptions from '../ShareButton/shareButtonOptions';
 import ManageBoardMembersOptions from '../ManageBoardMembers/manageBoardMembersOptions';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function BoardMenu({
-    initialBoardColour
+    initialBoardColour, 
+    boardId, 
+    userRole,
 }: {
     initialBoardColour: BoardColour; 
+    boardId: number; 
+    userRole: UserRole; 
 }) {
     const activePanel = useBoardUIStore((state) => state.activePanel); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
@@ -39,27 +43,13 @@ export default function BoardMenu({
                         stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </button>
-            {
-                isBoardMenuOptionsOpen ? 
-                    <BoardMenuOptions initialBoardColour={initialBoardColour} initialFavoriteBoard={false} />
-                : null
-            }
-            {
-                isManageMembersOptionsOpen ? 
-                    <ManageBoardMembersOptions />
-                : null
-            }
+            { isBoardMenuOptionsOpen && <BoardMenuOptions boardId={boardId} userRole={userRole} /> }
+
+            { isManageMembersOptionsOpen && <ManageBoardMembersOptions /> }
+
             <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
-                {
-                    isFilterBoardOptionsOpen ? 
-                        <FilterBoardOptions />
-                    : null
-                }
-                {
-                    isShareBoardOptionsOpen ? 
-                        <ShareButtonOptions />
-                    : null
-                }
+                { isFilterBoardOptionsOpen && <FilterBoardOptions /> }
+                { isShareBoardOptionsOpen && <ShareButtonOptions /> }
             </div>
         </div>
     ); 
