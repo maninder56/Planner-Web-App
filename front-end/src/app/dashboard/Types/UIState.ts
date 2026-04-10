@@ -12,6 +12,7 @@ export type panelType =
     'boardMenuOptions'              |
     'manageMembersOptions'          | 
     'boardListMenuOptions'          | 
-    'cardDetailsPanel'; 
+    'cardDetailsPanel'              | 
+    'newListForm'                   ; 
 
 

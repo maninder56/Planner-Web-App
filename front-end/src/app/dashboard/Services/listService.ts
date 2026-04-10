@@ -9,8 +9,8 @@ const boardRoute = '/boards';
 // POST REQUESTS
 // ----------------------
 
-export async function CreateNewListRequest(boardId: number, newListName: string) {
-    const subUrl = boardRoute + `/${boardId}/lists`;
+export async function CreateNewListRequest(data: {boardId: number, newListName: string}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists`;
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export async function CreateNewListRequest(boardId: number, newListName: string)
         method: 'POST',
         credentials: 'include',
         body: JSON.stringify({
-            Name: newListName, 
+            Name: data.newListName, 
         }),
     };
 
@@ -50,19 +50,19 @@ export async function CreateNewListRequest(boardId: number, newListName: string)
 // PATCH REQUESTS
 // ----------------------
 
-export async function UpdateListInfoRequest(
+export async function UpdateListInfoRequest( data: {
     boardId: number,
     listId: number,
     listInfo: ChangeListInfo
-) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}`;
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}`;
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         },
         method: 'PATCH',
         credentials: 'include',
-        body: JSON.stringify(listInfo),
+        body: JSON.stringify(data.listInfo),
     };
 
     try {
@@ -93,11 +93,11 @@ export async function UpdateListInfoRequest(
 // PUT REQUESTS
 // ----------------------
 
-export async function UpdateListOrderRequest(
+export async function UpdateListOrderRequest( data: {
     boardId: number,
     listIDsInOrder: number[],
-) {
-    const subUrl = boardRoute + `/${boardId}/lists/re-order`;
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/re-order`;
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ export async function UpdateListOrderRequest(
         method: 'PUT',
         credentials: 'include',
         body: JSON.stringify({
-            ListIDsInOrder: listIDsInOrder,
+            ListIDsInOrder: data.listIDsInOrder,
         }),
     };
 
@@ -128,11 +128,11 @@ export async function UpdateListOrderRequest(
 // DELETE REQUESTS
 // ----------------------
 
-export async function DeleteListRequest(
+export async function DeleteListRequest(data: {
     boardId: number,
     listId: number
-) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}`;
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}`;
     const request: RequestInit = {
         method: 'DELETE',
         credentials: 'include',

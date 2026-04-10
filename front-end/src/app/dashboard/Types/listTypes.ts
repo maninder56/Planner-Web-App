@@ -2,8 +2,9 @@ import z from "zod";
 
 // Api response types
 export const NewListResponseSchema = z.object({
-    Name: z.string(), 
-    ListPosition: z.number(),
+    id: z.number(), 
+    name: z.string(), 
+    listPosition: z.number(),
 }); 
 
 export const ChangeListInfoSchema = z.object({

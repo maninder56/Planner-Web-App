@@ -10,6 +10,7 @@ import {RestrictToWindow, RestrictToElement} from '@dnd-kit/dom/modifiers';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
 import BoardContentSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
+import AddNewListButton from './AddNewListButton/addNewListButton';
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -92,7 +93,7 @@ export default function BoardContent() {
                         ))
                     }
                     <div className={styles.newListButtonContainer}>
-                        Add new 
+                        <AddNewListButton boardId={boardDetials.id}/>
                     </div>
                 </div>
             </div>

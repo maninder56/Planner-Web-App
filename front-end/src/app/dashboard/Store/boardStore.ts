@@ -70,6 +70,9 @@ type Action = {
 
     setBoardError: (error: string) => void; 
 
+    // Lists operations
+    AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
+
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
@@ -159,6 +162,27 @@ export const useBoardStore = create<State & Action>((set) => ({
     setBoardError: (error) => set(() => ({
         boardError: error, 
     })), 
+
+
+    // Lists operations 
+
+    AddNewListToBoard: (data) => set((state) => {
+        const listId = `list-${data.id}` as ListId; 
+
+        return {
+            lists: {
+                ...state.lists, 
+                [listId]: {
+                    id: data.id, 
+                    title: data.title, 
+                    position: data.position,
+                    CardIDsAndOrder: []
+                }
+            }, 
+            listOrder: [...state.listOrder, listId],
+        }
+    }), 
+
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
