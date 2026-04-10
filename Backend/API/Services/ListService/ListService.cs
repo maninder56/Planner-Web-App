@@ -19,7 +19,7 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
             BoardList newList = await listRepository.CreateNewBoardListAsync(boardId, request.Name);
             return Result<NewListResponse>.Success(new NewListResponse 
             { 
-                Name = newList.Name, ListPosition = newList.ListPosition 
+                Id = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition 
             }); 
         }
         catch (Exception ex)
