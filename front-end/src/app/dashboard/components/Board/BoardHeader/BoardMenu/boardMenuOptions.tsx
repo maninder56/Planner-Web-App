@@ -97,7 +97,7 @@ export default function BoardMenuOptions({
     return (
         <HoverOptionsPanel title='Board Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.wrapper}>
-                <div className={[styles.boardColour, styles.disabled].join(' ')}>
+                <div className={[styles.boardColour, viewOnlyBoard ? styles.disabled : ''].join(' ')}>
                     <header>Change Background Colour</header>
                     <div className={styles.colourGrid}>
                         {
