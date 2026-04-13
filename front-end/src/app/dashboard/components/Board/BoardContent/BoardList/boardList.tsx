@@ -9,11 +9,13 @@ import { useState } from 'react';
 import BoardCard from '../BoardCard/boardCard';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
 import { useDroppable } from '@dnd-kit/react';
+import { UserRole } from '@/app/dashboard/Types/boardTypes';
 
 export default function BoardList({
     listId, 
     index,
     currentOpenListMenu,
+    userRole, 
     setCurrentOpenListMenu,
     cardDetailsPanelId, 
     setCardDetailsPanelId, 
@@ -21,6 +23,7 @@ export default function BoardList({
     listId: ListId; 
     index: number; 
     currentOpenListMenu: ListId | undefined; 
+    userRole: UserRole; 
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
     cardDetailsPanelId?: CardId; 
     setCardDetailsPanelId: (cardId?: CardId) => void; 
@@ -41,16 +44,34 @@ export default function BoardList({
         data: {
             listId, 
         }
-    })
+    }); 
+
+
+    const viewOnly = userRole === 'Viewer'; 
 
     const listTitle = useBoardStore((state) => state.lists[listId].title); 
     const listCardsIdsAndOrder = useBoardStore((state) => state.lists[listId].CardIDsAndOrder); 
 
+    const [listName, setListName] = useState(listTitle);
+
+    function handleOnBlur() {
+
+    }
+
     return (
         <div className={[styles.wrapper, isDragging ? styles.dragging : ''].join(' ')} ref={ref}>
             <div className={styles.header}>
-                <header>{listTitle}</header>
-                {/* Create list menu which only opens if list id and panel are matched */}
+                <header>
+                    <input 
+                        className={styles.listName}
+                        type='text'
+                        maxLength={30}
+                        disabled={viewOnly}
+                        value={listName}
+                        onClick={e => { e.stopPropagation(); }}
+                        onChange={e => setListName(e.target.value)}
+                        onBlur={handleOnBlur}/>
+                </header>
                 <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu} />
             </div>
             <div className={styles.cards} ref={dropRef}>
