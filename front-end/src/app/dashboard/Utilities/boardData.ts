@@ -24,38 +24,38 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
         listOrder: listOrder,
     }; 
 
-    if (data.boardLists === undefined) {
+    if (data.boardList === undefined) {
         return normalisedData; 
     }
 
-    for (let list of data.boardLists) {
+    for (let list of data.boardList) {
 
         let cardIds: CardId[] = []; 
 
         if (list.cardList !== undefined) {
             for (let card of list.cardList) {
-                cards[`card-${card.id}`] = {
-                    id: card.id, 
+                cards[`card-${card.cardId}`] = {
+                    id: card.cardId, 
                     title: card.title, 
                     description: card.description, 
-                    done: card.done, 
+                    done: card.isDone, 
                     priority: card.priority, 
                     dueDate: card.dueDate, 
-                    position: card.position,
+                    position: card.cardPosition,
                 }; 
 
-                cardIds.push(`card-${card.id}`); 
+                cardIds.push(`card-${card.cardId}`); 
             }
         }
 
-        lists[`list-${list.id}`]  = {
-            id: list.id, 
-            title: list.title, 
-            position: list.position, 
+        lists[`list-${list.boardListId}`]  = {
+            id: list.boardListId, 
+            title: list.name, 
+            position: list.listPosition, 
             CardIDsAndOrder: cardIds, 
         }; 
 
-        listOrder.push(`list-${list.id}`); 
+        listOrder.push(`list-${list.boardListId}`); 
     }
 
     normalisedData.lists = lists; 
