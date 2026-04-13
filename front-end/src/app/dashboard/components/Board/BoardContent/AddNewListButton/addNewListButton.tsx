@@ -1,5 +1,5 @@
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import styles from './addNewListButton.module.css'; 
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
@@ -20,7 +20,6 @@ export default function AddNewListButton({
     const [listName, setListName] = useState(''); 
     const [error, setError] = useState(''); 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
-
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault(); 
@@ -67,6 +66,7 @@ export default function AddNewListButton({
                                 placeholder='Enter list name...'
                                 maxLength={30}
                                 value={listName}
+                                autoFocus={true}
                                 onChange={(e) => setListName(e.target.value)} />
                         </div>
                         <span className={styles.error}>{error}</span>
