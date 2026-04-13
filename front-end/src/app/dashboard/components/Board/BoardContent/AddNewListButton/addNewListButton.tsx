@@ -31,6 +31,8 @@ export default function AddNewListButton({
 
             if (request.ok && request.data !== undefined) {
                 addNewListToBoard({id: request.data.id, title: request.data.name, position: request.data.listPosition}); 
+                setListName(''); 
+                setError(''); 
                 setActivePanel('none'); 
             } else if (!request.ok && request.error === 'Unauthorized') {
                 setSessionExpired(true); 

@@ -4,42 +4,53 @@ USE plannerwebapp;
 
 SHOW TABLES;
 
-SHOW COLUMNS
-FROM users;
-
+# Table column Info
 
 SHOW COLUMNS
-FROM refreshtokens;
+FROM boardlists;
 
 SHOW COLUMNS
 FROM  boardmembers;
 
 SHOW COLUMNS
-FROM colours;
-
-SHOW COLUMNS
 FROM boards;
 
 SHOW COLUMNS
-FROM cards;
-
-SELECT *
-FROM users;
-
-SELECT *
-FROM boards;
-
-SELECT *
-FROM boardmembers;
-
-SELECT *
 FROM boardstar;
 
-SELECT *
+SHOW COLUMNS
 FROM cards;
 
-SELECT *
+SHOW COLUMNS
 FROM colours;
+
+SHOW COLUMNS
+FROM refreshtokens;
+
+SHOW COLUMNS
+FROM users;
+
+
+
+# Table data
+SELECT * FROM boardlists;
+
+SELECT * FROM boardmembers;
+
+SELECT * FROM boards;
+
+SELECT * FROM boardstar;
+
+SELECT * FROM cards;
+
+SELECT * FROM colours;
+
+SELECT * FROM refreshtokens;
+
+SELECT * FROM users;
+
+
+
 
 SELECT
     U.Email,
@@ -48,10 +59,6 @@ SELECT
 FROM users U
 LEFT JOIN refreshtokens RT
     ON U.UserId = RT.UserId;
-
-
-SELECT  *
-FROM refreshtokens RT;
 
 
 SELECT *
@@ -69,7 +76,9 @@ JOIN cards C
 
 SELECT
     BM.Role,
+    U.UserId,
     U.Name AS UserName,
+    B.BoardId,
     B.Name AS BoardName
 FROM boardmembers BM
 LEFT JOIN users U
@@ -78,12 +87,10 @@ LEFT JOIN boards B
     ON BM.BoardId = B.BoardId;
 
 
-
 SELECT *
 FROM boards B
 JOIN boardlists BL
     ON B.BoardId = BL.BoardId;
-
 
 
 
@@ -97,8 +104,18 @@ JOIN boards B
     ON BM.BoardId = B.BoardId
 WHERE BM.UserId = 1;
 
-SELECT *
-FROM boardstar;
+
+SELECT
+    B.BoardId AS BoardID,
+    B.Name AS BoardName,
+    BL.BoardListId AS ListID,
+    BL.Name AS ListName,
+    BL.ListPosition
+FROM boardlists BL
+JOIN boards B
+    ON BL.BoardId = B.BoardId
+WHERE B.BoardId = 32;
+
 
 
 

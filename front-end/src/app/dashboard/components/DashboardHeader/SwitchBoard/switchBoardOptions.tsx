@@ -32,6 +32,7 @@ export default function SwitchBoardOptions() {
     const boards = useBoardStore((state) => state.boards); 
     const setBoards = useBoardStore((state) => state.setBoards); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
+    const currentBoardData = useBoardStore((state) => state.currentBoardData); 
 
     const [loading, setLoading] = useState(false); 
     const [failedToLoadBoards, setFailedToLoadBoards] = useState(false); 
@@ -110,6 +111,11 @@ export default function SwitchBoardOptions() {
 
 
     async function handleBoardClick(boardId: number) {
+        if (currentBoardData !== undefined  && currentBoardData.id === boardId) {
+            setActivePanel('none');     
+            return; 
+        }
+
         setBoardLoading(true); 
         
         try {
