@@ -16,7 +16,7 @@ export default function DeleteBoardDialogBox({
     onCancel: () => void; 
 }) {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
-    const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
+    const RemoveBoardFromBoardArray = useBoardStore((state) => state.RemoveBoardFromBoardArray); 
     const resetCurrentBoardData = useBoardStore((state) => state.resetCurrentBoardData); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
 
@@ -27,7 +27,7 @@ export default function DeleteBoardDialogBox({
 
         if (request.ok) {
             resetCurrentBoardData(); 
-            resetBoardArray(); 
+            RemoveBoardFromBoardArray(boardId); 
             setLastUsedBoardExists(false); 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 

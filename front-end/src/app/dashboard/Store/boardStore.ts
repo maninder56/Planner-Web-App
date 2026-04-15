@@ -64,7 +64,9 @@ type Action = {
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
     
+    // Board array 
     AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
+    RemoveBoardFromBoardArray: (boardId: number) => void; 
     resetBoardArray: () => void; 
 
     setLastUsedBoardExists: (exists?: boolean) => void; 
@@ -112,6 +114,11 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     resetBoardArray: () => set(() => ({
         boards: null, 
+    })), 
+
+    RemoveBoardFromBoardArray: (boardId) => set((state) => ({
+        boards: state.boards === null ? null :  
+            state.boards.filter(b => b.boardId !== boardId)
     })), 
 
 

@@ -21,6 +21,11 @@
 
   /* board header bar colours */
   --soft-pink-bar: #e24e4e; 
+  --light-mint-green-bar: #88c45a; 
+  --aqua-bar: #53b6aa; 
+  --lavender-blue-bar: #8084cd; 
+  --light-purple-bar: #9f62b9; 
+  --bright-pink-bar: #c2389b; 
   /* need to add all other colours for board header bar */
 
 }

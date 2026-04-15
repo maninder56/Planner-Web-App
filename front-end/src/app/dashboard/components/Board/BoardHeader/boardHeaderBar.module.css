@@ -32,7 +32,7 @@
 } 
 
 .wrapper.light-mint-green {
-    background-color: var(--light-mint-green);
+    background-color: var(--light-mint-green-bar);
 }
 
 .wrapper.aqua {
@@ -41,14 +41,14 @@
 
 
 .wrapper.lavender-blue {
-    background-color: var(--lavender-blue);
+    background-color: var(--lavender-blue-bar);
 }
 
 .wrapper.light-purple {
-    background-color: var(--light-purple);
+    background-color: var(--light-purple-bar);
 }
 
 
 .wrapper.bright-pink {
-    background-color: var(--bright-pink);
+    background-color: var(--bright-pink-bar);
 }
