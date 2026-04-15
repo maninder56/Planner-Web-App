@@ -99,11 +99,7 @@ export default function BoardList({
 
     async function handleEnterKeyAfterNameChange(key: string) {
         if (key === 'Enter') {
-            
-            if (inputRef.current) {
-                inputRef.current.blur(); 
-            }
-
+            inputRef.current?.blur(); 
             await handleNameChange(); 
         }
     }

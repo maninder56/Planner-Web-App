@@ -27,26 +27,30 @@ export default function BoardNameInput({
 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
+    const inputRef = useRef<HTMLInputElement | null>(null); 
+
     const disableInput = userRole === 'Viewer'; 
 
-    async function handleOnBlur() {
-        if (input === '') {
+    async function handleNameChange() {
+        const inputTrimmed = input.trim(); 
+        if (inputTrimmed === '') {
             setInput(boardName); 
             return; 
-        } else if (input === initialName) {
+        } else if (inputTrimmed === initialName) {
             return; 
         }
 
         const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateBoardInfoRequest, 
             { boardId: boardId, boardInfo: {
-                name: input.trim(),
+                name: inputTrimmed,
                 isFavoriteBoard: undefined,
                 backgroundColour: undefined
             }}
         ); 
 
         if (request.ok) {
-            setCurrentBoardName(input); 
+            setCurrentBoardName(inputTrimmed);
+            setInput(inputTrimmed); 
             resetBoardArray();
             setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
@@ -58,9 +62,17 @@ export default function BoardNameInput({
         }
     }
 
+    async function handleEnterKeyAfterNameChange(key: string) {
+        if (key === 'Enter') {
+            inputRef.current?.blur(); 
+            await handleNameChange(); 
+        }
+    }
+
 
     return (
         <input
+            ref={inputRef}
             className={styles.wrapper}
             type='text'
             maxLength={50}
@@ -68,6 +80,7 @@ export default function BoardNameInput({
             disabled={disableInput}
             onClick={e => { e.stopPropagation(); }}
             onChange={e => setInput(e.target.value)}
-            onBlur={handleOnBlur}/>
+            onBlur={handleNameChange}
+            onKeyDown={e => handleEnterKeyAfterNameChange(e.key)}/>
     );
 }
