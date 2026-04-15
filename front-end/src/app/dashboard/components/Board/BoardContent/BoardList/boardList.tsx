@@ -14,6 +14,7 @@ import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities'
 import { useUserStore } from '@/Store/userStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateListInfoRequest } from '@/app/dashboard/Services/listService';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function BoardList({
     boardId, 
@@ -24,6 +25,7 @@ export default function BoardList({
     setCurrentOpenListMenu,
     cardDetailsPanelId, 
     setCardDetailsPanelId, 
+    setCreateNewCardListId
 }: {
     boardId: number,
     listId: ListId; 
@@ -33,6 +35,7 @@ export default function BoardList({
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
     cardDetailsPanelId?: CardId; 
     setCardDetailsPanelId: (cardId?: CardId) => void; 
+    setCreateNewCardListId: (listId: number | undefined) => void; 
 }) {
     const {ref, isDragging} = useSortable({
         id: listId,  
@@ -56,6 +59,7 @@ export default function BoardList({
     const viewOnly = userRole === 'Viewer'; 
     const numericListId = ConvertListIdToNumeric(listId); 
 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const initialListName = useBoardStore((state) => state.lists[listId].name); 
     const listCardsIdsAndOrder = useBoardStore((state) => state.lists[listId].CardIDsAndOrder); 
@@ -131,12 +135,25 @@ export default function BoardList({
                 }
             </div>
             <div className={styles.addNewCardContainer}>
-                <button>
-                    <Image src={'./plusSign.svg'} alt='plus sign' width={10} height={10} />
-                    <span>Add card button</span>
+                <button className='button transparent-with-outline' onClick={(e) => {
+                    e.stopPropagation(); 
+                    if (numericListId !== -1) {
+                        setCreateNewCardListId(numericListId); 
+                        setActivePanel('createNewCardPanel'); 
+                        setBoardError(''); 
+                    } else {
+                        setCreateNewCardListId(undefined); 
+                        setBoardError('Error occured while opening new card form, please try again'); 
+                    }
+                }}>
+                    <svg height="20" width="20" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" 
+                        clipRule="evenodd" strokeLinecap="round"  strokeLinejoin="round">
+                        <path d="M6 12h12m-6-6v12" fill="none" fillRule="nonzero" stroke="#000" 
+                            strokeWidth="2" transform="matrix(56.51202 0 0 56.51203 -278.144 -278.144)"/>
+                    </svg>
+                    <span>Add card</span>
                 </button>
             </div>
-            {/* <div>{JSON.stringify(listCardsIdsAndOrder)}</div> */}
         </div>
     ); 
 }

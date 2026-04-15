@@ -6,11 +6,14 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { CreateNewListRequest } from '@/app/dashboard/Services/listService';
 import { useUserStore } from '@/Store/userStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { UserRole } from '@/app/dashboard/Types/boardTypes';
 
 export default function AddNewListButton({
     boardId, 
+    userRole, 
 }: {
     boardId: number; 
+    userRole: UserRole; 
 }) {
     const isFormOpen = useBoardUIStore((state) => state.activePanel === 'newListForm'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -20,6 +23,8 @@ export default function AddNewListButton({
     const [listName, setListName] = useState(''); 
     const [error, setError] = useState(''); 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
+
+    const viewOnly = userRole === 'Viewer'; 
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault(); 
@@ -46,7 +51,7 @@ export default function AddNewListButton({
 
     return (
         <div className={styles.wrapper}>
-            <button onClick={(e) => {
+            <button disabled={viewOnly} onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel(isFormOpen ? 'none' : 'newListForm'); 
             }}>

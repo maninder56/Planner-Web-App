@@ -11,6 +11,8 @@ import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstrac
 import BoardContentSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 import AddNewListButton from './AddNewListButton/addNewListButton';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import AddNewCardPanel from './AddNewCardPanel/addNewCardPanel';
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -20,7 +22,13 @@ export default function BoardContent() {
     const setListOrder = useBoardStore((state) => state.setListOrder);
     const moveCard = useBoardStore((state) => state.moveCard); 
 
+    const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
+
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
+    
+    // list to which the new card will be added
+    const [createNewCardListId, setCreateNewCardListId] = useState<number | undefined>(undefined); 
+
     const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
     
     if (isBoardLoading) {
@@ -89,13 +97,16 @@ export default function BoardContent() {
                                 currentOpenListMenu={currentOpenListMenu} 
                                 setCurrentOpenListMenu={setCurrentOpenListMenu}
                                 cardDetailsPanelId={cardDetailsPanelId}
-                                setCardDetailsPanelId={setCardDetailsPanelId} />
+                                setCardDetailsPanelId={setCardDetailsPanelId} 
+                                setCreateNewCardListId={setCreateNewCardListId}/>
                         ))
                     }
                     <div className={styles.newListButtonContainer}>
-                        <AddNewListButton boardId={boardDetials.id}/>
+                        <AddNewListButton boardId={boardDetials.id} userRole={boardDetials.role} />
                     </div>
                 </div>
+                {isCreateNewCardPanelOpen && createNewCardListId && 
+                    <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/>}
             </div>
         </DragDropProvider>
     )

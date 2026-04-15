@@ -61,7 +61,8 @@ export default function BoardCard({
                     </div>
                     <div>
                         <span>Due Date</span>
-                        <div>{cardDetails.dueDate.toLocaleDateString('en-GB')}</div>
+                        {/* <div>{cardDetails.dueDate.toLocaleDateString('en-GB')}</div> */}
+                        <div>{cardDetails.dueDate.toString()}</div>
                     </div>
                 </div>
             </div>

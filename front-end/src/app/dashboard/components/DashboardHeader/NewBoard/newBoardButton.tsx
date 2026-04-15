@@ -23,9 +23,9 @@ export default function NewBoardButton() {
                 }}>
                 <svg height="20" width="20" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" 
                         clipRule="evenodd" strokeLinecap="round"  strokeLinejoin="round">
-                        <path d="M6 12h12m-6-6v12" fill="none" fillRule="nonzero" stroke="#000" 
-                            strokeWidth="2" transform="matrix(56.51202 0 0 56.51203 -278.144 -278.144)"/>
-                    </svg>
+                    <path d="M6 12h12m-6-6v12" fill="none" fillRule="nonzero" stroke="#000" 
+                        strokeWidth="2" transform="matrix(56.51202 0 0 56.51203 -278.144 -278.144)"/>
+                </svg>
                 <span>New Board</span>
             </button>
             {

@@ -27,10 +27,15 @@
 
 @media (pointer: fine) {
     
-    .wrapper > button:hover {
+    .wrapper > button:hover:not(:disabled) {
         background-color: rgba(0, 0, 0, 0.3);
         cursor: pointer;
     }
+}
+
+.wrapper > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .wrapper > button svg {

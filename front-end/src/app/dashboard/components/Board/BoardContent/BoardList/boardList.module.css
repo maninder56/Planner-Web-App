@@ -72,13 +72,30 @@
     cursor: not-allowed;
 }
 
+
+
 .cards {
     margin-top: 10px;
-    min-height: 100px;
+    min-height: 10px;
 }
 
 
 .addNewCardContainer {
     display: flex;
     justify-content: center;
+}
+
+.addNewCardContainer button {
+    font-size: 1rem;
+
+    padding: 5px 6px;
+
+    border-radius: 6px;
+}
+
+.addNewCardContainer button svg {
+    width: 15;
+    height: 15;
+
+    margin-right: 5px;
 }

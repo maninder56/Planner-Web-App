@@ -15,7 +15,7 @@ const CardSchema = z.object({
     description: z.string(), 
     isDone: z.boolean(), 
     priority: CardPriority,
-    dueDate: z.date(), 
+    dueDate: z.string(), 
     cardPosition: z.number(), 
 }); 
 export type CardFromAPI = z.infer<typeof CardSchema>; 
