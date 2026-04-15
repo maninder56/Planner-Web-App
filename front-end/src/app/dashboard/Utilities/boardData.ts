@@ -36,7 +36,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
             for (let card of list.cardList) {
                 cards[`card-${card.cardId}`] = {
                     id: card.cardId, 
-                    title: card.title, 
+                    name: card.title, 
                     description: card.description, 
                     done: card.isDone, 
                     priority: card.priority, 
@@ -50,7 +50,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
 
         lists[`list-${list.boardListId}`]  = {
             id: list.boardListId, 
-            title: list.name, 
+            name: list.name, 
             position: list.listPosition, 
             CardIDsAndOrder: cardIds, 
         }; 

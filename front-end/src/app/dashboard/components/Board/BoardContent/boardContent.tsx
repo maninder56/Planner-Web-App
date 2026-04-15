@@ -85,7 +85,7 @@ export default function BoardContent() {
                 <div className={styles.lists}>
                     {
                         listOrder.map((listId, listIndex) => (
-                            <BoardList listId={listId} index={listIndex} key={listId} userRole={boardDetials.role}
+                            <BoardList listId={listId} index={listIndex} key={listId} userRole={boardDetials.role} boardId={boardDetials.id}
                                 currentOpenListMenu={currentOpenListMenu} 
                                 setCurrentOpenListMenu={setCurrentOpenListMenu}
                                 cardDetailsPanelId={cardDetailsPanelId}

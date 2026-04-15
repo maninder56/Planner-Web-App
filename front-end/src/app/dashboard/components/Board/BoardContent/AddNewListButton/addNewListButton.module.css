@@ -19,7 +19,7 @@
     border: none;
     border-radius: 10px;
 
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
 
     display: flex;
     justify-content: center;
@@ -28,7 +28,7 @@
 @media (pointer: fine) {
     
     .wrapper > button:hover {
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.3);
         cursor: pointer;
     }
 }

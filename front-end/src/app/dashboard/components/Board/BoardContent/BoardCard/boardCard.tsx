@@ -50,7 +50,7 @@ export default function BoardCard({
                     onClick={(e) => {
                         e.stopPropagation(); 
                         setDoneOnCard(cardId, !cardDetails.done)}} />
-                <h3 className={cardDetails.done ? styles.taskDone : undefined }>{cardDetails.title}</h3>
+                <h3 className={cardDetails.done ? styles.taskDone : undefined }>{cardDetails.name}</h3>
             </header>
             <div className={styles.cardContent}>
                 <p>{cardDetails.description}</p>

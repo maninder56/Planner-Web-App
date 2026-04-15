@@ -16,14 +16,14 @@ type CardId = `card-${number}`;
 
 type List = {
     id: number, 
-    title: string, 
+    name: string, 
     position: number,
     CardIDsAndOrder: CardId[],
 }
 
 type Card = { 
     id: number,
-    title: string, 
+    name: string, 
     description: string, 
     done: boolean, 
     priority: CardPriority,
@@ -54,6 +54,7 @@ type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
     setBoards: (boards: BoardArray) => void; 
 
+    // Board Info operations
     setCurrentBoardName: (boardName: string) => void; 
     setCurrentBoardFavourite: (isFavourite: boolean) => void; 
     setCurrentBoardColour: (colour: BoardColour) => void; 
@@ -72,6 +73,7 @@ type Action = {
 
     // Lists operations
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
+    UpdateListName: (listId: ListId, newName: string) => void; 
 
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -166,6 +168,16 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     // Lists operations 
 
+    UpdateListName: (listId, newName) => set((state) => ({
+        lists: {
+            ...state.lists, 
+            [listId]: {
+                ...state.lists[listId], 
+                name: newName, 
+            }
+        }
+    })), 
+
     AddNewListToBoard: (data) => set((state) => {
         const listId = `list-${data.id}` as ListId; 
 
@@ -174,7 +186,7 @@ export const useBoardStore = create<State & Action>((set) => ({
                 ...state.lists, 
                 [listId]: {
                     id: data.id, 
-                    title: data.title, 
+                    name: data.title, 
                     position: data.position,
                     CardIDsAndOrder: []
                 }

@@ -28,14 +28,11 @@ export default function BoardNameInput({
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const disableInput = userRole === 'Viewer'; 
-    
-    function handleInputChange(value: string) {
-        setInput(value); 
-    }
 
     async function handleOnBlur() {
         if (input === '') {
             setInput(boardName); 
+            return; 
         } else if (input === initialName) {
             return; 
         }
@@ -70,7 +67,7 @@ export default function BoardNameInput({
             value={input}
             disabled={disableInput}
             onClick={e => { e.stopPropagation(); }}
-            onChange={e => handleInputChange(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onBlur={handleOnBlur}/>
     );
 }

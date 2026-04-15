@@ -5,13 +5,18 @@ import styles from './boardList.module.css';
 import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import Image from 'next/image';
 import ListMenuButton from './ListMenu/listMenuButton';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import BoardCard from '../BoardCard/boardCard';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
 import { useDroppable } from '@dnd-kit/react';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
+import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
+import { useUserStore } from '@/Store/userStore';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { UpdateListInfoRequest } from '@/app/dashboard/Services/listService';
 
 export default function BoardList({
+    boardId, 
     listId, 
     index,
     currentOpenListMenu,
@@ -20,6 +25,7 @@ export default function BoardList({
     cardDetailsPanelId, 
     setCardDetailsPanelId, 
 }: {
+    boardId: number,
     listId: ListId; 
     index: number; 
     currentOpenListMenu: ListId | undefined; 
@@ -48,14 +54,58 @@ export default function BoardList({
 
 
     const viewOnly = userRole === 'Viewer'; 
+    const numericListId = ConvertListIdToNumeric(listId); 
 
-    const listTitle = useBoardStore((state) => state.lists[listId].title); 
+
+    const initialListName = useBoardStore((state) => state.lists[listId].name); 
     const listCardsIdsAndOrder = useBoardStore((state) => state.lists[listId].CardIDsAndOrder); 
+    const setBoardError = useBoardStore((state) => state.setBoardError);  
+    const UpdateListName = useBoardStore((state) => state.UpdateListName); 
+    
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
-    const [listName, setListName] = useState(listTitle);
+    const [listName, setListName] = useState(initialListName);
+    
+    const inputRef = useRef<HTMLInputElement | null>(null); 
 
-    function handleOnBlur() {
+    async function handleNameChange() {
+        if (listName.trim() === '') {
+            setListName(initialListName); 
+            return;
+        } else if (listName === initialListName) {
+            return; 
+        } else if (numericListId === -1) {
+            setBoardError('Failed to change list name, please try again.')
+            return; 
+        }
 
+        const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateListInfoRequest, {
+                boardId: boardId, listId: numericListId, listInfo: {
+                    name: listName,
+                }}
+        ); 
+        
+        if (request.ok) {
+            UpdateListName(listId, listName); 
+            setBoardError(''); 
+        } else if (request.error === 'Unauthorized') {
+            setSessionExpired(true); 
+            setListName(initialListName); 
+        } else {
+            setBoardError('Failed to change list name, please try again.'); 
+            setListName(initialListName); 
+        }
+    }
+
+    async function handleEnterKeyAfterNameChange(key: string) {
+        if (key === 'Enter') {
+            
+            if (inputRef.current) {
+                inputRef.current.blur(); 
+            }
+
+            await handleNameChange(); 
+        }
     }
 
     return (
@@ -63,6 +113,7 @@ export default function BoardList({
             <div className={styles.header}>
                 <header>
                     <input 
+                        ref={inputRef}
                         className={styles.listName}
                         type='text'
                         maxLength={30}
@@ -70,7 +121,8 @@ export default function BoardList({
                         value={listName}
                         onClick={e => { e.stopPropagation(); }}
                         onChange={e => setListName(e.target.value)}
-                        onBlur={handleOnBlur}/>
+                        onBlur={handleNameChange}
+                        onKeyDown={e => handleEnterKeyAfterNameChange(e.key)}/>
                 </header>
                 <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu} />
             </div>

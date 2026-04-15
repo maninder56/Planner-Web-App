@@ -8,7 +8,7 @@ export const NewListResponseSchema = z.object({
 }); 
 
 export const ChangeListInfoSchema = z.object({
-    Name: z.union([z.string(), z.undefined()]), 
+    name: z.union([z.string(), z.undefined()]), 
 }); 
 
 export type ChangeListInfo = z.infer<typeof ChangeListInfoSchema>; 
