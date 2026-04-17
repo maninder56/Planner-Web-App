@@ -44,15 +44,19 @@ export async function SearchCardByKeywordRequest(keyword: string) {
 // Post requests
 
 
-export async function CreateNewCardRequest(boardId: number, listId: number, newCard: NewCard) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}/cards`; 
+export async function CreateNewCardRequest(data: {
+    boardId: number, 
+    listId: number, 
+    newCard: NewCard
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'POST', 
         credentials: 'include',
-        body: JSON.stringify(newCard),
+        body: JSON.stringify(data.newCard),
     }; 
 
     try {
@@ -83,15 +87,20 @@ export async function CreateNewCardRequest(boardId: number, listId: number, newC
 // Patch requests
 
 
-export async function UpdateCardInfoRequest(boardId: number, listId: number, cardId: number, card: UpdateCard) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}/cards/${cardId}`; 
+export async function UpdateCardInfoRequest(data: {
+    boardId: number, 
+    listId: number, 
+    cardId: number, 
+    card: UpdateCard
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards/${data.cardId}`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'PATCH', 
         credentials: 'include',
-        body: JSON.stringify(card),
+        body: JSON.stringify(data.card),
     }; 
 
     try {

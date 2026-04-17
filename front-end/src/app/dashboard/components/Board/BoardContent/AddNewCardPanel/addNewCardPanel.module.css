@@ -1,0 +1,91 @@
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper *:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cardForm {
+    flex: 1 1 auto;
+    max-width: 500px;
+}
+
+
+.error {
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+
+    font-size: 1rem;
+    text-align: center;
+    color: red;
+
+    min-height: 1rem;
+}
+
+.checkboxAndTitle {
+    display: flex;
+    justify-content: start;
+
+    margin: 10px 0px;
+}
+
+
+.checkbox {
+    flex: 0 1 auto;
+
+    margin: auto;
+    margin-left: 0;
+    margin-right: 20px;
+
+    width: 20px;
+    height: 20px;
+
+    accent-color: green;
+}
+
+@media (pointer: fine) {
+    .checkbox:hover:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+
+.title {
+    flex: 1 1 auto;
+
+    padding: 10px 15px;
+
+    font-size: 1rem;
+    color: black;
+
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.title.taskDone {
+    text-decoration: line-through;
+}
+
+
+@media (pointer: fine) {
+    .title:hover:not(:disabled) {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.title:focus:not(:disabled) {
+    background-color: white;
+}
