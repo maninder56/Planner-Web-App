@@ -28,7 +28,7 @@ export default function AddNewCardPanel({
     const [priority, setPriority] = useState<CardPriority>('Low'); 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [submitError, setSubmitError] = useState('can not submit form'); 
-    const [titleError, setTitleError] = useState('title is required'); 
+    const [titleError, setTitleError] = useState(''); 
 
 
     async function handleFormSubmit(e: FormEvent) {
@@ -41,6 +41,16 @@ export default function AddNewCardPanel({
         }
     }
 
+    function handleTitleChange(value: string) {
+        if (value.trim() === '') {
+            setTitleError('Title is required'); 
+        } else {
+            setTitleError(''); 
+        }
+
+        setTitle(value); 
+    }
+
     return (
         <BigHoverPanel title='Add New Card' onCloseClick={() => setActivePanel('none')}>
             <div className={styles.wrapper}>
@@ -48,14 +58,12 @@ export default function AddNewCardPanel({
                     <div className={styles.error}>{submitError}</div>
                     <div className={styles.checkboxAndTitle}>
                         <input className={styles.checkbox} type='checkbox' name='isDone' checked={isDone} onChange={e => setIsDone(e.target.checked)} />
-                        <div>
-                            <input className={[styles.title, isDone ? styles.taskDone : ''].join(' ')} type='text' 
-                                name='title' placeholder='Title...' maxLength={50} value={title} autoFocus={true} 
-                                onChange={e => setTitle(e.target.value)} />
-                            <span></span>
-                        </div>
+                        <input className={[styles.title, (isDone && title.trim() !== '') ? styles.crossTheTask : '', ].join(' ')} 
+                            type='text' name='title' placeholder='Title...' maxLength={50} value={title} autoFocus={true} 
+                            onChange={e => handleTitleChange(e.target.value)} />
                     </div>
-                    <div>
+                    <span className={styles.titleError}>{titleError}</span>
+                    <div className={styles.priorityAndDueDateContainer}>
                         <div>
                             <header>Priority</header>
                             <select name='priority' value={priority} onChange={e => handlePriorityChange(e.target.value)}>
@@ -69,13 +77,13 @@ export default function AddNewCardPanel({
                             <input type='date' name='dueDate' value={dueDate} onChange={e => setDueDate(e.target.value)} />
                         </div>
                     </div>
-                    <div>
+                    <div className={styles.description}>
                         <header>Description</header>
-                        <input type='text' name='description' maxLength={400} value={description} onChange={e => setDescription(e.target.value)} />
+                        <textarea name='description' maxLength={400} value={description} placeholder='card details...'
+                            onChange={e => setDescription(e.target.value)} />
                     </div>
-                    <div>
-                        <Button name='Cancle' color='transparent-with-outline' disabled={buttonDisabled} onClick={() => setActivePanel('none')} />
-                        <button type='submit' className='button blue' disabled={buttonDisabled || title === ''}>Save</button>
+                    <div className={styles.buttonsContainer}>
+                        <button type='submit' className='button blue' disabled={buttonDisabled || title.trim() === ''}>Save</button>
                     </div>
                 </form>
             </div>
