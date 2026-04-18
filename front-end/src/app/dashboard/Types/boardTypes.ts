@@ -52,7 +52,7 @@ export type NewCard = {
     Title: string; 
     Description?: string; 
     IsDone: boolean; 
-    DueDate: Date; 
+    DueDate: string; 
     Priority: CardPriority; 
 }
 
@@ -65,34 +65,34 @@ export type UpdateCard = {
 }
 
 export const CardUpdatedSchema = z.object({
-    CardId: z.number(), 
-    Title: z.union([z.string(), z.undefined()]), 
-    Description: z.union([z.string(), z.undefined()]), 
-    CardPosition: z.union([z.number(), z.undefined()]), 
-    IsDone: z.union([z.boolean(), z.undefined()]), 
-    DueDate:z.union([z.date(), z.undefined()]), 
-    Priority: z.union([CardPriority, z.undefined()]) 
+    cardId: z.number(), 
+    title: z.union([z.string(), z.undefined()]), 
+    description: z.union([z.string(), z.undefined()]), 
+    cardPosition: z.union([z.number(), z.undefined()]), 
+    isDone: z.union([z.boolean(), z.undefined()]), 
+    dueDate:z.union([z.date(), z.undefined()]), 
+    priority: z.union([CardPriority, z.undefined()]) 
 }); 
 export type CardUpdated = z.infer<typeof CardUpdatedSchema>; 
 
 
 
 export const CardInfoSchema = z.object({
-    CardId: z.number(), 
-    Title: z.string(), 
-    Description: z.union([z.string(), z.undefined()]), 
-    CardPosition: z.number(), 
-    IsDone: z.boolean(), 
-    DueDate: z.date(), 
-    Priority: CardPriority, 
-    BoardListId: z.number(),
+    cardId: z.number(), 
+    title: z.string(), 
+    description: z.union([z.string(), z.undefined()]), 
+    cardPosition: z.number(), 
+    isDone: z.boolean(), 
+    dueDate: z.string(), 
+    priority: CardPriority, 
+    boardListId: z.number(),
 }); 
 export type CardInfo = z.infer<typeof CardInfoSchema>; 
 
 
 export type UpdateCardOrder = {
-    ListId: number; 
-    CardIDsInOrder: number[]; 
+    listId: number; 
+    cardIDsInOrder: number[]; 
 }[]; 
 
 

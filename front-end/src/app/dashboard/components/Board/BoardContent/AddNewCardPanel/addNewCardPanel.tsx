@@ -5,6 +5,9 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { FormEvent, useEffect, useState } from 'react';
 import { CardPriority } from '@/app/dashboard/Types/boardTypes';
 import Button from '@/Components/Buttons/button';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { CreateNewCardRequest } from '@/app/dashboard/Services/cardService';
+import { useUserStore } from '@/Store/userStore';
 
 export default function AddNewCardPanel({
     boardId, 
@@ -21,18 +24,47 @@ export default function AddNewCardPanel({
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
     const [title, setTitle] = useState(''); 
     const [description, setDescription] = useState(''); 
     const [isDone, setIsDone] = useState(false); 
     const [dueDate, setDueDate] = useState(getLocalDate()); 
     const [priority, setPriority] = useState<CardPriority>('Low'); 
+
     const [buttonDisabled, setButtonDisabled] = useState(false); 
-    const [submitError, setSubmitError] = useState('can not submit form'); 
+    const [submitError, setSubmitError] = useState(''); 
     const [titleError, setTitleError] = useState(''); 
 
 
     async function handleFormSubmit(e: FormEvent) {
         e.preventDefault(); 
+        setButtonDisabled(true); 
+
+        try {
+            const request = await ApiRequestWithRefreshTokenAttemptAndData(CreateNewCardRequest, {
+                boardId: boardId, listId: parentListId, newCard: {
+                    Title: title,
+                    Description: description, 
+                    IsDone: isDone,
+                    DueDate: dueDate,
+                    Priority: priority,
+                }
+            }); 
+
+            if (request.ok && request.data !== undefined) {
+                // add new card to list
+                setSubmitError(''); 
+                setTitleError(''); 
+                setActivePanel('none'); 
+            } else if (!request.ok && request.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            } else {
+                setSubmitError('Failed to create new Card, please try again.');
+            }
+        } finally {
+            setButtonDisabled(false); 
+        }
     }
 
     function handlePriorityChange(value: string) {
