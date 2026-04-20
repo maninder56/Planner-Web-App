@@ -44,11 +44,7 @@ export default function ListMenuButton({
                         stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </button>
-            {
-                isBoardListMenuOptionsOpen && listId === currentOpenListMenu ? 
-                    <ListMenuOptions />
-                : null
-            }
+            { isBoardListMenuOptionsOpen && listId === currentOpenListMenu && <ListMenuOptions currentOpenListMenuId={currentOpenListMenu} /> }
         </div>
     ); 
 }

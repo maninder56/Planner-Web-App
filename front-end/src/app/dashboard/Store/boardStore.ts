@@ -215,6 +215,7 @@ export const useBoardStore = create<State & Action>((set) => ({
     }), 
 
 
+
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
 
