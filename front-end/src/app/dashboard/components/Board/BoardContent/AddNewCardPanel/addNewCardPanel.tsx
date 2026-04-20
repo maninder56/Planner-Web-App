@@ -8,6 +8,7 @@ import Button from '@/Components/Buttons/button';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { CreateNewCardRequest } from '@/app/dashboard/Services/cardService';
 import { useUserStore } from '@/Store/userStore';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function AddNewCardPanel({
     boardId, 
@@ -23,6 +24,8 @@ export default function AddNewCardPanel({
     };
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const addNewCard = useBoardStore((state) => state.addNewCard); 
 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
@@ -53,7 +56,15 @@ export default function AddNewCardPanel({
             }); 
 
             if (request.ok && request.data !== undefined) {
-                // add new card to list
+                addNewCard(parentListId, {
+                    id: request.data.cardId, 
+                    name: request.data.title, 
+                    description: request.data.description ?? "", 
+                    done: request.data.isDone, 
+                    priority: request.data.priority, 
+                    dueDate: request.data.dueDate, 
+                    position: request.data.cardPosition, 
+                }); 
                 setSubmitError(''); 
                 setTitleError(''); 
                 setActivePanel('none'); 

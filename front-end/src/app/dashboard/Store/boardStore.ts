@@ -27,7 +27,7 @@ type Card = {
     description: string, 
     done: boolean, 
     priority: CardPriority,
-    dueDate: Date, 
+    dueDate: string, 
     position: number, 
 }
 
@@ -83,6 +83,7 @@ type Action = {
     
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
+    addNewCard: (parentListId: number, card: Card) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -175,18 +176,29 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     // Lists operations 
 
-    UpdateListName: (listId, newName) => set((state) => ({
-        lists: {
-            ...state.lists, 
-            [listId]: {
-                ...state.lists[listId], 
-                name: newName, 
-            }
+    UpdateListName: (listId, newName) => set((state) => {
+        const list = state.lists[listId]; 
+        if (!list) {
+            return state; 
         }
-    })), 
+
+        return {
+            lists: {
+                ...state.lists, 
+                [listId]: {
+                    ...list, 
+                    name: newName, 
+                }
+        }
+        }
+    }), 
 
     AddNewListToBoard: (data) => set((state) => {
-        const listId = `list-${data.id}` as ListId; 
+        const listId: ListId = `list-${data.id}`; 
+
+        if (state.lists[listId]) {
+            return state; 
+        }
 
         return {
             lists: {
@@ -205,6 +217,8 @@ export const useBoardStore = create<State & Action>((set) => ({
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
+
+    // Card actions
     moveCard: (cardId, sourceListId, targetListId, targetIndex) => 
         set((state) => {
             // Moving in the same list
@@ -235,9 +249,17 @@ export const useBoardStore = create<State & Action>((set) => ({
             const sourceList = state.lists[sourceListId]; 
             const targetList = state.lists[targetListId]; 
 
+            if (!sourceList || !targetList) {
+                return state; 
+            }
+
+            if (!sourceList.CardIDsAndOrder.includes(cardId)) {
+                return state; 
+            }
+
             const newSourceCardIds = sourceList.CardIDsAndOrder.filter(id => id !== cardId); 
-            const newTargetCardTds = [...targetList.CardIDsAndOrder]; 
-            newTargetCardTds.splice(targetIndex, 0, cardId); 
+            const newTargetCardIds = [...targetList.CardIDsAndOrder]; 
+            newTargetCardIds.splice(targetIndex, 0, cardId); 
 
             return {
                 lists: {
@@ -248,22 +270,59 @@ export const useBoardStore = create<State & Action>((set) => ({
                     }, 
                     [targetListId]: {
                         ...targetList, 
-                        CardIDsAndOrder: newTargetCardTds,
+                        CardIDsAndOrder: newTargetCardIds,
                     }
                 }
             }
         }), 
 
-        setDoneOnCard: (cardId, done) => set((state) => ({ 
-            cards: {
-                ...state.cards, 
-                [cardId]: {
-                    ...state.cards[cardId],
-                    done: done, 
-                }, 
-            }
-        })), 
+        setDoneOnCard: (cardId, done) => set((state) => { 
+            const card = state.cards[cardId]; 
 
+            if (!card) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: {
+                        ...card,
+                        done: done, 
+                    }, 
+                }
+            }
+        }), 
+
+        addNewCard: (parentListId, card) => set((state) => {
+            const cardId: CardId = `card-${card.id}`; 
+            const listId: ListId = `list-${parentListId}`; 
+
+            const list = state.lists[listId]; 
+
+            if (!list) {
+                return state; 
+            }
+
+            if (list.CardIDsAndOrder.includes(cardId)) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: card,
+                }, 
+
+                lists: {
+                    ...state.lists, 
+                    [listId]: {
+                        ...list, 
+                        CardIDsAndOrder: [...list.CardIDsAndOrder, cardId], 
+                    }
+                }
+            }
+        }), 
 }))
 
 
