@@ -1,5 +1,5 @@
-/* 
-.wrapper * {
+
+/* .wrapper * {
     outline: solid 1px rgb(255, 0, 0);
 } */
 
@@ -33,6 +33,8 @@
 }
 
 .wrapper > header > input {
+    flex: 0 1 auto;
+
     margin: auto 10px;
 
     --size: 20px; 
@@ -45,11 +47,40 @@
 } */
 
 .wrapper > header > h3 {
+    flex: 1 1 auto;
     margin: auto 0px;
     padding: 0;
 
     font-size: 1.2rem;
     font-weight: 500;
+
+    min-width: 0;
+}
+
+.grabCardIcon {
+    flex: 0 1 auto;
+    
+    margin: 0px 5px;
+    width: 25px;
+
+    border-radius: 5px;
+    cursor: grab;
+
+    touch-action: none;
+
+    display: flex;
+}
+
+@media (pointer: fine ) {
+    .grabCardIcon:hover, 
+    .grabCardIcon:active {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+}
+
+
+.grabCardIcon svg {
+    margin: auto;
 }
 
 .taskDone {

@@ -10,30 +10,57 @@
     box-shadow: 0 0 20px -15px rgba(0, 0, 0, 1);
 }
 
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
 @media (pointer: fine) {
-    .wrapper:hover {
-        box-shadow: 0 0 20px -10px rgba(0, 0, 0, 1);
-    }
+    /* .wrapper:hover {
+        
+    } */
 }
 
 .wrapper.dragging {
-    background-color: rgb(255, 255, 255, 0.8); 
+    background-color: rgb(251, 251, 251); 
 }
 
-.wrapper:active {
-    /* box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.7);
+/* .wrapper:active {
+    box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.7);
 
     background-color: rgba(0, 0, 0, 0.2);
 
     cursor: grabbing;
 
-    transition: all 0.1s ease-in-out; */
-}
+    transition: all 0.1s ease-in-out;
+} */
 
 
 .header {
     display: flex;
+}
+
+.grabListIcon {
+    flex: 1 1 auto;
+
+    width: 30px;
+
+    border-radius: 5px;
     cursor: grab;
+
+    touch-action: none;
+
+    display: flex;
+}
+
+@media (pointer: fine ) {
+    .grabListIcon:hover, 
+    .grabListIcon:active {
+        background-color: rgb(241, 241, 241);
+    }
+}
+
+.grabListIcon svg {
+    margin: auto;
 }
 
 .header > header {
@@ -48,6 +75,8 @@
 
     display: flex;
     justify-content: start;
+
+    min-width: 0;
 }
 
 .listName {
@@ -55,6 +84,7 @@
 
     margin-right: 5px;
     padding: 5px;
+    min-width: 0;
 
     font-size: 1rem;
     font-weight: 550;
@@ -66,6 +96,7 @@
 
 .listName:focus-within {
     outline: solid 1.5px rgb(0, 0, 0);
+    cursor: text;
 }
 
 .listName:disabled {
