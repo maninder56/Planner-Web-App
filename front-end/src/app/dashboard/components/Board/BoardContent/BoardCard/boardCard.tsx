@@ -32,7 +32,6 @@ export default function BoardCard({
     }); 
 
     const cardDetails = useBoardStore((state) => state.cards[cardId]);
-    const isCardDetailsPanelOpen = useBoardUIStore((state) => state.activePanel === 'cardDetailsPanel'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const setDoneOnCard = useBoardStore((state) => state.setDoneOnCard); 
@@ -66,11 +65,6 @@ export default function BoardCard({
                     </div>
                 </div>
             </div>
-            {
-                isCardDetailsPanelOpen && cardDetailsPanelId === cardId ? 
-                    <BoardCardDetails cardId={cardId} />
-                : null
-            }
         </div>
     ); 
 }

@@ -135,7 +135,7 @@ export default function BoardList({
                 }
             </div>
             <div className={styles.addNewCardContainer}>
-                <button className='button transparent-with-outline' onClick={(e) => {
+                <button disabled={viewOnly} className='button transparent-with-outline' onClick={(e) => {
                     e.stopPropagation(); 
                     if (numericListId !== -1) {
                         setCreateNewCardListId(numericListId); 
