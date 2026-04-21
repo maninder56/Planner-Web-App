@@ -27,6 +27,8 @@ public class PlannerDatabaseContextFactory : IDesignTimeDbContextFactory<Planner
 
         optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 44))); 
 
+        optionsBuilder.EnableSensitiveDataLogging();
+
         return new PlannerContext(optionsBuilder.Options);  
     }
 }

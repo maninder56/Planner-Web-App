@@ -64,14 +64,20 @@ public class ListRepository (PlannerContext database) : IListRepository
             .Select((id, index) => new { id, index })
             .ToDictionary(x => x.id, x => x.index); 
 
+        // Temporary offset, to handle unique constraint of boardId and list position
+        foreach(var list in boardLists)
+        {
+            list.ListPosition += 1000; 
+        }
+        
+        await database.SaveChangesAsync();
+
+
         foreach (var boardList in boardLists)
         {
             if (positionMap.TryGetValue(boardList.BoardListId, out var position))
             {
-                if (boardList.ListPosition != position)
-                {
-                    boardList.ListPosition = position;
-                }
+                boardList.ListPosition = position;   
             }
         }
 
