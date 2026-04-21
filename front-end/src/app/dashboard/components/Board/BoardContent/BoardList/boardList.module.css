@@ -92,6 +92,8 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+
+    text-overflow: ellipsis;
 }
 
 .listName:focus-within {
