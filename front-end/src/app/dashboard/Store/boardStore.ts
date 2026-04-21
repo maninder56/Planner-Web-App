@@ -76,6 +76,7 @@ type Action = {
     // Lists operations
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
+    deleteList: (ListId: ListId) => void; 
 
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -214,6 +215,35 @@ export const useBoardStore = create<State & Action>((set) => ({
         }
     }), 
 
+    deleteList: (listId) => set((state) => {
+        const list = state.lists[listId]; 
+
+        if (!list) {
+            return state; 
+        }
+
+        const cardIdsToDelete = new Set(list.CardIDsAndOrder); 
+
+        // filter cards
+        const newCards = Object.fromEntries(
+            Object.entries(state.cards).filter(
+                ([cardId]) => !cardIdsToDelete.has(cardId as CardId))
+        ); 
+
+        // filter lists
+        const newLists = Object.fromEntries(
+            Object.entries(state.lists).filter(([Id]) => Id !== listId)
+        );
+    
+        // filter list order 
+        const newListOrder = state.listOrder.filter(id => id !== listId); 
+
+        return {
+            cards: newCards, 
+            lists: newLists, 
+            listOrder: newListOrder, 
+        };
+    }), 
 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 

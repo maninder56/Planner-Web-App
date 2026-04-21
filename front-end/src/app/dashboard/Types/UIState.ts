@@ -14,6 +14,7 @@ export type panelType =
     'boardListMenuOptions'          | 
     'cardDetailsPanel'              | 
     'newListForm'                   | 
-    'createNewCardPanel'               ; 
+    'createNewCardPanel'            |
+    'deleteListDialogBox'           ; 
 
 

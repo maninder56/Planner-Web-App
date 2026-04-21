@@ -20,11 +20,7 @@ export default function Dashboard() {
             }}>
                 <DashboardHeader />
                 <Board />   
-                {
-                    isSessionExpired ? 
-                    <SessionExpired />
-                    : null
-                }
+                { isSessionExpired && <SessionExpired /> }
         </div>
     ); 
 }

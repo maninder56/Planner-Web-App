@@ -18,6 +18,8 @@ export default function ListMenuOptions({
         if (currentOpenListMenuId === undefined) {
             return; 
         }
+
+        setActivePanel('deleteListDialogBox'); 
     }
 
     return (

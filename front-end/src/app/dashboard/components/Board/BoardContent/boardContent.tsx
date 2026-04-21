@@ -13,6 +13,7 @@ import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardCont
 import AddNewListButton from './AddNewListButton/addNewListButton';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import AddNewCardPanel from './AddNewCardPanel/addNewCardPanel';
+import DeleteListDialogBox from './BoardList/DeleteListDialogBox/deleteListDialogBox';
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -23,6 +24,7 @@ export default function BoardContent() {
     const moveCard = useBoardStore((state) => state.moveCard); 
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
+    const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
 
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
     
@@ -105,8 +107,9 @@ export default function BoardContent() {
                         <AddNewListButton boardId={boardDetials.id} userRole={boardDetials.role} />
                     </div>
                 </div>
-                {isCreateNewCardPanelOpen && createNewCardListId && 
-                    <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/>}
+                { isCreateNewCardPanelOpen && createNewCardListId && 
+                    <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/> }
+                { isDeleteListDialogBoxOpen && currentOpenListMenu && <DeleteListDialogBox boardId={boardDetials.id} listId={currentOpenListMenu} /> }
             </div>
         </DragDropProvider>
     )
