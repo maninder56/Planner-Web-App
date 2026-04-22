@@ -102,6 +102,11 @@
     margin: 0;
 
     font-size: 0.9rem;
+
+    /* max-height: 50px; */
+
+    overflow: hidden;   
+    text-overflow: ellipsis;
 }
 
 

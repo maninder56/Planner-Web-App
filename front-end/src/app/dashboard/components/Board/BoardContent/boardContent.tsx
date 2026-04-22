@@ -37,7 +37,7 @@ export default function BoardContent() {
     // list to which the new card will be added
     const [createNewCardListId, setCreateNewCardListId] = useState<number | undefined>(undefined); 
 
-    const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
+    const [cardDetailsPanelData, setCardDetailsPanelData] = useState<{parentListId: ListId, cardId: CardId} | undefined>(undefined); 
 
     const previousListOrder = useRef(listOrder); 
 
@@ -128,8 +128,7 @@ export default function BoardContent() {
                             <BoardList listId={listId} index={listIndex} key={listId} userRole={boardDetials.role} boardId={boardDetials.id}
                                 currentOpenListMenu={currentOpenListMenu} 
                                 setCurrentOpenListMenu={setCurrentOpenListMenu}
-                                cardDetailsPanelId={cardDetailsPanelId}
-                                setCardDetailsPanelId={setCardDetailsPanelId} 
+                                setCardDetailsPanelData={setCardDetailsPanelData} 
                                 setCreateNewCardListId={setCreateNewCardListId}/>
                         ))
                     }

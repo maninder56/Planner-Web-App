@@ -23,8 +23,7 @@ export default function BoardList({
     currentOpenListMenu,
     userRole, 
     setCurrentOpenListMenu,
-    cardDetailsPanelId, 
-    setCardDetailsPanelId, 
+    setCardDetailsPanelData, 
     setCreateNewCardListId
 }: {
     boardId: number,
@@ -33,8 +32,7 @@ export default function BoardList({
     currentOpenListMenu: ListId | undefined; 
     userRole: UserRole; 
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
-    cardDetailsPanelId?: CardId; 
-    setCardDetailsPanelId: (cardId?: CardId) => void; 
+    setCardDetailsPanelData: (data: {parentListId: ListId, cardId: CardId} | undefined) => void; 
     setCreateNewCardListId: (listId: number | undefined) => void; 
 }) {
     const viewOnly = userRole === 'Viewer'; 
@@ -138,7 +136,7 @@ export default function BoardList({
                 {
                     listCardsIdsAndOrder.map((cardId, index) => (
                         <BoardCard cardId={cardId} index={index} key={cardId} parentListId={listId} userRole={userRole}
-                            cardDetailsPanelId={cardDetailsPanelId} setCardDetailsPanelId={setCardDetailsPanelId} />
+                            setCardDetailsPanelData={setCardDetailsPanelData} />
                     ))
                 }
             </div>

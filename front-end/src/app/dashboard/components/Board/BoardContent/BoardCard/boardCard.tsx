@@ -14,14 +14,14 @@ export default function BoardCard({
     userRole, 
     parentListId, 
     cardDetailsPanelId, 
-    setCardDetailsPanelId, 
+    setCardDetailsPanelData,
 }: {
     cardId: CardId; 
     index: number;
     userRole: UserRole; 
     parentListId: ListId; 
     cardDetailsPanelId?: CardId; 
-    setCardDetailsPanelId: (cardId?: CardId) => void; 
+    setCardDetailsPanelData: (data: {parentListId: ListId, cardId: CardId} | undefined) => void; 
 }) {
     const viewOnly = userRole === 'Viewer'; 
 
@@ -51,7 +51,7 @@ export default function BoardCard({
             onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel('cardDetailsPanel');
-                setCardDetailsPanelId(cardId); 
+                setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
             <header>
