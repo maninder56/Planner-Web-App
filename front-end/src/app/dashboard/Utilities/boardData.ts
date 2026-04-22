@@ -64,3 +64,6 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
 
     return normalisedData; 
 }
+
+
+export const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' }); 

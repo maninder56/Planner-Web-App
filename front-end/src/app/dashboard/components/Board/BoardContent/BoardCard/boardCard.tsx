@@ -6,6 +6,7 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useState } from 'react';
 import BoardCardDetails from './boardCardDetails';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
+import { dateFormatter } from '@/app/dashboard/Utilities/boardData';
 
 export default function BoardCard({
     cardId, 
@@ -42,8 +43,11 @@ export default function BoardCard({
 
     const setDoneOnCard = useBoardStore((state) => state.setDoneOnCard); 
 
+    const dueDate = new Date(cardDetails.dueDate); 
+    const dueDateFormated = Number.isNaN(dueDate.getTime()) ? '-' : dateFormatter.format(dueDate); 
+
     return (
-        <div className={styles.wrapper} ref={ref} 
+        <div className={[styles.wrapper, cardDetails.done ? styles.taskDone: ''].join(' ')} ref={ref} 
             onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel('cardDetailsPanel');
@@ -51,11 +55,11 @@ export default function BoardCard({
             }}
         >
             <header>
-                <input type='checkbox' defaultChecked={cardDetails.done} 
+                <input type='checkbox' className={styles.checkbox} defaultChecked={cardDetails.done} 
                     onClick={(e) => {
                         e.stopPropagation(); 
                         setDoneOnCard(cardId, !cardDetails.done)}} />
-                <h3 className={cardDetails.done ? styles.taskDone : undefined }>{cardDetails.name}</h3>
+                <h3 className={[styles.cardName, cardDetails.done ? styles.taskDone : ''].join(' ')}>{cardDetails.name}</h3>
                 <div ref={handleRef} className={styles.grabCardIcon}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6h.01M15 6h.01M15 12h.01M9 12h.01M9 18h.01M15 18h.01M10 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" 
@@ -64,16 +68,15 @@ export default function BoardCard({
                 </div>
             </header>
             <div className={styles.cardContent}>
-                <p>{cardDetails.description}</p>
+                <p className={styles.description}>{cardDetails.description}</p>
                 <div className={styles.priorityAndDueDate}>
                     <div>
                         <span>Priority</span>
-                        <div>{cardDetails.priority} </div>
+                        <div className={`${styles.priority} ${styles[cardDetails.priority.toLowerCase()]}`}>{cardDetails.priority}</div>
                     </div>
                     <div>
                         <span>Due Date</span>
-                        {/* <div>{cardDetails.dueDate.toLocaleDateString('en-GB')}</div> */}
-                        <div>{cardDetails.dueDate.toString()}</div>
+                        <div>{dueDateFormated}</div>
                     </div>
                 </div>
             </div>

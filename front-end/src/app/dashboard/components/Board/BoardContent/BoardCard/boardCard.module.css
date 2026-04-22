@@ -7,21 +7,20 @@
     padding: 0px;
     margin-bottom: 20px;
 
-    border: solid 1px rgb(244, 244, 244);
+    /* border: solid 1px rgb(244, 244, 244); */
     border-radius: 10px;
 
     background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 0.1 1px 0.2px black;
+    box-shadow: 0 0.1 1px 0.2px rgb(152, 152, 152);
 
     overflow: hidden;
 
     cursor: pointer;
 }
 
-.wrapper:hover {
-    /* causes big hover panel to appear inside card */
-    /* transform: scale(1.02); */
-    transition: all 0.1s ease-in-out;
+.wrapper.taskDone {
+    background-color: rgba(0, 0, 0, 0.02);
+    opacity: 0.8;
 }
 
 .wrapper > header {
@@ -29,10 +28,10 @@
     padding: 10px 0px;
 
     display: flex;
-    background-color: rgb(255, 255, 0, 0.4);
+    background-color: rgba(255, 255, 80, 0.546);
 }
 
-.wrapper > header > input {
+.checkbox {
     flex: 0 1 auto;
 
     margin: auto 10px;
@@ -40,14 +39,16 @@
     --size: 20px; 
     width: var(--size);
     height: var(--size);
+
+    accent-color: green;
+    
+    cursor: pointer;
 }
 
-/* .wrapper > header > input:hover {
-    outline: solid black 2px;
-} */
 
-.wrapper > header > h3 {
+.cardName {
     flex: 1 1 auto;
+
     margin: auto 0px;
     padding: 0;
 
@@ -58,6 +59,10 @@
 
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.cardName.taskDone {
+    text-decoration: line-through;
 }
 
 .grabCardIcon {
@@ -81,34 +86,60 @@
     }
 }
 
-
 .grabCardIcon svg {
     margin: auto;
 }
 
-.taskDone {
-    text-decoration: line-through;
-}
+
+
 
 .cardContent {
-    margin: 10px 10px;
+    margin: 5px 10px;
 }
 
-.cardContent > p {
+.description {
     padding: 0;
     margin: 0;
+
+    font-size: 0.9rem;
 }
 
-.priorityAndDueDate {
 
-    margin-top: 10px;
+.priorityAndDueDate {
+    margin-top: 15px;
+    margin-bottom: 12px;
+
+    font-size: 0.9rem;
 
     display: flex;
     justify-content: space-evenly;
 }
 
-.priorityAndDueDate div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.priorityAndDueDate > div > span {
+    display: block;
+    margin-bottom: 2px;
+    
+    text-align: center;
 }
+
+.priority {
+    border-radius: 5px;
+
+    text-align: center;
+
+    padding: 1px 5px;
+}
+
+.priority.low {
+    background-color: rgba(255, 166, 0, 0.39);
+}
+
+.priority.medium {
+    background-color: rgba(255, 100, 48, 0.468);
+}
+
+.priority.high {
+    background-color: rgba(255, 0, 0, 0.39);
+}
+
