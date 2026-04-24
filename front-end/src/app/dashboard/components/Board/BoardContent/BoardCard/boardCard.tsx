@@ -13,14 +13,12 @@ export default function BoardCard({
     index,
     userRole, 
     parentListId, 
-    cardDetailsPanelId, 
     setCardDetailsPanelData,
 }: {
     cardId: CardId; 
     index: number;
     userRole: UserRole; 
     parentListId: ListId; 
-    cardDetailsPanelId?: CardId; 
     setCardDetailsPanelData: (data: {parentListId: ListId, cardId: CardId} | undefined) => void; 
 }) {
     const viewOnly = userRole === 'Viewer'; 
@@ -46,6 +44,10 @@ export default function BoardCard({
     const dueDate = new Date(cardDetails.dueDate); 
     const dueDateFormated = Number.isNaN(dueDate.getTime()) ? '-' : dateFormatter.format(dueDate); 
 
+    const cardDescription = cardDetails.description.length > 100 ?  
+        `${cardDetails.description.slice(0, 100)}...` : 
+        cardDetails.description; 
+
     return (
         <div className={[styles.wrapper, cardDetails.done ? styles.taskDone: ''].join(' ')} ref={ref} 
             onClick={(e) => {
@@ -68,7 +70,7 @@ export default function BoardCard({
                 </div>
             </header>
             <div className={styles.cardContent}>
-                <p className={styles.description}>{cardDetails.description}</p>
+                <p className={styles.description}>{cardDescription}</p>
                 <div className={styles.priorityAndDueDate}>
                     <div>
                         <span>Priority</span>

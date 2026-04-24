@@ -1,4 +1,174 @@
 
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+
+
+
 .wrapper {
-    
+    display: flex;
+    justify-content: center;
+
+    min-width: 0;
+}
+
+.wrapper *:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cardForm {
+    flex: 1 1 auto;
+    max-width: 500px;
+
+    min-width: 0;
+}
+
+
+.error {
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+
+    font-size: 1rem;
+    text-align: center;
+    color: red;
+
+    min-height: 1rem;
+}
+
+
+.checkboxAndTitle {
+    display: flex;
+    justify-content: start;
+
+    margin-top: 10px;
+    min-width: 0;
+}
+
+
+.checkbox {
+    flex: 0 1 auto;
+
+    margin: auto;
+    margin-left: 0;
+    margin-right: 20px;
+
+    width: 20px;
+    height: 20px;
+
+    accent-color: green;
+}
+
+@media (pointer: fine) {
+    .checkbox:hover:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+
+.title {
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    padding: 10px 15px;
+
+    font-size: 1.2rem;
+    color: black;
+
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    background-color: rgba(0, 0, 0, 0.02);
+
+    min-width: 0;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.title.crossTheTask {
+    text-decoration: line-through;
+}
+
+
+@media (pointer: fine) {
+    .title:hover:not(:disabled) {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.title:focus:not(:disabled) {
+    background-color: white;
+}
+
+
+.titleError {
+    margin-left: 50px;
+    font-size: 0.9rem;
+    color: red;
+
+    min-height: 1rem;
+}
+
+
+
+
+.priorityAndDueDateContainer {
+    margin: 10px 0px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.priorityAndDueDateContainer header {
+    font-size: 1rem;
+    text-align: center;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.description {
+    margin: 20px 0px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.description header {
+    font-size: 0.9rem;
+    margin-left: 5px;
+    margin-bottom: 3px;
+}
+
+
+.description textarea {
+    font-size: 1rem;
+
+    padding: 5px 10px;
+
+    border: solid 1.5px rgb(193, 193, 193);
+    border-radius: 10px;
+
+    min-height: 160px;
+    max-height: 200px;
+
+    resize: vertical;
+}
+
+
+
+.buttonsContainer {
+    display: flex;
+    justify-content: space-evenly;
+
+    margin: 20px 0px;
 }

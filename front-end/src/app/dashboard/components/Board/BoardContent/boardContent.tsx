@@ -18,6 +18,7 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { UpdateListOrderRequest } from '@/app/dashboard/Services/listService';
 import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
 import { useUserStore } from '@/Store/userStore';
+import BoardCardDetails from './BoardCard/boardCardDetails';
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -31,6 +32,7 @@ export default function BoardContent() {
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
     const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
+    const isCardDetailsPanelOpen = useBoardUIStore((state) => state.activePanel === 'cardDetailsPanel'); 
 
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
     
@@ -139,6 +141,8 @@ export default function BoardContent() {
                 { isCreateNewCardPanelOpen && createNewCardListId && 
                     <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/> }
                 { isDeleteListDialogBoxOpen && currentOpenListMenu && <DeleteListDialogBox boardId={boardDetials.id} listId={currentOpenListMenu} /> }
+                { isCardDetailsPanelOpen && cardDetailsPanelData && 
+                    <BoardCardDetails boardId={boardDetials.id} cardId={cardDetailsPanelData.cardId} parentListId={cardDetailsPanelData.parentListId} /> }
             </div>
         </DragDropProvider>
     )
