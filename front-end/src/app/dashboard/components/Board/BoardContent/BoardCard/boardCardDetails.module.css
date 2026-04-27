@@ -172,3 +172,11 @@
 
     margin: 20px 0px;
 }
+
+.deleteButton {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 50px;
+    margin-bottom: 20px;
+}

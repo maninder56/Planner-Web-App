@@ -9,6 +9,8 @@ import { useUserStore } from '@/Store/userStore';
 import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateCardInfoRequest } from '@/app/dashboard/Services/cardService';
+import Button from '@/Components/Buttons/button';
+import DeleteCardDialogBox from './DeleteCardDialogBox/DeleteCardDialogBox';
 
 export default function BoardCardDetails({
     boardId, 
@@ -47,6 +49,7 @@ export default function BoardCardDetails({
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [submitError, setSubmitError] = useState(''); 
     const [titleError, setTitleError] = useState(''); 
+    const [showDeleteCardDialogBox, setShowDeleteCardDialogBox] = useState(false); 
 
     async function handleFormSubmit(e: FormEvent) {
         e.preventDefault();
@@ -94,6 +97,10 @@ export default function BoardCardDetails({
         } finally {
             setButtonDisabled(false); 
         }
+    }
+
+    async function handleDeleteCard() {
+        
     }
 
 
@@ -180,7 +187,13 @@ export default function BoardCardDetails({
                     <div className={styles.buttonsContainer}>
                         <button type='submit' className='button blue' disabled={disableSaveButton()}>Save</button>
                     </div>
+                    <div className={styles.deleteButton}>
+                        <Button name='Delete Card' color='red' disabled={buttonDisabled} 
+                            onClick={() => setShowDeleteCardDialogBox(true)} />
+                    </div>
                 </form>
+                {showDeleteCardDialogBox && <DeleteCardDialogBox boardId={boardId} listId={parentListIdAsNumber} 
+                    cardId={cardDetails.id} cardTitle={cardDetails.name} onCancel={() => setShowDeleteCardDialogBox(false)}/> }
             </div>
         </BigHoverPanel>
     ); 
