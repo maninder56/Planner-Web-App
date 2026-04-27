@@ -18,6 +18,12 @@
     cursor: pointer;
 }
 
+@media (pointer: fine) {
+    .wrapper:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+}
+
 .wrapper.taskDone {
     background-color: rgba(0, 0, 0, 0.02);
     opacity: 0.8;
@@ -69,6 +75,7 @@
     flex: 0 1 auto;
     
     margin: 0px 5px;
+    height: 25px;
     width: 25px;
 
     border-radius: 5px;
