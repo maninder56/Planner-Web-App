@@ -143,4 +143,12 @@ public class CardRepository (PlannerContext database) : ICardRepository
 
         await transaction.CommitAsync();    
     }
+
+
+    public async Task DeleteCardAsync(int boardId, int listId, int cardId)
+    {
+        await database.Cards
+            .Where(c => c.CardId == cardId && c.BoardListId == listId && c.BoardList.BoardId == boardId)
+            .ExecuteDeleteAsync(); 
+    }
 }

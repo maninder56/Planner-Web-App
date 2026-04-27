@@ -122,6 +122,32 @@ public class CardsController(
             return updateResult.Error.ErrorToActionResult();
         }
     }
-    
+
+
+    // Delete 
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCard(int boardId, int listId, int id)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var deleteResult = await cardService.DeleteCardAsync(boardId, listId, id);
+
+        if (deleteResult.Successful)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return deleteResult.Error.ErrorToActionResult();
+        }
+    }
+
 
 }
