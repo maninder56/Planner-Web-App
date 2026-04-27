@@ -6,6 +6,9 @@ import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore'
 import { FormEvent, useState } from 'react';
 import { CardPriority } from '@/app/dashboard/Types/boardTypes';
 import { useUserStore } from '@/Store/userStore';
+import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { UpdateCardInfoRequest } from '@/app/dashboard/Services/cardService';
 
 export default function BoardCardDetails({
     boardId, 
@@ -27,11 +30,13 @@ export default function BoardCardDetails({
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
-    // function to update card in board store
+    const updateCardInfo = useBoardStore((state) => state.updateCardInfo); 
 
     const cardDetails = useBoardStore((state) => state.cards[cardId]); 
 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const parentListIdAsNumber = ConvertListIdToNumeric(parentListId); 
     
     const [title, setTitle] = useState(cardDetails.name); 
     const [description, setDescription] = useState(cardDetails.description); 
@@ -47,7 +52,44 @@ export default function BoardCardDetails({
         e.preventDefault();
         setButtonDisabled(true); 
 
+        if (parentListIdAsNumber === -1) {
+            setSubmitError('Failed to update card, please try again.'); 
+            return; 
+        }
+
+        if (!validateFormValues()) {
+            return; 
+        }
+
         try {
+            const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateCardInfoRequest, {
+                boardId: boardId,
+                listId: parentListIdAsNumber,
+                cardId: cardDetails.id,
+                card: {
+                    Title: title.trim(),
+                    Description: description.trim(),
+                    IsDone: isDone,
+                    DueDate: dueDate,
+                    Priority: priority
+                }
+            }); 
+
+            if (request.ok) {
+                updateCardInfo(cardId, {
+                    Title: title.trim(),
+                    Description: description.trim(),
+                    IsDone: isDone,
+                    DueDate: dueDate,
+                    Priority: priority
+                }); 
+                setSubmitError(''); 
+                setActivePanel('none'); 
+            } else if (request.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            } else {
+                setSubmitError('Failed to update card, please try again.');    
+            }
 
         } finally {
             setButtonDisabled(false); 
@@ -70,6 +112,37 @@ export default function BoardCardDetails({
         }
 
         setTitle(value); 
+    }
+
+    function validateFormValues() {
+        const titleTrimmed = title.trim(); 
+
+        if (titleTrimmed === '') {
+            return false; 
+        }
+
+        const descriptionTrimmed = description.trim(); 
+
+        if (titleTrimmed === cardDetails.name && descriptionTrimmed === cardDetails.description && 
+            isDone === cardDetails.done && priority === cardDetails.priority && 
+            dueDate === getLocalDate(cardDetails.dueDate)
+        ) {
+            return false; 
+        }
+
+        return true; 
+    }
+
+    function disableSaveButton() {
+        if (buttonDisabled) {
+            return true; 
+        } 
+
+        if (validateFormValues()) {
+            return false; 
+        } else {
+            return true; 
+        }
     }
 
 
@@ -105,7 +178,7 @@ export default function BoardCardDetails({
                             onChange={e => setDescription(e.target.value)} />
                     </div>
                     <div className={styles.buttonsContainer}>
-                        <button type='submit' className='button blue' disabled={buttonDisabled || title.trim() === ''}>Save</button>
+                        <button type='submit' className='button blue' disabled={disableSaveButton()}>Save</button>
                     </div>
                 </form>
             </div>

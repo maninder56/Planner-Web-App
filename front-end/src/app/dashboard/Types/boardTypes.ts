@@ -60,7 +60,7 @@ export type UpdateCard = {
     Title?: string; 
     Description?: string; 
     IsDone?: boolean; 
-    DueDate?: Date; 
+    DueDate?: string; 
     Priority?: CardPriority; 
 }
 
@@ -70,7 +70,7 @@ export const CardUpdatedSchema = z.object({
     description: z.union([z.string(), z.undefined()]), 
     cardPosition: z.union([z.number(), z.undefined()]), 
     isDone: z.union([z.boolean(), z.undefined()]), 
-    dueDate:z.union([z.date(), z.undefined()]), 
+    dueDate:z.union([z.string(), z.undefined()]), 
     priority: z.union([CardPriority, z.undefined()]) 
 }); 
 export type CardUpdated = z.infer<typeof CardUpdatedSchema>; 

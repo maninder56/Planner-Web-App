@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard } from "../Types/boardTypes";
 
 
 
@@ -84,7 +84,8 @@ type Action = {
     
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
-    addNewCard: (parentListId: number, card: Card) => void; 
+    addNewCard: (parentListId: number, card: Card) => void;
+    updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -354,6 +355,28 @@ export const useBoardStore = create<State & Action>((set) => ({
                 }
             }
         }), 
+
+        updateCardInfo: (cardId, updateCard) => set((state) => {
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: {
+                        ...card, 
+                        name: updateCard.Title ?? card.name, 
+                        description: updateCard.Description ?? card.description, 
+                        done: updateCard.IsDone ?? card.done, 
+                        dueDate: updateCard.DueDate ?? card.dueDate, 
+                        priority: updateCard.Priority ?? card.priority,
+                    }
+                }
+            }
+        })
 }))
 
 
