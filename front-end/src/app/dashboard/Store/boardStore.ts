@@ -86,6 +86,7 @@ type Action = {
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
     addNewCard: (parentListId: number, card: Card) => void;
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
+    deleteCard: (parentListId: ListId, cardId: CardId) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -376,6 +377,37 @@ export const useBoardStore = create<State & Action>((set) => ({
                     }
                 }
             }
+        }), 
+
+        deleteCard: (listId, cardId) => set((state) => {
+            const list = state.lists[listId]; 
+            const card = state.cards[cardId]; 
+
+            if (!list && !card) {
+                return state; 
+            }
+
+            const updatedState: Partial<typeof state> = {}; 
+
+            if (list) {
+                updatedState.lists = {
+                    ...state.lists, 
+                    [listId]: {
+                        ...list, 
+                        CardIDsAndOrder: list.CardIDsAndOrder.filter(id => id !== cardId), 
+                    }
+                }
+            }
+
+            if (card) {
+                 // filter cards
+                const newCards = Object.fromEntries(Object.entries(state.cards)
+                    .filter(([id]) => id !== cardId)); 
+
+                updatedState.cards = newCards; 
+            }
+
+            return updatedState; 
         })
 }))
 

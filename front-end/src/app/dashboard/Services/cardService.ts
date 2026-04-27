@@ -156,6 +156,31 @@ export async function UpdateCardOrderRequest(boardId: number, CardOrder: UpdateC
 
 
 
+export async function DeleteCard(data: {
+    boardId: number, 
+    listId: number, 
+    cardId: number, 
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards/${data.cardId}`; 
+    const request: RequestInit = { 
+        method: 'DELETE', 
+        credentials: 'include',
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
 
 
 
