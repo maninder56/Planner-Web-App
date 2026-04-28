@@ -8,6 +8,7 @@ import ListMenuButton from './ListMenu/listMenuButton';
 import { useRef, useState } from 'react';
 import BoardCard from '../BoardCard/boardCard';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
+import {RestrictToElement, RestrictToWindow} from '@dnd-kit/dom/modifiers';
 import { useDroppable } from '@dnd-kit/react';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
 import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
@@ -15,6 +16,11 @@ import { useUserStore } from '@/Store/userStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { UpdateListInfoRequest } from '@/app/dashboard/Services/listService';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import {
+  closestCenter,
+  pointerIntersection,
+  directionBiased
+} from '@dnd-kit/collision';
 
 export default function BoardList({
     boardId, 
@@ -36,27 +42,6 @@ export default function BoardList({
     setCreateNewCardListId: (listId: number | undefined) => void; 
 }) {
     const viewOnly = userRole === 'Viewer'; 
-
-    const {ref, handleRef, isDragging} = useSortable({
-        id: listId,  
-        index,
-        type: 'boardList',
-        accept: 'boardList', 
-        collisionPriority: CollisionPriority.Low, 
-        modifiers: [RestrictToHorizontalAxis],
-        disabled: viewOnly, 
-    }); 
-
-    const {ref: dropRef} = useDroppable({
-        id: `drop${listId}`, 
-        type: 'cardDropZone', 
-        accept: 'boardCard', 
-        data: {
-            listId, 
-        }, 
-        disabled: viewOnly,
-    }); 
-
     const numericListId = ConvertListIdToNumeric(listId); 
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -71,6 +56,31 @@ export default function BoardList({
     const [listName, setListName] = useState(initialListName);
     
     const inputRef = useRef<HTMLInputElement | null>(null); 
+
+    const {ref, handleRef, isDragging} = useSortable({
+        id: listId,  
+        index,
+        type: 'boardList',
+        accept: 'boardList', 
+        collisionDetector: directionBiased, 
+        collisionPriority: CollisionPriority.Normal, 
+        modifiers: [RestrictToHorizontalAxis],
+        disabled: viewOnly, 
+    }); 
+
+    const {ref: dropRef} = useDroppable({
+        id: `drop${listId}`, 
+        type: 'cardDropZone', 
+        accept: 'boardCard', 
+        data: {
+            listId, 
+        }, 
+        // disable drop area if list has cards
+        disabled: viewOnly || listCardsIdsAndOrder.length > 0,
+        // collisionDetector: pointerIntersection, 
+        collisionPriority: CollisionPriority.Normal,
+    }); 
+
 
     async function handleNameChange() {
         if (listName.trim() === '') {

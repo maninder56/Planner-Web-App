@@ -2,6 +2,7 @@
 import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import styles from './boardCard.module.css'; 
 import {CollisionPriority} from '@dnd-kit/abstract';
+import {RestrictToElement, RestrictToWindow} from '@dnd-kit/dom/modifiers';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useState } from 'react';
@@ -12,6 +13,11 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { UpdateCardInfoRequest } from '@/app/dashboard/Services/cardService';
 import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
 import { useUserStore } from '@/Store/userStore';
+import {
+  closestCenter,
+  pointerIntersection,
+  directionBiased
+} from '@dnd-kit/collision';
 
 export default function BoardCard({
     cardId, 
@@ -28,12 +34,14 @@ export default function BoardCard({
 }) {
     const viewOnly = userRole === 'Viewer'; 
 
-    const {ref, handleRef} = useSortable({
+    const {ref, handleRef, isDropTarget} = useSortable({
         id: cardId, 
         index, 
         type: 'boardCard', 
         accept: 'boardCard',
-        // collisionPriority: CollisionPriority.High,
+        collisionPriority: CollisionPriority.Normal,
+        collisionDetector: closestCenter, 
+        // modifiers: [RestrictToWindow], 
         group: parentListId, 
         data: {
             parentListId,
@@ -87,7 +95,9 @@ export default function BoardCard({
     }
 
     return (
-        <div className={[styles.wrapper, IsCardDone ? styles.taskDone: ''].join(' ')} ref={ref} 
+        <div className={[styles.wrapper, 
+            IsCardDone ? styles.taskDone : '', 
+            isDropTarget? styles.dropTarget : ''].join(' ')} ref={ref} 
             onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel('cardDetailsPanel');

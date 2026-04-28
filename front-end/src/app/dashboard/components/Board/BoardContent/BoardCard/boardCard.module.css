@@ -29,6 +29,10 @@
     opacity: 0.8;
 }
 
+.wrapper.dropTarget {
+    /* background-color: red; */
+}
+
 .wrapper > header {
     margin: 0px;
     padding: 10px 0px;

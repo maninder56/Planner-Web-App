@@ -23,6 +23,7 @@ import { UpdateCardOrderRequest } from '@/app/dashboard/Services/cardService';
 import { ConvertCardIdArrayToNumericArray, ConvertCardIdToNumeric } from '@/app/dashboard/Utilities/cardUtilities';
 import { UpdateCardOrder } from '@/app/dashboard/Types/boardTypes';
 
+import {Debug} from '@dnd-kit/dom/plugins/debug';
 
 type previousCardOrder = {
     cardId: CardId;
@@ -164,7 +165,8 @@ export default function BoardContent() {
 
     return (
         <DragDropProvider
-            modifiers={(defaults) => [...defaults]}
+            modifiers={(defaults) => [...defaults, RestrictToWindow]}
+            // plugins={(defaults) => [...defaults, Debug] }
             onDragStart={(event) => {
                 const {source, target} = event.operation; 
                 if (source === null || target === null) {
@@ -190,10 +192,16 @@ export default function BoardContent() {
                     return;
                 }
 
+                if (source.data.parentListId === target.data.parentListId && source.data.index === target.data.index) {
+                    return; 
+                }
+
+
                 if (source.type === 'boardCard' && target.type === 'boardCard') {
                     const sourceParentListId = source.data.parentListId; 
                     const targetParentListId = target.data.parentListId; 
                     const targetIndex = target.data.index; 
+                    console.log('Move card'); 
                     moveCard(source.id as CardId, sourceParentListId, targetParentListId, targetIndex); 
                 } else if (source.type === 'boardCard' && target.type === 'cardDropZone') {
                     const sourceParentListId = source.data.parentListId;
