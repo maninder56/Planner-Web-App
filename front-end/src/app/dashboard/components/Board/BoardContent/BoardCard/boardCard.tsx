@@ -1,6 +1,7 @@
 
 import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import styles from './boardCard.module.css'; 
+import {CollisionPriority} from '@dnd-kit/abstract';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useState } from 'react';
@@ -32,6 +33,7 @@ export default function BoardCard({
         index, 
         type: 'boardCard', 
         accept: 'boardCard',
+        // collisionPriority: CollisionPriority.High,
         group: parentListId, 
         data: {
             parentListId,

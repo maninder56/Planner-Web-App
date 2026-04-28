@@ -77,6 +77,7 @@ type Action = {
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
     deleteList: (ListId: ListId) => void; 
+    getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
 
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -89,7 +90,7 @@ type Action = {
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
 }
 
-export const useBoardStore = create<State & Action>((set) => ({
+export const useBoardStore = create<State & Action>((set, get) => ({
     isBoardLoading: true,
     boards: null, 
     currentBoardData: undefined, 
@@ -246,6 +247,17 @@ export const useBoardStore = create<State & Action>((set) => ({
             listOrder: newListOrder, 
         };
     }), 
+
+    getCardIDsInOrderFromList: (listId) => {
+        const { lists } = get(); 
+        const list = lists[listId]; 
+
+        if (!list) {
+            return undefined; 
+        }
+
+        return list.CardIDsAndOrder; 
+    }, 
 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 

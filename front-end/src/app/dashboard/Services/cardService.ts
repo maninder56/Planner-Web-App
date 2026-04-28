@@ -129,15 +129,19 @@ export async function UpdateCardInfoRequest(data: {
 
 
 
-export async function UpdateCardOrderRequest(boardId: number, CardOrder: UpdateCardOrder) {
-    const subUrl = boardRoute + `/${boardId}/cards/re-order`; 
+export async function UpdateCardOrderRequest(data: {
+    boardId: number, CardOrder: UpdateCardOrder
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/cards/re-order`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'PATCH', 
         credentials: 'include',
-        body: JSON.stringify(CardOrder),
+        body: JSON.stringify({
+            ListsAndCards: data.CardOrder
+        }),
     }; 
 
     try {
