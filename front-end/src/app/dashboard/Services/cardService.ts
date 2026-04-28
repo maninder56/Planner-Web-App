@@ -156,7 +156,7 @@ export async function UpdateCardOrderRequest(boardId: number, CardOrder: UpdateC
 
 
 
-export async function DeleteCard(data: {
+export async function DeleteCardRequest(data: {
     boardId: number, 
     listId: number, 
     cardId: number, 

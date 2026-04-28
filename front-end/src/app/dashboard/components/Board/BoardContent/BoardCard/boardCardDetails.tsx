@@ -99,11 +99,6 @@ export default function BoardCardDetails({
         }
     }
 
-    async function handleDeleteCard() {
-        
-    }
-
-
     function handlePriorityChange(value: string) {
         if (value === 'Low' || value === 'Medium' || value === 'High') {
             setPriority(value); 

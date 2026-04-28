@@ -86,7 +86,7 @@ type Action = {
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
     addNewCard: (parentListId: number, card: Card) => void;
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
-    deleteCard: (parentListId: ListId, cardId: CardId) => void; 
+    deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set) => ({
@@ -379,7 +379,10 @@ export const useBoardStore = create<State & Action>((set) => ({
             }
         }), 
 
-        deleteCard: (listId, cardId) => set((state) => {
+        deleteCard: (listIdAsNumber, cardIdAsNumber) => set((state) => {
+            const listId: ListId = `list-${listIdAsNumber}`; 
+            const cardId: CardId = `card-${cardIdAsNumber}`; 
+
             const list = state.lists[listId]; 
             const card = state.cards[cardId]; 
 
