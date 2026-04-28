@@ -17,6 +17,13 @@ public class UpdateCardOrderRequest : IValidatableObject
             yield break; // Stop further validation if nothing exists
         }
 
+        // Only two lists are allowed
+        if (ListsAndCards.Count > 2)
+        {
+            yield return new ValidationResult("Only two lists are allowed to be updated at once");
+            yield break; // Stop further validation if nothing exists
+        }
+
         // Duplicate List IDs
         if (HasDuplicateListIds())
         {

@@ -127,15 +127,22 @@ public class CardRepository (PlannerContext database) : ICardRepository
                 o => o.cardId, 
                 o => (o.ListId, position: o.index )); 
 
+        if (request.ListsAndCards.Count == 1)
+        {
+            foreach(var card in cards)
+            {
+                card.CardPosition += 1000; 
+            }
+
+            await database.SaveChangesAsync(); 
+        }
+
         foreach (var card in cards)
         {
             if (positionAndParentList.TryGetValue(card.CardId, out var positionAndParent))
             {
-                if (card.BoardListId != positionAndParent.ListId || card.CardPosition != positionAndParent.position)
-                {
-                    card.BoardListId = positionAndParent.ListId;
-                    card.CardPosition = positionAndParent.position;
-                }
+                card.BoardListId = positionAndParent.ListId;
+                card.CardPosition = positionAndParent.position;   
             }
         }
 
