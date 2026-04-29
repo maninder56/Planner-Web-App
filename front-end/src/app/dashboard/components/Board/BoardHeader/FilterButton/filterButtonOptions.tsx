@@ -7,13 +7,34 @@ import Image from 'next/image';
 import Button from '@/Components/Buttons/button';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function FilterBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const [searchInput, setSearchInput] = useState(''); 
 
-    // const [tempState, setTempState] = useState<{}
+    const [tempFilter, setTempFilter] = useState<{
+        cardStatusCompleted: boolean, 
+        cardStatusNotCompleted: boolean, 
+        priorityHigh: boolean, 
+        priorityMedium: boolean, 
+        priorityLow: boolean, 
+        dueOverdue: boolean,
+        dueTomorrow: boolean,
+        dueThisWeek: boolean,
+        dueThisMonth: boolean,
+    }>({
+        cardStatusCompleted: false, 
+        cardStatusNotCompleted: false, 
+        priorityHigh: false, 
+        priorityMedium: false, 
+        priorityLow: false, 
+        dueOverdue: false,
+        dueTomorrow: false,
+        dueThisWeek: false,
+        dueThisMonth: false,
+    }); 
     
 
     return (
@@ -24,65 +45,129 @@ export default function FilterBoardOptions() {
                     value={searchInput}
                     setValue={(newValue) => setSearchInput(newValue)} />
             </div>
+            {/* Card Status */}
             <div className={styles.checkOptions}>
                 <header>Card Status</header>
-                <div>
-                    <input type='checkbox' />
+
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation(); 
+                        setTempFilter(prev => ({
+                            ...prev,
+                            cardStatusNotCompleted: false, 
+                            cardStatusCompleted: !prev.cardStatusCompleted,
+                        }));
+                    }}
+                >
+                    <input 
+                        type='checkbox' 
+                        checked={tempFilter.cardStatusCompleted} 
+                        readOnly 
+                    />
                     <label>Completed</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation(); 
+                        setTempFilter(prev => ({
+                            ...prev,
+                            cardStatusNotCompleted: !prev.cardStatusNotCompleted, 
+                            cardStatusCompleted: false, 
+                        }));
+                    }}
+                >
+                    <input 
+                        type='checkbox' 
+                        checked={tempFilter.cardStatusNotCompleted} 
+                        readOnly 
+                    />
                     <label>Not Completed</label>
                 </div>
             </div>
+
             <hr className={styles.hrTag} />
+
+            {/* Priority */}
             <div className={styles.checkOptions}>
                 <header>Priority</header>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityHigh: !prev.priorityHigh }))}>
+                    <input type='checkbox' checked={tempFilter.priorityHigh} readOnly />
                     <label>High</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityMedium: !prev.priorityMedium }))}>
+                    <input type='checkbox' checked={tempFilter.priorityMedium} readOnly />
                     <label>Medium</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityLow: !prev.priorityLow }))}>
+                    <input type='checkbox' checked={tempFilter.priorityLow} readOnly />
                     <label>Low</label>
                 </div>
             </div>
+        
             <hr className={styles.hrTag} />
-            <div className={styles.dropdownList}>
-                <header>By List</header>
-                <select>
-                    <option value=''>Show all lists</option>
-                    <option value='1'>Backlog</option>
-                    <option value='2'>In Progress</option>
-                    <option value='3'>Done</option>
-                </select>
-            </div>
-            <hr className={styles.hrTag} />
+
+            {/* Due Date */}
             <div className={styles.checkOptions}>
                 <header>Due Date</header>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({ ...prev, dueOverdue: !prev.dueOverdue }))}>
+                    <input type='checkbox' checked={tempFilter.dueOverdue} readOnly />
                     <label>Overdue</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({
+                    ...prev,
+                    dueTomorrow: !prev.dueTomorrow,
+                    dueThisWeek: false,
+                    dueThisMonth: false,
+                }))}>
+                    <input type='checkbox' checked={tempFilter.dueTomorrow} readOnly />
                     <label>Due tomorrow</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({
+                    ...prev,
+                    dueTomorrow: false,
+                    dueThisWeek: !prev.dueThisWeek,
+                    dueThisMonth: false,
+                }))}>
+                    <input type='checkbox' checked={tempFilter.dueThisWeek} readOnly />
                     <label>Due this week</label>
                 </div>
-                <div>
-                    <input type='checkbox' />
+
+                <div onClick={() => setTempFilter(prev => ({
+                    ...prev,
+                    dueTomorrow: false,
+                    dueThisWeek: false,
+                    dueThisMonth: !prev.dueThisMonth,
+                }))}>
+                    <input type='checkbox' checked={tempFilter.dueThisMonth} readOnly />
                     <label>Due this month</label>
                 </div>
             </div>
+
             <div className={styles.resetButton}>
-                <Button name='Reset Filters' color='blue' onClick={() => {}} />
+                <Button 
+                    name='Reset Filters' 
+                    color='blue' 
+                    onClick={() => {
+                        setTempFilter({
+                            cardStatusCompleted: false,
+                            cardStatusNotCompleted: false,
+                            priorityHigh: false,
+                            priorityMedium: false,
+                            priorityLow: false,
+                            dueOverdue: false,
+                            dueTomorrow: false,
+                            dueThisWeek: false,
+                            dueThisMonth: false,
+                        });
+                    }} 
+                />
             </div>
         </HoverOptionsPanel>
     ); 
