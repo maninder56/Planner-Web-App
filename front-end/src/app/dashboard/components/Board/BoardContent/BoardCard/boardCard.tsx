@@ -18,6 +18,7 @@ import {
   pointerIntersection,
   directionBiased
 } from '@dnd-kit/collision';
+import { DragOverlay } from '@dnd-kit/react';
 
 export default function BoardCard({
     cardId, 
@@ -34,7 +35,7 @@ export default function BoardCard({
 }) {
     const viewOnly = userRole === 'Viewer'; 
 
-    const {ref, handleRef, isDropTarget} = useSortable({
+    const {ref, handleRef, isDragging} = useSortable({
         id: cardId, 
         index, 
         type: 'boardCard', 
@@ -48,6 +49,10 @@ export default function BoardCard({
             index,
         }, 
         disabled: viewOnly, 
+        transition: {
+            duration: 0, 
+            idle: false,
+        }
     }); 
 
     const boardId = useBoardStore((state) => state.currentBoardData?.id); 
@@ -97,7 +102,7 @@ export default function BoardCard({
     return (
         <div className={[styles.wrapper, 
             IsCardDone ? styles.taskDone : '', 
-            isDropTarget? styles.dropTarget : ''].join(' ')} ref={ref} 
+            isDragging? styles.isDragging : ''].join(' ')} ref={ref} 
             onClick={(e) => {
                 e.stopPropagation(); 
                 setActivePanel('cardDetailsPanel');

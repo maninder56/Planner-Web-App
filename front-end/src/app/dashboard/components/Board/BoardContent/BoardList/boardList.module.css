@@ -8,6 +8,8 @@
     background-color: rgb(255, 255, 255); 
 
     box-shadow: 0 0 20px -15px rgba(0, 0, 0, 1);
+
+    transition: all 0.5s ease-in-out;
 }
 
 /* .wrapper * {
@@ -21,7 +23,8 @@
 }
 
 .wrapper.dragging {
-    background-color: rgb(251, 251, 251); 
+    /* background-color: rgb(251, 251, 251);  */
+    opacity: 0.95;
 }
 
 /* .wrapper:active {

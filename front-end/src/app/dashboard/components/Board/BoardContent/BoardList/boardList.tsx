@@ -64,7 +64,7 @@ export default function BoardList({
         accept: 'boardList', 
         collisionDetector: directionBiased, 
         collisionPriority: CollisionPriority.Normal, 
-        modifiers: [RestrictToHorizontalAxis],
+        modifiers: [RestrictToHorizontalAxis, RestrictToWindow],
         disabled: viewOnly, 
     }); 
 
