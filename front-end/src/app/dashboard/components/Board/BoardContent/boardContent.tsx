@@ -24,6 +24,8 @@ import { ConvertCardIdArrayToNumericArray, ConvertCardIdToNumeric } from '@/app/
 import { UpdateCardOrder } from '@/app/dashboard/Types/boardTypes';
 
 import {Debug} from '@dnd-kit/dom/plugins/debug';
+import { GetBoardRequest } from '@/app/dashboard/Services/boardService';
+import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 
 type previousCardOrder = {
     cardId: CardId;
@@ -41,6 +43,7 @@ export default function BoardContent() {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
     const getCardIDsInOrderFromList = useBoardStore((state) => state.getCardIDsInOrderFromList); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
     const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
@@ -75,13 +78,30 @@ export default function BoardContent() {
 
         if (request.ok) {
             setBoardError(''); 
+            previousListOrder.current = [...newListOrder]; 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
             setListOrder(previousListOrder.current); 
         } else {
             setBoardError(`We couldn't save your new list order. Please try again`); 
-            setListOrder(previousListOrder.current); 
+            const refreshSuccessful = await RefreshBoardData(boardId); 
+            if (!refreshSuccessful) {
+                setBoardError(`We couldn't save your new list order. Please check your Internet connection.`); 
+            }
         }
+    }
+
+    async function RefreshBoardData(boardId: number) {
+        const boardRequest = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardRequest, boardId); 
+
+        if (boardRequest.ok && boardRequest.data !== undefined) {
+            hydrateBoard(NormaliseBoardData(boardRequest.data)); 
+            return true; 
+        } else if (!boardRequest.ok && boardRequest.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        }
+
+        return false;
     }
 
     async function handleCardReOrder(boardId: number, currentListId: ListId, currentIndex: number) {
@@ -139,8 +159,10 @@ export default function BoardContent() {
             moveCard(previousCardOrder.current.cardId, currentListId, previousCardOrder.current.listId, previousCardOrder.current.index);
         } else {
             setBoardError('Failed to Re-order cards, please try again.'); 
-            // move cards back to original state
-            moveCard(previousCardOrder.current.cardId, currentListId, previousCardOrder.current.listId, previousCardOrder.current.index);
+            const refreshSuccessful = await RefreshBoardData(boardId); 
+            if (!refreshSuccessful) {
+                setBoardError(`Failed to Re-order cards, Please check your Internet connection.`); 
+            }
         }
     }
 
@@ -176,7 +198,7 @@ export default function BoardContent() {
                 // console.log(`SourceData: ${JSON.stringify(source.data)}, TargetData: ${JSON.stringify(target.data)}, ST: ${source.type}, TT: ${target.type}`)
 
                 if (source.type === 'boardList' && target.type === 'boardList') {
-                    previousListOrder.current = listOrder; 
+                    previousListOrder.current = [...listOrder]; 
                 } else {
                     previousCardOrder.current = {
                         cardId: source.id as CardId, 
