@@ -2,24 +2,28 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './filterButtonOptions.module.css'; 
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Button from '@/Components/Buttons/button';
-import { Filters, useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { ToggleFilters, useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function FilterBoardOptions() {
-    const filters = useBoardUIStore((state) => state.filters); 
+    const filters = useBoardUIStore((state) => state.toggleFilters); 
     const cards = useBoardStore((state) => state.cards); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const toggleFilter = useBoardUIStore((state) => state.toggleFilter); 
     const resetFilters = useBoardUIStore((state) => state.resetFilters); 
     const applyFilters = useBoardUIStore((state) => state.applyFilters); 
 
-    const [searchInput, setSearchInput] = useState(''); 
+    const searchFilter = useBoardUIStore((state) => state.searchFilter); 
+    const setSearchFilter = useBoardUIStore((state) => state.setSearchFilter); 
+    const applySearchFilter = useBoardUIStore((state) => state.applySearchFilter); 
 
-    function handleFilterToggle(filter: keyof Filters) {
+    const debounceTimmerRef = useRef<NodeJS.Timeout | null>(null); 
+
+    function handleFilterToggle(filter: keyof ToggleFilters) {
         toggleFilter(filter); 
         applyFilters(cards); 
     }
@@ -27,6 +31,20 @@ export default function FilterBoardOptions() {
     function handleResetFilters() {
         resetFilters(); 
         applyFilters(cards); 
+        setSearchFilter('')
+    }
+
+    function handleSearch(value: string) {
+        setSearchFilter(value);      
+
+        if (debounceTimmerRef.current) {
+            clearTimeout(debounceTimmerRef.current); 
+        }
+
+        debounceTimmerRef.current = setTimeout(() => {
+            applySearchFilter(cards); 
+            console.log('Search done'); 
+        }, 500); 
     }
     
 
@@ -35,8 +53,9 @@ export default function FilterBoardOptions() {
             <div className={styles.search}>
                 <SearchBar 
                     placeHolder='Search this board'
-                    value={searchInput}
-                    setValue={(newValue) => setSearchInput(newValue)} />
+                    maxLenght={40}
+                    value={searchFilter}
+                    setValue={(newValue) => handleSearch(newValue)} />
             </div>
             {/* Card Status */}
             <div className={styles.checkOptions}>

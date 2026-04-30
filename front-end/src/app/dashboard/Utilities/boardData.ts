@@ -1,5 +1,5 @@
 import { BoardData, Card, CardId, List, ListId, NormalisedBoardData } from "../Store/boardStore";
-import { Filters } from "../Store/boardUIStore";
+import { ToggleFilters } from "../Store/boardUIStore";
 import { BoardDataFromAPI } from "../Types/boardTypes";
 
 
@@ -70,7 +70,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
 export const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' }); 
 
 
-export function matchFilter(card: Card, filters: Filters) {
+export function matchFilter(card: Card, filters: ToggleFilters) {
     // // If no filters are active, show everything
     // const activeFilters = Object.entries(filters).filter(([_, value]) => value === true);
     // if (activeFilters.length === 0) return true;

@@ -4,7 +4,7 @@ import { Card, CardId, ListId } from './boardStore';
 import { matchFilter } from '../Utilities/boardData';
 
 
-export type Filters = {
+export type ToggleFilters = {
     cardStatusCompleted: boolean, 
     cardStatusNotCompleted: boolean, 
     priorityHigh: boolean, 
@@ -16,7 +16,7 @@ export type Filters = {
     dueThisMonth: boolean,
 }
 
-const initialFilters: Filters = {
+const initialFilters: ToggleFilters = {
     cardStatusCompleted: false,
     cardStatusNotCompleted: false,
     priorityHigh: false,
@@ -39,7 +39,8 @@ type State = {
     switchBoardOptionsErrorMessage?: string;
 
     hiddenCardsAndLists: HiddenListsAndCards;  
-    filters: Filters; 
+    searchFilter: string; 
+    toggleFilters: ToggleFilters; 
 }
 
 type Action = {
@@ -47,9 +48,11 @@ type Action = {
     setSwitchBoardOptionsErrorMessage: (message?: string) => void; 
 
     // Filters
-    toggleFilter: (filter: keyof Filters) => void; 
+    setSearchFilter: (value: string) => void; 
+    toggleFilter: (filter: keyof ToggleFilters) => void; 
     resetFilters: () => void; 
     applyFilters: (cards: Record<CardId, Card>) => void; 
+    applySearchFilter: (cards: Record<CardId, Card>) => void; 
 }
 
 export const useBoardUIStore = create<State & Action>((set) => ({
@@ -59,7 +62,8 @@ export const useBoardUIStore = create<State & Action>((set) => ({
         hiddenCards: new Set([]), 
         hiddenLists: new Set([]),
     }, 
-    filters: {
+    searchFilter: '',
+    toggleFilters: {
         cardStatusCompleted: false, 
         cardStatusNotCompleted: false, 
         priorityHigh: false, 
@@ -82,38 +86,40 @@ export const useBoardUIStore = create<State & Action>((set) => ({
 
     // Filter operations
 
+    setSearchFilter: (value) => set({ searchFilter: value }), 
+
     toggleFilter: (filter) => set((state) => {
         const exclusiveGroups: Record<string, string[]> = {
             cardStatus: ['cardStatusCompleted', 'cardStatusNotCompleted'],
             due: ['dueTomorrow', 'dueThisWeek', 'dueThisMonth'], 
         }; 
 
-        const currentValue = state.filters[filter]; 
-        let updatedFilters = { ...state.filters, [filter]: !currentValue };
+        const currentValue = state.toggleFilters[filter]; 
+        let updatedFilters = { ...state.toggleFilters, [filter]: !currentValue };
         
         for (const group of Object.values(exclusiveGroups)) {
             if (group.includes(filter)) {
                 group.forEach(key => {
                     if (key !== filter) {
-                        updatedFilters[key as keyof Filters] = false; 
+                        updatedFilters[key as keyof ToggleFilters] = false; 
                     }
                 })
             }
         }
 
         return {
-            filters: updatedFilters, 
+            toggleFilters: updatedFilters, 
         }
     }), 
 
-    resetFilters: () => set({ filters: initialFilters }), 
+    resetFilters: () => set({ toggleFilters: initialFilters }), 
 
     applyFilters: (cards) => set((state) => {
         const hiddenCards = new Set<CardId>(); 
         const hiddenLists = new Set<ListId>(); 
 
         // If no filters are active, show everything
-        const activeFilters = Object.entries(state.filters).filter(([_, value]) => value === true);
+        const activeFilters = Object.entries(state.toggleFilters).filter(([_, value]) => value === true);
         if (activeFilters.length === 0) {
             return {
                 hiddenCardsAndLists: {
@@ -124,7 +130,7 @@ export const useBoardUIStore = create<State & Action>((set) => ({
         }
 
         for (const [cardId, card] of Object.entries(cards)) {
-            if (!matchFilter(card, state.filters)) {
+            if (!matchFilter(card, state.toggleFilters)) {
                 hiddenCards.add(cardId as CardId); 
             }
         }
@@ -136,6 +142,35 @@ export const useBoardUIStore = create<State & Action>((set) => ({
             }
         }; 
     }), 
+
+    applySearchFilter: (cards) => set((state) => {
+        const hiddenCards = new Set<CardId>(); 
+        const hiddenLists = new Set<ListId>(); 
+
+        // Search is empty, show everything
+        const search = state.searchFilter.trim(); 
+        if (search === '') {
+            return {
+                hiddenCardsAndLists: {
+                    hiddenCards: hiddenCards, 
+                    hiddenLists: hiddenLists,
+                }
+            }; 
+        }
+
+        for (const [cardId, card] of Object.entries(cards)) {
+            if (!card.name.includes(search)) {
+                hiddenCards.add(cardId as CardId); 
+            }
+        }
+
+        return {
+            hiddenCardsAndLists: {
+                hiddenCards: hiddenCards, 
+                hiddenLists: hiddenLists,
+            }
+        }; 
+    })
 }))
 
 
