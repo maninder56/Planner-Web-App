@@ -21,12 +21,12 @@ export default function FilterBoardOptions() {
 
     function handleFilterToggle(filter: keyof Filters) {
         toggleFilter(filter); 
-        applyFilters(cards, filters); 
+        applyFilters(cards); 
     }
 
     function handleResetFilters() {
         resetFilters(); 
-        applyFilters(cards, filters); 
+        applyFilters(cards); 
     }
     
 

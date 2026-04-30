@@ -49,7 +49,7 @@ type Action = {
     // Filters
     toggleFilter: (filter: keyof Filters) => void; 
     resetFilters: () => void; 
-    applyFilters: (cards: Record<CardId, Card>, filters: Filters) => void; 
+    applyFilters: (cards: Record<CardId, Card>) => void; 
 }
 
 export const useBoardUIStore = create<State & Action>((set) => ({
@@ -108,12 +108,12 @@ export const useBoardUIStore = create<State & Action>((set) => ({
 
     resetFilters: () => set({ filters: initialFilters }), 
 
-    applyFilters: (cards, filters) => set(() => {
+    applyFilters: (cards) => set((state) => {
         const hiddenCards = new Set<CardId>(); 
         const hiddenLists = new Set<ListId>(); 
 
         // If no filters are active, show everything
-        const activeFilters = Object.entries(filters).filter(([_, value]) => value === true);
+        const activeFilters = Object.entries(state.filters).filter(([_, value]) => value === true);
         if (activeFilters.length === 0) {
             return {
                 hiddenCardsAndLists: {
@@ -124,7 +124,7 @@ export const useBoardUIStore = create<State & Action>((set) => ({
         }
 
         for (const [cardId, card] of Object.entries(cards)) {
-            if (!matchFilter(card, filters)) {
+            if (!matchFilter(card, state.filters)) {
                 hiddenCards.add(cardId as CardId); 
             }
         }
