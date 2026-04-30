@@ -11,6 +11,7 @@
     border-top: none;
 
     text-align: center;
+
 }
 
 .wrapper.noBoardSelected header {
@@ -47,7 +48,7 @@
     
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 300px;
+    grid-auto-columns: max-content;
     gap: 30px;
 
     overflow-y: auto;

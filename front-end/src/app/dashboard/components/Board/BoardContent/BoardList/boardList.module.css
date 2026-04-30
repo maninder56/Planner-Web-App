@@ -3,6 +3,8 @@
     padding: 10px;
     height: fit-content;
 
+    max-width: 300px;
+
     border-radius: 10px;
 
     background-color: rgb(255, 255, 255); 
@@ -11,6 +13,19 @@
 
     transition: all 0.5s ease-in-out;
 }
+
+.wrapper.hidden {
+    width: 60px;
+    height: 150px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
 
 /* .wrapper * {
     border: solid 1px red;

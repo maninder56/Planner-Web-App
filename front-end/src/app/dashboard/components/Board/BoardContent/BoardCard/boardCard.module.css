@@ -20,6 +20,18 @@
     transition: all 0.5s ease-in-out;
 }
 
+.wrapper.hidden {
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+
 @media (pointer: fine) {
     .wrapper:hover {
         background-color: rgba(0, 0, 0, 0.02);
