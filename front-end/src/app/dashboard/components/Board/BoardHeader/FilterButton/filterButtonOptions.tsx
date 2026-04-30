@@ -10,31 +10,12 @@ import SearchBar from '@/Components/Inputs/Search/searchBar';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function FilterBoardOptions() {
+    const filters = useBoardUIStore((state) => state.filters); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const toggleFilter = useBoardUIStore((state) => state.toggleFilter); 
+    const resetFilters = useBoardUIStore((state) => state.resetFilters); 
 
     const [searchInput, setSearchInput] = useState(''); 
-
-    const [tempFilter, setTempFilter] = useState<{
-        cardStatusCompleted: boolean, 
-        cardStatusNotCompleted: boolean, 
-        priorityHigh: boolean, 
-        priorityMedium: boolean, 
-        priorityLow: boolean, 
-        dueOverdue: boolean,
-        dueTomorrow: boolean,
-        dueThisWeek: boolean,
-        dueThisMonth: boolean,
-    }>({
-        cardStatusCompleted: false, 
-        cardStatusNotCompleted: false, 
-        priorityHigh: false, 
-        priorityMedium: false, 
-        priorityLow: false, 
-        dueOverdue: false,
-        dueTomorrow: false,
-        dueThisWeek: false,
-        dueThisMonth: false,
-    }); 
     
 
     return (
@@ -48,40 +29,12 @@ export default function FilterBoardOptions() {
             {/* Card Status */}
             <div className={styles.checkOptions}>
                 <header>Card Status</header>
-
-                <div
-                    onClick={(e) => {
-                        e.stopPropagation(); 
-                        setTempFilter(prev => ({
-                            ...prev,
-                            cardStatusNotCompleted: false, 
-                            cardStatusCompleted: !prev.cardStatusCompleted,
-                        }));
-                    }}
-                >
-                    <input 
-                        type='checkbox' 
-                        checked={tempFilter.cardStatusCompleted} 
-                        readOnly 
-                    />
+                <div onClick={() => toggleFilter('cardStatusCompleted')}>
+                    <input type='checkbox' checked={filters.cardStatusCompleted} readOnly />
                     <label>Completed</label>
                 </div>
-
-                <div
-                    onClick={(e) => {
-                        e.stopPropagation(); 
-                        setTempFilter(prev => ({
-                            ...prev,
-                            cardStatusNotCompleted: !prev.cardStatusNotCompleted, 
-                            cardStatusCompleted: false, 
-                        }));
-                    }}
-                >
-                    <input 
-                        type='checkbox' 
-                        checked={tempFilter.cardStatusNotCompleted} 
-                        readOnly 
-                    />
+                <div onClick={() => toggleFilter('cardStatusNotCompleted')}>
+                    <input type='checkbox' checked={filters.cardStatusNotCompleted} readOnly />
                     <label>Not Completed</label>
                 </div>
             </div>
@@ -91,19 +44,16 @@ export default function FilterBoardOptions() {
             {/* Priority */}
             <div className={styles.checkOptions}>
                 <header>Priority</header>
-
-                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityHigh: !prev.priorityHigh }))}>
-                    <input type='checkbox' checked={tempFilter.priorityHigh} readOnly />
+                <div onClick={() => toggleFilter('priorityHigh')}>
+                    <input type='checkbox' checked={filters.priorityHigh} readOnly />
                     <label>High</label>
                 </div>
-
-                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityMedium: !prev.priorityMedium }))}>
-                    <input type='checkbox' checked={tempFilter.priorityMedium} readOnly />
+                <div onClick={() => toggleFilter('priorityMedium')}>
+                    <input type='checkbox' checked={filters.priorityMedium} readOnly />
                     <label>Medium</label>
                 </div>
-
-                <div onClick={() => setTempFilter(prev => ({ ...prev, priorityLow: !prev.priorityLow }))}>
-                    <input type='checkbox' checked={tempFilter.priorityLow} readOnly />
+                <div onClick={() => toggleFilter('priorityLow')}>
+                    <input type='checkbox' checked={filters.priorityLow} readOnly />
                     <label>Low</label>
                 </div>
             </div>
@@ -113,39 +63,20 @@ export default function FilterBoardOptions() {
             {/* Due Date */}
             <div className={styles.checkOptions}>
                 <header>Due Date</header>
-
-                <div onClick={() => setTempFilter(prev => ({ ...prev, dueOverdue: !prev.dueOverdue }))}>
-                    <input type='checkbox' checked={tempFilter.dueOverdue} readOnly />
+                <div onClick={() => toggleFilter('dueOverdue')}>
+                    <input type='checkbox' checked={filters.dueOverdue} readOnly />
                     <label>Overdue</label>
                 </div>
-
-                <div onClick={() => setTempFilter(prev => ({
-                    ...prev,
-                    dueTomorrow: !prev.dueTomorrow,
-                    dueThisWeek: false,
-                    dueThisMonth: false,
-                }))}>
-                    <input type='checkbox' checked={tempFilter.dueTomorrow} readOnly />
+                <div onClick={() => toggleFilter('dueTomorrow')}>
+                    <input type='checkbox' checked={filters.dueTomorrow} readOnly />
                     <label>Due tomorrow</label>
                 </div>
-
-                <div onClick={() => setTempFilter(prev => ({
-                    ...prev,
-                    dueTomorrow: false,
-                    dueThisWeek: !prev.dueThisWeek,
-                    dueThisMonth: false,
-                }))}>
-                    <input type='checkbox' checked={tempFilter.dueThisWeek} readOnly />
+                <div onClick={() => toggleFilter('dueThisWeek')}>
+                    <input type='checkbox' checked={filters.dueThisWeek} readOnly />
                     <label>Due this week</label>
                 </div>
-
-                <div onClick={() => setTempFilter(prev => ({
-                    ...prev,
-                    dueTomorrow: false,
-                    dueThisWeek: false,
-                    dueThisMonth: !prev.dueThisMonth,
-                }))}>
-                    <input type='checkbox' checked={tempFilter.dueThisMonth} readOnly />
+                <div onClick={() => toggleFilter('dueThisMonth')}>
+                    <input type='checkbox' checked={filters.dueThisMonth} readOnly />
                     <label>Due this month</label>
                 </div>
             </div>
@@ -154,19 +85,7 @@ export default function FilterBoardOptions() {
                 <Button 
                     name='Reset Filters' 
                     color='blue' 
-                    onClick={() => {
-                        setTempFilter({
-                            cardStatusCompleted: false,
-                            cardStatusNotCompleted: false,
-                            priorityHigh: false,
-                            priorityMedium: false,
-                            priorityLow: false,
-                            dueOverdue: false,
-                            dueTomorrow: false,
-                            dueThisWeek: false,
-                            dueThisMonth: false,
-                        });
-                    }} 
+                    onClick={resetFilters} 
                 />
             </div>
         </HoverOptionsPanel>
