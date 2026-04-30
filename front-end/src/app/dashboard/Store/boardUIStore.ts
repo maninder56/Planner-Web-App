@@ -53,9 +53,10 @@ type Action = {
     resetFilters: () => void; 
     applyFilters: (cards: Record<CardId, Card>) => void; 
     applySearchFilter: (cards: Record<CardId, Card>) => void; 
+    isFilterActive: () => boolean; 
 }
 
-export const useBoardUIStore = create<State & Action>((set) => ({
+export const useBoardUIStore = create<State & Action>((set, get) => ({
     activePanel: 'none', 
     switchBoardOptionsErrorMessage: undefined, 
     hiddenCardsAndLists: {
@@ -170,7 +171,22 @@ export const useBoardUIStore = create<State & Action>((set) => ({
                 hiddenLists: hiddenLists,
             }
         }; 
-    })
+    }), 
+
+    isFilterActive: () => {
+        const { searchFilter, toggleFilters } = get(); 
+
+        if (searchFilter.trim() !== '') {
+            return true; 
+        }
+
+        const activeToggleFilters = Object.entries(toggleFilters).filter(([_, value]) => value === true);
+        if (activeToggleFilters.length > 0) {
+            return true; 
+        }
+
+        return false; 
+    }
 }))
 
 
