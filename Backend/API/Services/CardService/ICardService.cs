@@ -16,5 +16,9 @@ public interface ICardService
     // Update operations 
     public Task<Result<UpdateCardResponse>> UpdateCardInfo(int boardId, int listId, int cardId, UpdateCardRequest request);
 
-    public Task<Result> UpdateCardOrderAsync(int boardId, UpdateCardOrderRequest request); 
+    public Task<Result> UpdateCardOrderAsync(int boardId, UpdateCardOrderRequest request);
+
+
+    // Delete operations 
+    public Task<Result> DeleteCardAsync(int boardId, int listId, int cardId); 
 }

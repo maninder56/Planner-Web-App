@@ -17,6 +17,33 @@ public class ListsController(
     IAuthorizationService authorizationService) : ControllerBase
 {
 
+    // Get Requests
+
+    [HttpGet("order")]
+    public async Task<IActionResult> GetListOrder(int boardId)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var listOrderResult = await listService.GetListOrderAsync(boardId);
+
+        if (listOrderResult.Successful)
+        {
+            return Ok(listOrderResult.Data); 
+        }
+        else
+        {
+            return listOrderResult.Error.ErrorToActionResult(); 
+        }
+    }
+
+
+
     // Post Requests 
 
     [HttpPost]

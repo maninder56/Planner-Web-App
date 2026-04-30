@@ -18,6 +18,20 @@ import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest'
 import { UpdateListOrderRequest } from '@/app/dashboard/Services/listService';
 import { ConvertListIdToNumeric } from '@/app/dashboard/Utilities/listUtilities';
 import { useUserStore } from '@/Store/userStore';
+import BoardCardDetails from './BoardCard/boardCardDetails';
+import { UpdateCardOrderRequest } from '@/app/dashboard/Services/cardService';
+import { ConvertCardIdArrayToNumericArray, ConvertCardIdToNumeric } from '@/app/dashboard/Utilities/cardUtilities';
+import { UpdateCardOrder } from '@/app/dashboard/Types/boardTypes';
+
+import {Debug} from '@dnd-kit/dom/plugins/debug';
+import { GetBoardRequest } from '@/app/dashboard/Services/boardService';
+import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+
+type previousCardOrder = {
+    cardId: CardId;
+    listId: ListId; 
+    index: number; 
+}
 
 export default function BoardContent() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -28,23 +42,34 @@ export default function BoardContent() {
     const moveCard = useBoardStore((state) => state.moveCard); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
+    const getCardIDsInOrderFromList = useBoardStore((state) => state.getCardIDsInOrderFromList); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
     const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
+    const isCardDetailsPanelOpen = useBoardUIStore((state) => state.activePanel === 'cardDetailsPanel'); 
 
     const [currentOpenListMenu, setCurrentOpenListMenu] = useState<ListId | undefined>(undefined); 
     
     // list to which the new card will be added
     const [createNewCardListId, setCreateNewCardListId] = useState<number | undefined>(undefined); 
 
-    const [cardDetailsPanelId, setCardDetailsPanelId] = useState<CardId | undefined>(undefined); 
+    const [cardDetailsPanelData, setCardDetailsPanelData] = useState<{parentListId: ListId, cardId: CardId} | undefined>(undefined); 
 
     const previousListOrder = useRef(listOrder); 
+    const previousCardOrder = useRef<previousCardOrder>(null); 
 
     async function handleListReOrder(boardId: number, newListOrder: ListId[]) {
-        let listIDsInOrder: number[] = [];
+        const listIDsInOrder: number[] = [];
+
         for(const listId of newListOrder) {
-            listIDsInOrder.push(ConvertListIdToNumeric(listId)); 
+            const idAsNumber = ConvertListIdToNumeric(listId); 
+            if (idAsNumber === -1) {
+                setBoardError(`We couldn't save your new list order. Please try again`); 
+                setListOrder(previousListOrder.current);
+                return; 
+            }
+            listIDsInOrder.push(idAsNumber); 
         }
 
         const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateListOrderRequest, {
@@ -53,14 +78,94 @@ export default function BoardContent() {
 
         if (request.ok) {
             setBoardError(''); 
+            previousListOrder.current = [...newListOrder]; 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
             setListOrder(previousListOrder.current); 
         } else {
             setBoardError(`We couldn't save your new list order. Please try again`); 
-            setListOrder(previousListOrder.current); 
+            const refreshSuccessful = await RefreshBoardData(boardId); 
+            if (!refreshSuccessful) {
+                setBoardError(`We couldn't save your new list order. Please check your Internet connection.`); 
+            }
         }
     }
+
+    async function RefreshBoardData(boardId: number) {
+        const boardRequest = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardRequest, boardId); 
+
+        if (boardRequest.ok && boardRequest.data !== undefined) {
+            hydrateBoard(NormaliseBoardData(boardRequest.data)); 
+            return true; 
+        } else if (!boardRequest.ok && boardRequest.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        }
+
+        return false;
+    }
+
+    async function handleCardReOrder(boardId: number, currentListId: ListId, currentIndex: number) {
+        if (previousCardOrder.current === null) {
+            return; 
+        } else if (previousCardOrder.current.index === currentIndex && 
+            previousCardOrder.current.listId === currentListId) {
+            return; 
+        }
+
+        const previousListIdAsNumber = ConvertListIdToNumeric(previousCardOrder.current.listId); 
+        const currentListIdAsNumber = ConvertListIdToNumeric(currentListId);
+
+        const previousListCardIDs = getCardIDsInOrderFromList(previousCardOrder.current.listId); 
+        const currentListCardIDs = getCardIDsInOrderFromList(currentListId); 
+
+        if (!previousListCardIDs || !currentListCardIDs ||
+            previousListIdAsNumber === -1 || currentListIdAsNumber === -1
+        ) {
+            setBoardError('Failed to Re-order cards, please try again.'); 
+            // move cards back to original state
+            moveCard(previousCardOrder.current.cardId, currentListId, previousCardOrder.current.listId, previousCardOrder.current.index);
+            return; 
+        } 
+
+        const previousListCardIDsAsNumber = ConvertCardIdArrayToNumericArray(previousListCardIDs); 
+        const currentListCardIDsAsNumber = ConvertCardIdArrayToNumericArray(currentListCardIDs); 
+
+        if (!previousListCardIDsAsNumber || !currentListCardIDsAsNumber) {
+            setBoardError('Failed to Re-order cards, please try again.'); 
+            // move cards back to original state
+            moveCard(previousCardOrder.current.cardId, currentListId, previousCardOrder.current.listId, previousCardOrder.current.index);
+            return; 
+        } 
+
+        const cardOrderArray: UpdateCardOrder = [{
+            listId: currentListIdAsNumber,
+            cardIDsInOrder: currentListCardIDsAsNumber, 
+        }]; 
+
+        // Add previous list details if card is moved from another list
+
+        if (previousCardOrder.current.listId !== currentListId) {
+            cardOrderArray.push({listId: previousListIdAsNumber, cardIDsInOrder: previousListCardIDsAsNumber}); 
+        }
+        
+        const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateCardOrderRequest, {
+            boardId: boardId, CardOrder: cardOrderArray, }); 
+
+        if (request.ok) {
+            setBoardError(''); 
+        } else if (request.error === 'Unauthorized') {
+            setSessionExpired(true); 
+            // move cards back to original state
+            moveCard(previousCardOrder.current.cardId, currentListId, previousCardOrder.current.listId, previousCardOrder.current.index);
+        } else {
+            setBoardError('Failed to Re-order cards, please try again.'); 
+            const refreshSuccessful = await RefreshBoardData(boardId); 
+            if (!refreshSuccessful) {
+                setBoardError(`Failed to Re-order cards, Please check your Internet connection.`); 
+            }
+        }
+    }
+
     
     if (isBoardLoading) {
         return <BoardContentLoadingSkeleton />
@@ -82,9 +187,26 @@ export default function BoardContent() {
 
     return (
         <DragDropProvider
-            modifiers={(defaults) => [...defaults]}
+            modifiers={(defaults) => [...defaults, RestrictToWindow]}
+            // plugins={(defaults) => [...defaults, Debug] }
             onDragStart={(event) => {
-                previousListOrder.current = listOrder; 
+                const {source, target} = event.operation; 
+                if (source === null || target === null) {
+                    return;
+                }
+                
+                // console.log(`SourceData: ${JSON.stringify(source.data)}, TargetData: ${JSON.stringify(target.data)}, ST: ${source.type}, TT: ${target.type}`)
+
+                if (source.type === 'boardList' && target.type === 'boardList') {
+                    previousListOrder.current = [...listOrder]; 
+                } else {
+                    previousCardOrder.current = {
+                        cardId: source.id as CardId, 
+                        listId: source.data.parentListId, 
+                        index: source.data.index,
+                    }; 
+                }
+                
             }}
             onDragOver={(event) => {
                 const {source, target} = event.operation; 
@@ -92,10 +214,16 @@ export default function BoardContent() {
                     return;
                 }
 
+                if (source.data.parentListId === target.data.parentListId && source.data.index === target.data.index) {
+                    return; 
+                }
+
+
                 if (source.type === 'boardCard' && target.type === 'boardCard') {
                     const sourceParentListId = source.data.parentListId; 
                     const targetParentListId = target.data.parentListId; 
                     const targetIndex = target.data.index; 
+                    console.log('Move card'); 
                     moveCard(source.id as CardId, sourceParentListId, targetParentListId, targetIndex); 
                 } else if (source.type === 'boardCard' && target.type === 'cardDropZone') {
                     const sourceParentListId = source.data.parentListId;
@@ -113,10 +241,14 @@ export default function BoardContent() {
                     return;
                 }
 
+                // console.log(`SourceData: ${JSON.stringify(source.data)}, TargetData: ${JSON.stringify(target.data)}, SID: ${source.id}, TID: ${target.id}`)
+
                 if (source.type === 'boardList' && target.type === 'boardList') {
                     const newOrder = move(listOrder, event); 
                     setListOrder(newOrder); 
                     handleListReOrder(boardDetials.id, newOrder); 
+                } else {
+                    handleCardReOrder(boardDetials.id, source.data.parentListId, source.data.index); 
                 }
             }}
         >
@@ -128,8 +260,7 @@ export default function BoardContent() {
                             <BoardList listId={listId} index={listIndex} key={listId} userRole={boardDetials.role} boardId={boardDetials.id}
                                 currentOpenListMenu={currentOpenListMenu} 
                                 setCurrentOpenListMenu={setCurrentOpenListMenu}
-                                cardDetailsPanelId={cardDetailsPanelId}
-                                setCardDetailsPanelId={setCardDetailsPanelId} 
+                                setCardDetailsPanelData={setCardDetailsPanelData} 
                                 setCreateNewCardListId={setCreateNewCardListId}/>
                         ))
                     }
@@ -140,6 +271,8 @@ export default function BoardContent() {
                 { isCreateNewCardPanelOpen && createNewCardListId && 
                     <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/> }
                 { isDeleteListDialogBoxOpen && currentOpenListMenu && <DeleteListDialogBox boardId={boardDetials.id} listId={currentOpenListMenu} /> }
+                { isCardDetailsPanelOpen && cardDetailsPanelData && 
+                    <BoardCardDetails boardId={boardDetials.id} cardId={cardDetailsPanelData.cardId} parentListId={cardDetailsPanelData.parentListId} /> }
             </div>
         </DragDropProvider>
     )

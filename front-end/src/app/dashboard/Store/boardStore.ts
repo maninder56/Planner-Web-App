@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard } from "../Types/boardTypes";
 
 
 
@@ -77,6 +77,7 @@ type Action = {
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
     deleteList: (ListId: ListId) => void; 
+    getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
 
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -84,10 +85,12 @@ type Action = {
     
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
-    addNewCard: (parentListId: number, card: Card) => void; 
+    addNewCard: (parentListId: number, card: Card) => void;
+    updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
+    deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
 }
 
-export const useBoardStore = create<State & Action>((set) => ({
+export const useBoardStore = create<State & Action>((set, get) => ({
     isBoardLoading: true,
     boards: null, 
     currentBoardData: undefined, 
@@ -245,6 +248,17 @@ export const useBoardStore = create<State & Action>((set) => ({
         };
     }), 
 
+    getCardIDsInOrderFromList: (listId) => {
+        const { lists } = get(); 
+        const list = lists[listId]; 
+
+        if (!list) {
+            return undefined; 
+        }
+
+        return list.CardIDsAndOrder; 
+    }, 
+
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
     
@@ -354,6 +368,62 @@ export const useBoardStore = create<State & Action>((set) => ({
                 }
             }
         }), 
+
+        updateCardInfo: (cardId, updateCard) => set((state) => {
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: {
+                        ...card, 
+                        name: updateCard.Title ?? card.name, 
+                        description: updateCard.Description ?? card.description, 
+                        done: updateCard.IsDone ?? card.done, 
+                        dueDate: updateCard.DueDate ?? card.dueDate, 
+                        priority: updateCard.Priority ?? card.priority,
+                    }
+                }
+            }
+        }), 
+
+        deleteCard: (listIdAsNumber, cardIdAsNumber) => set((state) => {
+            const listId: ListId = `list-${listIdAsNumber}`; 
+            const cardId: CardId = `card-${cardIdAsNumber}`; 
+
+            const list = state.lists[listId]; 
+            const card = state.cards[cardId]; 
+
+            if (!list && !card) {
+                return state; 
+            }
+
+            const updatedState: Partial<typeof state> = {}; 
+
+            if (list) {
+                updatedState.lists = {
+                    ...state.lists, 
+                    [listId]: {
+                        ...list, 
+                        CardIDsAndOrder: list.CardIDsAndOrder.filter(id => id !== cardId), 
+                    }
+                }
+            }
+
+            if (card) {
+                 // filter cards
+                const newCards = Object.fromEntries(Object.entries(state.cards)
+                    .filter(([id]) => id !== cardId)); 
+
+                updatedState.cards = newCards; 
+            }
+
+            return updatedState; 
+        })
 }))
 
 

@@ -1,8 +1,44 @@
 import { ApiFetchRequest } from '@/Services/ApiRequest';
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from '@/Utilities/ApiUtilities';
-import { ChangeListInfo, ChangeListInfoSchema, NewListResponseSchema } from '../Types/listTypes';
+import { ChangeListInfo, ChangeListInfoSchema, ListOrderSchema, NewListResponseSchema } from '../Types/listTypes';
 
 const boardRoute = '/boards';
+
+// ----------------------
+// GET REQUESTS
+// ----------------------
+
+export async function GetListOrderRequest(data: {boardId: number}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists`;
+    const request: RequestInit = {
+        method: 'GET',
+        credentials: 'include',
+    };
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request);
+
+        if (response.ok) {
+            const data = await response.json();
+            const validData = ListOrderSchema.safeParse(data);
+
+            if (validData.success) {
+                return ApiRequestSuccessfull(validData.data);
+            } else {
+                console.error('Invalid data received from API');
+                console.error(validData.error);
+                return ApiRequestFailed('DataValidationFailed');
+            }
+        } else {
+            return ApiErrorFromStatusCode(response.status);
+        }
+    } catch (error) {
+        console.error('Error: ', error);
+        return ApiRequestFailed('FetchRequestFailed');
+    }
+}
+
+
 
 
 // ----------------------
