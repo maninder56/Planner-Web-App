@@ -7,6 +7,9 @@
     padding: 0px;
     margin-bottom: 20px;
 
+    width: 300px;
+    height: 105;
+
     /* border: solid 1px rgb(244, 244, 244); */
     border-radius: 10px;
 
@@ -17,17 +20,37 @@
 
     cursor: pointer;
 
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out; 
 }
 
 .wrapper.hidden {
-    height: 50px;
+    height: 30px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+}
 
-    background-color: rgba(0, 0, 0, 0.1);
+.wrapper.hidden svg {
+    width: 20px;
+    height: 20px;
+
+    animation: fade-in 0.8s ease-in; 
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.wrapper.bigCard {
+    height: 155px;
 }
 
 
@@ -39,8 +62,7 @@
 }
 
 .wrapper.taskDone {
-    background-color: rgba(0, 0, 0, 0.02);
-    opacity: 0.8;
+    filter: grayscale(30%);
 }
 
 .wrapper.isDragging {
@@ -119,16 +141,19 @@
 
 
 .cardContent {
-    margin: 5px 10px;
+    margin: 0 10px;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .description {
+    flex: 0 1 auto;
     padding: 0;
-    margin: 0;
+
+    margin: 5px;
 
     font-size: 0.9rem;
-
-    /* max-height: 50px; */
 
     overflow: hidden;   
     text-overflow: ellipsis;
@@ -136,7 +161,7 @@
 
 
 .priorityAndDueDate {
-    margin-top: 15px;
+    flex: 1 1 auto;
     margin-bottom: 12px;
 
     font-size: 0.9rem;
