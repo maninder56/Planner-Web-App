@@ -112,7 +112,7 @@ export default function FilterBoardOptions() {
 
             <div className={styles.resetButton}>
                 <Button 
-                    name='Reset Filters' 
+                    name='Clear Filters' 
                     color='blue' 
                     onClick={handleResetFilters} 
                 />

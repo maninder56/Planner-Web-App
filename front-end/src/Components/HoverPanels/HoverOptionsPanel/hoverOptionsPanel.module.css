@@ -3,12 +3,16 @@
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 10px; 
+
     position: absolute;
     z-index: 1;
+
     padding: 20px;
+    height: max-content;
+
     overflow: hidden;
     top: calc(100% + 5px);
-    height: max-content;
+
     animation: slide-in 0.1s ease-out;
 }
 

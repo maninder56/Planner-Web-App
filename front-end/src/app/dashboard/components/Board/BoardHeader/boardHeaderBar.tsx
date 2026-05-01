@@ -12,10 +12,13 @@ import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { LastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import BoardHeaderSkeleton from './BoardHeaderSkeleton/boardHeaderSkeleton';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import ShareButtonOptions from './ShareButton/shareButtonOptions';
 
 export default function BoardHeaderBar() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const boardData = useBoardStore((state) => state.currentBoardData); 
+    const isShareBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'shareBoardOptions'); 
 
     if (isBoardLoading) {
         return <BoardHeaderSkeleton />
@@ -33,12 +36,12 @@ export default function BoardHeaderBar() {
                 <BoardNameInput initialName={boardData.title} boardId={boardData.id} userRole={boardData.role} />
             </div>
             <div className={styles.barOptionList}>
+                <div>
+                    <FilterButton />
+                </div>
                 <div className='boardHeaderBarOptionsVisibilityForBigScreen'>
                     <div>
                         <FavoriteBoardButton boardId={boardData.id} userRole={boardData.role} />
-                    </div>
-                    <div>
-                        <FilterButton />
                     </div>
                     <div>
                         <ShareButton userRole={boardData.role}/>
@@ -48,6 +51,7 @@ export default function BoardHeaderBar() {
                     <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} />
                 </div>
             </div>
+            { isShareBoardOptionsOpen && <ShareButtonOptions />}
         </div>
     ); 
 }

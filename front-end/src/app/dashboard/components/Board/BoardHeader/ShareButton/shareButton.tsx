@@ -10,7 +10,6 @@ export default function ShareButton({
 }: {
     userRole: UserRole; 
 }) {
-    const isShareBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'shareBoardOptions'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     const viewOnlyBoard = userRole === 'Viewer'; 
@@ -21,7 +20,7 @@ export default function ShareButton({
                 disabled={viewOnlyBoard}
                 onClick={e => {
                     e.stopPropagation(); 
-                    setActivePanel(isShareBoardOptionsOpen ? 'none' : 'shareBoardOptions'); 
+                    setActivePanel('shareBoardOptions'); 
                 }}
             >
                 {/* Share logo */}
@@ -33,11 +32,6 @@ export default function ShareButton({
                     </g>
                 </svg>
             </button>
-            {
-                isShareBoardOptionsOpen ? 
-                <ShareButtonOptions />
-                : null
-            }
         </div>
     ); 
 }
