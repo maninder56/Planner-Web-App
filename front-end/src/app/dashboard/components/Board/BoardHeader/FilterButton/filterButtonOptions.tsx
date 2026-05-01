@@ -47,7 +47,8 @@ export default function FilterBoardOptions() {
     
 
     return (
-        <HoverOptionsPanel title='Filter' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
+        <HoverOptionsPanel title='Filter' onCloseClick={() => setActivePanel('none')}
+            offsetZeroTo='right' className={styles.hoverPanel}>
             <div className={styles.search}>
                 <SearchBar 
                     placeHolder='Search this board'

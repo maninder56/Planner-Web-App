@@ -16,11 +16,11 @@
     animation: slide-in 0.1s ease-out;
 }
 
-.wrapper.right {
+.right {
     right: 0;
 }
 
-.wrapper.left {
+.left {
     left: 0;
 }
 
