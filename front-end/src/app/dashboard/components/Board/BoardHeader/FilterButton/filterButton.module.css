@@ -56,6 +56,10 @@
     margin: auto;
 }
 
+.wrapper.filterActive .mainButton svg {
+    margin: auto 3px;
+}
+
 .wrapper.filterActive .mainButton svg path {
     stroke: black;
 }
@@ -72,11 +76,62 @@
 
     background-color: transparent;
     color: rgb(0, 0, 0);
+
+    display: flex;
+    justify-content: center;
 }
 
 @media (pointer: fine) {
     .clearFilterButton:hover {
         background-color: white;
         border-radius: 0 10px 10px 0;
+    }
+}
+
+.clearFilterButton svg {
+    margin: auto 4px;
+}
+
+@media (pointer: fine) {
+
+    .toolTip {
+        position: relative;
+        --textBackgroundColour: #000000bb; 
+    }
+
+    .toolTipText {
+        position: absolute;
+        z-index: 2;
+        top: calc(100%);
+
+        padding: 5px 8px;
+        width: max-content;
+
+        background-color: var(--textBackgroundColour);
+        color: white;
+
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+
+        border-radius: 5px;
+
+        opacity: 0;
+        transition: top 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    }
+
+    .toolTipText::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: solid 5px;
+        border-color: transparent transparent var(--textBackgroundColour) transparent;
+    }
+
+    .toolTip:hover .toolTipText {
+        top: calc(100% + 8px);
+        opacity: 1;
     }
 }

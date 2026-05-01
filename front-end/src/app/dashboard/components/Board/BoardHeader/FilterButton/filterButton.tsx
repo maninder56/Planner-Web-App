@@ -35,8 +35,14 @@ export default function FilterButton() {
                 </svg>
             </div>
             { isFilterActive && 
-                <button className={styles.clearFilterButton} onClick={handleClearFilter}
-                >Clear</button> }
+                <button className={[styles.clearFilterButton, styles.toolTip].join(' ')} onClick={handleClearFilter}
+                >
+                    <svg width="20" height="20" viewBox="0 0 1.5 1.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m1.25 1.25-1-1m1 0-1 1" stroke="#000" strokeWidth=".125" strokeLinecap="round"/>
+                    </svg>
+                    <span className={styles.toolTipText}>Clear Filter</span>
+                </button> 
+            }
             { isFilterBoardOptionsOpen && <FilterBoardOptions /> }
         </div>
     ); 

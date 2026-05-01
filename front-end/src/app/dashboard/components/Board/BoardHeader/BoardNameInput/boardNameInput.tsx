@@ -7,6 +7,7 @@ import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 
 export default function BoardNameInput({
@@ -78,7 +79,6 @@ export default function BoardNameInput({
             maxLength={50}
             value={input}
             disabled={disableInput}
-            onClick={e => { e.stopPropagation(); }}
             onChange={e => setInput(e.target.value)}
             onBlur={handleNameChange}
             onKeyDown={e => handleEnterKeyAfterNameChange(e.key)}/>

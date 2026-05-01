@@ -16,6 +16,7 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import ShareButtonOptions from './ShareButton/shareButtonOptions';
 
 export default function BoardHeaderBar() {
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const boardData = useBoardStore((state) => state.currentBoardData); 
     const isShareBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'shareBoardOptions'); 
@@ -32,7 +33,10 @@ export default function BoardHeaderBar() {
 
     return (
         <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
-            <div className={styles.boardNameContainer}>
+            <div className={styles.boardNameContainer} onClick={e => { 
+                e.stopPropagation(); 
+                setActivePanel('none'); 
+            }}>
                 <BoardNameInput initialName={boardData.title} boardId={boardData.id} userRole={boardData.role} />
             </div>
             <div className={styles.barOptionList}>
