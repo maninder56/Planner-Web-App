@@ -9,15 +9,25 @@
     height: var(--size);
     position: relative;
 
+    border-radius: 10px;
+    cursor: pointer;
+
     display: flex;
     justify-content: center;
+
+    transition: width 0.5s ease-in-out;
+}
+
+.wrapper:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.wrapper.filterActive {
+    background-color: #ffffffd7
 }
 
 .mainButton {
-    padding: 5px;
-    
-    border-radius: 10px;
-    cursor: pointer;
+    padding: 5px 7px;
 
     /* background-color: rgba(0, 0, 0, 0.1); */
     background-color: transparent;
@@ -27,9 +37,11 @@
     align-items: center;
 }
 
-.mainButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+.wrapper.filterActive .mainButton:hover {
+    background-color: white;
+    border-radius: 10px 0 0 10px;
 }
+
 
 .mainButton svg {
     --svgSize: calc(var(--size) - 15px);
@@ -38,23 +50,27 @@
     margin: auto;
 }
 
+.wrapper.filterActive .mainButton svg path {
+    stroke: black;
+}
+
+
 .clearFilterButton {
     font-size: 0.8rem;
     font-weight: 600;
 
-    margin-left: 5px;
-
     border: none;
-    border-radius: 10px;
+    border-left: solid 1px black;
 
     cursor: pointer;
 
-    background-color: white;
-    color: black;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
 }
 
 @media (pointer: fine) {
-    .clearFilterButton:hover:not(:disabled) {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    .clearFilterButton:hover {
+        background-color: white;
+        border-radius: 0 10px 10px 0;
     }
 }

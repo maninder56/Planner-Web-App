@@ -52,7 +52,6 @@ type Action = {
     toggleFilter: (filter: keyof ToggleFilters) => void; 
     resetFilters: () => void; 
     applyFilters: (cards: Record<CardId, Card>) => void; 
-    applySearchFilter: (cards: Record<CardId, Card>) => void; 
     isFilterActive: () => boolean; 
 }
 
@@ -113,7 +112,7 @@ export const useBoardUIStore = create<State & Action>((set, get) => ({
         }
     }), 
 
-    resetFilters: () => set({ toggleFilters: initialFilters }), 
+    resetFilters: () => set({ toggleFilters: initialFilters, searchFilter: '' }), 
 
     applyFilters: (cards) => set((state) => {
         const hiddenCards = new Set<CardId>(); 
@@ -121,36 +120,8 @@ export const useBoardUIStore = create<State & Action>((set, get) => ({
 
         // If no filters are active, show everything
         const activeFilters = Object.entries(state.toggleFilters).filter(([_, value]) => value === true);
-        if (activeFilters.length === 0) {
-            return {
-                hiddenCardsAndLists: {
-                    hiddenCards: hiddenCards, 
-                    hiddenLists: hiddenLists,
-                }
-            }; 
-        }
-
-        for (const [cardId, card] of Object.entries(cards)) {
-            if (!matchFilter(card, state.toggleFilters)) {
-                hiddenCards.add(cardId as CardId); 
-            }
-        }
-
-        return {
-            hiddenCardsAndLists: {
-                hiddenCards: hiddenCards, 
-                hiddenLists: hiddenLists,
-            }
-        }; 
-    }), 
-
-    applySearchFilter: (cards) => set((state) => {
-        const hiddenCards = new Set<CardId>(); 
-        const hiddenLists = new Set<ListId>(); 
-
-        // Search is empty, show everything
         const search = state.searchFilter.trim(); 
-        if (search === '') {
+        if (activeFilters.length === 0 && search === '') {
             return {
                 hiddenCardsAndLists: {
                     hiddenCards: hiddenCards, 
@@ -160,7 +131,9 @@ export const useBoardUIStore = create<State & Action>((set, get) => ({
         }
 
         for (const [cardId, card] of Object.entries(cards)) {
-            if (!card.name.includes(search)) {
+            if (!matchFilter(card, state.toggleFilters) || 
+                (search !== '' && !card.name.includes(search))
+            ) {
                 hiddenCards.add(cardId as CardId); 
             }
         }

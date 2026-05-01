@@ -19,7 +19,6 @@ export default function FilterBoardOptions() {
 
     const searchFilter = useBoardUIStore((state) => state.searchFilter); 
     const setSearchFilter = useBoardUIStore((state) => state.setSearchFilter); 
-    const applySearchFilter = useBoardUIStore((state) => state.applySearchFilter); 
 
     const debounceTimmerRef = useRef<NodeJS.Timeout | null>(null); 
 
@@ -31,7 +30,6 @@ export default function FilterBoardOptions() {
     function handleResetFilters() {
         resetFilters(); 
         applyFilters(cards); 
-        setSearchFilter('')
     }
 
     function handleSearch(value: string) {
@@ -42,7 +40,7 @@ export default function FilterBoardOptions() {
         }
 
         debounceTimmerRef.current = setTimeout(() => {
-            applySearchFilter(cards); 
+            applyFilters(cards); 
             console.log('Search done'); 
         }, 500); 
     }
