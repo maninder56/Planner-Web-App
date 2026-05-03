@@ -156,13 +156,16 @@ export default function BoardCardDetails({
         <BigHoverPanel title='Card Details' onCloseClick={() => setActivePanel('none')}>
             <div className={styles.wrapper}>
                 <form className={styles.cardForm} onSubmit={handleFormSubmit}>
-                    <div className={styles.viewOnlyBoard}>
-                        <svg width="50" height="50" viewBox="0 0 1.5 1.5" xmlns="http://www.w3.org/2000/svg">
-                            <path d="m0.205 0.139 1.156 1.156a0.047 0.047 0 1 1 -0.066 0.066L0.875 0.941 0.566 1.25a0.141 0.141 0 0 1 -0.062 0.036l-0.32 0.087a0.047 0.047 0 0 1 -0.058 -0.058l0.087 -0.32a0.141 0.141 0 0 1 0.036 -0.062L0.559 0.625 0.139 0.205a0.047 0.047 0 1 1 0.066 -0.066M0.625 0.691 0.316 1a0.05 0.05 0 0 0 -0.01 0.015l-0.002 0.006 -0.066 0.241 0.241 -0.066a0.05 0.05 0 0 0 0.016 -0.008L0.5 1.184 0.809 0.875zm0.373 -0.506a0.224 0.224 0 0 1 0.325 0.307l-0.009 0.01 -0.307 0.307 -0.066 -0.066L1.121 0.563 0.938 0.379l-0.18 0.18 -0.066 -0.066zm0.066 0.066 -0.061 0.061L1.188 0.496l0.061 -0.061a0.13 0.13 0 0 0 -0.184 -0.184" 
-                                fill="#212121"/>
-                        </svg>
-                        <span>View only</span>
-                    </div>
+                    {
+                        viewOnlyBoard &&
+                        <div className={styles.viewOnlyBoard}>
+                            <svg width="50" height="50" viewBox="0 0 1.5 1.5" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m0.205 0.139 1.156 1.156a0.047 0.047 0 1 1 -0.066 0.066L0.875 0.941 0.566 1.25a0.141 0.141 0 0 1 -0.062 0.036l-0.32 0.087a0.047 0.047 0 0 1 -0.058 -0.058l0.087 -0.32a0.141 0.141 0 0 1 0.036 -0.062L0.559 0.625 0.139 0.205a0.047 0.047 0 1 1 0.066 -0.066M0.625 0.691 0.316 1a0.05 0.05 0 0 0 -0.01 0.015l-0.002 0.006 -0.066 0.241 0.241 -0.066a0.05 0.05 0 0 0 0.016 -0.008L0.5 1.184 0.809 0.875zm0.373 -0.506a0.224 0.224 0 0 1 0.325 0.307l-0.009 0.01 -0.307 0.307 -0.066 -0.066L1.121 0.563 0.938 0.379l-0.18 0.18 -0.066 -0.066zm0.066 0.066 -0.061 0.061L1.188 0.496l0.061 -0.061a0.13 0.13 0 0 0 -0.184 -0.184" 
+                                    fill="#212121"/>
+                            </svg>
+                            <span>View only</span>
+                        </div>
+                    }
                     <div className={styles.error}>{submitError}</div>
                     <div className={styles.checkboxAndTitle}>
                         <input className={styles.checkbox} type='checkbox' name='isDone' checked={isDone} onChange={e => setIsDone(e.target.checked)} />
