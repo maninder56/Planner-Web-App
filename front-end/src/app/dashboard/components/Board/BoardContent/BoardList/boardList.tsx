@@ -121,7 +121,7 @@ export default function BoardList({
     return (
         <div className={[styles.wrapper, isDragging ? styles.dragging : ''].join(' ')} ref={ref}>
             <div className={styles.header}>
-                <div ref={handleRef} className={styles.grabListIcon}>
+                <div ref={handleRef} className={[styles.grabListIcon, viewOnly ? styles.disable : ''].join(' ')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6h.01M15 6h.01M15 12h.01M9 12h.01M9 18h.01M15 18h.01M10 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" 
                             stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -140,7 +140,9 @@ export default function BoardList({
                         onBlur={handleNameChange}
                         onKeyDown={e => handleEnterKeyAfterNameChange(e.key)}/>
                 </header>
-                <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} setCurrentOpenListMenu={setCurrentOpenListMenu} />
+                <ListMenuButton listId={listId} currentOpenListMenu={currentOpenListMenu} 
+                    viewOnlyBoard={viewOnly}
+                    setCurrentOpenListMenu={setCurrentOpenListMenu} />
             </div>
             <div className={styles.cards} ref={dropRef}>
                 {

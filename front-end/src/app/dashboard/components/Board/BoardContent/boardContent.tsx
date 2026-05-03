@@ -185,6 +185,8 @@ export default function BoardContent() {
         ); 
     }
 
+    const viewOnly = boardDetials.role === 'Viewer'; 
+
     return (
         <DragDropProvider
             modifiers={(defaults) => [...defaults, RestrictToWindow]}
@@ -272,7 +274,8 @@ export default function BoardContent() {
                     <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/> }
                 { isDeleteListDialogBoxOpen && currentOpenListMenu && <DeleteListDialogBox boardId={boardDetials.id} listId={currentOpenListMenu} /> }
                 { isCardDetailsPanelOpen && cardDetailsPanelData && 
-                    <BoardCardDetails boardId={boardDetials.id} cardId={cardDetailsPanelData.cardId} parentListId={cardDetailsPanelData.parentListId} /> }
+                    <BoardCardDetails boardId={boardDetials.id} cardId={cardDetailsPanelData.cardId} 
+                    parentListId={cardDetailsPanelData.parentListId} viewOnlyBoard={viewOnly} /> }
             </div>
         </DragDropProvider>
     )

@@ -150,3 +150,9 @@
 
     margin-right: 5px;
 }
+
+
+.disable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

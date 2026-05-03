@@ -18,6 +18,26 @@
     cursor: not-allowed;
 }
 
+
+.viewOnlyBoard {
+    text-align: center;
+    font-size: 0.8rem;
+
+    display: flex;
+    justify-content: center;
+}
+
+.viewOnlyBoard svg {
+    margin: auto 0;
+    margin-right: 5px;
+    
+    width: 15px;
+    height: 15px;
+}
+
+.viewOnlyBoard span {
+    margin: auto 0;
+}
 .cardForm {
     flex: 1 1 auto;
     max-width: 500px;

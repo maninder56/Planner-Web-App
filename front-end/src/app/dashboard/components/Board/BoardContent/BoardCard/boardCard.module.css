@@ -1,5 +1,5 @@
-
-/* .wrapper * {
+/* 
+.wrapper * {
     outline: solid 1px rgb(255, 0, 0);
 } */
 
@@ -21,6 +21,9 @@
     cursor: pointer;
 
     transition: all 0.5s ease-in-out; 
+
+    display: flex;
+    flex-direction: column;
 }
 
 .wrapper.hidden {
@@ -91,6 +94,10 @@
     cursor: pointer;
 }
 
+.checkbox:disabled {
+    cursor: not-allowed;
+}
+
 
 .cardName {
     flex: 1 1 auto;
@@ -141,7 +148,7 @@
 
 
 .cardContent {
-    margin: 0 10px;
+    margin: auto 10px;
 
     display: flex;
     flex-direction: column;
@@ -152,6 +159,7 @@
     padding: 0;
 
     margin: 5px;
+    max-height: 50px;
 
     font-size: 0.9rem;
 
@@ -198,3 +206,7 @@
     background-color: rgba(255, 0, 0, 0.39);
 }
 
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

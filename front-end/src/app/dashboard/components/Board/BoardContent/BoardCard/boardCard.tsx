@@ -54,7 +54,7 @@ export default function BoardCard({
     const cardDescription = cardDetails.description.length > 100 ?  
         `${cardDetails.description.slice(0, 100)}...` : 
         cardDetails.description; 
-    const bigCard = cardDescription.length > 100; 
+    const bigCard = cardDescription.length > 10; 
 
     const {ref, handleRef, isDragging} = useSortable({
         id: cardId, 
@@ -125,12 +125,12 @@ export default function BoardCard({
             }}
         >
             <header>
-                <input type='checkbox' className={styles.checkbox} defaultChecked={IsCardDone} 
+                <input type='checkbox' disabled={viewOnly} className={styles.checkbox} defaultChecked={IsCardDone} 
                     onClick={(e) => {
                         e.stopPropagation(); 
                         handleDoneOnCard(cardId, !IsCardDone)}} />
                 <h3 className={[styles.cardName, IsCardDone ? styles.taskDone : ''].join(' ')}>{cardDetails.name}</h3>
-                <div ref={handleRef} className={styles.grabCardIcon}>
+                <div ref={handleRef} className={[styles.grabCardIcon, viewOnly ? styles.disabled : ''].join(' ')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6h.01M15 6h.01M15 12h.01M9 12h.01M9 18h.01M15 18h.01M10 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" 
                             stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
