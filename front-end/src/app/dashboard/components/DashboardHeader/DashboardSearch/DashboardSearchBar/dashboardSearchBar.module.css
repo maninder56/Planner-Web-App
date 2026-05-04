@@ -58,20 +58,62 @@
 
 
 .results {
-    
+    flex: 1 1 auto;
+    margin: auto 0px;
+
+    display: flex;
 }
 
-.results p {
-    margin: 10px 5px;
-    padding: 10px 10px;
-    cursor: pointer;
+.cardNotFound {
+    margin: auto;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    margin: auto;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.resultList {
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.resultList div {
+    flex: 0 1 auto;
+    margin: 5px;
+    padding: 5px;
+    padding-left: 10px;
+
     border-radius: 10px;
-    font-size: 1rem;
+
+    display: flex;
+    flex-direction: column;
 }
 
-.results p:hover {
-    background-color: rgb(220, 220, 220);
+.cardName {
+    font-size: 0.9rem;
 }
+
+.cardInfo {
+    font-size: 0.8rem;
+    color: rgb(62, 62, 62);
+}
+
+@media (pointer: fine) {
+    .resultList div:hover {
+        background-color: rgba(0, 0, 0, 0.107);
+        cursor: pointer;
+    }
+}
+
+
+
 
 /* @media (min-width: 600) {
 
