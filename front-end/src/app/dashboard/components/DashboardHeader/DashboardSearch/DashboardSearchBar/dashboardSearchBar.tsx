@@ -5,7 +5,7 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import styles from './dashboardSearchBar.module.css'; 
 import { panelType } from '@/app/dashboard/Types/UIState';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchBar from '@/Components/Inputs/Search/searchBar';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { CardSearchResult } from '@/app/dashboard/Types/cardTypes';
@@ -14,8 +14,25 @@ import LoadingCircle from '@/Components/LoadingCircle/loadingCircle';
 export default function DashboardSearchBar() {
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     // const [activePanel, setActivePanel] = useActivePanel(); 
-    const [searchInput, setSearchInput] = useState('keyword'); 
+    const [searchInput, setSearchInput] = useState(''); 
     const [loading, setLoading] = useState(true); 
+
+    const debounceTimmerRef = useRef<NodeJS.Timeout | null>(null); 
+    
+    function handleSearch(value: string) {
+        setSearchInput(value); 
+        setLoading(true); 
+
+        if (debounceTimmerRef.current) {
+            clearTimeout(debounceTimmerRef.current); 
+        }
+
+        debounceTimmerRef.current = setTimeout(() => {
+            setLoading(false); 
+            console.log('Search Done'); 
+        }, 2000);
+    }
+
 
     const mockResults: CardSearchResult = {
         "searchResults": [
@@ -43,6 +60,7 @@ export default function DashboardSearchBar() {
         ]
     }; 
 
+
     return (
         <div className={styles.searchWrapper}
             onClick={(e) => {
@@ -54,7 +72,7 @@ export default function DashboardSearchBar() {
                     onBlur={() => setSearchInput('')}
                     value={searchInput}
                     disabled={isBoardLoading}
-                    setValue={(newValue) => setSearchInput(newValue)} />
+                    setValue={(newValue) => handleSearch(newValue)} />
             </div>
             {
                 searchInput.length > 0 ?

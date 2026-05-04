@@ -41,7 +41,6 @@ export default function FilterBoardOptions() {
 
         debounceTimmerRef.current = setTimeout(() => {
             applyFilters(cards); 
-            console.log('Search done'); 
         }, 500); 
     }
     
