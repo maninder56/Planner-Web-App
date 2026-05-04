@@ -16,8 +16,6 @@ import { useUserStore } from '@/Store/userStore';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function DashboardSearchBar() {
-    const activePanel = useBoardUIStore((state) => state.activePanel); 
-    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const [searchInput, setSearchInput] = useState(''); 
     const [loading, setLoading] = useState(true); 
@@ -65,7 +63,6 @@ export default function DashboardSearchBar() {
             if (
                 wrapperRef.current && !wrapperRef.current.contains(event.target as Node)
             ) {
-                setActivePanel('none'); 
                 setSearchInput(''); 
                 setSearchResults(undefined); 
             }
@@ -77,7 +74,7 @@ export default function DashboardSearchBar() {
             document.removeEventListener('mousedown', handleClickOutside); 
         }; 
 
-    }, [activePanel])
+    }, [])
 
 
 
@@ -86,7 +83,6 @@ export default function DashboardSearchBar() {
             ref={wrapperRef}
             onClick={(e) => {
                 e.stopPropagation(); 
-                setActivePanel('globalSearchBarPanel'); 
             }}>
             <div className={styles.search}>
                 <SearchBar
@@ -96,7 +92,7 @@ export default function DashboardSearchBar() {
                     setValue={(newValue) => handleSearch(newValue)} />
             </div>
             {
-                (searchInput.length > 0 && activePanel === 'globalSearchBarPanel') ?
+                searchInput.length > 0 ?
                 <div className={styles.searchResultsWrapper} onClick={(e) => {
                     e.stopPropagation(); 
                 }}>
