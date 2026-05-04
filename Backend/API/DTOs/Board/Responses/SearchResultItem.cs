@@ -9,4 +9,6 @@ public class SearchResultItem
     public required string CardName { get; set; }
 
     public required string BoardName { get; set; }
+
+    public required string ListName { get; set; }
 }
