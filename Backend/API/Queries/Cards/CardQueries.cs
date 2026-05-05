@@ -21,7 +21,8 @@ public class CardQueries(PlannerContext database)
                 CardId = c.CardId,
                 CardName = c.Title, 
                 BoardName = c.BoardList.Board.Name,
-                ListName = c.BoardList.Name, 
+                ListName = c.BoardList.Name,
+                ListId = c.BoardList.BoardListId,
             }).ToListAsync();
 
         SearchResponse response = new SearchResponse()

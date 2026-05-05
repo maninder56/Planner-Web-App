@@ -40,10 +40,11 @@ export default function BoardContent() {
     const lastUsedBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
     const setListOrder = useBoardStore((state) => state.setListOrder);
     const moveCard = useBoardStore((state) => state.moveCard); 
-    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const setBoardError = useBoardStore((state) => state.setBoardError); 
     const getCardIDsInOrderFromList = useBoardStore((state) => state.getCardIDsInOrderFromList); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
+
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
     const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
@@ -54,7 +55,7 @@ export default function BoardContent() {
     // list to which the new card will be added
     const [createNewCardListId, setCreateNewCardListId] = useState<number | undefined>(undefined); 
 
-    const [cardDetailsPanelData, setCardDetailsPanelData] = useState<{parentListId: ListId, cardId: CardId} | undefined>(undefined); 
+    const cardDetailsPanelData = useBoardUIStore((state) => state.cardDetailsPanelData); 
 
     const previousListOrder = useRef(listOrder); 
     const previousCardOrder = useRef<previousCardOrder>(null); 
@@ -262,7 +263,6 @@ export default function BoardContent() {
                             <BoardList listId={listId} index={listIndex} key={listId} userRole={boardDetials.role} boardId={boardDetials.id}
                                 currentOpenListMenu={currentOpenListMenu} 
                                 setCurrentOpenListMenu={setCurrentOpenListMenu}
-                                setCardDetailsPanelData={setCardDetailsPanelData} 
                                 setCreateNewCardListId={setCreateNewCardListId}/>
                         ))
                     }

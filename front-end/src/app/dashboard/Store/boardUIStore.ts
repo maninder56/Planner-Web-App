@@ -34,6 +34,11 @@ type HiddenListsAndCards = {
     hiddenLists: Set<ListId>; 
 }
 
+type CardDetailsPanelData = {
+    parentListId: ListId, 
+    cardId: CardId
+}
+
 type State = {
     activePanel: panelType; 
     switchBoardOptionsErrorMessage?: string;
@@ -41,6 +46,7 @@ type State = {
     hiddenCardsAndLists: HiddenListsAndCards;  
     searchFilter: string; 
     toggleFilters: ToggleFilters; 
+    cardDetailsPanelData?: CardDetailsPanelData; 
 }
 
 type Action = {
@@ -53,6 +59,9 @@ type Action = {
     resetFilters: () => void; 
     applyFilters: (cards: Record<CardId, Card>) => void; 
     isFilterActive: () => boolean; 
+
+    // Card detials 
+    setCardDetailsPanelData: (data?: CardDetailsPanelData) => void; 
 }
 
 export const useBoardUIStore = create<State & Action>((set, get) => ({
@@ -74,6 +83,8 @@ export const useBoardUIStore = create<State & Action>((set, get) => ({
         dueThisWeek: false,
         dueThisMonth: false,
     }, 
+
+    cardDetailsPanelData: undefined, 
 
     setActivePanel: (newPanel) => set(() => ({ 
         activePanel: newPanel 
@@ -159,7 +170,15 @@ export const useBoardUIStore = create<State & Action>((set, get) => ({
         }
 
         return false; 
-    }
+    }, 
+
+
+
+    // Card Details panel data
+    setCardDetailsPanelData: (data) => set({
+        cardDetailsPanelData: data,
+    }), 
+
 }))
 
 

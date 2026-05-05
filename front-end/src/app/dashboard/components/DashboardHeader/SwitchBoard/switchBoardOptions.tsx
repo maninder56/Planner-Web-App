@@ -14,6 +14,7 @@ import { BoardArray } from '@/app/dashboard/Types/boardTypes';
 import Button from '@/Components/Buttons/button';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+import { useUserStore } from '@/Store/userStore';
 
 type BoardsState = {
     owned: BoardArray, 
@@ -33,6 +34,8 @@ export default function SwitchBoardOptions() {
     const setBoards = useBoardStore((state) => state.setBoards); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const currentBoardData = useBoardStore((state) => state.currentBoardData); 
+
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const [loading, setLoading] = useState(false); 
     const [failedToLoadBoards, setFailedToLoadBoards] = useState(false); 
@@ -126,6 +129,8 @@ export default function SwitchBoardOptions() {
                 setLastUsedBoard(boardId); 
                 setErrorMessage(undefined); 
                 setActivePanel('none');     
+            } else if (!result.ok && result.error === 'Unauthorized') {
+                setSessionExpired(true); 
             } else {
                 setErrorMessage('Failed to switch board, Please try again.'); 
             }
@@ -141,7 +146,9 @@ export default function SwitchBoardOptions() {
 
         if (lastUsedBoardResult.ok) {
             setLastUsedBoardExists(true); 
-        } 
+        } else if (!lastUsedBoardResult.ok && lastUsedBoardResult.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        }
     }
 
     function handleCloseButton() {
@@ -160,6 +167,8 @@ export default function SwitchBoardOptions() {
                 setBoards(result.data);                 
             } else if (!result.ok && result.error === 'NotFound') {
                 setBoards([]);  
+            } else if (!result.ok && result.error === 'Unauthorized') {
+                setSessionExpired(true); 
             } else {
                 setBoards([]); 
                 setFailedToLoadBoards(true);

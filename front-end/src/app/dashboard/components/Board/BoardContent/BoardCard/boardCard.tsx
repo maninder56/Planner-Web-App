@@ -25,13 +25,11 @@ export default function BoardCard({
     index,
     userRole, 
     parentListId, 
-    setCardDetailsPanelData,
 }: {
     cardId: CardId; 
     index: number;
     userRole: UserRole; 
     parentListId: ListId; 
-    setCardDetailsPanelData: (data: {parentListId: ListId, cardId: CardId} | undefined) => void; 
 }) {
     const viewOnly = userRole === 'Viewer'; 
 
@@ -43,6 +41,8 @@ export default function BoardCard({
     const setBoardError = useBoardStore((state) => state.setBoardError); 
     const setDoneOnCard = useBoardStore((state) => state.setDoneOnCard); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const setCardDetailsPanelData = useBoardUIStore((state) => state.setCardDetailsPanelData); 
 
     const [IsCardDone, setIsCardDone] = useState(cardDetails.done); 
 
