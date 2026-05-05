@@ -30,6 +30,9 @@ FROM refreshtokens;
 SHOW COLUMNS
 FROM users;
 
+SHOW COLUMNS
+FROM passwordresettokens;
+
 
 
 # Table data
@@ -49,7 +52,7 @@ SELECT * FROM refreshtokens;
 
 SELECT * FROM users;
 
-
+SELECT * FROM passwordresettokens;
 
 
 SELECT

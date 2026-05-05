@@ -21,8 +21,11 @@ public class CardQueries(PlannerContext database)
                 CardId = c.CardId,
                 CardName = c.Title, 
                 BoardName = c.BoardList.Board.Name,
+<<<<<<< Updated upstream
                 ListName = c.BoardList.Name,
                 ListId = c.BoardList.BoardListId,
+=======
+>>>>>>> Stashed changes
             }).ToListAsync();
 
         SearchResponse response = new SearchResponse()

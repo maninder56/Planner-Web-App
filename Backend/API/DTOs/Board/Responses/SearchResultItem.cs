@@ -11,6 +11,9 @@ public class SearchResultItem
     public required string CardName { get; set; }
 
     public required string BoardName { get; set; }
+<<<<<<< Updated upstream
 
     public required string ListName { get; set; }
+=======
+>>>>>>> Stashed changes
 }

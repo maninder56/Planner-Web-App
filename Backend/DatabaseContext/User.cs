@@ -37,5 +37,7 @@ public class User
 
     public List<BoardMember> BoardMembers { get; set;  } = [];
 
-    public List<BoardStar> BoardStars { get; set; } = []; 
+    public List<BoardStar> BoardStars { get; set; } = [];
+
+    public PasswordResetToken PasswordResetToken { get; set; } = null!; 
 }

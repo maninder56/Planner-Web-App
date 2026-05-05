@@ -21,7 +21,11 @@ export async function SearchCardByKeywordRequest(keyword: string) {
 
         if (response.ok) {
             const data = await response.json(); 
+<<<<<<< Updated upstream
             const validData = CardSearchResultSchema.safeParse(data); 
+=======
+            const validData = BoardArraySchema.safeParse(data); 
+>>>>>>> Stashed changes
 
             if (validData.success) {
                 return ApiRequestSuccessfull(validData.data); 
