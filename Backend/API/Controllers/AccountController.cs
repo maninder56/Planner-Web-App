@@ -150,4 +150,11 @@ public class AccountController : ControllerBase
 
     }
 
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPasswordRequestAsync(string email)
+    {
+        throw new NotImplementedException();
+    }
+
 }
