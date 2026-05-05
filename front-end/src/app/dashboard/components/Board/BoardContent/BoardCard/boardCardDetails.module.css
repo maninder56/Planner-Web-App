@@ -18,6 +18,10 @@
     cursor: not-allowed;
 }
 
+.cardNotFound {
+    margin: 50px auto;
+    font-size: 1rem;
+}
 
 .viewOnlyBoard {
     text-align: center;
