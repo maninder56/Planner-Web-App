@@ -1,4 +1,9 @@
 
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+
 .wrapper {
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -27,6 +32,10 @@
 .titleAndCloseButton {
     display: flex;
     justify-content: space-between;
+
+    position: relative;
+
+    min-height: 30px;
 }
 
 .titleAndCloseButton > header {
@@ -41,6 +50,10 @@
 .closeButton {
     width: 30px;
     height: 30px;
+
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 @keyframes slide-in {

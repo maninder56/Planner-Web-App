@@ -1,13 +1,14 @@
 
 /* .wrapper * {
-    border: solid 1px red;
+    border: solid 1px blue;
 } */
 
+.hoverPanel {
+    padding: 15px 5px;
+}
 
 .wrapper {
-    margin: 0px 10px;
-
-    min-width: 120px;
+    min-width: 150px;
 }
 
 

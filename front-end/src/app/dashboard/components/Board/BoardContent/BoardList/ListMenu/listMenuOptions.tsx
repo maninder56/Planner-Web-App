@@ -23,7 +23,8 @@ export default function ListMenuOptions({
     }
 
     return (
-        <HoverOptionsPanel title='List Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
+        <HoverOptionsPanel title='List Menu' className={styles.hoverPanel}
+            onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.wrapper}>
                 <div className={styles.deleteButtonContainer}>
                     <Button name='Delete' color='red' disabled={false} onClick={handleDeleteButton} />
