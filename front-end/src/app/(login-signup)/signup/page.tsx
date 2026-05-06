@@ -7,11 +7,13 @@ import { AppRoute } from "@/Types/appRoutes";
 import { permanentRedirect } from "next/navigation";
 import { useBoardStore } from "@/app/dashboard/Store/boardStore";
 import { useUserStore } from "@/Store/userStore";
+import { useBoardUIStore } from "@/app/dashboard/Store/boardUIStore";
 
 export default function Signup() {
     const [fromError, setFormError] = useState(''); 
     const resetBoardData = useBoardStore((state) => state.resetBoardData); 
     const resetUserData = useUserStore((state) => state.resetUserData); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     
     const dashboard: AppRoute = '/dashboard'; 
 
@@ -22,6 +24,7 @@ export default function Signup() {
             // clear any previous data
             resetBoardData(); 
             resetUserData(); 
+            setActivePanel('none');
             permanentRedirect(dashboard); 
         } else if (apiResult.error === 'Conflict'){
             setFormError('An account with this email already exists.'); 

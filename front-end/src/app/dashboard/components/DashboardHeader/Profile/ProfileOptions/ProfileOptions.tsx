@@ -48,7 +48,8 @@ export default function ProfileOptions({
             if (result.ok) {
                 resetBoardData(); 
                 resetUserData(); 
-                permanentRedirect(homeRoute); 
+                setActivePanel('none');
+                permanentRedirect(homeRoute);
             } else {
                 setError('Log out failed, please try again.'); 
             }
