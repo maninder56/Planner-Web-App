@@ -1,8 +1,10 @@
 ﻿using API.DTOs.Account.Requests;
 using API.Exceptions;
 using API.Models.Account;
+using API.Models.EmailSettings;
 using API.Models.Result;
 using API.Repositories.Account;
+using API.Services.EmailService;
 using API.Utilities;
 using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,7 @@ public class AccountService : IAccountService
     private TokenProviderUtility tokenProviderUtility;
     private IConfiguration configuration;
     private CookiesUtility cookiesUtility;
+    private IEmailService emailService; 
 
     private int refreshTokenLifeInDays;
     private int passwordResetTokenLifeInMinutes; 
@@ -25,13 +28,15 @@ public class AccountService : IAccountService
     public AccountService(
         ILogger<AccountService> logger, IAccountRepository repository,
         IConfiguration configuration, TokenProviderUtility tokenProviderUtility,
-        CookiesUtility cookiesUtility)
+        CookiesUtility cookiesUtility, IEmailService emailService)
     {
         this.logger = logger;
         this.repository = repository;
         this.tokenProviderUtility = tokenProviderUtility;
         this.configuration = configuration;
         this.cookiesUtility = cookiesUtility;
+        this.emailService = emailService; 
+        
 
         refreshTokenLifeInDays = configuration.GetValue<int>(
             "RefreshToken:ExpirationInDays",
@@ -265,7 +270,7 @@ public class AccountService : IAccountService
 
 
 
-    public async Task<Result> SendResetPasswordEmail(string email)
+    public async Task<Result> SendResetPasswordEmailAsync(string email)
     {
         try
         {
@@ -292,9 +297,13 @@ public class AccountService : IAccountService
             string newBase64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(tokenBytes);
 
             await repository.CreateNewPasswordResetTokenAsync(user.UserId, newBase64TokenHash, 
-                DateTime.UtcNow.AddMinutes(passwordResetTokenLifeInMinutes)); 
+                DateTime.UtcNow.AddMinutes(passwordResetTokenLifeInMinutes));
 
-            // send email to provided email
+            // send email to provided email; add email and token as query in link
+            string resetLink = "https://i.pinimg.com/1200x/c3/5c/45/c35c4516c4d7eda5ac9a39c8d8b79151.jpg"; 
+            await emailService.SendPasswordResetEmailAsync(email, resetLink); 
+
+            return Result.Success();
 
         } 
         catch (Exception ex)
@@ -303,8 +312,6 @@ public class AccountService : IAccountService
                email, ex.Message);
             return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
-
-        throw new NotImplementedException();
     }
 
 

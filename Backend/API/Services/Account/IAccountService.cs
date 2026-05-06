@@ -14,7 +14,8 @@ public interface IAccountService
 
     // Update operations 
     public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64);
-    public Task<Result> ChangeUserPassword(int userId, string oldPassword, string newPassword); 
+    public Task<Result> ChangeUserPassword(int userId, string oldPassword, string newPassword);
+    public Task<Result> SendResetPasswordEmailAsync(string email); 
 
     // delete operations
     public Task<Result> LogoutUserAsync(string refreshTokenInBase64); 
