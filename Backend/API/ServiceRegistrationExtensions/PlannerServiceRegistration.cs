@@ -1,4 +1,5 @@
-﻿using API.Models.EmailSettings;
+﻿using API.Models.AppConfigurations;
+using API.Models.EmailSettings;
 using API.Policies.Handlers;
 using API.Repositories.BoardRepository;
 using API.Services.Account;
@@ -41,6 +42,14 @@ public static class PlannerServiceRegistration
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings")); 
 
         services.AddScoped<IEmailService, EmailService>();  
+
+        return services; 
+    }
+
+
+    public static IServiceCollection AddAppConfigurations(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<FrontEndLinks>(configuration.GetSection("FrontEndLinks"));
 
         return services; 
     }

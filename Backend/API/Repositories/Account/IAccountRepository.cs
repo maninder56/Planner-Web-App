@@ -25,5 +25,5 @@ public interface IAccountRepository
     // Delete Operations
     public Task DeleteRefreshTokenAsync(string base64TokenHash); 
     public Task DeleteRefreshTokenAsync(int UserId);
-    public Task DeleteAllPasswordResetTokensAsync(int userId)
+    public Task DeleteAllPasswordResetTokensAsync(int userId); 
 }

@@ -30,13 +30,13 @@ public static class TokenUtility
 
 
     /// <summary>
-    /// Converts a Base64-encoded refresh token to its Base64-encoded hash representation.
+    /// Converts a Base64-encoded token to its Base64-encoded hash representation.
     /// </summary>
-    /// <param name="refreshTokenInBase64">A refresh token encoded in Base64 format.</param>
-    /// <returns>The Base64-encoded hash of the provided refresh token.</returns>
-    public static string ConvertBase64ToBase64Hash(string refreshTokenInBase64)
+    /// <param name="tokenInBase64">A token encoded in Base64 format.</param>
+    /// <returns>The Base64-encoded hash of the provided token.</returns>
+    public static string ConvertBase64ToBase64Hash(string tokenInBase64)
     {
-        var tokenBytes = Decode(refreshTokenInBase64);
+        var tokenBytes = Decode(tokenInBase64);
         var hashBytes = HashToken(tokenBytes);
         var hashInBase64 = Encode(hashBytes);
 
@@ -46,7 +46,7 @@ public static class TokenUtility
 
 
     /// <summary>
-    /// Converts refresh token bytes to Base64-encoded hash. 
+    /// Converts token bytes to Base64-encoded hash. 
     /// </summary>
     /// <param name="tokenBytes">The token bytes to hash and encode.</param>
     /// <returns>A Base64-encoded string representing the hash of the token bytes.</returns>

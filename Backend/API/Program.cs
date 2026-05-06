@@ -44,6 +44,8 @@ builder.Services.AddPlannerServices();
 // Email services
 builder.Services.AddEmailServices(builder.Configuration); 
 
+// App configurations 
+builder.Services.AddAppConfigurations(builder.Configuration);
 
 // Global Exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

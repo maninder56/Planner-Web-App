@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Account.Requests;
 using API.Exceptions;
 using API.Models.Account;
+using API.Models.AppConfigurations;
 using API.Models.EmailSettings;
 using API.Models.Result;
 using API.Repositories.Account;
@@ -8,7 +9,9 @@ using API.Services.EmailService;
 using API.Utilities;
 using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
 
 namespace API.Services.Account; 
@@ -20,7 +23,8 @@ public class AccountService : IAccountService
     private TokenProviderUtility tokenProviderUtility;
     private IConfiguration configuration;
     private CookiesUtility cookiesUtility;
-    private IEmailService emailService; 
+    private IEmailService emailService;
+    private FrontEndLinks frontEndLinks; 
 
     private int refreshTokenLifeInDays;
     private int passwordResetTokenLifeInMinutes; 
@@ -28,14 +32,16 @@ public class AccountService : IAccountService
     public AccountService(
         ILogger<AccountService> logger, IAccountRepository repository,
         IConfiguration configuration, TokenProviderUtility tokenProviderUtility,
-        CookiesUtility cookiesUtility, IEmailService emailService)
+        CookiesUtility cookiesUtility, IEmailService emailService, 
+        IOptions<FrontEndLinks> frontEndLinksOptions)
     {
         this.logger = logger;
         this.repository = repository;
         this.tokenProviderUtility = tokenProviderUtility;
         this.configuration = configuration;
         this.cookiesUtility = cookiesUtility;
-        this.emailService = emailService; 
+        this.emailService = emailService;
+        this.frontEndLinks = frontEndLinksOptions.Value; 
         
 
         refreshTokenLifeInDays = configuration.GetValue<int>(
@@ -274,18 +280,26 @@ public class AccountService : IAccountService
     {
         try
         {
+            if (string.IsNullOrEmpty(frontEndLinks.ResetPassword))
+            {
+                logger.LogWarning("Failed to load FrontEnd link for reset password");
+                return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+            }
+
             var userAndToken = await repository.GetUserAndPasswordResetToken(email);
 
             if (userAndToken is null)
             {
+                logger.LogInformation("User {Email} does not exists", email); 
                 return Result.Success(); 
             }
 
             (User user, PasswordResetToken? token) = userAndToken.Value; 
 
             // If token exits; same user can not make another request within 2 minutes
-            if (token is not null && token.CreatedAt >= DateTime.UtcNow.AddMinutes(-2))
+            if (token is not null && token.CreatedAt >= DateTime.Now.AddMinutes(-2))
             {
+                logger.LogWarning("User {Email} exceeded the request threshold (multiple requests within 2 minutes).", email);
                 return Result.Success();
             }
 
@@ -294,21 +308,29 @@ public class AccountService : IAccountService
 
             // generate token and save it as hash
             byte[] tokenBytes = TokenUtility.GenerateTokenAsByteArray();
-            string newBase64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(tokenBytes);
+            string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(tokenBytes);
 
-            await repository.CreateNewPasswordResetTokenAsync(user.UserId, newBase64TokenHash, 
+            await repository.CreateNewPasswordResetTokenAsync(user.UserId, base64TokenHash, 
                 DateTime.UtcNow.AddMinutes(passwordResetTokenLifeInMinutes));
 
             // send email to provided email; add email and token as query in link
-            string resetLink = "https://i.pinimg.com/1200x/c3/5c/45/c35c4516c4d7eda5ac9a39c8d8b79151.jpg"; 
-            await emailService.SendPasswordResetEmailAsync(email, resetLink); 
+            string base64Token = TokenUtility.Encode(tokenBytes);
+            string resetLink = QueryHelpers.AddQueryString(frontEndLinks.ResetPassword, new Dictionary<string, string?>
+            {
+                ["email"] = email,
+                ["token"] = base64Token,
+            }); 
+
+            await emailService.SendPasswordResetEmailAsync(email, resetLink);
+
+            logger.LogInformation("Reset password email has been sent to user {Email}", email); 
 
             return Result.Success();
 
         } 
         catch (Exception ex)
         {
-            logger.LogWarning("Failed to send reset password email to: {Email}, Exception message {ExceptionMessage}", 
+            logger.LogWarning("Failed to send reset password email to: {Email}, Exception message: {ExceptionMessage}", 
                email, ex.Message);
             return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }

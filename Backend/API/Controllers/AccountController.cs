@@ -152,9 +152,9 @@ public class AccountController : ControllerBase
 
 
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPasswordRequestAsync(string email)
+    public async Task<IActionResult> ForgotPasswordRequestAsync(ForgotPasswordRequest request)
     {
-        var sendEmailResult = await accountService.SendResetPasswordEmailAsync(email);
+        var sendEmailResult = await accountService.SendResetPasswordEmailAsync(request.Email);
 
         if (sendEmailResult.Successful)
         {
