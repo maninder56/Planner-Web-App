@@ -41,6 +41,9 @@ builder.Services.AddAuthorization(options =>
 // Web app services 
 builder.Services.AddPlannerServices();
 
+// Email services
+builder.Services.AddEmailServices(builder.Configuration); 
+
 
 // Global Exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

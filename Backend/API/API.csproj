@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="HttpsCertificates\" />
+    <Folder Include="Services\EmailService\" />
   </ItemGroup>
 
 </Project>
