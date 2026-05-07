@@ -21,6 +21,7 @@ public interface IAccountRepository
     // Update Operations 
     public Task UpdateRefreshTokenAsync(int refreshTokenId, string newBase64TokenHash); 
     public Task UpdateUserPassword(int userId, string newPasswordHash);
+    public Task UpdatePasswordResetToken(int userId, DateTime usedAt); 
 
     // Delete Operations
     public Task DeleteRefreshTokenAsync(string base64TokenHash); 

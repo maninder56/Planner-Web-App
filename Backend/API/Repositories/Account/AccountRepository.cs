@@ -131,6 +131,17 @@ public class AccountRepository : IAccountRepository
         await database.SaveChangesAsync();  
     }
 
+    public async Task UpdatePasswordResetToken(int userId, DateTime usedAt)
+    {
+        PasswordResetToken token = await database.PasswordResetTokens
+            .FirstOrDefaultAsync(t => t.UserId == userId)
+            ?? throw new NotFoundException("Password reset token not found"); 
+
+        token.UsedAt = usedAt;
+
+        await database.SaveChangesAsync();
+    }
+
 
     // Delete operations
 

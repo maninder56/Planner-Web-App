@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
+using System.Web;
 
 namespace API.Services.Account; 
 
@@ -311,7 +312,7 @@ public class AccountService : IAccountService
             string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(tokenBytes);
 
             await repository.CreateNewPasswordResetTokenAsync(user.UserId, base64TokenHash, 
-                DateTime.UtcNow.AddMinutes(passwordResetTokenLifeInMinutes));
+                DateTime.Now.AddMinutes(passwordResetTokenLifeInMinutes));
 
             // send email to provided email; add email and token as query in link
             string base64Token = TokenUtility.Encode(tokenBytes);
@@ -324,7 +325,6 @@ public class AccountService : IAccountService
             await emailService.SendPasswordResetEmailAsync(email, resetLink);
 
             logger.LogInformation("Reset password email has been sent to user {Email}", email); 
-
             return Result.Success();
 
         } 
@@ -333,6 +333,101 @@ public class AccountService : IAccountService
             logger.LogWarning("Failed to send reset password email to: {Email}, Exception message: {ExceptionMessage}", 
                email, ex.Message);
             return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
+
+
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
+    {
+        try
+        {
+            var userAndToken = await repository.GetUserAndPasswordResetToken(request.Email);
+
+            if (userAndToken is null)
+            {
+                logger.LogInformation("User {Email} does not exists", request.Email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Email");
+            }
+
+            (User user, PasswordResetToken? token) = userAndToken.Value;
+
+            // Validate Token
+            Result validateToken = ValidateTokenForResetPassword(token, request.token, request.Email);
+
+            if (!validateToken.Successful)
+            {
+                return validateToken;
+            }
+
+            string newPasswordHash = PasswordUtility.HashPassword(request.NewPassword);
+
+            await repository.UpdateUserPassword(user.UserId, newPasswordHash);
+
+            await repository.DeleteRefreshTokenAsync(user.UserId);
+
+            await repository.UpdatePasswordResetToken(user.UserId, DateTime.Now); 
+
+            return Result.Success();
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to reset user {Email} password, Exception message: {ExceptionMessage}", 
+                request.Email, ex.Message);
+            return Result.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to reset user {Email} password, Exception message: {ExceptionMessage}",
+                request.Email, ex.Message);
+            logger.LogWarning("Exception message {ex}", ex); 
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+
+    }
+
+
+    private Result ValidateTokenForResetPassword(PasswordResetToken? token, string base64Token, string email)
+    {
+        try
+        {
+            if (token is null)
+            {
+                logger.LogInformation("User {Email} does not have token stored", email);
+                return Result.Failed(ErrorType.NotFound, "Token not found");
+            }
+
+            string? base64TokenFromUser = HttpUtility.UrlDecode(base64Token);
+
+            if (base64TokenFromUser is null)
+            {
+                logger.LogWarning("Unable to decode token form user {Email}", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (token.ExpiresAt < DateTime.Now)
+            {
+                logger.LogWarning("User {Email} has expired token stored", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (token.UsedAt is not null)
+            {
+                logger.LogWarning("Token for user {Email} has already been used at {DateTime}", email, token.UsedAt);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (!TokenUtility.VerifyBase64TokenHash(token.TokenHash, base64TokenFromUser))
+            {
+                logger.LogWarning("User {Email} provided Invalid token", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else
+            {
+                return Result.Success();
+            }
+        }
+        catch (FormatException ex)
+        {
+            logger.LogWarning("User {Email} provided Invalid token, Exception message: {ExceptionMessage}", email, ex.Message);
+            return Result.Failed(ErrorType.BadRequest, "Invalid Token");
         }
     }
 

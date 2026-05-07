@@ -166,4 +166,21 @@ public class AccountController : ControllerBase
         }
     }
 
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPasswordRequestAsync(ResetPasswordRequest request)
+    {
+        var resetPasswordResult = await accountService.ResetPasswordAsync(request); 
+
+        if (resetPasswordResult.Successful)
+        {
+            cookiesUtility.InvalidateCookies(HttpContext);
+            return NoContent();
+        }
+        else
+        {
+            return resetPasswordResult.Error.ErrorToActionResult();
+        }
+    }
+
 }
