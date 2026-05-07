@@ -102,7 +102,7 @@ export default function LoginForm({
                         }
                     }}
                 >
-                    Create New account
+                    Don't have an account? Sign up
                 </Link>
             </div>
             <div className={styles.logIn}>

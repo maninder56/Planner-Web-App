@@ -1,0 +1,48 @@
+
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+.wrapper header {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.wrapper header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.4rem;
+}
+
+.wrapper header p {
+    margin: 5px 0px;
+    font-size: 0.9rem;
+}
+
+
+.formError {
+    text-align: center;
+    margin: 5px 0px;
+    font-size: 1rem;
+    min-height: 20px;
+}
+
+.submitButton {
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.success {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.success a {
+    margin-top: 10px;
+    font-size: 1rem;
+    width: 60px;
+}

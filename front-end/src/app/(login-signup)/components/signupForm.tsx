@@ -2,6 +2,7 @@
 
 import styles from '@/app/(login-signup)/components/signupForm.module.css'; 
 import FormInput from '@/Components/Inputs/formInput';
+import { AppRoute } from '@/Types/appRoutes';
 import { ValidateEmail, ValidatePassword } from '@/Utilities/validations';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
@@ -30,6 +31,7 @@ export default function SignupForm({
     const [errors, setErrors] = useState<errorsInterface>({}); 
     const [buttonsDisabled, setButtonsDisabled] = useState<boolean>(false); 
 
+    const logInRoute: AppRoute = '/login'; 
 
     function validateFormValues(): boolean {
         const newErrors: errorsInterface = {}; 
@@ -130,7 +132,7 @@ export default function SignupForm({
                     }}/>
             </div>
             <div className={styles.LoginLink}>
-                <Link href={'/login'} className={buttonsDisabled ? styles.linkDisabled : undefined }
+                <Link href={logInRoute} className={buttonsDisabled ? styles.linkDisabled : undefined }
                     onClick={e => {
                         if (buttonsDisabled) {
                             e.preventDefault(); 

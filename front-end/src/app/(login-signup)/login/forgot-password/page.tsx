@@ -4,6 +4,8 @@ import { FormEvent, useState } from 'react';
 import styles from './page.module.css'; 
 import FormInput from '@/Components/Inputs/formInput';
 import Button from '@/Components/Buttons/button';
+import Link from 'next/link';
+import { AppRoute } from '@/Types/appRoutes';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -12,6 +14,7 @@ export default function ForgotPassword() {
     const [formError, setFormError] = useState('');
     const [emailError, setEmailError] = useState('');
     
+    const logInRoute: AppRoute = '/login'; 
     
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -38,10 +41,11 @@ export default function ForgotPassword() {
             {submitted ? (
                 <div className={styles.success}>
                     <p>If an account exists for that email, a password reset link has been sent.</p>
+                    <Link href={logInRoute} className='button red'>Log in</Link>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    <p>{formError}</p>
+                    <p className={styles.formError}>{formError}</p>
                     <FormInput label='Email' placeholder='Enter your email' 
                         maxLength={200} value={email} error={emailError} type='text'
                         setValue={(value) => {
@@ -52,9 +56,11 @@ export default function ForgotPassword() {
                                 setEmailError(''); 
                             }
                         }} />
-                    <button className='button blue' type="submit" disabled={loading || email.trim() === ''}>
-                        {loading ? 'Sending...' : 'Send reset link'}
-                    </button>
+                    <div className={styles.submitButton}>
+                        <button className='button blue' type="submit" disabled={loading || email.trim() === ''}>
+                            {loading ? 'Sending...' : 'Send reset link'}
+                        </button>
+                    </div>
                 </form>
             )}
         </div>
