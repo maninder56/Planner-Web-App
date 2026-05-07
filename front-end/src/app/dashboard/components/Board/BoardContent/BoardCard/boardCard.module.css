@@ -7,19 +7,69 @@
     padding: 0px;
     margin-bottom: 20px;
 
+    width: 300px;
+    height: 105;
+
+    /* border: solid 1px rgb(244, 244, 244); */
     border-radius: 10px;
 
     background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0.1 1px 0.2px rgb(152, 152, 152);
 
     overflow: hidden;
 
     cursor: pointer;
+
+    transition: all 0.5s ease-in-out; 
+
+    display: flex;
+    flex-direction: column;
 }
 
-.wrapper:hover {
-    /* causes big hover panel to appear inside card */
-    /* transform: scale(1.02); */
-    transition: all 0.1s ease-in-out;
+.wrapper.hidden {
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper.hidden svg {
+    width: 20px;
+    height: 20px;
+
+    animation: fade-in 0.8s ease-in; 
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.wrapper.bigCard {
+    height: 155px;
+}
+
+
+
+@media (pointer: fine) {
+    .wrapper:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+}
+
+.wrapper.taskDone {
+    filter: grayscale(30%);
+}
+
+.wrapper.isDragging {
+    opacity: 0.9;
 }
 
 .wrapper > header {
@@ -27,52 +77,136 @@
     padding: 10px 0px;
 
     display: flex;
-    background-color: rgb(255, 255, 0, 0.4);
+    background-color: rgba(255, 255, 80, 0.546);
 }
 
-.wrapper > header > input {
+.checkbox {
+    flex: 0 1 auto;
+
     margin: auto 10px;
 
     --size: 20px; 
     width: var(--size);
     height: var(--size);
+
+    accent-color: green;
+    
+    cursor: pointer;
 }
 
-/* .wrapper > header > input:hover {
-    outline: solid black 2px;
-} */
+.checkbox:disabled {
+    cursor: not-allowed;
+}
 
-.wrapper > header > h3 {
+
+.cardName {
+    flex: 1 1 auto;
+
     margin: auto 0px;
     padding: 0;
 
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
+
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.taskDone {
+.cardName.taskDone {
     text-decoration: line-through;
 }
 
-.cardContent {
-    margin: 10px 10px;
+.grabCardIcon {
+    flex: 0 1 auto;
+    
+    margin: 0px 5px;
+    height: 25px;
+    width: 25px;
+
+    border-radius: 5px;
+    cursor: grab;
+
+    touch-action: none;
+
+    display: flex;
 }
 
-.cardContent > p {
-    padding: 0;
-    margin: 0;
+@media (pointer: fine ) {
+    .grabCardIcon:hover, 
+    .grabCardIcon:active {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
 }
+
+.grabCardIcon svg {
+    margin: auto;
+}
+
+
+
+
+.cardContent {
+    margin: auto 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.description {
+    flex: 0 1 auto;
+    padding: 0;
+
+    margin: 5px;
+    max-height: 50px;
+
+    font-size: 0.9rem;
+
+    overflow: hidden;   
+    text-overflow: ellipsis;
+}
+
 
 .priorityAndDueDate {
+    flex: 1 1 auto;
+    margin-bottom: 12px;
 
-    margin-top: 10px;
+    font-size: 0.9rem;
 
     display: flex;
     justify-content: space-evenly;
 }
 
-.priorityAndDueDate div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.priorityAndDueDate > div > span {
+    display: block;
+    margin-bottom: 2px;
+    
+    text-align: center;
+}
+
+.priority {
+    border-radius: 5px;
+
+    text-align: center;
+
+    padding: 1px 5px;
+}
+
+.priority.low {
+    background-color: rgba(255, 166, 0, 0.39);
+}
+
+.priority.medium {
+    background-color: rgba(255, 100, 48, 0.468);
+}
+
+.priority.high {
+    background-color: rgba(255, 0, 0, 0.39);
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

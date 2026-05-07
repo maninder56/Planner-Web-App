@@ -1,4 +1,8 @@
 
+/* .searchWrapper * {
+    border: solid 1px red;
+} */
+
 .searchWrapper {
     flex: 1 1 auto;
     max-width: 400px;
@@ -18,6 +22,8 @@
 
 .searchResultsWrapper {
     width: 100%;
+    min-height: 100px;
+
     outline: solid 1.5px;
     border-radius: 10px;
     background-color: white;
@@ -26,41 +32,97 @@
     top: auto; 
     margin-top: 10px;
     z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: all 0.5s ease-in-out;
 }
 
 
 .searchResultsWrapper header {
-    margin: 10px;
+    margin: 5px;
     padding-left: 10px;
-    font-size: 1rem;
+
+    font-size: 0.9rem;
     border-bottom: solid 1px;
     color: rgb(78, 78, 78);
 }
 
-/* Temporary styles */
+
+.loading {
+    margin: 20px auto;
+
+    width: 30px;
+    height: 30px;
+}
+
 
 .results {
-    
+    flex: 1 1 auto;
+    margin: auto 0px;
+
+    display: flex;
 }
 
-.results p {
-    margin: 10px 5px;
-    padding: 10px 10px;
-    cursor: pointer;
+.cardNotFound {
+    margin: auto;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    margin: auto;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.resultList {
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.resultList div {
+    flex: 0 1 auto;
+    margin: 5px;
+    padding: 5px;
+    padding-left: 10px;
+
     border-radius: 10px;
-    font-size: 1rem;
+
+    display: flex;
+    flex-direction: column;
 }
 
-.results p:hover {
-    background-color: rgb(220, 220, 220);
+.cardName {
+    font-size: 0.9rem;
 }
 
-@media (min-width: 600) {
+.cardInfo {
+    font-size: 0.8rem;
+    color: rgb(62, 62, 62);
+}
+
+@media (pointer: fine) {
+    .resultList div:hover {
+        background-color: rgba(0, 0, 0, 0.107);
+        cursor: pointer;
+    }
+}
+
+
+
+
+/* @media (min-width: 600) {
 
     .search > input, 
     .searchResultsWrapper header, 
     .results p {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 
-}
+} */

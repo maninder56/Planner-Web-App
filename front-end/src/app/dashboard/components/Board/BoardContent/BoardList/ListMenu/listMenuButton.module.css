@@ -25,9 +25,18 @@
     align-items: center;
 }
 
-.mainButton:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+.mainButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
+
+@media (pointer: fine) {
+    .mainButton:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }    
+}
+
+
 
 .mainButton svg {
     margin: auto;

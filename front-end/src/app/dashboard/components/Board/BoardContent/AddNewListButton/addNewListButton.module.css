@@ -1,0 +1,115 @@
+
+
+.wrapper {
+    flex: 1 1 auto;
+
+    min-width: 250px;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper > button {
+    flex: 1 1 auto;
+
+    margin: 10px;
+
+    height: 50px;
+
+    border: none;
+    border-radius: 10px;
+
+    background-color: rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    justify-content: center;
+}
+
+@media (pointer: fine) {
+    
+    .wrapper > button:hover:not(:disabled) {
+        background-color: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+    }
+}
+
+.wrapper > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.wrapper > button svg {
+    margin: auto 5px;
+
+    color: white;
+}
+
+.wrapper > button span {
+    margin: auto 0px;
+    
+    font-size: 1.1rem;
+
+    color: white;
+}
+
+
+.fromContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.fromContainer form {
+    flex: 1 1 auto;
+
+    margin: 5px;
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.fromContainer input {
+    flex: 1 1 auto;
+
+    margin: 5px 0px;
+    padding: 5px 5px;
+
+    border: solid 1.5px;
+    border-radius: 5px;
+
+    font-size: 0.9rem;
+}
+
+.error {
+    display: block;
+    
+    font-size: 0.8rem;
+    text-align: center;
+    color: red;
+}
+
+.listFromButtons {
+    margin-top: 5px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.listFromButtons button {
+    font-size: 1rem ;
+}

@@ -3,9 +3,13 @@ import z from "zod";
 
 export const CardSearchResultSchema = z.object({
     searchResults: z.array(z.object({
-        BoardId: z.number(),
-        CardId: z.number(), 
-        CardName: z.string(), 
-        BoardName: z.string(), 
+        boardId: z.number(),
+        cardId: z.number(), 
+        listId: z.number(),
+        cardName: z.string(), 
+        boardName: z.string(), 
+        listName: z.string(), 
     })), 
 }); 
+
+export type CardSearchResult = z.infer<typeof CardSearchResultSchema>; 

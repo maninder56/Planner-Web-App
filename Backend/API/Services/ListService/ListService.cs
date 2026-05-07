@@ -2,13 +2,30 @@
 using API.DTOs.List.Responses;
 using API.Exceptions;
 using API.Models.Result;
+using API.Queries.Lists;
 using API.Repositories.ListRepository;
 using DatabaseContext;
 
 namespace API.Services.ListService; 
 
-public class ListService(ILogger<ListService> logger, IListRepository listRepository) : IListService
+public class ListService(ILogger<ListService> logger, IListRepository listRepository, ListQueries listQueries) : IListService
 {
+
+    public async Task<Result<ListOrderResponse>> GetListOrderAsync(int boardId)
+    {
+        try
+        {
+            var listorder = await listQueries.GetListOrderAsync(boardId);
+            return Result<ListOrderResponse>.Success(new ListOrderResponse() { ListOrder = listorder }); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to get list order of board with Id: {BoardId}, Exception message: {ExceptionMessage}",
+                boardId, ex.Message);
+            return Result<ListOrderResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
 
     // Create operations
 
@@ -19,7 +36,7 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
             BoardList newList = await listRepository.CreateNewBoardListAsync(boardId, request.Name);
             return Result<NewListResponse>.Success(new NewListResponse 
             { 
-                Name = newList.Name, ListPosition = newList.ListPosition 
+                Id = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition 
             }); 
         }
         catch (Exception ex)

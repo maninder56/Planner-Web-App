@@ -10,10 +10,12 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 export default function ListMenuButton({
     listId, 
     currentOpenListMenu, 
+    viewOnlyBoard,
     setCurrentOpenListMenu, 
 }: {
     listId: ListId; 
     currentOpenListMenu: ListId | undefined; 
+    viewOnlyBoard: boolean; 
     setCurrentOpenListMenu: (listId: ListId | undefined) => void; 
 }) {
     const isBoardListMenuOptionsOpen = useBoardUIStore((state) => state.activePanel === 'boardListMenuOptions'); 
@@ -22,6 +24,7 @@ export default function ListMenuButton({
     return (
         <div className={styles.wrapper}>
             <button className={styles.mainButton}
+                disabled={viewOnlyBoard}
                 onClick={e => {
                     e.stopPropagation(); 
 
@@ -44,11 +47,7 @@ export default function ListMenuButton({
                         stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </button>
-            {
-                isBoardListMenuOptionsOpen && listId === currentOpenListMenu ? 
-                    <ListMenuOptions />
-                : null
-            }
+            { isBoardListMenuOptionsOpen && listId === currentOpenListMenu && <ListMenuOptions currentOpenListMenuId={currentOpenListMenu} /> }
         </div>
     ); 
 }

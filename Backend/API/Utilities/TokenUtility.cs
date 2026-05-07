@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 
 namespace API.Utilities; 
 
-public static class RefreshTokenUtility
+public static class TokenUtility
 {
-    public static byte[] GenerateRefreshTokenAsByteArray()
+    public static byte[] GenerateTokenAsByteArray()
     {
         byte[] randomNumber = new byte[32];
         using RandomNumberGenerator rng = RandomNumberGenerator.Create();
@@ -13,15 +13,15 @@ public static class RefreshTokenUtility
         return randomNumber;
     }
 
-    public static byte[] HashRefreshToken(byte[] refreshTokenAsByteArray)
+    public static byte[] HashToken(byte[] tokenAsByteArray)
     {
-        return SHA256.HashData(refreshTokenAsByteArray);
+        return SHA256.HashData(tokenAsByteArray);
     }
 
-    public static bool VerifyBase64RefreshTokenHash(string base64hash, string base64Token)
+    public static bool VerifyBase64TokenHash(string base64hash, string base64Token)
     {
         byte[] hashBytes = Decode(base64hash);
-        byte[] tokenHashBytes = HashRefreshToken(Decode(base64Token));
+        byte[] tokenHashBytes = HashToken(Decode(base64Token));
         return CryptographicOperations.FixedTimeEquals(hashBytes, tokenHashBytes);
     }
 
@@ -30,14 +30,14 @@ public static class RefreshTokenUtility
 
 
     /// <summary>
-    /// Converts a Base64-encoded refresh token to its Base64-encoded hash representation.
+    /// Converts a Base64-encoded token to its Base64-encoded hash representation.
     /// </summary>
-    /// <param name="refreshTokenInBase64">A refresh token encoded in Base64 format.</param>
-    /// <returns>The Base64-encoded hash of the provided refresh token.</returns>
-    public static string ConvertBase64ToBase64Hash(string refreshTokenInBase64)
+    /// <param name="tokenInBase64">A token encoded in Base64 format.</param>
+    /// <returns>The Base64-encoded hash of the provided token.</returns>
+    public static string ConvertBase64ToBase64Hash(string tokenInBase64)
     {
-        var tokenBytes = Decode(refreshTokenInBase64);
-        var hashBytes = HashRefreshToken(tokenBytes);
+        var tokenBytes = Decode(tokenInBase64);
+        var hashBytes = HashToken(tokenBytes);
         var hashInBase64 = Encode(hashBytes);
 
         return hashInBase64; 
@@ -46,13 +46,13 @@ public static class RefreshTokenUtility
 
 
     /// <summary>
-    /// Converts refresh token bytes to Base64-encoded hash. 
+    /// Converts token bytes to Base64-encoded hash. 
     /// </summary>
     /// <param name="tokenBytes">The token bytes to hash and encode.</param>
     /// <returns>A Base64-encoded string representing the hash of the token bytes.</returns>
     public static string ConvertTokenBytesToBase64Hash(byte[] tokenBytes)
     {
-        var hashBytes = HashRefreshToken(tokenBytes);
+        var hashBytes = HashToken(tokenBytes);
         var hashInBase64 = Encode(hashBytes);
 
         return hashInBase64;

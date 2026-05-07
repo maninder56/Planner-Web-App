@@ -9,9 +9,11 @@ public class CardQueries(PlannerContext database)
     public async Task<SearchResponse> SearchCardsByKeyword(int userId, string keyword)
     {
         var resultItems = await database.Cards.AsNoTracking()
-            .Where(c => c.Title.ToLower().Contains(keyword.ToLower()) &&
+            .Where(c => EF.Functions.Like(c.Title, $"%{keyword}%") &&
                 c.BoardList.Board.BoardMembers.Any(bm => bm.UserId == userId))
-            .OrderBy(c => c.Title)
+            .OrderByDescending(c => c.Title == keyword)
+            .ThenBy(c => c.Title.StartsWith(keyword))
+            .ThenBy(c => c.Title)
             .Take(10)
             .Select(c => new SearchResultItem
             {
@@ -19,6 +21,8 @@ public class CardQueries(PlannerContext database)
                 CardId = c.CardId,
                 CardName = c.Title, 
                 BoardName = c.BoardList.Board.Name,
+                ListName = c.BoardList.Name,
+                ListId = c.BoardList.BoardListId,
             }).ToListAsync();
 
         SearchResponse response = new SearchResponse()

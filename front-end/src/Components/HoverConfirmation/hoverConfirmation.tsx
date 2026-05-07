@@ -35,7 +35,7 @@ export default function HoverConfirmation({
 
     return (
         <div className={[styles.wrapper, className ?? ''].join(' ')}>
-            <div className={styles.confirmation}>
+            <div className={styles.confirmation} onClick={e => { e.stopPropagation(); }}>
                 <header>{title}</header>
                 <p className={styles.confirmationError}>{confirmationError}</p>
                 <p>{message}</p>

@@ -21,8 +21,6 @@ export default function BoardMenu({
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
 
     const isManageMembersOptionsOpen = activePanel === 'manageMembersOptions'; 
-    const isShareBoardOptionsOpen = activePanel === 'shareBoardOptions'; 
-    const isFilterBoardOptionsOpen = activePanel === 'filterBoardOptions'; 
     const isBoardMenuOptionsOpen = activePanel === 'boardMenuOptions';  
 
     return (
@@ -46,11 +44,6 @@ export default function BoardMenu({
             { isBoardMenuOptionsOpen && <BoardMenuOptions boardId={boardId} userRole={userRole} /> }
 
             { isManageMembersOptionsOpen && <ManageBoardMembersOptions /> }
-
-            <div className='boardHeaderBarOptionsVisibilityForSmallScreen'>
-                { isFilterBoardOptionsOpen && <FilterBoardOptions /> }
-                { isShareBoardOptionsOpen && <ShareButtonOptions /> }
-            </div>
         </div>
     ); 
 }

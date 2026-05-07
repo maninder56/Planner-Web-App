@@ -1,24 +1,22 @@
 
+/* .wrapper * {
+    border: solid 1px blue;
+} */
+
+.hoverPanel {
+    padding: 15px 5px;
+}
+
 .wrapper {
-    margin: 0px 10px;
+    min-width: 150px;
 }
 
-.wrapper button {
-    margin: 0;
-    margin-top: 2px;
-    padding: 10px;
-    width: 100%;
 
-    border: none;
-    border-radius: 10px;
-
-    background-color: transparent;
-    cursor: pointer;
-
+.deleteButtonContainer {
     display: flex;
-    justify-content: start;
-}
+    justify-content: center;
 
-.wrapper button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+
+    font-size: 1rem;
 }

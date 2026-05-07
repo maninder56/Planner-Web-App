@@ -28,11 +28,14 @@
     transition: all 0.1s ease-in-out;
 }
 
-.wrapper:hover:not(:disabled) {
-    background-color: rgb(255, 255, 255, 0.2);
+@media (pointer: fine) {
+    .wrapper:hover:not(:disabled) {
+        background-color: rgb(255, 255, 255, 0.2);
+    }
 }
 
-.wrapper:focus-within {
+
+.wrapper:focus-within:not(:disabled) {
     background-color: rgba(255, 255, 255, 0.9);
     color: black;
     outline: solid 1.5px rgb(0, 0, 0);

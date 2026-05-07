@@ -44,15 +44,19 @@ export async function SearchCardByKeywordRequest(keyword: string) {
 // Post requests
 
 
-export async function CreateNewCardRequest(boardId: number, listId: number, newCard: NewCard) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}/cards`; 
+export async function CreateNewCardRequest(data: {
+    boardId: number, 
+    listId: number, 
+    newCard: NewCard
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'POST', 
         credentials: 'include',
-        body: JSON.stringify(newCard),
+        body: JSON.stringify(data.newCard),
     }; 
 
     try {
@@ -83,15 +87,20 @@ export async function CreateNewCardRequest(boardId: number, listId: number, newC
 // Patch requests
 
 
-export async function UpdateCardInfoRequest(boardId: number, listId: number, cardId: number, card: UpdateCard) {
-    const subUrl = boardRoute + `/${boardId}/lists/${listId}/cards/${cardId}`; 
+export async function UpdateCardInfoRequest(data: {
+    boardId: number, 
+    listId: number, 
+    cardId: number, 
+    card: UpdateCard
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards/${data.cardId}`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'PATCH', 
         credentials: 'include',
-        body: JSON.stringify(card),
+        body: JSON.stringify(data.card),
     }; 
 
     try {
@@ -120,15 +129,19 @@ export async function UpdateCardInfoRequest(boardId: number, listId: number, car
 
 
 
-export async function UpdateCardOrderRequest(boardId: number, CardOrder: UpdateCardOrder) {
-    const subUrl = boardRoute + `/${boardId}/cards/re-order`; 
+export async function UpdateCardOrderRequest(data: {
+    boardId: number, CardOrder: UpdateCardOrder
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/cards/re-order`; 
     const request: RequestInit = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         method: 'PATCH', 
         credentials: 'include',
-        body: JSON.stringify(CardOrder),
+        body: JSON.stringify({
+            ListsAndCards: data.CardOrder
+        }),
     }; 
 
     try {
@@ -146,6 +159,31 @@ export async function UpdateCardOrderRequest(boardId: number, CardOrder: UpdateC
 }
 
 
+
+export async function DeleteCardRequest(data: {
+    boardId: number, 
+    listId: number, 
+    cardId: number, 
+}) {
+    const subUrl = boardRoute + `/${data.boardId}/lists/${data.listId}/cards/${data.cardId}`; 
+    const request: RequestInit = { 
+        method: 'DELETE', 
+        credentials: 'include',
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
 
 
 

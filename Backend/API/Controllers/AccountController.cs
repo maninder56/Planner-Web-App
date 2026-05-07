@@ -150,4 +150,37 @@ public class AccountController : ControllerBase
 
     }
 
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPasswordRequestAsync(ForgotPasswordRequest request)
+    {
+        var sendEmailResult = await accountService.SendResetPasswordEmailAsync(request.Email);
+
+        if (sendEmailResult.Successful)
+        {
+            return NoContent(); 
+        }
+        else
+        {
+            return sendEmailResult.Error.ErrorToActionResult();
+        }
+    }
+
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPasswordRequestAsync(ResetPasswordRequest request)
+    {
+        var resetPasswordResult = await accountService.ResetPasswordAsync(request); 
+
+        if (resetPasswordResult.Successful)
+        {
+            cookiesUtility.InvalidateCookies(HttpContext);
+            return NoContent();
+        }
+        else
+        {
+            return resetPasswordResult.Error.ErrorToActionResult();
+        }
+    }
+
 }

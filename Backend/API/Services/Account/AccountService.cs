@@ -1,13 +1,19 @@
 ﻿using API.DTOs.Account.Requests;
 using API.Exceptions;
 using API.Models.Account;
+using API.Models.AppConfigurations;
+using API.Models.EmailSettings;
 using API.Models.Result;
 using API.Repositories.Account;
+using API.Services.EmailService;
 using API.Utilities;
 using DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
+using System.Web;
 
 namespace API.Services.Account; 
 
@@ -18,24 +24,38 @@ public class AccountService : IAccountService
     private TokenProviderUtility tokenProviderUtility;
     private IConfiguration configuration;
     private CookiesUtility cookiesUtility;
+    private IEmailService emailService;
+    private FrontEndLinks frontEndLinks; 
 
     private int refreshTokenLifeInDays;
-    
+    private int passwordResetTokenLifeInMinutes; 
+
     public AccountService(
-        ILogger<AccountService> logger, IAccountRepository repository, 
+        ILogger<AccountService> logger, IAccountRepository repository,
         IConfiguration configuration, TokenProviderUtility tokenProviderUtility,
-        CookiesUtility cookiesUtility)
+        CookiesUtility cookiesUtility, IEmailService emailService, 
+        IOptions<FrontEndLinks> frontEndLinksOptions)
     {
         this.logger = logger;
         this.repository = repository;
         this.tokenProviderUtility = tokenProviderUtility;
         this.configuration = configuration;
         this.cookiesUtility = cookiesUtility;
+        this.emailService = emailService;
+        this.frontEndLinks = frontEndLinksOptions.Value; 
         
-        refreshTokenLifeInDays = configuration.GetValue<int>("RefreshToken:ExpirationInDays", cookiesUtility.GetRefreshTokenLifeInDaysDefaultValue());
+
+        refreshTokenLifeInDays = configuration.GetValue<int>(
+            "RefreshToken:ExpirationInDays",
+            cookiesUtility.GetRefreshTokenLifeInDaysDefaultValue()
+        );
+
+
+        passwordResetTokenLifeInMinutes = configuration.GetValue<int>(
+            "PasswordResetToken:ExpirationInMinutes", 
+            15
+        );
     }
-
-
 
 
     // Read Operations
@@ -63,13 +83,13 @@ public class AccountService : IAccountService
             }
 
             // create tokens 
-            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-            string base64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+            byte[] refreshTokenBytes = TokenUtility.GenerateTokenAsByteArray();
+            string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
 
             Tokens tokens = new Tokens
             {
                 AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
-                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+                RefreshToken = TokenUtility.Encode(refreshTokenBytes)
             };
 
 
@@ -113,13 +133,13 @@ public class AccountService : IAccountService
             }
 
             // Create tokens
-            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-            string base64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+            byte[] refreshTokenBytes = TokenUtility.GenerateTokenAsByteArray();
+            string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
 
             Tokens tokens = new Tokens
             {
                 AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
-                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes)
+                RefreshToken = TokenUtility.Encode(refreshTokenBytes)
             };
 
             await repository.CreateNewRefreshTokenAsync(userSaved.UserId, base64TokenHash, 
@@ -155,7 +175,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            string base64TokenHash = RefreshTokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
+            string base64TokenHash = TokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
 
             // get user details by refreshtoken 
             var userAndRefreshTokenResult = await repository.GetUserAndRefreshToken(base64TokenHash);
@@ -176,20 +196,20 @@ public class AccountService : IAccountService
             }
 
             // Verify refresh tokens 
-            if (!RefreshTokenUtility.VerifyBase64RefreshTokenHash(refreshToken.TokenHash, refreshTokenInBase64))
+            if (!TokenUtility.VerifyBase64TokenHash(refreshToken.TokenHash, refreshTokenInBase64))
             {
                 logger.LogWarning("Invalid refresh token of user with email: {Email}", user.Email);
                 return Result<Tokens>.Failed(ErrorType.Unauthorized, "Invalid Refresh token");
             }
 
             // create new refresh token and jwt 
-            byte[] refreshTokenBytes = RefreshTokenUtility.GenerateRefreshTokenAsByteArray();
-            string newBase64TokenHash = RefreshTokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+            byte[] refreshTokenBytes = TokenUtility.GenerateTokenAsByteArray();
+            string newBase64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
 
             Tokens tokens = new Tokens
             {
                 AccessToken = tokenProviderUtility.Create(user.UserId, user.Email),
-                RefreshToken = RefreshTokenUtility.Encode(refreshTokenBytes),
+                RefreshToken = TokenUtility.Encode(refreshTokenBytes),
                 RefreshTokenExpiresAt = refreshToken.ExpiresAt
             };
 
@@ -256,11 +276,169 @@ public class AccountService : IAccountService
 
 
 
+
+    public async Task<Result> SendResetPasswordEmailAsync(string email)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(frontEndLinks.ResetPassword))
+            {
+                logger.LogWarning("Failed to load FrontEnd link for reset password");
+                return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+            }
+
+            var userAndToken = await repository.GetUserAndPasswordResetToken(email);
+
+            if (userAndToken is null)
+            {
+                logger.LogInformation("User {Email} does not exists", email); 
+                return Result.Success(); 
+            }
+
+            (User user, PasswordResetToken? token) = userAndToken.Value; 
+
+            // If token exits; same user can not make another request within 2 minutes
+            if (token is not null && token.CreatedAt >= DateTime.Now.AddMinutes(-2))
+            {
+                logger.LogWarning("User {Email} exceeded the request threshold (multiple requests within 2 minutes).", email);
+                return Result.Success();
+            }
+
+            // Delete all the previous tokes of this user
+            await repository.DeleteAllPasswordResetTokensAsync(user.UserId); 
+
+            // generate token and save it as hash
+            byte[] tokenBytes = TokenUtility.GenerateTokenAsByteArray();
+            string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(tokenBytes);
+
+            await repository.CreateNewPasswordResetTokenAsync(user.UserId, base64TokenHash, 
+                DateTime.Now.AddMinutes(passwordResetTokenLifeInMinutes));
+
+            // send email to provided email; add email and token as query in link
+            string base64Token = TokenUtility.Encode(tokenBytes);
+            string resetLink = QueryHelpers.AddQueryString(frontEndLinks.ResetPassword, new Dictionary<string, string?>
+            {
+                ["email"] = email,
+                ["token"] = base64Token,
+            }); 
+
+            await emailService.SendPasswordResetEmailAsync(email, resetLink);
+
+            logger.LogInformation("Reset password email has been sent to user {Email}", email); 
+            return Result.Success();
+
+        } 
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to send reset password email to: {Email}, Exception message: {ExceptionMessage}", 
+               email, ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
+
+
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
+    {
+        try
+        {
+            var userAndToken = await repository.GetUserAndPasswordResetToken(request.Email);
+
+            if (userAndToken is null)
+            {
+                logger.LogInformation("User {Email} does not exists", request.Email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Email");
+            }
+
+            (User user, PasswordResetToken? token) = userAndToken.Value;
+
+            // Validate Token
+            Result validateToken = ValidateTokenForResetPassword(token, request.token, request.Email);
+
+            if (!validateToken.Successful)
+            {
+                return validateToken;
+            }
+
+            string newPasswordHash = PasswordUtility.HashPassword(request.NewPassword);
+
+            await repository.UpdateUserPassword(user.UserId, newPasswordHash);
+
+            await repository.DeleteRefreshTokenAsync(user.UserId);
+
+            await repository.UpdatePasswordResetToken(user.UserId, DateTime.Now); 
+
+            return Result.Success();
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to reset user {Email} password, Exception message: {ExceptionMessage}", 
+                request.Email, ex.Message);
+            return Result.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to reset user {Email} password, Exception message: {ExceptionMessage}",
+                request.Email, ex.Message);
+            logger.LogWarning("Exception message {ex}", ex); 
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+
+    }
+
+
+    private Result ValidateTokenForResetPassword(PasswordResetToken? token, string base64Token, string email)
+    {
+        try
+        {
+            if (token is null)
+            {
+                logger.LogInformation("User {Email} does not have token stored", email);
+                return Result.Failed(ErrorType.NotFound, "Token not found");
+            }
+
+            string? base64TokenFromUser = HttpUtility.UrlDecode(base64Token);
+
+            if (base64TokenFromUser is null)
+            {
+                logger.LogWarning("Unable to decode token form user {Email}", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (token.ExpiresAt < DateTime.Now)
+            {
+                logger.LogWarning("User {Email} has expired token stored", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (token.UsedAt is not null)
+            {
+                logger.LogWarning("Token for user {Email} has already been used at {DateTime}", email, token.UsedAt);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else if (!TokenUtility.VerifyBase64TokenHash(token.TokenHash, base64TokenFromUser))
+            {
+                logger.LogWarning("User {Email} provided Invalid token", email);
+                return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+            }
+            else
+            {
+                return Result.Success();
+            }
+        }
+        catch (FormatException ex)
+        {
+            logger.LogWarning("User {Email} provided Invalid token, Exception message: {ExceptionMessage}", email, ex.Message);
+            return Result.Failed(ErrorType.BadRequest, "Invalid Token");
+        }
+    }
+
+
+
+
     // Delete operations
 
     public async Task<Result> LogoutUserAsync(string refreshTokenInBase64)
     {
-        string base64TokenHash = RefreshTokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
+        string base64TokenHash = TokenUtility.ConvertBase64ToBase64Hash(refreshTokenInBase64);
 
         await repository.DeleteRefreshTokenAsync(base64TokenHash);
 

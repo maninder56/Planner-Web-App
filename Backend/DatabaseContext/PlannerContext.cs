@@ -21,6 +21,7 @@ public class PlannerContext : DbContext
     public DbSet<BoardList> BoardLists { get; set; }
     public DbSet<Card> Cards { get; set; }
     public DbSet<Colour> Colours { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
 
     public PlannerContext() { }
@@ -56,6 +57,10 @@ public class PlannerContext : DbContext
 
         modelBuilder.Entity<Card>()
             .Property(c => c.Priority)
-            .HasDefaultValue(Priority.Low); 
+            .HasDefaultValue(Priority.Low);
+
+        modelBuilder.Entity<PasswordResetToken>()
+            .Property(p => p.CreatedAt)
+            .HasDefaultValueSql("(CURRENT_TIMESTAMP)"); 
     }
 }

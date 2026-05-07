@@ -3,26 +3,32 @@ import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverO
 import styles from './listMenuOptions.module.css'; 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import Button from '@/Components/Buttons/button';
+import { ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 
-export default function ListMenuOptions() {
+export default function ListMenuOptions({
+    currentOpenListMenuId, 
+}: {
+    currentOpenListMenuId?: ListId;  
+}) {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel);
     
+    async function handleDeleteButton() {
+        if (currentOpenListMenuId === undefined) {
+            return; 
+        }
+
+        setActivePanel('deleteListDialogBox'); 
+    }
+
     return (
-        <HoverOptionsPanel title='List Menu' onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
+        <HoverOptionsPanel title='List Menu' className={styles.hoverPanel}
+            onCloseClick={() => setActivePanel('none')} offsetZeroTo='right'>
             <div className={styles.wrapper}>
-                <div>
-                    <span>Order by</span>
-                    <select>
-                        <option value='new'>New to old</option>
-                        <option value='old'>New to old</option>
-                        <option value='due'>New to old</option>
-                        <option value='date'>New to old</option>
-                    </select>
+                <div className={styles.deleteButtonContainer}>
+                    <Button name='Delete' color='red' disabled={false} onClick={handleDeleteButton} />
                 </div>
-                <button>
-                    Delete List
-                </button>
             </div>
         </HoverOptionsPanel>
     ); 

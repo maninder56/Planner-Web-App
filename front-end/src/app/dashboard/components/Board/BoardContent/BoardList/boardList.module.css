@@ -3,35 +3,82 @@
     padding: 10px;
     height: fit-content;
 
+    max-width: 300px;
+
     border-radius: 10px;
 
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgb(255, 255, 255); 
+
+    box-shadow: 0 0 20px -15px rgba(0, 0, 0, 1);
+
+    transition: all 0.5s ease-in-out;
 }
 
+.wrapper.hidden {
+    width: 60px;
+    height: 150px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
 @media (pointer: fine) {
-    .wrapper:hover {
-        /* background-color: rgba(0, 0, 0, 0.2); */
-    }
+    /* .wrapper:hover {
+        
+    } */
 }
 
 .wrapper.dragging {
-    
+    /* background-color: rgb(251, 251, 251);  */
+    opacity: 0.95;
 }
 
-.wrapper:active {
-    /* box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.7);
+/* .wrapper:active {
+    box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.7);
 
     background-color: rgba(0, 0, 0, 0.2);
 
     cursor: grabbing;
 
-    transition: all 0.1s ease-in-out; */
-}
+    transition: all 0.1s ease-in-out;
+} */
 
 
 .header {
     display: flex;
+}
+
+.grabListIcon {
+    flex: 1 1 auto;
+
+    width: 30px;
+
+    border-radius: 5px;
     cursor: grab;
+
+    touch-action: none;
+
+    display: flex;
+}
+
+@media (pointer: fine ) {
+    .grabListIcon:hover, 
+    .grabListIcon:active {
+        background-color: rgb(241, 241, 241);
+    }
+}
+
+.grabListIcon svg {
+    margin: auto;
 }
 
 .header > header {
@@ -43,15 +90,69 @@
 
     text-align: start;
     font-size: 1rem;
+
+    display: flex;
+    justify-content: start;
+
+    min-width: 0;
 }
+
+.listName {
+    flex: 1 1 auto;
+
+    margin-right: 5px;
+    padding: 5px;
+    min-width: 0;
+
+    font-size: 1rem;
+    font-weight: 550;
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    text-overflow: ellipsis;
+}
+
+.listName:focus-within {
+    outline: solid 1.5px rgb(0, 0, 0);
+    cursor: text;
+}
+
+.listName:disabled {
+    cursor: not-allowed;
+}
+
+
 
 .cards {
     margin-top: 10px;
-    min-height: 100px;
+    min-height: 50px;
 }
 
 
 .addNewCardContainer {
     display: flex;
     justify-content: center;
+}
+
+.addNewCardContainer button {
+    font-size: 1rem;
+
+    padding: 5px 6px;
+
+    border-radius: 6px;
+}
+
+.addNewCardContainer button svg {
+    width: 15;
+    height: 15;
+
+    margin-right: 5px;
+}
+
+
+.disable {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

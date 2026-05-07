@@ -7,6 +7,7 @@ import { UpdateBoardInfoRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 
 export default function BoardNameInput({
@@ -27,29 +28,30 @@ export default function BoardNameInput({
 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
-    const disableInput = userRole === 'Viewer'; 
-    
-    function handleInputChange(value: string) {
-        setInput(value); 
-    }
+    const inputRef = useRef<HTMLInputElement | null>(null); 
 
-    async function handleOnBlur() {
-        if (input === '') {
+    const disableInput = userRole === 'Viewer'; 
+
+    async function handleNameChange() {
+        const inputTrimmed = input.trim(); 
+        if (inputTrimmed === '') {
             setInput(boardName); 
-        } else if (input === initialName) {
+            return; 
+        } else if (inputTrimmed === initialName) {
             return; 
         }
 
         const request = await ApiRequestWithRefreshTokenAttemptAndData(UpdateBoardInfoRequest, 
             { boardId: boardId, boardInfo: {
-                name: input.trim(),
+                name: inputTrimmed,
                 isFavoriteBoard: undefined,
                 backgroundColour: undefined
             }}
         ); 
 
         if (request.ok) {
-            setCurrentBoardName(input); 
+            setCurrentBoardName(inputTrimmed);
+            setInput(inputTrimmed); 
             resetBoardArray();
             setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
@@ -61,16 +63,24 @@ export default function BoardNameInput({
         }
     }
 
+    async function handleEnterKeyAfterNameChange(key: string) {
+        if (key === 'Enter') {
+            inputRef.current?.blur(); 
+            await handleNameChange(); 
+        }
+    }
+
 
     return (
         <input
+            ref={inputRef}
             className={styles.wrapper}
             type='text'
             maxLength={50}
             value={input}
             disabled={disableInput}
-            onClick={e => { e.stopPropagation(); }}
-            onChange={e => handleInputChange(e.target.value)}
-            onBlur={handleOnBlur}/>
+            onChange={e => setInput(e.target.value)}
+            onBlur={handleNameChange}
+            onKeyDown={e => handleEnterKeyAfterNameChange(e.key)}/>
     );
 }

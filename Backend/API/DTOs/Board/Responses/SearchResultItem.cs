@@ -6,7 +6,11 @@ public class SearchResultItem
 
     public int CardId { get; set; }
 
+    public int ListId { get; set; }
+
     public required string CardName { get; set; }
 
     public required string BoardName { get; set; }
+
+    public required string ListName { get; set; }
 }

@@ -9,11 +9,13 @@ import { permanentRedirect } from 'next/navigation';
 import { AppRoute } from '@/Types/appRoutes';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
+import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 
 export default function Login() {
     const resetBoardData = useBoardStore((state) => state.resetBoardData); 
     const resetUserData = useUserStore((state) => state.resetUserData); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     
     const [fromError, setFormError] = useState(''); 
 
@@ -26,7 +28,7 @@ export default function Login() {
             // Clear any previous data
             resetBoardData(); 
             resetUserData(); 
-
+            setActivePanel('none');
             permanentRedirect(dashboard); 
         } else if (apiResult.error === 'BadRequest' || apiResult.error === 'NotFound') {
             setFormError('Invalid Email or Password'); 

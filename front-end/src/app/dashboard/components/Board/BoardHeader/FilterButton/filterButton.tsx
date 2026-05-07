@@ -3,13 +3,26 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import styles from './filterButton.module.css'; 
 import FilterBoardOptions from './filterButtonOptions';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import Button from '@/Components/Buttons/button';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function FilterButton() {
+    const cards = useBoardStore((state) => state.cards); 
     const isFilterBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'filterBoardOptions'); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const isFilterActive = useBoardUIStore((state) => state.isFilterActive()); 
+    const resetFilter = useBoardUIStore((state) => state.resetFilters);
+    const applyFilters = useBoardUIStore((state) => state.applyFilters); 
+    
+    function handleClearFilter() {
+        resetFilter(); 
+        applyFilters(cards); 
+        setActivePanel('none'); 
+    }
 
     return (
-        <div className={styles.wrapper} onClick={e => { e.stopPropagation(); }}>
+        <div className={[styles.wrapper, 
+            isFilterActive ? styles.filterActive : ''].join(' ')} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.mainButton}
                 onClick={e => {
                     e.stopPropagation(); 
@@ -17,18 +30,20 @@ export default function FilterButton() {
                 }}
             >
                 {/* filter logo */}
-                <svg width="100px" height="100px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3H16V1H0V3Z" fill="#ffffff"/>
-                    <path d="M2 7H14V5H2V7Z" fill="#ffffff"/>
-                    <path d="M4 11H12V9H4V11Z" fill="#ffffff"/>
-                    <path d="M10 15H6V13H10V15Z" fill="#ffffff"/>
+                <svg width="100" height="100" viewBox="0 0 1.875 1.875" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 .313h1.875m-1.5.625H1.5m-.875.625h.625" stroke="#ffffff" strokeWidth=".125"/>
                 </svg>
             </div>
-            {
-                isFilterBoardOptionsOpen ?
-                <FilterBoardOptions />
-                : null
+            { isFilterActive && 
+                <button className={[styles.clearFilterButton, styles.toolTip].join(' ')} onClick={handleClearFilter}
+                >
+                    <svg width="20" height="20" viewBox="0 0 1.5 1.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m1.25 1.25-1-1m1 0-1 1" stroke="#000" strokeWidth=".125" strokeLinecap="round"/>
+                    </svg>
+                    <span className={styles.toolTipText}>Clear Filter</span>
+                </button> 
             }
+            { isFilterBoardOptionsOpen && <FilterBoardOptions /> }
         </div>
     ); 
 }

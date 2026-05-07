@@ -45,6 +45,15 @@ public class AccountRepository : IAccountRepository
         return token is null ? null : (token.User, token); 
     }
 
+    public async Task<(User, PasswordResetToken?)?> GetUserAndPasswordResetToken(string email)
+    {
+        var user = await database.Users.AsNoTracking()
+            .Include(u => u.PasswordResetToken)
+            .FirstOrDefaultAsync (u => u.Email == email);
+
+        return user is null ? null : (user, user.PasswordResetToken); 
+    }
+
 
 
     // Create Operations
@@ -80,6 +89,23 @@ public class AccountRepository : IAccountRepository
     }
 
 
+    public async Task CreateNewPasswordResetTokenAsync(int userId, string base64TokenHash, DateTime expiresAt)
+    {
+        User user = await database.Users
+            .Include(u => u.PasswordResetToken)
+            .FirstOrDefaultAsync(u => u.UserId == userId)
+            ?? throw new NotFoundException("User not found");
+
+        user.PasswordResetToken = new PasswordResetToken()
+        {
+            TokenHash = base64TokenHash,
+            ExpiresAt = expiresAt,
+        };
+
+        await database.SaveChangesAsync();
+    }
+
+
     // Update operations 
     
     public async Task UpdateRefreshTokenAsync(int refreshTokenId, string newBase64TokenHash)
@@ -105,6 +131,17 @@ public class AccountRepository : IAccountRepository
         await database.SaveChangesAsync();  
     }
 
+    public async Task UpdatePasswordResetToken(int userId, DateTime usedAt)
+    {
+        PasswordResetToken token = await database.PasswordResetTokens
+            .FirstOrDefaultAsync(t => t.UserId == userId)
+            ?? throw new NotFoundException("Password reset token not found"); 
+
+        token.UsedAt = usedAt;
+
+        await database.SaveChangesAsync();
+    }
+
 
     // Delete operations
 
@@ -121,5 +158,14 @@ public class AccountRepository : IAccountRepository
             .Where(r => r.UserId == UserId)
             .ExecuteDeleteAsync();
     }
+
+
+    public async Task DeleteAllPasswordResetTokensAsync(int userId)
+    {
+        await database.PasswordResetTokens
+            .Where(p => p.UserId == userId)
+            .ExecuteDeleteAsync();
+    }
+
 
 }

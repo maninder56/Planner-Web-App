@@ -1,28 +1,41 @@
 
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+
 .wrapper {
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 10px; 
+
     position: absolute;
     z-index: 1;
+
     padding: 20px;
+    height: max-content;
+
     overflow: hidden;
     top: calc(100% + 5px);
-    height: max-content;
+
     animation: slide-in 0.1s ease-out;
 }
 
-.wrapper.right {
+.right {
     right: 0;
 }
 
-.wrapper.left {
+.left {
     left: 0;
 }
 
 .titleAndCloseButton {
     display: flex;
     justify-content: space-between;
+
+    position: relative;
+
+    min-height: 30px;
 }
 
 .titleAndCloseButton > header {
@@ -37,6 +50,10 @@
 .closeButton {
     width: 30px;
     height: 30px;
+
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 @keyframes slide-in {

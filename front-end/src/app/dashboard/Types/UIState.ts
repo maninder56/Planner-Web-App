@@ -1,7 +1,7 @@
 
 export type panelType = 
     'none' | 
-    // 'searchBarPanel' | 
+    'globalSearchBarPanel'          | 
     'searchButtonPanel'             | 
     'profileOptions'                | 
     'dashboardMenuButtonOptions'    | 
@@ -12,6 +12,9 @@ export type panelType =
     'boardMenuOptions'              |
     'manageMembersOptions'          | 
     'boardListMenuOptions'          | 
-    'cardDetailsPanel'; 
+    'cardDetailsPanel'              | 
+    'newListForm'                   | 
+    'createNewCardPanel'            |
+    'deleteListDialogBox'           ; 
 
 

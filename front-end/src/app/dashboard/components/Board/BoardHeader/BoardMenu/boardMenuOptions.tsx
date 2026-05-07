@@ -152,19 +152,6 @@ export default function BoardMenuOptions({
                             </svg> 
                             <span>{favouriteBoard ? 'Unfavourite' : 'Favourite'}</span>
                         </button>
-                        <button onClick={e => {
-                            e.stopPropagation();
-                            setActivePanel('filterBoardOptions'); 
-                        }}>
-                            {/* filter logo */}
-                            <svg width="100px" height="100px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 3H16V1H0V3Z" fill="#000000"/>
-                                <path d="M2 7H14V5H2V7Z" fill="#000000"/>
-                                <path d="M4 11H12V9H4V11Z" fill="#000000"/>
-                                <path d="M10 15H6V13H10V15Z" fill="#000000"/>
-                            </svg>
-                            <span>Filter</span>
-                        </button>
                         <button disabled={viewOnlyBoard} onClick={e => {
                             e.stopPropagation();
                             setActivePanel('shareBoardOptions'); 

@@ -182,6 +182,41 @@ namespace DatabaseContext.Migrations
                     b.ToTable("colours");
                 });
 
+            modelBuilder.Entity("DatabaseContext.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("passwordresettokens");
+                });
+
             modelBuilder.Entity("DatabaseContext.RefreshToken", b =>
                 {
                     b.Property<int>("RefreshTokenId")
@@ -332,6 +367,15 @@ namespace DatabaseContext.Migrations
                     b.Navigation("BoardList");
                 });
 
+            modelBuilder.Entity("DatabaseContext.PasswordResetToken", b =>
+                {
+                    b.HasOne("DatabaseContext.User", null)
+                        .WithOne("PasswordResetToken")
+                        .HasForeignKey("DatabaseContext.PasswordResetToken", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DatabaseContext.RefreshToken", b =>
                 {
                     b.HasOne("DatabaseContext.User", "User")
@@ -362,6 +406,9 @@ namespace DatabaseContext.Migrations
                     b.Navigation("BoardMembers");
 
                     b.Navigation("BoardStars");
+
+                    b.Navigation("PasswordResetToken")
+                        .IsRequired();
 
                     b.Navigation("RefreshToken")
                         .IsRequired();
