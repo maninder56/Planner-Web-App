@@ -79,44 +79,56 @@ export default function SignupForm({
         <form className={styles.form} onSubmit={handleFormSubmit}>
             <header>Sign up to continue</header>
             <div className={styles.formError}>{formError}</div>
-            <FormInput label='User Name' placeholder='Your Name' maxLength={100} value={userName} error={errors.userName} type='text'
-                setValue={(value) => {
-                    setUserName(value); 
-                    if (value === '') {
-                        setErrors({...errors, userName: 'User name is Required'}); 
-                    } else {
-                        setErrors({...errors, userName: undefined}); 
-                    }
-                }}/>
-            <FormInput label='Email' placeholder='Enter your Email' maxLength={200} value={email} error={errors.email} type='text'
-                setValue={(value) => {
-                    setEmail(value); 
-                    if (value === '') {
-                        setErrors({...errors, email: 'Email is Required' }); 
-                    } else {
-                        setErrors({...errors, email: undefined }); 
-                    }
-                }}/>
-            <FormInput label='Password' placeholder='New Password' maxLength={100} value={password} error={errors.password} type='password'
-                setValue={(value) => {
-                    setPassword(value); 
-                    if (!ValidatePassword(value)) {
-                        setErrors({...errors, password: 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'}); 
-                    } else {
-                        setErrors({...errors, password: undefined}); 
-                    }
-                }}/>
-            <FormInput label='Repeat Password' placeholder='Repeat Password' maxLength={100} value={repeatPassword} error={errors.repeatPassword} type='password'
-                setValue={(value) => {
-                    setRepeatPassword(value); 
-                    if (value === '') {
-                        setErrors({...errors, repeatPassword: 'Please Retype your password'}); 
-                    } else if (password !== value) {
-                        setErrors({...errors, repeatPassword: 'Password does not match'}); 
-                    } else {
-                        setErrors({...errors, repeatPassword: undefined}); 
-                    }
-                }}/>
+            <div className={styles.inputContainer}>
+                <FormInput label='User Name' placeholder='Your Name' 
+                    maxLength={100} value={userName} error={errors.userName} type='text'
+                    setValue={(value) => {
+                        setUserName(value); 
+                        if (value === '') {
+                            setErrors({...errors, userName: 'User name is Required'}); 
+                        } else {
+                            setErrors({...errors, userName: undefined}); 
+                        }
+                    }}/>
+            </div>
+            <div className={styles.inputContainer}>
+                <FormInput label='Email' placeholder='Enter your Email'
+                     maxLength={200} value={email} error={errors.email} type='text'
+                    setValue={(value) => {
+                        setEmail(value); 
+                        if (value === '') {
+                            setErrors({...errors, email: 'Email is Required' }); 
+                        } else {
+                            setErrors({...errors, email: undefined }); 
+                        }
+                    }}/>
+            </div>
+            <div className={styles.inputContainer}>
+                <FormInput label='Password' placeholder='New Password' 
+                    maxLength={100} value={password} error={errors.password} type='password'
+                    setValue={(value) => {
+                        setPassword(value); 
+                        if (!ValidatePassword(value)) {
+                            setErrors({...errors, password: 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'}); 
+                        } else {
+                            setErrors({...errors, password: undefined}); 
+                        }
+                    }}/>
+            </div>
+            <div className={styles.inputContainer}>
+                <FormInput label='Repeat Password' placeholder='Repeat Password' 
+                    maxLength={100} value={repeatPassword} error={errors.repeatPassword} type='password'
+                    setValue={(value) => {
+                        setRepeatPassword(value); 
+                        if (value === '') {
+                            setErrors({...errors, repeatPassword: 'Please Retype your password'}); 
+                        } else if (password !== value) {
+                            setErrors({...errors, repeatPassword: 'Password does not match'}); 
+                        } else {
+                            setErrors({...errors, repeatPassword: undefined}); 
+                        }
+                    }}/>
+            </div>
             <div className={styles.LoginLink}>
                 <Link href={'/login'} className={buttonsDisabled ? styles.linkDisabled : undefined }
                     onClick={e => {

@@ -1,4 +1,8 @@
 
+/* .form * {
+    border: solid 1px red;
+} */
+
 
 .form > header {
     font-size: 1.2rem;
@@ -13,6 +17,20 @@
     min-height: 20px;
 }
 
+.inputContainer {
+    margin: 20px 0px;
+}
+
+.passwordInput {
+    margin-bottom: 0;
+}
+
+.forgotPasswordLink {
+    margin-bottom: 40px;
+
+    font-size: 0.9rem;
+    text-align: end;
+}
 
 .createAccountLink {
     display: flex;

@@ -144,39 +144,45 @@ export default function Page () {
             <form onSubmit={handleSubmit}>
                 <header className={styles.pageTitle}>Change Password</header>
                 <div className={styles.formError}>{formSubmitError}</div>
-                <FormInput label='Old Password' placeholder='Old Password' maxLength={100} value={oldPassword}
-                    error={formErrors.oldPasswordError} type='password'
-                    setValue={(value) => {
-                        setOldPassword(value); 
-                        const validationResult = validateOldPassword(value); 
-                        if (validationResult !== undefined) {
-                            setFormErrors({...formErrors, oldPasswordError: validationResult}); 
-                        } else {
-                            setFormErrors({...formErrors, oldPasswordError: undefined}); 
-                        }
-                    }}/>
-                <FormInput label='New Password' placeholder='New Password' maxLength={100} value={newPassword} 
-                    error={formErrors.newPasswordError} type='password'
-                    setValue={(value) => {
-                        setNewPassword(value); 
-                        const validationResult = validateNewPassword(value); 
-                        if (validationResult !== undefined) {
-                            setFormErrors({...formErrors, newPasswordError: validationResult}); 
-                        } else {
-                            setFormErrors({...formErrors, newPasswordError: undefined}); 
-                        }
-                    }}/>
-                <FormInput label='Repeat Password' placeholder='Repeat Password' maxLength={100} value={repeatNewPassword} 
-                    error={formErrors.repeatNewPasswordError} type='password'
-                    setValue={(value) => {
-                        setRepeatNewPassword(value); 
-                        const validationResult = validateRepeatNewPassword(value); 
-                        if (validationResult !== undefined) {
-                            setFormErrors({...formErrors, repeatNewPasswordError: validationResult}); 
-                        } else {
-                            setFormErrors({...formErrors, repeatNewPasswordError: undefined}); 
-                        }
-                    }}/>
+                <div className={styles.inputContainer}>
+                    <FormInput label='Old Password' placeholder='Old Password' maxLength={100} value={oldPassword}
+                        error={formErrors.oldPasswordError} type='password'
+                        setValue={(value) => {
+                            setOldPassword(value); 
+                            const validationResult = validateOldPassword(value); 
+                            if (validationResult !== undefined) {
+                                setFormErrors({...formErrors, oldPasswordError: validationResult}); 
+                            } else {
+                                setFormErrors({...formErrors, oldPasswordError: undefined}); 
+                            }
+                        }}/>
+                </div>
+                <div className={styles.inputContainer}>
+                    <FormInput label='New Password' placeholder='New Password' maxLength={100} value={newPassword} 
+                        error={formErrors.newPasswordError} type='password'
+                        setValue={(value) => {
+                            setNewPassword(value); 
+                            const validationResult = validateNewPassword(value); 
+                            if (validationResult !== undefined) {
+                                setFormErrors({...formErrors, newPasswordError: validationResult}); 
+                            } else {
+                                setFormErrors({...formErrors, newPasswordError: undefined}); 
+                            }
+                        }}/>
+                </div>
+                <div className={styles.inputContainer}>
+                    <FormInput label='Repeat Password' placeholder='Repeat Password' maxLength={100} value={repeatNewPassword} 
+                        error={formErrors.repeatNewPasswordError} type='password'
+                        setValue={(value) => {
+                            setRepeatNewPassword(value); 
+                            const validationResult = validateRepeatNewPassword(value); 
+                            if (validationResult !== undefined) {
+                                setFormErrors({...formErrors, repeatNewPasswordError: validationResult}); 
+                            } else {
+                                setFormErrors({...formErrors, repeatNewPasswordError: undefined}); 
+                            }
+                        }}/>
+                </div>
                 <div className={styles.buttons}>
                     <Button name='Cancel' color='transparent-with-outline' disabled={buttonsDisabled} onClick={() => {
                         router.push(profileRoute); 
