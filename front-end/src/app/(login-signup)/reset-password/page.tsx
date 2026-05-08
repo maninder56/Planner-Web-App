@@ -7,6 +7,9 @@ import { FormEvent, useState } from 'react';
 import { validateNewPassword, ValidatePassword, validateRepeatNewPassword } from '@/Utilities/validations';
 import FormInput from '@/Components/Inputs/formInput';
 import PasswordchangedDialogBox from '@/app/profile/changepassword/components/passwordChangedDialogBox';
+import { ResetPasswordRequest } from '@/Services/userService';
+import { AppRoute } from '@/Types/appRoutes';
+import Link from 'next/link';
 
 
 interface errorsInterface {
@@ -25,10 +28,12 @@ export default function ResetPassword() {
 
     const [passwordChangedSuccessfully, setPasswordChangedSuccessfully] = useState(false); 
     const [formErrors, setFormErrors] = useState<errorsInterface>({}); 
-    const [formSubmitError, setFormSubmitError] = useState(''); 
+    // const [formSubmitError, setFormSubmitError] = useState(''); 
     const [buttonsDisabled, setButtonsDisabled] = useState(false); 
 
-    const emailAndTokenExists = email && token; 
+    const [validLink, setValidLink] = useState<boolean>(email !== null && token !== null);
+
+    const forgotPasswordRoute: AppRoute = '/login/forgot-password'; 
 
     function validateFormValues() {
         const errors: errorsInterface = {};
@@ -69,38 +74,35 @@ export default function ResetPassword() {
         e.preventDefault(); 
 
         if (!validateFormValues()) return; 
+        if (!validLink || !email || !token) return; 
 
         setButtonsDisabled(true); 
 
         try {
-            // const result = await ApiRequestWithRefreshTokenAttemptAndData(ChangeUserPasswordRequest, 
-            //     { oldPassword: oldPassword, newPassword: newPassword}); 
-            // if (result.ok) {
-            //     setPasswordChangedSuccessfully(true); 
-            // } else if (result.error === 'Unauthorized') {
-            //     setSessionExpired(true); 
-            // } else if (result.error === 'BadRequest') {
-            //     setFormSubmitError('Invalid password'); 
-            // } else {
-            //     setFormSubmitError('Failed to update password, Please try again'); 
-            // }
+            const result = await ResetPasswordRequest({
+                email: email, token: token, newPassword: newPassword
+            }); 
 
-            await new Promise(r => setTimeout(r, 2000)); 
-            setPasswordChangedSuccessfully(true); 
-
-
+            if (result.ok) {
+                setPasswordChangedSuccessfully(true); 
+            } else {
+                setValidLink(false); 
+            }
         } finally {
             setButtonsDisabled(false); 
         }
     }
 
-    if (!emailAndTokenExists) {
+    if (!validLink) {
         return (
             <div className={styles.wrapper}>
                 <header>
                     <h1>Invalid Link</h1>
-                    <p>This password reset link is invalid or expired.</p>
+                    <p>This password reset link is invalid or has expired.</p>
                 </header>
+                <div className={styles.forgotPasswordLink}>
+                    <Link href={forgotPasswordRoute} className='button red'>Request another link</Link>
+                </div>
             </div>
         ); 
     }
@@ -112,7 +114,7 @@ export default function ResetPassword() {
                 <p>Please Enter your new password</p>
             </header>
             <form onSubmit={handleSubmit}>
-                <p className={styles.formSubmitError}>{formSubmitError}</p>
+                {/* <p className={styles.formSubmitError}>{formSubmitError}</p> */}
                 <div className={styles.inputContainer}>
                     <FormInput label='New Password' placeholder='New Password' maxLength={100} value={newPassword} 
                         error={formErrors.newPasswordError} type='password'

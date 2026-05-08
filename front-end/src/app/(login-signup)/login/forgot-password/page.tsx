@@ -6,6 +6,7 @@ import FormInput from '@/Components/Inputs/formInput';
 import Button from '@/Components/Buttons/button';
 import Link from 'next/link';
 import { AppRoute } from '@/Types/appRoutes';
+import { ForgotPasswordRequest } from '@/Services/userService';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -23,10 +24,13 @@ export default function ForgotPassword() {
         setFormError('');
 
         try {
+            const request = await ForgotPasswordRequest(email); 
 
-            await new Promise(r => setTimeout(r, 2000)); 
-
-            setSubmitted(true);
+            if (request.ok) {
+                setSubmitted(true);
+            } else {
+                setFormError('Failed to send email. Please try again.'); 
+            }
         } finally {
             setLoading(false);
         }
