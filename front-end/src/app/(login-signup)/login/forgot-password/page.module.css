@@ -28,6 +28,10 @@
     min-height: 20px;
 }
 
+.formInput {
+    margin-bottom: 40px;
+}
+
 .submitButton {
     margin-top: 20px;
 

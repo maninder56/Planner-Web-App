@@ -97,10 +97,10 @@ export default function ResetPassword() {
     if (!emailAndTokenExists) {
         return (
             <div className={styles.wrapper}>
-                <div className={styles.errorCard}>
+                <header>
                     <h1>Invalid Link</h1>
                     <p>This password reset link is invalid or expired.</p>
-                </div>
+                </header>
             </div>
         ); 
     }
@@ -112,7 +112,7 @@ export default function ResetPassword() {
                 <p>Please Enter your new password</p>
             </header>
             <form onSubmit={handleSubmit}>
-                <p>{formSubmitError}</p>
+                <p className={styles.formSubmitError}>{formSubmitError}</p>
                 <div className={styles.inputContainer}>
                     <FormInput label='New Password' placeholder='New Password' maxLength={100} value={newPassword} 
                         error={formErrors.newPasswordError} type='password'

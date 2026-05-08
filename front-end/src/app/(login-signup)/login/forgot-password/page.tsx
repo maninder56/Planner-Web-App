@@ -46,7 +46,7 @@ export default function ForgotPassword() {
             ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <p className={styles.formError}>{formError}</p>
-                    <FormInput label='Email' placeholder='Enter your email' 
+                    <FormInput label='Email' placeholder='Enter your email' className={styles.formInput}
                         maxLength={200} value={email} error={emailError} type='text'
                         setValue={(value) => {
                             setEmail(value); 

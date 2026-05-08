@@ -1,0 +1,36 @@
+
+.wrapper header {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.wrapper header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.4rem;
+}
+
+.wrapper header p {
+    margin: 5px 0px;
+    font-size: 0.9rem;
+}
+
+.formSubmitError {
+    text-align: center;
+    margin: 5px 0px;
+    font-size: 1rem;
+    min-height: 20px;
+}
+
+.inputContainer {
+    margin: 20px 0px;
+}
+
+
+.submitButton {
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: center;
+}
