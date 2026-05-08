@@ -45,7 +45,6 @@ export default function ForgotPassword() {
             {submitted ? (
                 <div className={styles.success}>
                     <p>If an account exists for that email, a password reset link has been sent.</p>
-                    <Link href={logInRoute} className='button red'>Log in</Link>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
@@ -67,6 +66,9 @@ export default function ForgotPassword() {
                     </div>
                 </form>
             )}
+            <div className={styles.logInLink}>
+                <Link href={logInRoute} className='button red'>Log in</Link>
+            </div>
         </div>
     ); 
 }
