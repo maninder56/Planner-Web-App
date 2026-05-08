@@ -3,7 +3,7 @@
 import styles from '@/app/(login-signup)/components/signupForm.module.css'; 
 import FormInput from '@/Components/Inputs/formInput';
 import { AppRoute } from '@/Types/appRoutes';
-import { ValidateEmail, ValidatePassword } from '@/Utilities/validations';
+import { ValidateEmail, ValidateNewEmail, validateNewPassword, ValidatePassword, validateRepeatNewPassword } from '@/Utilities/validations';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 
@@ -35,32 +35,30 @@ export default function SignupForm({
 
     function validateFormValues(): boolean {
         const newErrors: errorsInterface = {}; 
+        newErrors.userName = validateUserName(userName); 
+        newErrors.email = ValidateNewEmail(email); 
+        newErrors.password = validateNewPassword(password); 
+        newErrors.repeatPassword = validateRepeatNewPassword(repeatPassword, password); 
 
-        if (userName === '') {
-            newErrors.userName = 'User Name is Required'; 
+
+        setErrors(newErrors);
+
+        for(let value of Object.values(newErrors)) {
+            if (typeof(value) === 'string') {
+                return false; 
+            }
         }
 
-        if (email === '') {
-            newErrors.email = 'Email is Required'; 
-        } else if (!ValidateEmail(email)) {
-            newErrors.email = 'Email is Invalid'; 
+        return true; 
+    }
+
+    function validateUserName(value: string): string | undefined {
+        const valueTrimmed = value.trim(); 
+        if (valueTrimmed === '') {
+            return 'User Name is Required'; 
+        } else {
+            return undefined; 
         }
-
-        if (password === '') {
-            newErrors.password = 'Password is Required'; 
-        } else if (!ValidatePassword(password)) {
-            newErrors.password = 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'; 
-        }
-
-        if (repeatPassword === '') {
-            newErrors.repeatPassword = 'Please Retype your password'
-        } else if (password !== repeatPassword) {
-            newErrors.repeatPassword = 'Password does not match'
-        }
-
-        setErrors(newErrors); 
-        return Object.keys(newErrors).length === 0; 
-
     }
 
 
@@ -86,11 +84,7 @@ export default function SignupForm({
                     maxLength={100} value={userName} error={errors.userName} type='text'
                     setValue={(value) => {
                         setUserName(value); 
-                        if (value === '') {
-                            setErrors({...errors, userName: 'User name is Required'}); 
-                        } else {
-                            setErrors({...errors, userName: undefined}); 
-                        }
+                        setErrors({...errors, userName: validateUserName(value)}); 
                     }}/>
             </div>
             <div className={styles.inputContainer}>
@@ -98,11 +92,7 @@ export default function SignupForm({
                      maxLength={200} value={email} error={errors.email} type='text'
                     setValue={(value) => {
                         setEmail(value); 
-                        if (value === '') {
-                            setErrors({...errors, email: 'Email is Required' }); 
-                        } else {
-                            setErrors({...errors, email: undefined }); 
-                        }
+                        setErrors({...errors, email: ValidateNewEmail(value) }); 
                     }}/>
             </div>
             <div className={styles.inputContainer}>
@@ -110,11 +100,7 @@ export default function SignupForm({
                     maxLength={100} value={password} error={errors.password} type='password'
                     setValue={(value) => {
                         setPassword(value); 
-                        if (!ValidatePassword(value)) {
-                            setErrors({...errors, password: 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'}); 
-                        } else {
-                            setErrors({...errors, password: undefined}); 
-                        }
+                        setErrors({...errors, password: validateNewPassword(value)}); 
                     }}/>
             </div>
             <div className={styles.inputContainer}>
@@ -122,13 +108,7 @@ export default function SignupForm({
                     maxLength={100} value={repeatPassword} error={errors.repeatPassword} type='password'
                     setValue={(value) => {
                         setRepeatPassword(value); 
-                        if (value === '') {
-                            setErrors({...errors, repeatPassword: 'Please Retype your password'}); 
-                        } else if (password !== value) {
-                            setErrors({...errors, repeatPassword: 'Password does not match'}); 
-                        } else {
-                            setErrors({...errors, repeatPassword: undefined}); 
-                        }
+                        setErrors({...errors, repeatPassword: validateRepeatNewPassword(value, password)}); 
                     }}/>
             </div>
             <div className={styles.LoginLink}>

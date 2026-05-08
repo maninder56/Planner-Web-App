@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 
 import styles from './page.module.css'; 
 import { FormEvent, useState } from 'react';
-import { ValidatePassword } from '@/Utilities/validations';
+import { validateNewPassword, ValidatePassword, validateRepeatNewPassword } from '@/Utilities/validations';
 import FormInput from '@/Components/Inputs/formInput';
 import PasswordchangedDialogBox from '@/app/profile/changepassword/components/passwordChangedDialogBox';
 
@@ -30,33 +30,11 @@ export default function ResetPassword() {
 
     const emailAndTokenExists = email && token; 
 
-    function validateNewPassword(value: string): string | undefined {
-        const valueTrimmed = value.trim(); 
-        if (valueTrimmed === '') {
-            return 'New password is Required'; 
-        } else if (!ValidatePassword(value)) {
-            return 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'; 
-        } else {
-            return undefined; 
-        }
-    }
-
-    function validateRepeatNewPassword(value: string): string | undefined {
-        const valueTrimmed = value.trim(); 
-        if (valueTrimmed === '') {
-            return 'Please Retype your new password'; 
-        } else if (value !== newPassword) {
-            return 'Password does not match'; 
-        } else {
-            return undefined; 
-        }
-    }
-
     function validateFormValues() {
         const errors: errorsInterface = {};
 
         errors.newPasswordError = validateNewPassword(newPassword);
-        errors.repeatNewPasswordError = validateRepeatNewPassword(repeatNewPassword);;
+        errors.repeatNewPasswordError = validateRepeatNewPassword(repeatNewPassword, newPassword);;
         
         setFormErrors(errors);
 
@@ -148,7 +126,7 @@ export default function ResetPassword() {
                         error={formErrors.repeatNewPasswordError} type='password'
                         setValue={(value) => {
                             setRepeatNewPassword(value); 
-                            setFormErrors({...formErrors, repeatNewPasswordError: validateRepeatNewPassword(value)}); 
+                            setFormErrors({...formErrors, repeatNewPasswordError: validateRepeatNewPassword(value, newPassword)}); 
                         }}/>
                 </div>
                 <div className={styles.submitButton}>

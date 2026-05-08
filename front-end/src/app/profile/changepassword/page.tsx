@@ -7,7 +7,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useUserStore } from '@/Store/userStore';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { AppRoute } from '@/Types/appRoutes';
-import { ValidatePassword } from '@/Utilities/validations';
+import { validateNewPassword, validateOldPassword, ValidatePassword, validateRepeatNewPassword } from '@/Utilities/validations';
 import Button from '@/Components/Buttons/button';
 import { permanentRedirect, useRouter } from 'next/navigation';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
@@ -41,57 +41,21 @@ export default function Page () {
 
     const profileRoute: AppRoute = '/profile'; 
 
-    function validateOldPassword(value: string): string | undefined {
-        const valueTrimmed = value.trim(); 
-        if (valueTrimmed === '') {
-            return 'Old password is Required'; 
-        } else {
-            return undefined; 
-        }
-    }
-
-    function validateNewPassword(value: string): string | undefined {
-        const valueTrimmed = value.trim(); 
-        if (valueTrimmed === '') {
-            return 'New password is Required'; 
-        } else if (!ValidatePassword(valueTrimmed)) {
-            return 'Your password is not strong, Please provide atleast 8 characters with number, capital and small letters'; 
-        } else {
-            return undefined; 
-        }
-    }
-
-    function validateRepeatNewPassword(value: string): string | undefined {
-        const valueTrimmed = value.trim(); 
-        if (valueTrimmed === '') {
-            return 'Please Retype your new password'; 
-        } else if (valueTrimmed !== newPassword) {
-            return 'Password does not match'; 
-        } else {
-            return undefined; 
-        }
-    }
-
     function validateFormValues() {
         const errors: errorsInterface = {};
+        errors.oldPasswordError =  validateOldPassword(oldPassword);
+        errors.newPasswordError = validateNewPassword(newPassword);
+        errors.repeatNewPasswordError = validateRepeatNewPassword(repeatNewPassword, newPassword);;
+        
+        setFormErrors(errors);
 
-        const oldPasswordValidation = validateOldPassword(oldPassword);
-        if (oldPasswordValidation) {
-            errors.oldPasswordError = oldPasswordValidation;
+        for(let value of Object.values(errors)) {
+            if (typeof(value) === 'string') {
+                return false; 
+            }
         }
 
-        const newPasswordValidation = validateNewPassword(newPassword);
-        if (newPasswordValidation) {
-            errors.newPasswordError = newPasswordValidation;
-        }
-
-        const repeatValidation = validateRepeatNewPassword(repeatNewPassword);
-        if (repeatValidation) {
-            errors.repeatNewPasswordError = repeatValidation;
-        }
-
-        setFormErrors(errors); 
-        return Object.keys(errors).length === 0; 
+        return true; 
     }
 
     function disableSaveButton() {
@@ -149,12 +113,7 @@ export default function Page () {
                         error={formErrors.oldPasswordError} type='password'
                         setValue={(value) => {
                             setOldPassword(value); 
-                            const validationResult = validateOldPassword(value); 
-                            if (validationResult !== undefined) {
-                                setFormErrors({...formErrors, oldPasswordError: validationResult}); 
-                            } else {
-                                setFormErrors({...formErrors, oldPasswordError: undefined}); 
-                            }
+                            setFormErrors({...formErrors, oldPasswordError: validateOldPassword(value)}); 
                         }}/>
                 </div>
                 <div className={styles.inputContainer}>
@@ -162,12 +121,7 @@ export default function Page () {
                         error={formErrors.newPasswordError} type='password'
                         setValue={(value) => {
                             setNewPassword(value); 
-                            const validationResult = validateNewPassword(value); 
-                            if (validationResult !== undefined) {
-                                setFormErrors({...formErrors, newPasswordError: validationResult}); 
-                            } else {
-                                setFormErrors({...formErrors, newPasswordError: undefined}); 
-                            }
+                            setFormErrors({...formErrors, newPasswordError: validateNewPassword(value)}); 
                         }}/>
                 </div>
                 <div className={styles.inputContainer}>
@@ -175,12 +129,7 @@ export default function Page () {
                         error={formErrors.repeatNewPasswordError} type='password'
                         setValue={(value) => {
                             setRepeatNewPassword(value); 
-                            const validationResult = validateRepeatNewPassword(value); 
-                            if (validationResult !== undefined) {
-                                setFormErrors({...formErrors, repeatNewPasswordError: validationResult}); 
-                            } else {
-                                setFormErrors({...formErrors, repeatNewPasswordError: undefined}); 
-                            }
+                            setFormErrors({...formErrors, repeatNewPasswordError: validateRepeatNewPassword(value, newPassword)}); 
                         }}/>
                 </div>
                 <div className={styles.buttons}>
