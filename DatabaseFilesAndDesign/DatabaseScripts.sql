@@ -33,6 +33,9 @@ FROM users;
 SHOW COLUMNS
 FROM passwordresettokens;
 
+SHOW COLUMNS
+FROM invitations;
+
 
 
 # Table data
@@ -53,6 +56,8 @@ SELECT * FROM refreshtokens;
 SELECT * FROM users;
 
 SELECT * FROM passwordresettokens;
+
+SELECT * FROM invitations;
 
 
 SELECT
