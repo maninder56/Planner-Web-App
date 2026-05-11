@@ -3,6 +3,7 @@ using API.DTOs.Invitation.Responses;
 using API.Models.AppConfigurations;
 using API.Models.Result;
 using API.Queries.Boards;
+using API.Queries.Invitations;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
 using API.Repositories.InvitationRepository;
@@ -17,6 +18,7 @@ public class InvitationService(
     ILogger<InvitationService> logger,
     IAccountRepository accountRepository, 
     IInvitationRepository invitationRepository, 
+    InvitationQueries invitationQueries, 
     BoardQueries boardQueries, 
     IOptions<InvitationConfigurations> invitationOptions 
     ) : IInvitationService
@@ -83,16 +85,18 @@ public class InvitationService(
     }
 
 
-    public async Task<Result<InvitationInfoResponse[]>> GetInvitationsReceived(int userId)
+    public async Task<Result<List<InvitationInfoResponse>>> GetInvitationsReceived(int userId)
     {
         try
         {
-            throw new NotImplementedException();
+            var invitationList = await invitationQueries.GetInvitationsInfoByUserId(userId);
+
+            return Result<List<InvitationInfoResponse>>.Success(invitationList);
         }
         catch (Exception ex)
         {
             logger.LogWarning("Error occured while getting invitations, Error Message: {ErrorMessage}", ex.Message);
-            return Result<InvitationInfoResponse[]>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
+            return Result<List<InvitationInfoResponse>>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using API.Queries.Boards;
 using API.Queries.Cards;
+using API.Queries.Invitations;
 using API.Queries.Lists;
 using API.Queries.Profile;
 using API.Repositories.Account;
@@ -38,6 +39,7 @@ public static class DatabaseServiceRegistration
         services.AddScoped<CardQueries>(); 
         services.AddScoped<ProfileQueries>();
         services.AddScoped<ListQueries>();
+        services.AddScoped<InvitationQueries>();
 
         return services;
     }

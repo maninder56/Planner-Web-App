@@ -21,7 +21,16 @@ public class InvitationController(
     [HttpGet("received")]
     public async Task<IActionResult> GetInvitationsReceived()
     {
-        throw new NotImplementedException();
+        var result = await invitationService.GetInvitationsReceived(User.GetUserId()); 
+
+        if (result.Successful)
+        {
+            return Ok(result.Data); 
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult(); 
+        }
     }
     
 
