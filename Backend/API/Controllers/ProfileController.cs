@@ -12,7 +12,7 @@ namespace API.Controllers;
 [Authorize]
 [Route("api/account/[controller]")]
 [ApiController]
-public class ProfileController (ILogger<ProfileController> logger, CookiesUtility cookiesUtility, IProfileService profileService)
+public class ProfileController (CookiesUtility cookiesUtility, IProfileService profileService)
     : ControllerBase
 {
     [HttpGet]

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Policies.Requirements; 
 
-public class BoardEditRequirement : IAuthorizationRequirement 
+public class BoardPermissionRequirement : IAuthorizationRequirement
 {
-    public BoardEditRequirement(params Role[] roles)
+    public BoardPermissionRequirement(params Role[] roles)
     {
-        this.Roles = roles;
+        Roles = roles;
     }
 
     public Role[] Roles { get; }
