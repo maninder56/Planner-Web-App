@@ -48,6 +48,7 @@ public static class PlannerServiceRegistration
     public static IServiceCollection AddAppConfigurations(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<FrontEndLinks>(configuration.GetSection("FrontEndLinks"));
+        services.Configure<InvitationConfigurations>(configuration.GetSection("InvitationConfigurations")); 
 
         return services; 
     }
