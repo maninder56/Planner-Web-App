@@ -1,8 +1,9 @@
 
 export type AppRoute = 
-    '/'                 |
-    '/dashboard'        | 
-    '/login'            | 
-    '/signup'           |
-    '/profile'          | 
+    '/'                         |
+    '/dashboard'                | 
+    '/login'                    | 
+    '/login/forgot-password'    | 
+    '/signup'                   |
+    '/profile'                  | 
     '/profile/changepassword'   ; 

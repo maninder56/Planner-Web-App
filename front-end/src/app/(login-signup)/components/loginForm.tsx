@@ -2,6 +2,7 @@
 
 import styles from '@/app/(login-signup)/components/loginForm.module.css'; 
 import FormInput from '@/Components/Inputs/formInput';
+import { AppRoute } from '@/Types/appRoutes';
 import { ValidateEmail } from '@/Utilities/validations';
 import Link from 'next/link';
 
@@ -25,6 +26,9 @@ export default function LoginForm({
     const [password, setPassword] = useState(''); 
     const [errors, setErrors] = useState<errorInterface>({}); 
     const [buttonsDisabled, setButtonsDisabled] = useState<boolean>(false); 
+
+    const signupRoute: AppRoute = '/signup'; 
+    const forgotPasswordRoute: AppRoute = '/login/forgot-password'; 
 
     function validateFormValues(): boolean {
         const newErrors: errorInterface = {}; 
@@ -63,33 +67,42 @@ export default function LoginForm({
         <form className={styles.form} onSubmit={handleFormSubmit}>
             <header>Log in to continue</header>
             <div className={styles.formError}>{formError}</div>
-            <FormInput label='Email' placeholder='Enter your email' maxLength={200} value={email} error={errors.email} type='text'
-                setValue={(value) => {
-                    setEmail(value); 
-                    if (value === '') {
-                        setErrors({...errors, email: 'Email is Required'}); 
-                    } else {
-                        setErrors({...errors, email: undefined}); 
-                    }
-                }} />
-            <FormInput label='Password' placeholder='Enter your password' maxLength={100} value={password} error={errors.password} type='password'
-                setValue={(value) => {
-                    setPassword(value); 
-                    if (value === '') {
-                        setErrors({...errors, password: 'Password is Required'}); 
-                    } else {
-                        setErrors({...errors, password: undefined}); 
-                    }
-                }} />
+            <div className={styles.inputContainer}>
+                <FormInput label='Email' placeholder='Enter your email' 
+                    maxLength={200} value={email} error={errors.email} type='text'
+                    setValue={(value) => {
+                        setEmail(value); 
+                        if (value === '') {
+                            setErrors({...errors, email: 'Email is Required'}); 
+                        } else {
+                            setErrors({...errors, email: undefined}); 
+                        }
+                    }} />
+            </div>
+            <div className={[styles.inputContainer, styles.passwordInput].join(' ')}>
+                <FormInput label='Password' placeholder='Enter your password' 
+                    maxLength={100} value={password} error={errors.password} type='password'
+                    setValue={(value) => {
+                        setPassword(value); 
+                        if (value === '') {
+                            setErrors({...errors, password: 'Password is Required'}); 
+                        } else {
+                            setErrors({...errors, password: undefined}); 
+                        }
+                    }} />
+            </div>
+            <div className={styles.forgotPasswordLink}>
+                <Link href={forgotPasswordRoute}>Forgot password?</Link>
+            </div>
             <div className={styles.createAccountLink}>
-                <Link href={'/signup'} className={buttonsDisabled ? styles.linkDisabled : undefined }
+                <Link href={signupRoute} className={buttonsDisabled ? styles.linkDisabled : undefined }
                     onClick={e => {
                         if (buttonsDisabled) {
                             e.preventDefault(); 
                         }
                     }}
                 >
-                    Create New account
+                    Don't have an account? Sign up
                 </Link>
             </div>
             <div className={styles.logIn}>

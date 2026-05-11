@@ -11,6 +11,7 @@ export default function FormInput({
     setValue, 
     error,
     type, 
+    className, 
 }: {
     label: string;
     value: string; 
@@ -19,9 +20,10 @@ export default function FormInput({
     setValue: (value: string) => void; 
     error?: string; 
     type: 'text' | 'password'; 
+    className?: string; 
 }) {
     return (
-        <div className={styles.fromInput}>
+        <div className={[styles.formInput, className ?? ''].join(' ')}>
             <label htmlFor={label}>{label}</label>
             <input 
                 name={label}

@@ -10,13 +10,13 @@ sealed public class PasswordValidationAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is string password && passwordRegex.IsMatch(password))
+        if (value is string password && passwordRegex.IsMatch(password) && password.Length == password.Trim().Length)
         {
             return ValidationResult.Success;
         }
         else
         {
-            return new ValidationResult("Weak password not allowed. Password needs to have atleast one uppercase letter, one smallcase letter, at least one digit and at least 8 characters or more long"); 
+            return new ValidationResult("Weak password not allowed. Password needs to have atleast one uppercase letter, one smallcase letter, at least one digit, at least 8 characters or more long and no trailing spaces"); 
         }
     }
 }

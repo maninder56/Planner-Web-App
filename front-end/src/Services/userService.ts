@@ -59,6 +59,68 @@ export async function ChangeUserPasswordRequest(data: {oldPassword: string, newP
 }
 
 
+export async function ForgotPasswordRequest(email: string) {
+    const subUrl = accountRoute + '/forgot-password'; 
+    const request: RequestInit = {
+        headers: {
+            'Content-Type': 'application/json',
+        }, 
+        method: 'POST', 
+        body: JSON.stringify({
+            email: email, 
+        }),
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+export async function ResetPasswordRequest(data: {
+    email: string, 
+    token: string, 
+    newPassword: string, 
+}) {
+    const subUrl = accountRoute + '/reset-password'; 
+    const request: RequestInit = {
+        headers: {
+            'Content-Type': 'application/json',
+        }, 
+        method: 'POST', 
+        body: JSON.stringify({
+            email: data.email, 
+            token: data.token, 
+            newPassword: data.newPassword, 
+        }),
+    }; 
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+    } catch(error) {
+        console.error('Error: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
+
+
+
 
 
 // User profile requests

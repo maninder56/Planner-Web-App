@@ -136,15 +136,17 @@ export default function Page () {
             <form onSubmit={handleFormSubmit}>
                 <header className={styles.profileHeader}>Profile</header>
                 <div className={styles.formError}>{fromErrors.formSubmitError}</div>
-                <FormInput label='User Name' placeholder='Your Name' maxLength={100} value={userName} error={fromErrors.userName} type='text'
-                    setValue={(value) => {
-                        setUserName(value); 
-                        if (value === '') {
-                            setFormErrors({...fromErrors, userName: 'User name is Required'}); 
-                        } else {
-                            setFormErrors({...fromErrors, userName: undefined}); 
-                        }
-                    }}/>
+                <div className={styles.inputContainer}>
+                    <FormInput label='User Name' placeholder='Your Name' maxLength={100} value={userName} error={fromErrors.userName} type='text'
+                        setValue={(value) => {
+                            setUserName(value); 
+                            if (value === '') {
+                                setFormErrors({...fromErrors, userName: 'User name is Required'}); 
+                            } else {
+                                setFormErrors({...fromErrors, userName: undefined}); 
+                            }
+                        }}/>
+                </div>
                 <div className={styles.fromElement}>
                     <header>Email</header>
                     <p>{userData.email}</p>

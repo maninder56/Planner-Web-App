@@ -22,6 +22,7 @@ public class PlannerContext : DbContext
     public DbSet<Card> Cards { get; set; }
     public DbSet<Colour> Colours { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+    public DbSet<Invitation> Invitations { get; set; }
 
 
     public PlannerContext() { }
@@ -61,6 +62,22 @@ public class PlannerContext : DbContext
 
         modelBuilder.Entity<PasswordResetToken>()
             .Property(p => p.CreatedAt)
-            .HasDefaultValueSql("(CURRENT_TIMESTAMP)"); 
+            .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        modelBuilder.Entity<Invitation>()
+            .Property(i => i.CreatedAt)
+            .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
+
+        // user sending invites
+        modelBuilder.Entity<Invitation>()
+            .HasOne(i => i.InvitedByUser)
+            .WithMany(u => u.InvitationsSent)
+            .HasForeignKey(i => i.InvitedByUserId);
+
+        // user recieving invites
+        modelBuilder.Entity<Invitation>()
+            .HasOne(i => i.InvitedUser)
+            .WithMany(u => u.InvitationsRecieved)
+            .HasForeignKey(i => i.InvitedUserId); 
     }
 }

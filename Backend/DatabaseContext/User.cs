@@ -40,4 +40,7 @@ public class User
     public List<BoardStar> BoardStars { get; set; } = [];
 
     public PasswordResetToken? PasswordResetToken { get; set; }
+
+    public List<Invitation> InvitationsSent { get; set; } = [];
+    public List<Invitation> InvitationsRecieved { get; set; } = [];
 }

@@ -18,7 +18,7 @@ export default function Layout({
         <div className={styles.wrapper}>
             <main>
                 <div className={styles.dashboardButton}>
-                    <Button name={`&#129136; Dashboard`} color='transparent-with-outline'
+                    <Button name={`Dashboard`} color='transparent-with-outline'
                         onClick={() => { 
                             router.push(dashboardRoute); 
                         }} />

@@ -13,6 +13,10 @@
     min-height: 20px;
 }
 
+.inputContainer {
+    margin: 20px 0px;
+}
+
 
 .LoginLink {
     display: flex;
