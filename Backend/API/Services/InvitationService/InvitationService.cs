@@ -18,6 +18,7 @@ public class InvitationService(
     ILogger<InvitationService> logger,
     IAccountRepository accountRepository, 
     IInvitationRepository invitationRepository, 
+    IBoardRepository boardRepository,
     InvitationQueries invitationQueries, 
     BoardQueries boardQueries, 
     IOptions<InvitationConfigurations> invitationOptions 
@@ -103,7 +104,7 @@ public class InvitationService(
     {
         try
         {
-            var invitationList = await invitationQueries.GetInvitationsInfoByUserId(userId);
+            var invitationList = await invitationQueries.GetValidPendingInvitationsInfoByUserId(userId);
 
             return Result<List<InvitationInfoResponse>>.Success(invitationList);
         }
@@ -117,21 +118,94 @@ public class InvitationService(
 
     public async Task<Result> HandleUserRespondToInvitation(int invitationId, int invitedUserId, BoardInvitationRespondRequest request)
     {
-        // for any of these check when request is accept invitation invitation send bad request
-        // check if invitation exits for user with provided id
-        // check if invitation is expired
-        // cehck if invitation status is revoked
-        // check if board exists: send not found as board does not exits now
-        // if user is already an member of board but not access role 
+        var invitation = await invitationRepository.GetPendingInvitationByIdAsync(invitationId);
 
-        // when user wants to reject invitation
-        // if invitation exits or not send : success 
-        // if invitation is expired : success 
-        // if invitation staus is revoked : sucess 
+        if (invitation is null)
+        {
+            logger.LogWarning("Invitation with ID {InvitationID} does not exists", invitationId); 
+            return Result.Failed(ErrorType.BadRequest, "Invalid Invitation"); 
+        }
+        else if (invitation.InvitedUserId != invitedUserId)
+        {
+            logger.LogWarning("Invitation with ID {InvitationID} does not belong to user with ID {UserID}",
+                invitationId, invitedUserId); 
+            return Result.Failed(ErrorType.BadRequest, "Invalid Invitation");
+        }
+        else if (invitation.ExpiresAt < DateTime.Now)
+        {
+            logger.LogWarning("Invitation with ID {InvitationID} expired",invitationId);
+            return Result.Failed(ErrorType.BadRequest, "Invalid Invitation");
+        }
 
-        // for any of these check send success
-        // if user is already an member of board and has same access role
-        // if user is not member of the board update boardmember to give user access to the board
+        if (request.Status == InvitationStatus.Rejected)
+        {
+            await invitationRepository.UpdateInvitationStatusByIdAsync(invitationId, InvitationStatus.Rejected);
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, invitation.BoardId); 
+            return Result.Success();
+        }
+
+        if (request.Status != InvitationStatus.Accepted)
+        {
+            logger.LogWarning("Invitation can only be accepted or rejected; {Status} was provided for invitation id {ID} for invited user id {ID}", 
+                request.Status, invitationId, invitedUserId);
+            return Result.Failed(ErrorType.BadRequest, "Invalid request"); 
+        }
+
+        // check if board exists 
+        Board? board = await boardQueries.GetBoardByIdAsync(invitation.BoardId);
+        if (board is null)
+        {
+            logger.LogWarning("Board in which user was invited does not exists"); 
+            return Result.Failed(ErrorType.NotFound, "Board does not exists"); 
+        }
+
+        // check if user exists
+        User? user = await accountRepository.GetUserById(invitedUserId);
+        if (user is null)
+        {
+            logger.LogWarning("User {ID} does not exists", invitedUserId);
+            return Result.Failed(ErrorType.BadRequest, "Invalid User");
+        }
+
+
+        // check if user already has access to the board
+        BoardMember? boardMember = await boardQueries.GetBoardMemberAsync(invitedUserId, invitation.BoardId);
+
+        if (boardMember is null)
+        {
+            // create new board member
+            await boardRepository.CreateNewBoardMemberAsync(invitedUserId, invitation.BoardId, invitation.Role);
+            await invitationRepository.UpdateInvitationStatusByIdAsync(invitation.Id, InvitationStatus.Accepted);
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, invitation.BoardId);
+            return Result.Success();
+            
+        }
+        else if (boardMember.Role == invitation.Role)
+        {
+            logger.LogInformation("User is already a member of board {BoardID} and has same role {Role}",
+                invitation.BoardId, invitation.Role);
+            await invitationRepository.UpdateInvitationStatusByIdAsync(invitation.Id, InvitationStatus.Accepted);
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, invitation.BoardId);
+            return Result.Success();
+        } 
+        else if (invitation.Role == Role.Member)
+        {
+            // update board member role
+            await boardRepository.UpdateBoardMemberRoleAsync(invitedUserId, invitation.BoardId, invitation.Role);
+            await invitationRepository.UpdateInvitationStatusByIdAsync(invitation.Id, InvitationStatus.Accepted);
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, invitation.BoardId);
+            return Result.Success();
+        }
+        else
+        {
+            // can not change access level from higher lower
+            logger.LogWarning(
+                "Can not change user's access level to lower then current access level; current access level: {CurrentAccessLevel}, requested access level: {requestedAccessLevel}", 
+                boardMember.Role, invitation.Role); 
+            await invitationRepository.UpdateInvitationStatusByIdAsync(invitation.Id,InvitationStatus.Accepted);
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, invitation.BoardId);
+            return Result.Success(); 
+        }
 
     }
 }

@@ -1,6 +1,8 @@
 ﻿using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using DatabaseContext.Types; 
+using DatabaseContext.Types;
+using API.Services.InvitationService;
+using API.Exceptions;
 
 namespace API.Repositories.InvitationRepository;
 
@@ -24,6 +26,13 @@ public class InvitationRepository(PlannerContext database) : IInvitationReposito
                 i.Status == InvitationStatus.Pending);
     }
 
+    public async Task<Invitation?> GetPendingInvitationByIdAsync(int invitationId)
+    {
+        return await database.Invitations.AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == invitationId && i.Status == InvitationStatus.Pending); 
+    }
+
+
 
 
     public async Task<bool> DoesUserHasAnyPendingInvitation(int userId, int boardId)
@@ -43,14 +52,27 @@ public class InvitationRepository(PlannerContext database) : IInvitationReposito
 
 
     // update operations
-    public async Task InvalidatePreviousPendingInvitationsAsync(int userId, int boardId)
+    public async Task InvalidatePreviousPendingInvitationsAsync(int invitedUserId, int boardId)
     {
         await database.Invitations
-            .Where(i => i.InvitedUserId == userId && i.BoardId == boardId && i.Status == InvitationStatus.Pending)
+            .Where(i => i.InvitedUserId == invitedUserId && i.BoardId == boardId && i.Status == InvitationStatus.Pending)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(i => i.Status, InvitationStatus.Revoked));
     }
 
+    public async Task<Invitation> UpdateInvitationStatusByIdAsync(int id, InvitationStatus status)
+    {
+        var invitation = await database.Invitations
+            .Where(i => i.Id == id)
+            .FirstOrDefaultAsync()
+            ?? throw new NotFoundException("Invitation not found"); 
+
+        invitation.Status = status;
+
+        await database.SaveChangesAsync(); 
+
+        return invitation;
+    }
 
 
     // Delete Operations
