@@ -59,4 +59,14 @@ public class InvitationController(
             return result.Error.ErrorToActionResult(); 
         }
     }
+
+
+    // PATCH requests
+
+    [HttpPatch("{id}/respond")]
+    public async Task<IActionResult> RespondToUserInvitation(int id, BoardInvitationRespondRequest respondRequest)
+    {
+
+        throw new NotImplementedException();
+    }
 }

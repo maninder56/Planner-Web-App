@@ -10,6 +10,7 @@ public class InvitationQueries(PlannerContext database)
     {
         var query = await database.Invitations.AsNoTracking()
             .Where(i => i.InvitedUserId == userId)
+            .OrderByDescending(i => i.CreatedAt)
             .Select(i => new InvitationInfoResponse
             {
                 Id = i.Id, 
