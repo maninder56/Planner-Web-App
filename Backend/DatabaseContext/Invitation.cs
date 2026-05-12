@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace DatabaseContext;
 
 [Table("invitations")]
-[Index(nameof(BoardId), nameof(InvitedUserEmail), IsUnique = true)]
 public class Invitation
 {
     [Key]
@@ -24,6 +23,7 @@ public class Invitation
     public int InvitedUserId { get; set; }
 
     [EmailAddress]
+    [StringLength(200)]
     public required string InvitedUserEmail { get; set; }
 
     [Column(TypeName = "varchar(50)")]

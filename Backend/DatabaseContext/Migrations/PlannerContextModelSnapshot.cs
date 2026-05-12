@@ -209,7 +209,8 @@ namespace DatabaseContext.Migrations
 
                     b.Property<string>("InvitedUserEmail")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<int>("InvitedUserId")
                         .HasColumnType("int");
@@ -224,12 +225,11 @@ namespace DatabaseContext.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoardId");
+
                     b.HasIndex("InvitedByUserId");
 
                     b.HasIndex("InvitedUserId");
-
-                    b.HasIndex("BoardId", "InvitedUserEmail")
-                        .IsUnique();
 
                     b.ToTable("invitations");
                 });

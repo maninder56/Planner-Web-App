@@ -21,7 +21,7 @@ namespace DatabaseContext.Migrations
                     BoardId = table.Column<int>(type: "int", nullable: false),
                     InvitedByUserId = table.Column<int>(type: "int", nullable: false),
                     InvitedUserId = table.Column<int>(type: "int", nullable: false),
-                    InvitedUserEmail = table.Column<string>(type: "varchar(255)", nullable: false)
+                    InvitedUserEmail = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Role = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -56,10 +56,9 @@ namespace DatabaseContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invitations_BoardId_InvitedUserEmail",
+                name: "IX_invitations_BoardId",
                 table: "invitations",
-                columns: new[] { "BoardId", "InvitedUserEmail" },
-                unique: true);
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_invitations_InvitedByUserId",

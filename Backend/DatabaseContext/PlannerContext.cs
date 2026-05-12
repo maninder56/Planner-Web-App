@@ -68,16 +68,21 @@ public class PlannerContext : DbContext
             .Property(i => i.CreatedAt)
             .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
 
+        modelBuilder.Entity<Invitation>()
+            .Property(i => i.Status)
+            .HasConversion<string>();
+
         // user sending invites
         modelBuilder.Entity<Invitation>()
             .HasOne(i => i.InvitedByUser)
             .WithMany(u => u.InvitationsSent)
-            .HasForeignKey(i => i.InvitedByUserId);
+            .HasForeignKey(i => i.InvitedByUserId); 
 
         // user recieving invites
         modelBuilder.Entity<Invitation>()
             .HasOne(i => i.InvitedUser)
             .WithMany(u => u.InvitationsRecieved)
             .HasForeignKey(i => i.InvitedUserId); 
+
     }
 }
