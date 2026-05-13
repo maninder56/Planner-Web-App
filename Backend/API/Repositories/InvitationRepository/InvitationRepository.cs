@@ -57,7 +57,7 @@ public class InvitationRepository(PlannerContext database) : IInvitationReposito
         await database.Invitations
             .Where(i => i.InvitedUserId == invitedUserId && i.BoardId == boardId && i.Status == InvitationStatus.Pending)
             .ExecuteUpdateAsync(setters => setters
-                .SetProperty(i => i.Status, InvitationStatus.Revoked));
+                .SetProperty(i => i.Status, InvitationStatus.Invalidated));
     }
 
     public async Task<Invitation> UpdateInvitationStatusByIdAsync(int id, InvitationStatus status)
