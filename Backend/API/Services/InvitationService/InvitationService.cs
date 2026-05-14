@@ -41,15 +41,6 @@ public class InvitationService(
                 return Result.Success();
             }
 
-            // check if board exists 
-            Board? board = await boardQueries.GetBoardByIdAsync(request.BoardId);
-            if (board is null)
-            {
-                logger.LogWarning("Can not invite user {invitedUserEmail} to board {BoardId} which does not exist; send by user with id {invitedByUserId}",
-                    invitedUser.Email, request.BoardId, invitedByUserId);
-                return Result.Failed(ErrorType.NotFound, "Board does not exist");
-            }
-
             // check if user already has access to the board
             BoardMember? boardMember = await boardQueries.GetBoardMemberAsync(invitedUser.UserId, request.BoardId);
 
