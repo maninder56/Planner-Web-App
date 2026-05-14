@@ -37,7 +37,6 @@ SHOW COLUMNS
 FROM invitations;
 
 
-
 # Table data
 SELECT * FROM boardlists;
 

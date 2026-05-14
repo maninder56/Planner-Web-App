@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Invitation.Requests; 
 
-public class BoardInviteRequest
+public class BoardInviteRequest : IValidatableObject
 {
     [Required]
-    public int BoardId { get; set; }
+    [Range(0, int.MaxValue)]
+    public required int BoardId { get; set; }
 
     [Required]
     [EmailAddress]
@@ -14,4 +15,15 @@ public class BoardInviteRequest
 
     [Required]
     public required Role Role { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        // Owner role is not allowed
+        if (Role == Role.Owner)
+        {
+            yield return new ValidationResult(
+                "Each board can only have one owner",
+                [nameof(Role)]); 
+        }
+    }
 }

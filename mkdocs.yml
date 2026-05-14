@@ -1,0 +1,4 @@
+site_name: Planner web app docs
+site_url: https://localhost
+theme:
+  name: material

@@ -8,5 +8,5 @@ namespace DatabaseContext.Types;
 
 public enum InvitationStatus
 {
-    Pending, Accepted, Rejected, Revoked
+    Pending, Accepted, Rejected, Revoked, Expired, Invalidated
 }

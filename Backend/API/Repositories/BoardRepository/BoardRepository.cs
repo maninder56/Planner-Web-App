@@ -6,6 +6,7 @@ using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
 using DatabaseContext;
+using DatabaseContext.Types;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -37,7 +38,33 @@ public class BoardRepository : IBoardRepository
         return boardMembers;
     }
 
+    public async Task<BoardMember> CreateNewBoardMemberAsync(int userID, int boardID, Role role)
+    {
+        var newBoard = new BoardMember()
+        {
+            BoardId = boardID,
+            UserId = userID,
+            Role = role
+        }; 
+        database.BoardMembers.Add(newBoard); 
+
+        await database.SaveChangesAsync();
+        return newBoard; 
+    }
+
     // Update operations
+
+    public async Task<BoardMember> UpdateBoardMemberRoleAsync(int userID, int boardID, Role role)
+    {
+        var board = await database.BoardMembers
+            .FirstOrDefaultAsync(bm => bm.BoardId == boardID && bm.UserId == userID)
+            ?? throw new NotFoundException("Boardmember not found");
+
+        board.Role = role; 
+
+        await database.SaveChangesAsync();
+        return board;
+    }
 
     public async Task UpdateBoardInfoAsync(int userId, int boardId, string? newName, string? newBackgroundColour)
     {

@@ -12,20 +12,26 @@ public static class AuthorizationServiceRegistration
         options.AddPolicy(
             "CanViewBoard",
             policyBuilder => policyBuilder.AddRequirements(
-                new BoardViewRequirement(Role.Owner, Role.Member, Role.Viewer)
+                new BoardPermissionRequirement(Role.Owner, Role.Member, Role.Viewer)
                 ));  
 
         options.AddPolicy(
         "CanEditBoard",
         policyBuilder => policyBuilder.AddRequirements(
-            new BoardEditRequirement(Role.Owner, Role.Member)
+            new BoardPermissionRequirement(Role.Owner, Role.Member)
             ));
 
         options.AddPolicy(
             "CanDeleteBoard",
             policyBuilder => policyBuilder.AddRequirements(
-                new BoardDeleteRequirement(Role.Owner)
+                new BoardPermissionRequirement(Role.Owner)
                 ));
+
+        options.AddPolicy(
+            "CanShareBoard",
+            policyBuilder => policyBuilder.AddRequirements(
+                new BoardPermissionRequirement(Role.Owner)
+                )); 
 
         return options; 
     }

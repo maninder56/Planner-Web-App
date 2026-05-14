@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseContext.Types; 
+namespace DatabaseContext.Types;
 
 public enum Role
 {
-    Owner, Member, Viewer
+    Viewer = 0,
+    Member = 1,
+    Owner = 2, 
 }

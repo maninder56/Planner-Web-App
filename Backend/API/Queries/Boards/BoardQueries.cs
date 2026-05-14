@@ -110,4 +110,10 @@ public class BoardQueries(PlannerContext database)
             .SingleOrDefaultAsync(); 
     }
 
+    public async Task<Board?> GetBoardByIdAsync(int id)
+    {
+        return await database.Boards.AsNoTracking()
+            .FirstOrDefaultAsync(b => b.BoardId == id);
+    }
+
 }
