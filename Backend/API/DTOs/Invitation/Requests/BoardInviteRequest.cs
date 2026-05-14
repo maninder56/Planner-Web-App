@@ -7,7 +7,7 @@ public class BoardInviteRequest : IValidatableObject
 {
     [Required]
     [Range(0, int.MaxValue)]
-    public int BoardId { get; set; }
+    public required int BoardId { get; set; }
 
     [Required]
     [EmailAddress]

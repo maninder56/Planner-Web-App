@@ -6,6 +6,7 @@ using API.Services.Account;
 using API.Services.BoardService;
 using API.Services.CardService;
 using API.Services.EmailService;
+using API.Services.InvitationService;
 using API.Services.ListService;
 using API.Services.ProfileService;
 using API.Utilities;
@@ -23,6 +24,7 @@ public static class PlannerServiceRegistration
         services.AddScoped<ICardService, CardService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IListService, ListService>();
+        services.AddScoped<IInvitationService, InvitationService>();
 
         // Authorization handlers
         services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
