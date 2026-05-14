@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Invitation.Requests;
+using API.DTOs.Invitation.Responses;
 using API.Extensions;
 using API.Services.InvitationService;
 using API.Utilities;
@@ -66,7 +67,15 @@ public class InvitationController(
     [HttpPatch("{id}/respond")]
     public async Task<IActionResult> RespondToUserInvitation(int id, BoardInvitationRespondRequest respondRequest)
     {
+        var result = await invitationService.ProcessInvitationResponseAsync(id, User.GetUserId(), respondRequest);
 
-        throw new NotImplementedException();
+        if (result.Successful)
+        {
+            return NoContent(); 
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult();
+        }
     }
 }
