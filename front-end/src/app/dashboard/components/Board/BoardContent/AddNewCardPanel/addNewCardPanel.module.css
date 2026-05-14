@@ -132,6 +132,21 @@
     padding: 0;
 }
 
+.priorityAndDueDateContainer select,
+.dueDateInput {
+    margin-top: 5px;
+    padding: 5px;
+    border: solid 1.5px rgb(193, 193, 193);
+    border-radius: 5px;
+}
+
+@media (pointer: fine) {
+    .priorityAndDueDateContainer select:hover {
+        cursor: pointer;
+    }
+}
+
+
 
 
 .description {

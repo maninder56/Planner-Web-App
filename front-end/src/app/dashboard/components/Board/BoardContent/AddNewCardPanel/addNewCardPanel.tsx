@@ -117,7 +117,8 @@ export default function AddNewCardPanel({
                         </div>
                         <div>
                             <header>Due Date</header>
-                            <input type='date' name='dueDate' value={dueDate} onChange={e => setDueDate(e.target.value)} />
+                            <input type='date' name='dueDate' min={'2000-01-01'} max={'2100-12-01'} 
+                                className={styles.dueDateInput} value={dueDate} onChange={e => setDueDate(e.target.value)} />
                         </div>
                     </div>
                     <div className={styles.description}>

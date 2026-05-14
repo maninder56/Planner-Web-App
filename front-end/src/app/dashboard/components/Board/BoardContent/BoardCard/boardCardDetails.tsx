@@ -190,7 +190,8 @@ export default function BoardCardDetails({
                             </div>
                             <div>
                                 <header>Due Date</header>
-                                <input type='date' name='dueDate' value={dueDate} onChange={e => setDueDate(e.target.value)} />
+                                <input className={styles.dueDateInput} type='date' name='dueDate' 
+                                    min={'2000-01-01'} max={'2100-12-01'} value={dueDate} onChange={e => setDueDate(e.target.value)} />
                             </div>
                         </div>
                         <div className={styles.description}>
