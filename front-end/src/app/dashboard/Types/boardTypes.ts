@@ -3,18 +3,28 @@ import * as z from 'zod';
 const BoardColour = z.literal(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
 export type BoardColour = z.infer<typeof BoardColour>; 
 
-const UserRole = z.literal(['Owner', 'Member', 'Viewer']);
-export type UserRole = z.infer<typeof UserRole>; 
+export const UserRoleSchema = z.enum([
+  "Owner",
+  "Member",
+  "Viewer",
+]);
 
-const CardPriority = z.literal(['Low', 'Medium', 'High']); 
-export type CardPriority = z.infer<typeof CardPriority>; 
+export type UserRole = z.infer<typeof UserRoleSchema>;
+
+export const CardPrioritySchema = z.enum([
+  "Low",
+  "Medium",
+  "High",
+]);
+
+export type CardPriority = z.infer<typeof CardPrioritySchema>;
 
 const CardSchema = z.object({
     cardId: z.number(),
     title: z.string(), 
     description: z.string(), 
     isDone: z.boolean(), 
-    priority: CardPriority,
+    priority: CardPrioritySchema,
     dueDate: z.string(), 
     cardPosition: z.number(), 
 }); 
@@ -33,7 +43,7 @@ export const BoardSchema = z.object({
     name: z.string(),
     isFavoriteBoard: z.boolean(), 
     backgroundColour: BoardColour,
-    role: UserRole,
+    role: UserRoleSchema,
     boardList: z.union([z.array(BoardListSchema), z.undefined()]) ,
 }); 
 export type BoardDataFromAPI = z.infer<typeof BoardSchema>; 
@@ -71,7 +81,7 @@ export const CardUpdatedSchema = z.object({
     cardPosition: z.union([z.number(), z.undefined()]), 
     isDone: z.union([z.boolean(), z.undefined()]), 
     dueDate:z.union([z.string(), z.undefined()]), 
-    priority: z.union([CardPriority, z.undefined()]) 
+    priority: z.union([CardPrioritySchema, z.undefined()]) 
 }); 
 export type CardUpdated = z.infer<typeof CardUpdatedSchema>; 
 
@@ -84,7 +94,7 @@ export const CardInfoSchema = z.object({
     cardPosition: z.number(), 
     isDone: z.boolean(), 
     dueDate: z.string(), 
-    priority: CardPriority, 
+    priority: CardPrioritySchema, 
     boardListId: z.number(),
 }); 
 export type CardInfo = z.infer<typeof CardInfoSchema>; 
