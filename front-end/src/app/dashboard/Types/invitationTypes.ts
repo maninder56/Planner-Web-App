@@ -1,0 +1,38 @@
+import * as z from 'zod'; 
+import { UserRoleSchema } from './boardTypes';
+
+export const InvitationStatusSchema = z.enum([
+  "Pending",
+  "Accepted",
+  "Rejected",
+  "Revoked",
+  "Expired",
+  "Invalidated",
+]);
+
+const InvitationRespondStatusSchema = z.enum(["Accepted", "Rejected"]); 
+export type InvitationRespondStatus = z.infer<typeof InvitationRespondStatusSchema>; 
+
+export const InvitationsInfoSchema = z.array(
+  z.object({
+    id: z.number(),
+    boardName: z.string(),
+    invitedByUserEmail: z.string(),
+    role: UserRoleSchema,
+    status: InvitationStatusSchema,
+    expiresAt: z.string(),
+  })
+);
+
+export type InvitationsInfo = z.infer<typeof InvitationsInfoSchema>; 
+
+
+
+const SendInvitationSchema = z.object({
+    boardId: z.number(), 
+    invitedUserEmail: z.string(), 
+    role: UserRoleSchema,
+}); 
+
+export type SendInvitation = z.infer<typeof SendInvitationSchema>; 
+
