@@ -25,9 +25,9 @@
 
 .panel {
     flex: 1 1 auto;
-    margin: 10px;
+    margin: 3px;
     margin-top: 5vh;
-    padding: 20px;
+    padding: 10px;
     height: max-content;
     max-width: 800px;
     background-color: white;
@@ -38,7 +38,9 @@
 
 @media (min-width: 600) {
     .panel {
+        margin: 10px;
         margin-top: 10vh;
+        padding: 20px;
     }
 }
 
