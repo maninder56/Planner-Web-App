@@ -32,8 +32,12 @@
     width: 20px;
     height: 20px;
     margin: auto;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     margin-left: 5px;
+}
+
+.wrapper sup {
+    min-width: 12px;
 }
 
 .wrapper:disabled > svg {
