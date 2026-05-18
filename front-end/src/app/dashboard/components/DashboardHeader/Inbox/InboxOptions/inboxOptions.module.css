@@ -1,0 +1,122 @@
+
+/* .wrapper * {
+    border:  solid 1px red;
+} */
+
+.wrapper {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.wrapper li:first-child {
+    margin-top: 20px;
+}
+
+.wrapper li {
+    min-width: 0;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 700px) {
+    .wrapper li{
+        padding: 20px;
+
+        flex-direction: row;
+    }
+}
+
+
+.inviteInfo {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.boardName {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: black;
+}
+
+.invitedBy {
+    flex: 1 1 auto;
+    min-width: 0; 
+
+    font-size: 1rem;
+    color: #6b7280;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.meta {
+    display: flex;
+    /* justify-content: space-evenly; */
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.metaItem {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 500;
+}
+
+
+.actions {
+    flex: 1 1 auto;
+
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+
+    font-size: 1rem;
+}
+
+.expireText {
+    font-size: 0.85rem;
+    color: #9ca3af;
+
+    text-align: center;
+}
+
+
+@media (min-width: 700px) {
+    .actions {
+        flex: 0 0 230px;
+        margin: auto;
+        margin-left: 20px;
+    }
+}

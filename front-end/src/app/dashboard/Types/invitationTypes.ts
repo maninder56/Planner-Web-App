@@ -10,6 +10,8 @@ export const InvitationStatusSchema = z.enum([
   "Invalidated",
 ]);
 
+export type InvitationStatus = z.infer<typeof InvitationStatusSchema>; 
+
 const InvitationRespondStatusSchema = z.enum(["Accepted", "Rejected"]); 
 export type InvitationRespondStatus = z.infer<typeof InvitationRespondStatusSchema>; 
 
