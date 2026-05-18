@@ -1,12 +1,14 @@
 
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import styles from './inboxButton.module.css'; 
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 
 export default function InboxButton() {
+    const isBoardLoading = useBoardStore((state) => state.isBoardLoading); 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     return (
-        <button className={styles.wrapper} onClick={e => {
+        <button className={styles.wrapper} disabled={isBoardLoading} onClick={e => {
             e.stopPropagation(); 
             setActivePanel('inboxOptionsPanel'); 
         }}>
