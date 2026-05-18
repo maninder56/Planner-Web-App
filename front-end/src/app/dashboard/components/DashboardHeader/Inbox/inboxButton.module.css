@@ -1,48 +1,48 @@
 
 .wrapper {
-    margin: 5px;
     height: 40px;
-    width: 145px;
-    position: relative;
-}
 
-.mainButton {
-    width: inherit;
-    height: inherit;
+    margin: 5px;
 
     border: none;
     border-radius: 10px;
 
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.05);
+
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-evenly;
 }
 
+
+
 @media (pointer: fine) {
-    .mainButton:hover {
+    .wrapper:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }    
 }
 
 
-.mainButton:disabled {
+.wrapper:disabled {
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.mainButton > svg {
+.wrapper > svg {
     width: 20px;
     height: 20px;
+    margin: auto;
     margin-right: 10px;
+    margin-left: 5px;
 }
 
-.mainButton:disabled > svg {
+.wrapper:disabled > svg {
     opacity: 0.5;
 }
 
-.mainButton > span {
+.wrapper > span {
     text-wrap: nowrap;
     font-size: 1rem;
+    margin: auto;
+    margin-right: 5px;
 }
