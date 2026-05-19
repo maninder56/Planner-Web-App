@@ -38,7 +38,7 @@ export default function InboxButton() {
                     />
                 </g>
                 {
-                    invitations.length === 0 ? null : 
+                    invitations === null ? null : invitations.length === 0 ? null : 
                     <g transform="matrix(0.87127,0,0,0.867115,10.218253,-0.671147)">
                         <ellipse
                             cx="6.636"

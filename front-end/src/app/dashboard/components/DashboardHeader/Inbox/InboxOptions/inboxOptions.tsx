@@ -7,11 +7,23 @@ import { useInvitationStore } from '@/app/dashboard/Store/invitationStore';
 import Button from '@/Components/Buttons/button';
 import { InvitationStatus } from '@/app/dashboard/Types/invitationTypes';
 import InboxOptionsLoadingSkeleton from './InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
+import { useEffect, useState } from 'react';
+import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { GetAllInvitationsReceivedRequest } from '@/app/dashboard/Services/invitationService';
+import { useUserStore } from '@/Store/userStore';
 
 export default function InboxOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    
     const invitations = useInvitationStore((state) => state.invitations); 
+    const setInvitations = useInvitationStore((state) => state.setInvitations); 
+
     const loading = useInvitationStore((state) => state.loadingInvitations); 
+    const setLoading = useInvitationStore((state) => state.setLoadingInvitation); 
+    
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const [failedToLoadData, setFailedToLoadData] = useState(false); 
 
     function formatInviteDate(value: string) {
         const date = new Date(value); 
@@ -29,10 +41,56 @@ export default function InboxOptions() {
         }
     }
 
+    async function fetchInvitationsData() {
+        setLoading(true); 
+        setFailedToLoadData(false); 
+
+        try {
+            const result = await ApiRequestWithRefreshTokenAttempt(GetAllInvitationsReceivedRequest);
+
+            if (result.ok) {
+                if (result.data !== undefined) {
+                    setInvitations(result.data); 
+                } else {
+                    setInvitations(null); 
+                    setFailedToLoadData(true); 
+                }
+            } else if (result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+                setInvitations(null); 
+            } else {
+                setInvitations(null); 
+                setFailedToLoadData(true); 
+            }
+
+        } finally {
+            setLoading(false); 
+        }
+    }
+
+    useEffect(() => {
+        if (invitations === null) {
+            fetchInvitationsData(); 
+        }
+    }, []); 
+
+
+
     if (loading) {
         return (
             <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
                 <InboxOptionsLoadingSkeleton />
+            </BigHoverPanel>
+        ); 
+    }
+
+    if (failedToLoadData || invitations === null) {
+        return (
+            <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
+                <div className={[styles.wrapper, styles.failedToLoad].join(' ')}>
+                    <header>Failed to load inbox, Please try again.</header>
+                    <Button name='Try again' color='red' onClick={fetchInvitationsData} />
+                </div>
             </BigHoverPanel>
         ); 
     }
