@@ -136,7 +136,7 @@ export default function DashboardSearchButton() {
         if (isPanelOpen && inputRef.current) {
             inputRef.current.focus(); 
         }
-    }, [isPanelOpen])
+    }, [isPanelOpen]);
 
     return (
         <>
