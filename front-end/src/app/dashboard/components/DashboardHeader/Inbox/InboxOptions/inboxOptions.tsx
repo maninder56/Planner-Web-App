@@ -6,6 +6,7 @@ import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useInvitationStore } from '@/app/dashboard/Store/invitationStore';
 import Button from '@/Components/Buttons/button';
 import { InvitationStatus } from '@/app/dashboard/Types/invitationTypes';
+import InboxOptionsLoadingSkeleton from './InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
 
 export default function InboxOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -26,6 +27,12 @@ export default function InboxOptions() {
             });
         }
     }
+
+    return (
+        <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
+            <InboxOptionsLoadingSkeleton />
+        </BigHoverPanel>
+    ); 
 
     if (invitations.length === 0) {
         return (

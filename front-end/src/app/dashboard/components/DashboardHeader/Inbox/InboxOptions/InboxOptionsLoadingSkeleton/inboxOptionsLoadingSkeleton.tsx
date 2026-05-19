@@ -1,17 +1,35 @@
 
 
 
-import styles from './inboxOptionsLoadingSkeleton.module.css'; 
+// InboxOptionsLoadingSkeleton.jsx
+import styles from './inboxOptionsLoadingSkeleton.module.css';
 
 export default function InboxOptionsLoadingSkeleton() {
     return (
-        <div className={[styles.wrapper, 'skeletonBackground'].join(' ')}>
-            <ul>
-                <li className='skeletonElement'></li>
-                <li className='skeletonElement'></li>
-                <li className='skeletonElement'></li>
-                <li className='skeletonElement'></li>
-            </ul>
-        </div>
-    ); 
+        <ul className={styles.wrapper}>
+            {Array.from({ length: 4 }).map((_, index) => (
+                <li key={index} className={styles.card}>
+                    <div className={styles.inviteInfo}>
+                        <div className={`${styles.boardName} skeletonElement`}></div>
+
+                        <div className={`${styles.invitedBy} skeletonElement`}></div>
+
+                        <div className={styles.meta}>
+                            <div className={`${styles.metaItem} skeletonElement`}></div>
+                            <div className={`${styles.metaItem} skeletonElement`}></div>
+                        </div>
+                    </div>
+
+                    <div className={styles.actions}>
+                        <div className={styles.buttons}>
+                            <div className={`${styles.button} skeletonElement`}></div>
+                            <div className={`${styles.button} skeletonElement`}></div>
+                        </div>
+
+                        <div className={`${styles.expireText} skeletonElement`}></div>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
 }
