@@ -70,13 +70,11 @@ export default function ShareButtonOptions() {
                 setEmail(''); 
             } else if (request.error === 'Unauthorized') {
                 setSessionExpired(true); 
-                setInviteSent(false); 
             } else if (request.error === 'Conflict') {
                 setSubmitError('This user already has access to the board, to change user role please open Manage members panel'); 
             } else if (request.error === 'TooManyRequests') {
                 setSubmitError('Please wait 5 min before sending another invitation'); 
             } else {
-                setInviteSent(false); 
                 setSubmitError('Failed to send invitation, please try again.'); 
             }
         } finally {
