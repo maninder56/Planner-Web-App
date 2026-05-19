@@ -11,6 +11,7 @@ import InboxOptionsLoadingSkeleton from './InboxOptionsLoadingSkeleton/inboxOpti
 export default function InboxOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const invitations = useInvitationStore((state) => state.invitations); 
+    const loading = useInvitationStore((state) => state.loadingInvitations); 
 
     function formatInviteDate(value: string) {
         const date = new Date(value); 
@@ -28,11 +29,13 @@ export default function InboxOptions() {
         }
     }
 
-    return (
-        <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
-            <InboxOptionsLoadingSkeleton />
-        </BigHoverPanel>
-    ); 
+    if (loading) {
+        return (
+            <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
+                <InboxOptionsLoadingSkeleton />
+            </BigHoverPanel>
+        ); 
+    }
 
     if (invitations.length === 0) {
         return (

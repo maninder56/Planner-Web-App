@@ -4,6 +4,7 @@ import { InvitationsInfo } from "../Types/invitationTypes";
 
 type State = {
     invitations: InvitationsInfo; 
+    loadingInvitations: boolean; 
 }
 
 type Action = {
@@ -11,10 +12,13 @@ type Action = {
 
     acceptInvitation: (id: number) => void; 
     rejectInvitation: (id: number) => void; 
+
+    setLoadingInvitation: (loading: boolean) => void; 
 }
 
 export const useInvitationStore = create<State & Action>((set) => ({
     invitations: [], 
+    loadingInvitations: false,
 
     setInvitations: (invitations) => set({invitations: invitations }),
 
@@ -38,4 +42,6 @@ export const useInvitationStore = create<State & Action>((set) => ({
             }
         })
     })),
+
+    setLoadingInvitation: (loading) => set({ loadingInvitations: loading }),
 })); 
