@@ -27,6 +27,16 @@ export default function InboxOptions() {
         }
     }
 
+    if (invitations.length === 0) {
+        return (
+            <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
+                <div className={styles.wrapper}>
+                    <p className={styles.noInvitationMessage}>Your inbox is empty</p>
+                </div>
+            </BigHoverPanel>
+        ); 
+    }
+
     return (
         <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
             <ul className={styles.wrapper}>
