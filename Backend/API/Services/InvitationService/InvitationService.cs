@@ -106,8 +106,13 @@ public class InvitationService(
             }
             else
             {
-                logger.LogInformation("User {Email} has pending invitation from board with id {ID}",
-                    newInvitation.InvitedUserEmail, newInvitation.BoardId);
+                // start transaction
+                await using var transaction = await plannerContext.Database.BeginTransactionAsync();
+
+                // invalidate all pending invitations and add new invitation
+                await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, newInvitation.BoardId);
+                await invitationRepository.CreateNewInvitation(newInvitation);
+                await transaction.CommitAsync();
             }
 
             return Result.Success();
