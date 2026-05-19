@@ -110,6 +110,13 @@ body {
   color: #ffffff;
 }
 
+.button.lightGreen {
+  background-color: #79ff65;
+  color: #111111;
+}
+
+
+
 .button.transparent {
   background-color: transparent;
   color: #334155;

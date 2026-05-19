@@ -123,7 +123,7 @@ export default function InboxOptions() {
                                 {
                                     invite.status !== 'Pending' ? null : 
                                     <div className={styles.buttons}>
-                                        <Button name='Accept' color='transparent-with-outline' onClick={() => {}} />
+                                        <Button name='Accept' color='lightGreen' onClick={() => {}} />
                                         <Button name='Reject' color='red' onClick={() => {}} />
                                     </div>
                                 }
