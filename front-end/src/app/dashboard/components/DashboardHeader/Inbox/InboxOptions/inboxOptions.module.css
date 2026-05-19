@@ -3,6 +3,12 @@
     border:  solid 1px red;
 } */
 
+.errorMessage {
+    text-align: center;
+    font-size: 1rem;
+    color: red;
+}
+
 .wrapper {
     list-style: none;
     padding: 0;

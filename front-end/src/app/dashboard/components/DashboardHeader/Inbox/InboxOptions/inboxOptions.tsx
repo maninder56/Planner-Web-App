@@ -9,21 +9,20 @@ import { InvitationStatus } from '@/app/dashboard/Types/invitationTypes';
 import InboxOptionsLoadingSkeleton from './InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
 import { useEffect, useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
-import { GetAllInvitationsReceivedRequest } from '@/app/dashboard/Services/invitationService';
+import { GetAllInvitationsReceivedRequest, RespondToInvitationRequest } from '@/app/dashboard/Services/invitationService';
 import { useUserStore } from '@/Store/userStore';
 
 export default function InboxOptions() {
-    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    
     const invitations = useInvitationStore((state) => state.invitations); 
-    const setInvitations = useInvitationStore((state) => state.setInvitations); 
-
     const loading = useInvitationStore((state) => state.loadingInvitations); 
+    const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const setInvitations = useInvitationStore((state) => state.setInvitations); 
     const setLoading = useInvitationStore((state) => state.setLoadingInvitation); 
-    
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+    const setInvitationStatus = useInvitationStore((state) => state.setInvitationStatus); 
 
     const [failedToLoadData, setFailedToLoadData] = useState(false); 
+    const [errorMessage, setErrorMessage] = useState(''); 
 
     function formatInviteDate(value: string) {
         const date = new Date(value); 
@@ -38,6 +37,30 @@ export default function InboxOptions() {
                 minute: "2-digit",
                 hour12: true, 
             });
+        }
+    }
+
+
+    function acceptInvitationRequest(invitationId: number) {
+        // try {
+        //     const res
+        // }
+    }
+
+    async function rejectInvitationRequest(invitationId: number) {
+        const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
+            invitationId: invitationId, status: 'Rejected', 
+        }); 
+
+        if (result.ok) {
+            setInvitationStatus(invitationId, 'Rejected'); 
+        } else if (result.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        } else if (result.error === 'BadRequest') {
+            setErrorMessage('The invitation is no longer valid.');
+            setInvitationStatus(invitationId, 'Expired');
+        } else {
+            setErrorMessage('An Error occured, please try again.'); 
         }
     }
 
@@ -107,6 +130,8 @@ export default function InboxOptions() {
 
     return (
         <BigHoverPanel title='Inbox' onCloseClick={() => setActivePanel('none')}>
+            <>
+            <div className={styles.errorMessage}>{errorMessage}</div>
             <ul className={styles.wrapper}>
                 {
                     invitations.map(invite => 
@@ -123,8 +148,8 @@ export default function InboxOptions() {
                                 {
                                     invite.status !== 'Pending' ? null : 
                                     <div className={styles.buttons}>
-                                        <Button name='Accept' color='lightGreen' onClick={() => {}} />
-                                        <Button name='Reject' color='red' onClick={() => {}} />
+                                        <Button name='Accept' color='lightGreen' onClick={() => acceptInvitationRequest(invite.id)} />
+                                        <Button name='Reject' color='red' onClick={() => rejectInvitationRequest(invite.id)} />
                                     </div>
                                 }
                                 <div className={styles.expireText}>Expires at: {formatInviteDate(invite.expiresAt)}</div>
@@ -133,6 +158,7 @@ export default function InboxOptions() {
                     )
                 }
             </ul>
+            </>
         </BigHoverPanel>
     ); 
 }
