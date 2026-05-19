@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { InvitationsInfo } from "../Types/invitationTypes";
+import { InvitationsInfo, InvitationStatus } from "../Types/invitationTypes";
 
 
 type State = {
@@ -10,8 +10,7 @@ type State = {
 type Action = {
     setInvitations: (invitations: InvitationsInfo | null) => void; 
 
-    acceptInvitation: (id: number) => void; 
-    rejectInvitation: (id: number) => void; 
+    setInvitationStatus: (id: number, status: InvitationStatus) => void; 
 
     setLoadingInvitation: (loading: boolean) => void; 
 }
@@ -22,25 +21,7 @@ export const useInvitationStore = create<State & Action>((set) => ({
 
     setInvitations: (invitations) => set({invitations: invitations }),
 
-    acceptInvitation: (id) => set((state) => {
-        if (state.invitations === null) {
-            return state; 
-        } 
-        
-        return {
-            invitations: state.invitations.map(invitation => {
-                if (invitation.id === id) {
-                    return { ...invitation, status: 'Accepted'}
-                } else {
-                    return invitation; 
-                }
-            })
-        }
-        
-    }), 
-
-
-    rejectInvitation: (id) => set((state) => {
+    setInvitationStatus: (id, status) => set((state) => {
         if (state.invitations === null) {
             return state; 
         }
@@ -48,7 +29,7 @@ export const useInvitationStore = create<State & Action>((set) => ({
         return {
             invitations: state.invitations.map(invitation => {
                 if (invitation.id === id) {
-                    return { ...invitation, status: 'Rejected'}
+                    return { ...invitation, status: status }
                 } else {
                     return invitation; 
                 }
