@@ -66,6 +66,8 @@ export default function ShareButtonOptions() {
 
             if (request.ok) {
                 setInviteSent(true); 
+                setSubmitError(''); 
+                setEmail(''); 
             } else if (request.error === 'Unauthorized') {
                 setSessionExpired(true); 
                 setInviteSent(false); 
