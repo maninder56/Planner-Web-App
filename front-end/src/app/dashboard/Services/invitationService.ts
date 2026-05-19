@@ -81,7 +81,7 @@ export async function RespondToInvitationRequest(data: {
         headers: {
             'Content-Type': 'application/json',
         }, 
-        method: 'POST', 
+        method: 'PATCH', 
         credentials: 'include',
         body: JSON.stringify({
             status: data.status
