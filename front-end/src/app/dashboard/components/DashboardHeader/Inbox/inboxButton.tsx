@@ -9,26 +9,47 @@ export default function InboxButton() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const invitations = useInvitationStore((state) => state.invitations); 
 
-    const numberOfInvitations = () => {
-        if (invitations.length === 0) {
-            return  <sup></sup>; 
-        } else if (invitations.length > 9) {
-            return <sup>+9</sup>; 
-        } else {
-            return <sup>{invitations.length}</sup>; 
-        }
-    }  
-
     return (
         <button className={styles.wrapper} disabled={isBoardLoading} onClick={e => {
             e.stopPropagation(); 
             setActivePanel('inboxOptionsPanel'); 
         }}>
-            <svg width="20" height="20" viewBox="0 0 240 240" fill="none" stroke="#000" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M220 120h-60l-20 30h-40l-20-30H20"/>
-                <path d="M54.5 51.1 20 120v60a20 20 0 0 0 20 20h160a20 20 0 0 0 20-20v-60l-34.5-68.9A20 20 0 0 0 167.6 40H72.4a20 20 0 0 0-17.9 11.1"/>
-            </svg>
-            {numberOfInvitations()}
+            <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 20 20"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                xmlSpace="preserve"
+                className={styles.inboxSvg}
+                >
+                <g transform="matrix(0.083333,0,0,0.083333,0,0)">
+                    <path
+                    d="M220,120L160,120L140,150L100,150L80,120L20,120"
+                    className={styles.inboxLine}
+                    />
+                </g>
+
+                <g transform="matrix(0.083333,0,0,0.083333,0,0)">
+                    <path
+                    d="M54.5,51.1L20,120L20,180C20,190.972 29.028,200 40,200L200,200C210.972,200 220,190.972 220,180L220,120L185.5,51.1C182.128,44.314 175.178,40.004 167.6,40L72.4,40C64.822,40.004 57.872,44.314 54.5,51.1"
+                    className={styles.inboxLine}
+                    />
+                </g>
+                {
+                    invitations.length === 0 ? null : 
+                    <g transform="matrix(0.87127,0,0,0.867115,10.218253,-0.671147)">
+                        <ellipse
+                            cx="6.636"
+                            cy="5.387"
+                            rx="4.591"
+                            ry="4.613"
+                            className={styles.inboxDot}
+                        />
+                    </g>
+                }
+                </svg>
             <span>Inbox</span>
         </button>
     ); 

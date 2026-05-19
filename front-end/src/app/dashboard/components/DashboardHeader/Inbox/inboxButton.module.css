@@ -31,14 +31,27 @@
 .wrapper > svg {
     width: 20px;
     height: 20px;
-    margin: auto;
-    /* margin-right: 10px; */
-    margin-left: 5px;
+    margin: auto 5px;
 }
 
-.wrapper sup {
-    min-width: 12px;
+.inboxSvg {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+
+.inboxLine {
+  fill: none;
+  fill-rule: nonzero;
+  stroke: black;
+  stroke-width: 20px;
+}
+
+.inboxDot {
+  fill: rgb(255, 7, 0);
+}
+
 
 .wrapper:disabled > svg {
     opacity: 0.5;
