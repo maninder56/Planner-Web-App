@@ -102,6 +102,7 @@ public class InvitationService(
                 // user can not send multiple invitation one after another
                 logger.LogInformation("Skipped invitation creation because a recent pending invitation created at {CreatedAt} already exists; send by User with id {UserID}",
                     latestPendingInvitation.CreatedAt, invitedByUserId);
+                return Result.Failed(ErrorType.TooManyRequests, "Too many invitations sent withing 5 min"); 
             }
             else
             {
