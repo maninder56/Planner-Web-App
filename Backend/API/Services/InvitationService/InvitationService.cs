@@ -7,8 +7,10 @@ using API.Queries.Invitations;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
 using API.Repositories.InvitationRepository;
+using API.SignalRHubs.Notification;
 using DatabaseContext;
 using DatabaseContext.Types;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Options;
@@ -24,7 +26,8 @@ public class InvitationService(
     InvitationQueries invitationQueries, 
     BoardQueries boardQueries, 
     PlannerContext plannerContext,
-    IOptions<InvitationConfigurations> invitationOptions 
+    IOptions<InvitationConfigurations> invitationOptions, 
+    IHubContext<NotificationHub, INotificationClient> notificationHubContext
     ) : IInvitationService
 {
     private readonly InvitationConfigurations invitationConfigurations = invitationOptions.Value;
@@ -114,6 +117,9 @@ public class InvitationService(
                 await invitationRepository.CreateNewInvitation(newInvitation);
                 await transaction.CommitAsync();
             }
+
+            // Send user notification
+            await notificationHubContext.Clients.User(invitedUserId.ToString()).ReceiveNotification("You got new Invitation");
 
             return Result.Success();
         }
