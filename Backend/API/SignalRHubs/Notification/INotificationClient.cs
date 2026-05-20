@@ -1,6 +1,8 @@
-﻿namespace API.SignalRHubs.Notification; 
+﻿using API.DTOs.Invitation.Responses;
+
+namespace API.SignalRHubs.Notification; 
 
 public interface INotificationClient
 {
-    Task ReceiveNotification(string message);
+    Task ReceiveInvitationNotification(InvitationInfoResponse invitationInfo);
 }

@@ -6,7 +6,7 @@ public static class SignalRExtensions
 {
     public static WebApplication MapPlannerHubs(this WebApplication app)
     {
-        app.MapHub<NotificationHub>("/Notification"); 
+        app.MapHub<NotificationHub>("/hubs/notifications"); 
 
         return app; 
     }
