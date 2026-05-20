@@ -28,6 +28,7 @@ export default function InboxOptions() {
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const currentBoardData = useBoardStore((state) => state.currentBoardData); 
+    const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
 
     const [failedToLoadData, setFailedToLoadData] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); 
@@ -57,6 +58,7 @@ export default function InboxOptions() {
         if (result.ok) {
             setInvitationStatus(invitationId, 'Accepted'); 
             switchBoard(invitationId); 
+            resetBoardArray(); 
         } else if (result.error === 'Unauthorized') {
             setSessionExpired(true); 
         } else if (result.error === 'BadRequest') {
@@ -208,7 +210,7 @@ export default function InboxOptions() {
                         <li key={invite.id}>
                             <div className={styles.inviteInfo}>
                                 <div className={styles.boardName}>{invite.boardName}</div>
-                                <div className={styles.invitedBy}>Invited By: {invite.invitedByUserEmail}sdfsdfjlkjlkjlkjlkjsdfsdfsdfsdfsdfsdf</div>
+                                <div className={styles.invitedBy}>Invited By: {invite.invitedByUserEmail}</div>
                                 <div  className={styles.meta}>
                                     <div className={styles.metaItem}>Status: {invite.status}</div>
                                     <div className={styles.metaItem}>Role: {invite.role}</div>
