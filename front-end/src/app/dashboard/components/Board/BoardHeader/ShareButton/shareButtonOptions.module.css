@@ -82,3 +82,48 @@
 
     min-height: 20px;
 }
+
+
+.manageMembers {
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 30px;
+}
+
+
+.manageMembers button {
+    margin: 0;
+    padding: 10px;
+
+    border: none;
+    border-radius: 10px;
+    outline: solid 1.5px rgb(183, 183, 183);
+
+    background-color: transparent;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: start;
+}
+
+@media (pointer: fine) {
+    .manageMembers button:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }   
+}
+
+.manageMembers button svg {
+    --size: 20px; 
+    width: var(--size);
+    height: var(--size);
+}
+
+.manageMembers button span {
+    margin: auto;
+    margin-left: 5px;
+
+    font-size: 0.9rem;
+    text-wrap: nowrap;
+    color: black;
+}
