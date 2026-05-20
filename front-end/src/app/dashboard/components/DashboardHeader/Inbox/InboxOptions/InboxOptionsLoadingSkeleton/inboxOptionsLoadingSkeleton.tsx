@@ -7,7 +7,7 @@ import styles from './inboxOptionsLoadingSkeleton.module.css';
 export default function InboxOptionsLoadingSkeleton() {
     return (
         <ul className={styles.wrapper}>
-            {Array.from({ length: 4 }).map((_, index) => (
+            {Array.from({ length: 3 }).map((_, index) => (
                 <li key={index} className={styles.card}>
                     <div className={styles.inviteInfo}>
                         <div className={`${styles.boardName} skeletonElement`}></div>
