@@ -9,6 +9,8 @@ export default function InboxButton() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const invitations = useInvitationStore((state) => state.invitations); 
 
+    const anyPendingInvitation = invitations !== null && invitations.some(i => i.status === 'Pending'); 
+
     return (
         <button className={styles.wrapper} disabled={isBoardLoading} onClick={e => {
             e.stopPropagation(); 
@@ -38,7 +40,7 @@ export default function InboxButton() {
                     />
                 </g>
                 {
-                    invitations === null ? null : invitations.length === 0 ? null : 
+                    anyPendingInvitation &&
                     <g transform="matrix(0.87127,0,0,0.867115,10.218253,-0.671147)">
                         <ellipse
                             cx="6.636"
