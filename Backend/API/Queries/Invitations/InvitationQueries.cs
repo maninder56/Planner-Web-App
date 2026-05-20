@@ -19,7 +19,7 @@ public class InvitationQueries(PlannerContext database)
                 Id = i.Id, 
                 BoardId = i.BoardId,
                 BoardName = i.Board.Name, 
-                InvitedByUserEmail = i.InvitedByUser.Name, 
+                InvitedByUserEmail = i.InvitedByUser.Email, 
                 Role = i.Role,
                 Status = i.Status,
                 ExpiresAt = i.ExpiresAt,
