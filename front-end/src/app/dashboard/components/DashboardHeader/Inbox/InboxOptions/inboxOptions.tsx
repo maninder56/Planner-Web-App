@@ -11,6 +11,9 @@ import { useEffect, useState } from 'react';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { GetAllInvitationsReceivedRequest, RespondToInvitationRequest } from '@/app/dashboard/Services/invitationService';
 import { useUserStore } from '@/Store/userStore';
+import { GetBoardRequest, UpdateLastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
+import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 
 export default function InboxOptions() {
     const invitations = useInvitationStore((state) => state.invitations); 
@@ -20,6 +23,11 @@ export default function InboxOptions() {
     const setLoading = useInvitationStore((state) => state.setLoadingInvitation); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const setInvitationStatus = useInvitationStore((state) => state.setInvitationStatus); 
+
+    const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
+    const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
+    const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
+    const currentBoardData = useBoardStore((state) => state.currentBoardData); 
 
     const [failedToLoadData, setFailedToLoadData] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); 
@@ -41,10 +49,72 @@ export default function InboxOptions() {
     }
 
 
-    function acceptInvitationRequest(invitationId: number) {
-        // try {
-        //     const res
-        // }
+    async function acceptInvitationRequest(invitationId: number) {
+        const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
+            invitationId: invitationId, status: 'Accepted', 
+        }); 
+
+        if (result.ok) {
+            setInvitationStatus(invitationId, 'Accepted'); 
+            switchBoard(invitationId); 
+        } else if (result.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        } else if (result.error === 'BadRequest') {
+            setErrorMessage('The invitation is no longer valid.');
+            setInvitationStatus(invitationId, 'Invalidated');
+        } else if (result.error === 'NotFound') {
+            setErrorMessage('The board you were invited in does not exists anymore.'); 
+            setInvitationStatus(invitationId, 'Invalidated'); 
+        } else {
+            setErrorMessage('An Error occured, please try again.'); 
+        }
+    }
+
+    function getBoardIdFromInvitation(invitationId: number) {
+        return invitations?.find(i => i.id === invitationId)?.boardId; 
+    }
+
+    async function switchBoard(invitationId: number) {
+        const boardId = getBoardIdFromInvitation(invitationId); 
+
+        if (boardId === undefined) {
+            setErrorMessage('Failed to switch board. Please try again from the switch board panel.'); 
+            return; 
+        } else if (currentBoardData !== undefined  && currentBoardData.id === boardId) {
+            setActivePanel('none');     
+            return; 
+        }
+
+        setBoardLoading(true); 
+        
+        try {
+            const result = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardRequest, boardId); 
+
+            if (result.ok && result.data !== undefined) {
+                hydrateBoard(NormaliseBoardData(result.data)); 
+                setLastUsedBoard(boardId); 
+                setActivePanel('none');     
+            } else if (!result.ok && result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            } else {
+                setErrorMessage('Failed to switch board. Please try again from the switch board panel.'); 
+            }
+
+        } finally {
+            setBoardLoading(false); 
+        }
+    }
+
+
+    async function setLastUsedBoard(boardId: number) {
+        const lastUsedBoardResult =  await ApiRequestWithRefreshTokenAttemptAndData(
+            UpdateLastUsedBoardRequest, boardId); 
+
+        if (lastUsedBoardResult.ok) {
+            setLastUsedBoardExists(true); 
+        } else if (!lastUsedBoardResult.ok && lastUsedBoardResult.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        }
     }
 
     async function rejectInvitationRequest(invitationId: number) {
@@ -58,7 +128,7 @@ export default function InboxOptions() {
             setSessionExpired(true); 
         } else if (result.error === 'BadRequest') {
             setErrorMessage('The invitation is no longer valid.');
-            setInvitationStatus(invitationId, 'Expired');
+            setInvitationStatus(invitationId, 'Invalidated');
         } else {
             setErrorMessage('An Error occured, please try again.'); 
         }

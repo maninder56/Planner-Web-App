@@ -17,6 +17,7 @@ public class InvitationQueries(PlannerContext database)
             .Select(i => new InvitationInfoResponse
             {
                 Id = i.Id, 
+                BoardId = i.BoardId,
                 BoardName = i.Board.Name, 
                 InvitedByUserEmail = i.InvitedByUser.Name, 
                 Role = i.Role,

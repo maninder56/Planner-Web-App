@@ -18,6 +18,7 @@ export type InvitationRespondStatus = z.infer<typeof InvitationRespondStatusSche
 export const InvitationsInfoSchema = z.array(
   z.object({
     id: z.number(),
+    boardId: z.number(),
     boardName: z.string(),
     invitedByUserEmail: z.string(),
     role: UserRoleSchema,
