@@ -21,6 +21,7 @@ type Action = {
     setStale: (stale: boolean) => void; 
 
     newInvitationReceived: () => void; 
+    closeInvitationReceivedNotification: () => void; 
 }
 
 export const useInvitationStore = create<State & Action>((set) => ({
@@ -79,6 +80,17 @@ export const useInvitationStore = create<State & Action>((set) => ({
         return {
            showInvitationReceivedNotification: true, 
            invitationReceivedNotificationTimer: timer,
+        }
+    }), 
+
+    closeInvitationReceivedNotification: () => set((state) => {
+        if (state.invitationReceivedNotificationTimer) {
+            clearTimeout(state.invitationReceivedNotificationTimer); 
+        }
+
+        return {
+            showInvitationReceivedNotification: false, 
+            invitationReceivedNotificationTimer: null, 
         }
     }), 
 
