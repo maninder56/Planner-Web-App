@@ -23,12 +23,17 @@ export default function SignalRInvitationProvider({
         } else {
             console.error('Invalid data recieved from API'); 
             console.error(validData.error); 
+            console.error(`data received: \n${JSON.stringify(data)}`); 
             //either set the invitations to null or refetch data here
         }
     }
 
     useEffect(() => {
         async function init() {
+            if (signalRInvitationService === null) {
+                return; 
+            }
+
             await signalRInvitationService.start(); 
 
             signalRInvitationService.connection
@@ -38,9 +43,13 @@ export default function SignalRInvitationProvider({
         init(); 
 
         return () => {
+            if (signalRInvitationService === null) {
+                return; 
+            }
+            
             signalRInvitationService.connection.off(invitationReceivedMethod); 
         }
-    }, [addInvitation]); 
+    }, []); 
 
     return children; 
 }
