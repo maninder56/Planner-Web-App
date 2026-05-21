@@ -19,10 +19,14 @@ class SignalRInvitationService {
     }
 
     async start() {
-        if (this.connection.state === HubConnectionState.Disconnected) {
-            await this.connection.start(); 
-            console.log('Signal R connected'); 
-        } 
+        try {
+            if (this.connection.state === HubConnectionState.Disconnected) {
+                await this.connection.start(); 
+                console.log('Signal R connected'); 
+            } 
+        } catch(error) {
+            console.error('SignalR start failed', error); 
+        }
     }
 }
 
