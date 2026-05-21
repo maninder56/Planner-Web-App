@@ -11,6 +11,7 @@ export default function SignalRInvitationProvider({
     children: React.ReactNode; 
 }) {
     const addInvitation = useInvitationStore((state) => state.addInvitation); 
+    const setInvitationsStale = useInvitationStore((state) => state.setStale); 
     const invitationReceivedMethod: SignalRClientMethods = 'ReceiveInvitationNotification'; 
 
     function invitationReceived(data: any) {
@@ -23,8 +24,7 @@ export default function SignalRInvitationProvider({
         } else {
             console.error('Invalid data recieved from API'); 
             console.error(validData.error); 
-            console.error(`data received: \n${JSON.stringify(data)}`); 
-            //either set the invitations to null or refetch data here
+            setInvitationsStale(true); 
         }
     }
 

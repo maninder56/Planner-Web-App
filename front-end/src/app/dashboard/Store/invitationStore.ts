@@ -5,18 +5,30 @@ import { InvitationInfo, InvitationsInfo, InvitationStatus } from "../Types/invi
 type State = {
     invitations: InvitationsInfo | null; 
     loadingInvitations: boolean; 
+    stale: boolean; 
+
+    showInvitationReceivedNotification: boolean; 
 }
 
 type Action = {
+    setInvitationsToNull: () => void; 
     setInvitations: (invitations: InvitationsInfo | null) => void; 
     setInvitationStatus: (id: number, status: InvitationStatus) => void; 
     setLoadingInvitation: (loading: boolean) => void; 
     addInvitation: (invitation: InvitationInfo) => void; 
+
+    setStale: (stale: boolean) => void; 
+
+    newInvitationReceived: () => void; 
 }
 
 export const useInvitationStore = create<State & Action>((set) => ({
     invitations: null, 
     loadingInvitations: true,
+    stale: false, 
+    showInvitationReceivedNotification: false, 
+
+    setInvitationsToNull: () => set({ invitations: null }),
 
     setInvitations: (invitations) => set({invitations: invitations }),
 
@@ -47,5 +59,11 @@ export const useInvitationStore = create<State & Action>((set) => ({
             invitations: [...state.invitations, invitation],
         }
     }),
+
+    setStale: (stale) => set({ stale: stale }), 
+
+    newInvitationReceived: () => set((state) => { 
+        return state; 
+    })
 
 })); 

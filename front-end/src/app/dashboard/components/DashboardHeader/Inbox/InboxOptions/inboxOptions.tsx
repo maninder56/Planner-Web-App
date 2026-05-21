@@ -23,6 +23,8 @@ export default function InboxOptions() {
     const setLoading = useInvitationStore((state) => state.setLoadingInvitation); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const setInvitationStatus = useInvitationStore((state) => state.setInvitationStatus); 
+    const invitationStale = useInvitationStore((state) => state.stale); 
+    const setInvitationsStale = useInvitationStore((state) => state.setStale); 
 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
@@ -163,11 +165,33 @@ export default function InboxOptions() {
         }
     }
 
+    async function fetchInvitationsDataInBackground() {
+        const result = await ApiRequestWithRefreshTokenAttempt(GetAllInvitationsReceivedRequest);
+
+        if (result.ok) {
+            if (result.data !== undefined) {
+                setInvitations(result.data); 
+            } else {
+                setInvitations(null); 
+                setFailedToLoadData(true); 
+            }
+        } else if (result.error === 'Unauthorized') {
+            setSessionExpired(true); 
+            setInvitations(null); 
+        } else {
+            setInvitations(null); 
+            setFailedToLoadData(true); 
+        }
+    }
+
     useEffect(() => {
         if (invitations === null) {
             fetchInvitationsData(); 
+        } else if (invitationStale) {
+            fetchInvitationsDataInBackground(); 
+            setInvitationsStale(false); 
         }
-    }, []); 
+    }, [invitationStale]); 
 
 
 
