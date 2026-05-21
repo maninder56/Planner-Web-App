@@ -23,7 +23,12 @@ builder.Services.AddProblemDetails();
 
 
 // Add SignalR serivce
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters
+            .Add(new JsonStringEnumConverter());
+    });
 
 
 // Add database services
