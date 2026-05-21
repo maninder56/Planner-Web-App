@@ -1,6 +1,9 @@
 import * as z from 'zod'; 
 import { UserRoleSchema } from './boardTypes';
 
+
+export type SignalRClientMethods = 'ReceiveInvitationNotification'; 
+
 export const InvitationStatusSchema = z.enum([
   "Pending",
   "Accepted",
@@ -15,16 +18,22 @@ export type InvitationStatus = z.infer<typeof InvitationStatusSchema>;
 const InvitationRespondStatusSchema = z.enum(["Accepted", "Rejected"]); 
 export type InvitationRespondStatus = z.infer<typeof InvitationRespondStatusSchema>; 
 
+
+export const InvitationInfoSchema = z.object({
+  id: z.number(),
+  boardId: z.number(),
+  boardName: z.string(),
+  invitedByUserEmail: z.string(),
+  role: UserRoleSchema,
+  status: InvitationStatusSchema,
+  expiresAt: z.string(),
+})
+
+export type InvitationInfo = z.infer<typeof InvitationInfoSchema>; 
+
+
 export const InvitationsInfoSchema = z.array(
-  z.object({
-    id: z.number(),
-    boardId: z.number(),
-    boardName: z.string(),
-    invitedByUserEmail: z.string(),
-    role: UserRoleSchema,
-    status: InvitationStatusSchema,
-    expiresAt: z.string(),
-  })
+  InvitationInfoSchema
 );
 
 export type InvitationsInfo = z.infer<typeof InvitationsInfoSchema>; 

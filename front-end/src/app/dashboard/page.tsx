@@ -7,20 +7,23 @@ import DashboardHeader from './components/DashboardHeader/dashboardHeader';
 import Board from './components/Board/board';
 import { useUserStore } from '../../Store/userStore';
 import SessionExpired from '@/Components/Alert/SessionExpired/sessionExpired';
+import SignalRInvitationProvider from './providers/signalRInvitationProvider';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const isSessionExpired = useUserStore((state) => state.sessionExpired); 
 
     return (
-        <div className={styles.page}
-            onClick={(e) => {
-                e.stopPropagation(); 
-                setActivePanel('none'); 
-            }}>
-                <DashboardHeader />
-                <Board />   
-                { isSessionExpired && <SessionExpired /> }
-        </div>
+        <SignalRInvitationProvider>
+            <div className={styles.page}
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    setActivePanel('none'); 
+                }}>
+                    <DashboardHeader />
+                    <Board />   
+                    { isSessionExpired && <SessionExpired /> }
+            </div>
+        </SignalRInvitationProvider>
     ); 
 }

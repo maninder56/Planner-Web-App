@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { InvitationsInfo, InvitationStatus } from "../Types/invitationTypes";
+import { InvitationInfo, InvitationsInfo, InvitationStatus } from "../Types/invitationTypes";
 
 
 type State = {
@@ -9,10 +9,9 @@ type State = {
 
 type Action = {
     setInvitations: (invitations: InvitationsInfo | null) => void; 
-
     setInvitationStatus: (id: number, status: InvitationStatus) => void; 
-
     setLoadingInvitation: (loading: boolean) => void; 
+    addInvitation: (invitation: InvitationInfo) => void; 
 }
 
 export const useInvitationStore = create<State & Action>((set) => ({
@@ -38,5 +37,15 @@ export const useInvitationStore = create<State & Action>((set) => ({
     }),
 
     setLoadingInvitation: (loading) => set({ loadingInvitations: loading }),
+
+    addInvitation: (invitation) => set((state) => {
+        if (state.invitations === null) {
+            return state; 
+        }
+
+        return {
+            invitations: [...state.invitations, invitation],
+        }
+    }),
 
 })); 
