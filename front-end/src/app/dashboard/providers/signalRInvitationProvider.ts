@@ -12,6 +12,7 @@ export default function SignalRInvitationProvider({
 }) {
     const addInvitation = useInvitationStore((state) => state.addInvitation); 
     const setInvitationsStale = useInvitationStore((state) => state.setStale); 
+    const newInvitationReceived = useInvitationStore((state) => state.newInvitationReceived); 
     const invitationReceivedMethod: SignalRClientMethods = 'ReceiveInvitationNotification'; 
 
     function invitationReceived(data: any) {
@@ -19,7 +20,7 @@ export default function SignalRInvitationProvider({
         
         if (validData.success) {
             addInvitation(validData.data); 
-            // show invitation method with data
+            newInvitationReceived(); 
             console.log('user got notification'); 
         } else {
             console.error('Invalid data recieved from API'); 

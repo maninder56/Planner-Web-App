@@ -8,6 +8,7 @@ type State = {
     stale: boolean; 
 
     showInvitationReceivedNotification: boolean; 
+    invitationReceivedNotificationTimer: NodeJS.Timeout | null; 
 }
 
 type Action = {
@@ -27,6 +28,7 @@ export const useInvitationStore = create<State & Action>((set) => ({
     loadingInvitations: true,
     stale: false, 
     showInvitationReceivedNotification: false, 
+    invitationReceivedNotificationTimer: null, 
 
     setInvitationsToNull: () => set({ invitations: null }),
 
@@ -63,7 +65,21 @@ export const useInvitationStore = create<State & Action>((set) => ({
     setStale: (stale) => set({ stale: stale }), 
 
     newInvitationReceived: () => set((state) => { 
-        return state; 
-    })
+        if (state.invitationReceivedNotificationTimer) {
+            clearTimeout(state.invitationReceivedNotificationTimer); 
+        }
+
+        const timer = setTimeout(() => {
+            set({
+                showInvitationReceivedNotification: false,
+                invitationReceivedNotificationTimer: null, 
+            })
+        }, 4000);
+
+        return {
+           showInvitationReceivedNotification: true, 
+           invitationReceivedNotificationTimer: timer,
+        }
+    }), 
 
 })); 
