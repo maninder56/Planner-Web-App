@@ -1,0 +1,23 @@
+
+
+.wrapper {
+    position: absolute;
+    top: 20px;
+    right: 0;
+}
+
+
+
+.inboxSvg {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.inboxLine {
+  fill: none;
+  fill-rule: nonzero;
+  stroke: black;
+  stroke-width: 20px;
+}
