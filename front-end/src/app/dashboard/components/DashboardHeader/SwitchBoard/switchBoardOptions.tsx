@@ -31,6 +31,7 @@ export default function SwitchBoardOptions() {
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
     const boards = useBoardStore((state) => state.boards); 
+    const removeBoardFromBoardArray = useBoardStore((state) => state.RemoveBoardFromBoardArray); 
     const setBoards = useBoardStore((state) => state.setBoards); 
     const setLastUsedBoardExists = useBoardStore((state) => state.setLastUsedBoardExists); 
     const currentBoardData = useBoardStore((state) => state.currentBoardData); 
@@ -131,6 +132,9 @@ export default function SwitchBoardOptions() {
                 setActivePanel('none');     
             } else if (!result.ok && result.error === 'Unauthorized') {
                 setSessionExpired(true); 
+            } else if (!result.ok && result.error === 'NotFound') {
+                setErrorMessage('Board no longer exists, please select different board.'); 
+                removeBoardFromBoardArray(boardId); 
             } else {
                 setErrorMessage('Failed to switch board, Please try again.'); 
             }
