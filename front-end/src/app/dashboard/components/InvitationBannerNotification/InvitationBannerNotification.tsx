@@ -12,8 +12,8 @@ export default function InvitationBannerNotification() {
 
     return (
         <div className={styles.wrapper}>
-            <div>
-                <span>New Invitation to Board</span>
+            <div className={styles.header}>
+                <span>New Invitation</span>
                 <CloseButton className={styles.closeButton} onClick={handleCloseClick} />
             </div>
             <button className={styles.inboxButton} onClick={e => {
@@ -21,8 +21,8 @@ export default function InvitationBannerNotification() {
                 setActivePanel('inboxOptionsPanel'); 
             }}>
                 <svg
-                    width="100%"
-                    height="100%"
+                    width="20"
+                    height="20"
                     viewBox="0 0 20 20"
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,11 +1,81 @@
 
+/* .wrapper, 
+.wrapper * {
+  border:  solid 1px red;
+} */
+
 
 .wrapper {
     position: absolute;
-    top: 20px;
-    right: 0;
+    top: 10px;
+    right: 10px;
+
+    padding: 10px;
+
+    width: 200px;
+
+    border-radius: 16px;
+    border: 1px solid #cdd0d6;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 20px -15px rgba(0, 0, 0, 1);
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header span {
+  margin: auto 0px;
+  margin-left: 5px;
+
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.closeButton {
+  width: 30px;
+  height: 30px;
+
+  margin: 0;
+  padding: 5px;
+}
+
+
+.inboxButton {
+  display: flex;
+  justify-content: center;
+
+  margin: 0;
+  margin-top: 5px;
+  padding: 8px 10px;
+
+  border: 1px solid #cdd0d6;
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .inboxButton:hover {
+    background-color: rgba(0, 0, 0, 5%); 
+  } 
+}
+
+.inboxButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.inboxButton > span {
+    text-wrap: nowrap;
+    font-size: 1rem;
+    margin-left: 5px;
+    color: black;
+    padding: 0;
+}
 
 
 .inboxSvg {
@@ -19,5 +89,10 @@
   fill: none;
   fill-rule: nonzero;
   stroke: black;
-  stroke-width: 20px;
+  stroke-width: 15px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  
+  stroke: #4f46e5;
 }
+
