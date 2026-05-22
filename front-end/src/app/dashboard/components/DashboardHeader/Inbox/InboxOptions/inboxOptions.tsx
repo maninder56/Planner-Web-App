@@ -34,6 +34,7 @@ export default function InboxOptions() {
 
     const [failedToLoadData, setFailedToLoadData] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); 
+    const [buttonsDisabled, setButtonsDisabled] = useState(false); 
 
     function formatInviteDate(value: string) {
         const date = new Date(value); 
@@ -53,24 +54,30 @@ export default function InboxOptions() {
 
 
     async function acceptInvitationRequest(invitationId: number) {
-        const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
-            invitationId: invitationId, status: 'Accepted', 
-        }); 
+        setButtonsDisabled(true); 
 
-        if (result.ok) {
-            setInvitationStatus(invitationId, 'Accepted'); 
-            switchBoard(invitationId); 
-            resetBoardArray(); 
-        } else if (result.error === 'Unauthorized') {
-            setSessionExpired(true); 
-        } else if (result.error === 'BadRequest') {
-            setErrorMessage('The invitation is no longer valid.');
-            setInvitationStatus(invitationId, 'Invalidated');
-        } else if (result.error === 'NotFound') {
-            setErrorMessage('The board you were invited in does not exists anymore.'); 
-            setInvitationStatus(invitationId, 'Invalidated'); 
-        } else {
-            setErrorMessage('An Error occured, please try again.'); 
+        try {
+            const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
+                invitationId: invitationId, status: 'Accepted', 
+            }); 
+
+            if (result.ok) {
+                setInvitationStatus(invitationId, 'Accepted'); 
+                switchBoard(invitationId); 
+                resetBoardArray(); 
+            } else if (result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            } else if (result.error === 'BadRequest') {
+                setErrorMessage('The invitation is no longer valid.');
+                setInvitationStatus(invitationId, 'Invalidated');
+            } else if (result.error === 'NotFound') {
+                setErrorMessage('The board you were invited in does not exists anymore.'); 
+                setInvitationStatus(invitationId, 'Invalidated'); 
+            } else {
+                setErrorMessage('An Error occured, please try again.'); 
+            }
+        } finally {
+            setButtonsDisabled(false); 
         }
     }
 
@@ -122,19 +129,25 @@ export default function InboxOptions() {
     }
 
     async function rejectInvitationRequest(invitationId: number) {
-        const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
-            invitationId: invitationId, status: 'Rejected', 
-        }); 
+        setButtonsDisabled(true); 
 
-        if (result.ok) {
-            setInvitationStatus(invitationId, 'Rejected'); 
-        } else if (result.error === 'Unauthorized') {
-            setSessionExpired(true); 
-        } else if (result.error === 'BadRequest') {
-            setErrorMessage('The invitation is no longer valid.');
-            setInvitationStatus(invitationId, 'Invalidated');
-        } else {
-            setErrorMessage('An Error occured, please try again.'); 
+        try {
+            const result = await ApiRequestWithRefreshTokenAttemptAndData(RespondToInvitationRequest, {
+                invitationId: invitationId, status: 'Rejected', 
+            }); 
+
+            if (result.ok) {
+                setInvitationStatus(invitationId, 'Rejected'); 
+            } else if (result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            } else if (result.error === 'BadRequest') {
+                setErrorMessage('The invitation is no longer valid.');
+                setInvitationStatus(invitationId, 'Invalidated');
+            } else {
+                setErrorMessage('An Error occured, please try again.'); 
+            }   
+        } finally {
+            setButtonsDisabled(false); 
         }
     }
 
@@ -244,8 +257,10 @@ export default function InboxOptions() {
                                 {
                                     invite.status !== 'Pending' ? null : 
                                     <div className={styles.buttons}>
-                                        <Button name='Accept' color='lightGreen' onClick={() => acceptInvitationRequest(invite.id)} />
-                                        <Button name='Reject' color='red' onClick={() => rejectInvitationRequest(invite.id)} />
+                                        <Button name='Accept' color='lightGreen' disabled={buttonsDisabled} 
+                                            onClick={() => acceptInvitationRequest(invite.id)} />
+                                        <Button name='Reject' color='red' disabled={buttonsDisabled} 
+                                            onClick={() => rejectInvitationRequest(invite.id)} />
                                     </div>
                                 }
                                 <div className={styles.expireText}>Expires at: {formatInviteDate(invite.expiresAt)}</div>
