@@ -13,8 +13,7 @@ import InvitationBannerNotification from './components/InvitationBannerNotificat
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
-    const isSessionExpired = useUserStore((state) => state.sessionExpired); 
-    const showInvitationReceivedNotification = useInvitationStore((state) => state.showInvitationReceivedNotification); 
+    const isSessionExpired = useUserStore((state) => state.sessionExpired);  
 
     return (
         <SignalRInvitationProvider>
@@ -26,7 +25,7 @@ export default function Dashboard() {
                     <DashboardHeader />
                     <Board />   
                     { isSessionExpired && <SessionExpired /> }
-                    { !showInvitationReceivedNotification && <InvitationBannerNotification /> }
+                    { <InvitationBannerNotification /> }
             </div>
         </SignalRInvitationProvider>
     ); 

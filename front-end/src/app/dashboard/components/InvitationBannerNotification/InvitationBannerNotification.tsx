@@ -2,16 +2,28 @@
 import CloseButton from '@/Components/Buttons/closeButton';
 import styles from './InvitationBannerNotification.module.css'; 
 import { useBoardUIStore } from '../../Store/boardUIStore';
+import { useInvitationStore } from '../../Store/invitationStore';
+import { useState } from 'react';
 
 export default function InvitationBannerNotification() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+    const closeNotification = useInvitationStore((state) => state.closeInvitationReceivedNotification);
+    const showNotification = useInvitationStore((state) => state.showInvitationReceivedNotification); 
+
+    const [isClosing, setIsClosing] = useState(false); 
 
     function handleCloseClick() {
-
+        setIsClosing(true); 
+        setTimeout(() => {
+            closeNotification(); 
+            setIsClosing(false); 
+        }, 300); // match animation duration
     }
 
     return (
-        <div className={styles.wrapper}>
+        <div className={[styles.wrapper, 
+            showNotification ? styles.showNotification : styles.hideNotification, 
+            isClosing ? styles.closeNotification : ''].join(' ')}>
             <div className={styles.header}>
                 <span>New Invitation</span>
                 <CloseButton className={styles.closeButton} onClick={handleCloseClick} />
