@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useInvitationStore } from '../Store/invitationStore';
 import { signalRInvitationService } from '../Services/signalRInvitationService'; 
 import { InvitationInfoSchema, SignalRClientMethods } from '../Types/invitationTypes';
+import { useBoardUIStore } from '../Store/boardUIStore';
 
 export default function SignalRInvitationProvider({
     children, 
@@ -12,16 +13,20 @@ export default function SignalRInvitationProvider({
 }) {
     const addInvitation = useInvitationStore((state) => state.addInvitation); 
     const setInvitationsStale = useInvitationStore((state) => state.setStale); 
-    const newInvitationReceived = useInvitationStore((state) => state.newInvitationReceived); 
+    const setShowInvitationBanner = useInvitationStore((state) => state.setShowInvitationBanner); 
     const invitationReceivedMethod: SignalRClientMethods = 'ReceiveInvitationNotification'; 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
+        const activePanel = useBoardUIStore.getState().activePanel; 
         
         if (validData.success) {
             addInvitation(validData.data); 
-            newInvitationReceived(); 
-            console.log('user got notification'); 
+            if (activePanel !== 'inboxOptionsPanel') { 
+                setShowInvitationBanner(true); 
+            } else {
+                setShowInvitationBanner(false); 
+            } 
         } else {
             console.error('Invalid data recieved from API'); 
             console.error(validData.error); 
