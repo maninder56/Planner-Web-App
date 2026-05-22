@@ -26,7 +26,7 @@ type Action = {
 
 export const useInvitationStore = create<State & Action>((set) => ({
     invitations: null, 
-    loadingInvitations: true,
+    loadingInvitations: false,
     stale: false, 
     showInvitationReceivedNotification: false, 
     invitationReceivedNotificationTimer: null, 
@@ -55,43 +55,50 @@ export const useInvitationStore = create<State & Action>((set) => ({
 
     addInvitation: (invitation) => set((state) => {
         if (state.invitations === null) {
-            return state; 
+            return {
+                invitations: [invitation],
+            }
         }
 
         return {
-            invitations: [...state.invitations, invitation],
+            invitations: [invitation, ...state.invitations],
         }
     }),
 
     setStale: (stale) => set({ stale: stale }), 
 
-    newInvitationReceived: () => set((state) => { 
-        if (state.invitationReceivedNotificationTimer) {
-            clearTimeout(state.invitationReceivedNotificationTimer); 
-        }
+    // newInvitationReceived: () => set((state) => { 
+    //     if (state.invitationReceivedNotificationTimer) {
+    //         clearTimeout(state.invitationReceivedNotificationTimer); 
+    //     }
 
-        const timer = setTimeout(() => {
-            set({
-                showInvitationReceivedNotification: false,
-                invitationReceivedNotificationTimer: null, 
-            })
-        }, 4000);
+    //     const timer = setTimeout(() => {
+    //         set({
+    //             showInvitationReceivedNotification: false,
+    //             invitationReceivedNotificationTimer: null, 
+    //         })
+    //     }, 4000);
 
-        return {
-           showInvitationReceivedNotification: true, 
-           invitationReceivedNotificationTimer: timer,
-        }
-    }), 
+    //     return {
+    //        showInvitationReceivedNotification: true, 
+    //        invitationReceivedNotificationTimer: timer,
+    //     }
+    // }), 
 
-    closeInvitationReceivedNotification: () => set((state) => {
-        if (state.invitationReceivedNotificationTimer) {
-            clearTimeout(state.invitationReceivedNotificationTimer); 
-        }
 
-        return {
-            showInvitationReceivedNotification: false, 
-            invitationReceivedNotificationTimer: null, 
-        }
-    }), 
+    newInvitationReceived: () => set({ showInvitationReceivedNotification: true }), 
+
+    // closeInvitationReceivedNotification: () => set((state) => {
+    //     if (state.invitationReceivedNotificationTimer) {
+    //         clearTimeout(state.invitationReceivedNotificationTimer); 
+    //     }
+
+    //     return {
+    //         showInvitationReceivedNotification: false, 
+    //         invitationReceivedNotificationTimer: null, 
+    //     }
+    // }), 
+
+    closeInvitationReceivedNotification: () => set({ showInvitationReceivedNotification: false }), 
 
 })); 
