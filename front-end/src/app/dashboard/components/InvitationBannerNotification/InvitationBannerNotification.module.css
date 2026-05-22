@@ -94,13 +94,17 @@
   stroke-linejoin: round;
 }
 
+.inboxDot {
+  fill: rgb(255, 7, 0);
+}
+
 .showNotification {
   display: block;
-  animation: slide-in 0.3s ease-in forwards;
+  animation: slide-in 0.3s ease-out forwards;
 }
 
 .closeNotification {
-  animation: slide-out 0.3s ease-out forwards;
+  animation: slide-out 0.3s ease-in forwards;
 }
 
 .hideNotification {
