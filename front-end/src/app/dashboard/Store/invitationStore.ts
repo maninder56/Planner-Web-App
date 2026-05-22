@@ -7,8 +7,7 @@ type State = {
     loadingInvitations: boolean; 
     stale: boolean; 
 
-    showInvitationReceivedNotification: boolean; 
-    invitationReceivedNotificationTimer: NodeJS.Timeout | null; 
+    showInvitationBanner: boolean;
 }
 
 type Action = {
@@ -20,16 +19,15 @@ type Action = {
 
     setStale: (stale: boolean) => void; 
 
-    newInvitationReceived: () => void; 
-    closeInvitationReceivedNotification: () => void; 
+    setShowInvitationBanner: (show: boolean) => void; 
+
 }
 
 export const useInvitationStore = create<State & Action>((set) => ({
     invitations: null, 
     loadingInvitations: false,
     stale: false, 
-    showInvitationReceivedNotification: false, 
-    invitationReceivedNotificationTimer: null, 
+    showInvitationBanner: false, 
 
     setInvitationsToNull: () => set({ invitations: null }),
 
@@ -67,38 +65,6 @@ export const useInvitationStore = create<State & Action>((set) => ({
 
     setStale: (stale) => set({ stale: stale }), 
 
-    // newInvitationReceived: () => set((state) => { 
-    //     if (state.invitationReceivedNotificationTimer) {
-    //         clearTimeout(state.invitationReceivedNotificationTimer); 
-    //     }
-
-    //     const timer = setTimeout(() => {
-    //         set({
-    //             showInvitationReceivedNotification: false,
-    //             invitationReceivedNotificationTimer: null, 
-    //         })
-    //     }, 4000);
-
-    //     return {
-    //        showInvitationReceivedNotification: true, 
-    //        invitationReceivedNotificationTimer: timer,
-    //     }
-    // }), 
-
-
-    newInvitationReceived: () => set({ showInvitationReceivedNotification: true }), 
-
-    // closeInvitationReceivedNotification: () => set((state) => {
-    //     if (state.invitationReceivedNotificationTimer) {
-    //         clearTimeout(state.invitationReceivedNotificationTimer); 
-    //     }
-
-    //     return {
-    //         showInvitationReceivedNotification: false, 
-    //         invitationReceivedNotificationTimer: null, 
-    //     }
-    // }), 
-
-    closeInvitationReceivedNotification: () => set({ showInvitationReceivedNotification: false }), 
+    setShowInvitationBanner: (show) => set({ showInvitationBanner: show }), 
 
 })); 
