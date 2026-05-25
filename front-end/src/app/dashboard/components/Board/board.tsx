@@ -9,6 +9,7 @@ import BoardHeaderBar from './BoardHeader/boardHeaderBar';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { useBoardUIStore } from '../../Store/boardUIStore';
 import SignalRInvitationProvider from '../../providers/signalRInvitationProvider';
+import dynamic from 'next/dynamic';
 
 export default function Board() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -19,6 +20,14 @@ export default function Board() {
     const lastBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
     const boardError = useBoardStore((state) => state.boardError); 
     const userRole = useBoardStore((state) => state.currentBoardData?.role); 
+
+
+    // signalR library uses require which turbopack can't statically analyze. 
+    // use of dynamic is to make sure the module is rendered only on client side
+    const SignalRInvitationProvider = dynamic(
+        () => import('../../providers/signalRInvitationProvider'),
+        { ssr: false }
+    );
 
     async function fetchData() {
         const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
