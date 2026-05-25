@@ -1,4 +1,4 @@
-'use client'
+'use client'; 
 
 
 import styles from './page.module.css'; 
@@ -16,17 +16,15 @@ export default function Dashboard() {
     const isSessionExpired = useUserStore((state) => state.sessionExpired);  
 
     return (
-        <SignalRInvitationProvider>
-            <div className={styles.page}
-                onClick={(e) => {
-                    e.stopPropagation(); 
-                    setActivePanel('none'); 
-                }}>
-                    <DashboardHeader />
-                    <Board />   
-                    { isSessionExpired && <SessionExpired /> }
-                    { <InvitationBannerNotification /> }
-            </div>
-        </SignalRInvitationProvider>
+        <div className={styles.page}
+            onClick={(e) => {
+                e.stopPropagation(); 
+                setActivePanel('none'); 
+            }}>
+                <DashboardHeader />
+                <Board />   
+                { isSessionExpired && <SessionExpired /> }
+                { <InvitationBannerNotification /> }
+        </div>
     ); 
 }

@@ -8,6 +8,7 @@ import BoardContent from './BoardContent/boardContent';
 import BoardHeaderBar from './BoardHeader/boardHeaderBar';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { useBoardUIStore } from '../../Store/boardUIStore';
+import SignalRInvitationProvider from '../../providers/signalRInvitationProvider';
 
 export default function Board() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -54,12 +55,14 @@ export default function Board() {
                 </div>
             }
             <span className={styles.error}>{boardError}</span>
-            <section>
-                <BoardHeaderBar />
-            </section>
-            <section>
-                <BoardContent />
-            </section>
+            <SignalRInvitationProvider>
+                <section>
+                    <BoardHeaderBar />
+                </section>
+                <section>
+                    <BoardContent />
+                </section>
+            </SignalRInvitationProvider>
         </main>
     ); 
 }

@@ -1,4 +1,4 @@
-'use client'
+'use client'; 
 
 import {
   HubConnection,
@@ -30,5 +30,5 @@ class SignalRInvitationService {
     }
 }
 
-export const signalRInvitationService = typeof window !== 'undefined' ? 
-    new SignalRInvitationService() : null; 
+export const signalRInvitationService = new SignalRInvitationService(); 
+
