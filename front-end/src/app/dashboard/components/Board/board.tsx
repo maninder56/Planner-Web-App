@@ -21,14 +21,6 @@ export default function Board() {
     const boardError = useBoardStore((state) => state.boardError); 
     const userRole = useBoardStore((state) => state.currentBoardData?.role); 
 
-
-    // signalR library uses require which turbopack can't statically analyze. 
-    // use of dynamic is to make sure the module is rendered only on client side
-    const SignalRInvitationProvider = dynamic(
-        () => import('../../providers/signalRInvitationProvider'),
-        { ssr: false }
-    );
-
     async function fetchData() {
         const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
         if (dataRequest.ok) {
@@ -64,14 +56,12 @@ export default function Board() {
                 </div>
             }
             <span className={styles.error}>{boardError}</span>
-            <SignalRInvitationProvider>
-                <section>
-                    <BoardHeaderBar />
-                </section>
-                <section>
-                    <BoardContent />
-                </section>
-            </SignalRInvitationProvider>
+            <section>
+                <BoardHeaderBar />
+            </section>
+            <section>
+                <BoardContent />
+            </section>
         </main>
     ); 
 }
