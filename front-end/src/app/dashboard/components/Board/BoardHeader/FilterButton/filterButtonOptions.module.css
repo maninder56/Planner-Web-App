@@ -68,9 +68,8 @@
 @media (width < 400) {
     .hoverPanel {
         padding: 10px;
+        right: var(--rightValueForFilterOptionsPanel, 0px);
     }   
 
-    .hoverPanel {
-        right: -57px;
-    }
+    
 }

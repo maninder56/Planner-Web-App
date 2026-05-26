@@ -2,7 +2,7 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './filterButtonOptions.module.css'; 
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
-import { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Button from '@/Components/Buttons/button';
 import { ToggleFilters, useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
@@ -16,11 +16,13 @@ export default function FilterBoardOptions() {
     const toggleFilter = useBoardUIStore((state) => state.toggleFilter); 
     const resetFilters = useBoardUIStore((state) => state.resetFilters); 
     const applyFilters = useBoardUIStore((state) => state.applyFilters); 
+    const isFilterOptionsOpen = useBoardUIStore((state) => state.activePanel === 'filterBoardOptions'); 
 
     const searchFilter = useBoardUIStore((state) => state.searchFilter); 
     const setSearchFilter = useBoardUIStore((state) => state.setSearchFilter); 
 
     const debounceTimmerRef = useRef<NodeJS.Timeout | null>(null); 
+    const optionsPanelRef = useRef<HTMLDivElement | null>(null); 
 
     function handleFilterToggle(filter: keyof ToggleFilters) {
         toggleFilter(filter); 
@@ -43,10 +45,23 @@ export default function FilterBoardOptions() {
             applyFilters(cards); 
         }, 500); 
     }
-    
+
+    useLayoutEffect(() => {
+        if (!isFilterOptionsOpen || !optionsPanelRef.current?.parentElement) return; 
+
+        // get parent element's position relative to viewport
+        const element = optionsPanelRef.current.parentElement; 
+        const rect = element.getBoundingClientRect(); 
+
+        // calculate how far is element from right side 
+        const offSetRight = window.innerWidth - rect.right; 
+
+        element.style.setProperty('--rightValueForFilterOptionsPanel', 
+            offSetRight > 50 ? `${-offSetRight + 10}px`: '0px'); 
+    }, []); 
 
     return (
-        <HoverOptionsPanel title='Filter' onCloseClick={() => setActivePanel('none')}
+        <HoverOptionsPanel ref={optionsPanelRef} title='Filter' onCloseClick={() => setActivePanel('none')}
             offsetZeroTo='right' className={styles.hoverPanel}>
             <div className={styles.search}>
                 <SearchBar 

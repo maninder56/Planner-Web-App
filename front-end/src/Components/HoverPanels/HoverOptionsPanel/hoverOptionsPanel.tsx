@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { Ref, useState } from 'react';
 import CloseButton from '../../Buttons/closeButton';
 import styles from './hoverOptionsPanel.module.css'; 
 
@@ -15,17 +15,20 @@ export default function HoverOptionsPanel({
     children,
     offsetZeroTo,
     className,
+    ref, 
 }: {
     title: string; 
     onCloseClick: () => void; 
     children: React.ReactNode;
     offsetZeroTo: 'right' | 'left';  
     className?: string; 
+    ref?: Ref<HTMLDivElement>; 
 }) {
     return (
-        <div className={[styles.wrapper, 
-            styles[offsetZeroTo], 
-            className ? className : ''].join(' ')} onClick={e => { e.stopPropagation(); }}>
+        <div 
+            ref={ref}
+            className={[styles.wrapper, styles[offsetZeroTo], 
+                className ? className : ''].join(' ')} onClick={e => { e.stopPropagation(); }}>
             <div className={styles.titleAndCloseButton}>
                 <header>{title}</header>
                 <div className={styles.closeButton} onClick={e => {e.stopPropagation();}}>
