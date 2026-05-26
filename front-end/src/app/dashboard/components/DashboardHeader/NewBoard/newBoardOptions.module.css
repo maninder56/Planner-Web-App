@@ -26,67 +26,11 @@
         transform 0.15s ease;
 }
 
-.colourGrid > div:hover {
-    transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+    .colourGrid > div:hover {
+        transform: scale(1.05);
+    }
 }
-
-
-/* board colours */
-
-.soft-pink{
-    background-color: var(--soft-pink);
-} 
-
-.soft-pink:hover, 
-.soft-pink.selectedBoardColour {
-    outline: solid var(--soft-pink-outline);
-}
-
-.light-mint-green {
-    background-color: var(--light-mint-green);
-}
-
-.light-mint-green:hover, 
-.light-mint-green.selectedBoardColour {
-    outline: solid var(--light-mint-green-outline);
-}
-
-.aqua {
-    background-color: var(--aqua);
-}
-
-.aqua:hover, 
-.aqua.selectedBoardColour {
-    outline: solid var(--aqua-outline);
-}
-
-.lavender-blue {
-    background-color: var(--lavender-blue);
-}
-
-.lavender-blue:hover, 
-.lavender-blue.selectedBoardColour {
-    outline: solid var(--lavender-blue-outline);
-}
-
-.light-purple {
-    background-color: var(--light-purple);
-}
-
-.light-purple:hover, 
-.light-purple.selectedBoardColour {
-    outline: solid var(--light-purple-outline);
-}
-
-.bright-pink {
-    background-color: var(--bright-pink);
-}
-
-.bright-pink:hover, 
-.bright-pink.selectedBoardColour {
-    outline: solid var(--bright-pink-outline);
-}
-
 
 
 
@@ -128,9 +72,12 @@
         transform 0.1s ease;
 }
 
-.formButton button:hover {
-    background-color: #5f67c2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+@media (hover: hover) and (pointer: fine) {
+    .formButton button:hover {
+        background-color: #5f67c2;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
 }
 
 
@@ -146,10 +93,6 @@
     box-shadow: none;
 }
 
-.formButton button:disabled:hover {
-    background-color: #c7c9e8;
-}
-
 
 .errorMessage {
     font-size: 1rem;
@@ -163,4 +106,86 @@
     padding: 0;
     margin: 0;
 }
+
+
+
+/* board colours */
+
+.soft-pink{
+    background-color: var(--soft-pink);
+}
+
+.light-mint-green {
+    background-color: var(--light-mint-green);
+}
+
+.aqua {
+    background-color: var(--aqua);
+}
+
+.lavender-blue {
+    background-color: var(--lavender-blue);
+}
+
+.light-purple {
+    background-color: var(--light-purple);
+}
+
+.bright-pink {
+    background-color: var(--bright-pink);
+}
+
+/* only apply hover styles on hover-capable devices */
+@media (hover: hover) and (pointer: fine) {
+
+    .soft-pink:hover:not(:disabled) {
+        outline: solid var(--soft-pink-outline);
+    }
+
+    .light-mint-green:hover:not(:disabled) {
+        outline: solid var(--light-mint-green-outline);
+    }
+
+    .aqua:hover:not(:disabled) {
+        outline: solid var(--aqua-outline);
+    }
+
+    .lavender-blue:hover:not(:disabled) {
+        outline: solid var(--lavender-blue-outline);
+    }
+
+    .light-purple:hover:not(:disabled) {
+        outline: solid var(--light-purple-outline);
+    }
+
+    .bright-pink:hover:not(:disabled) {
+        outline: solid var(--bright-pink-outline);
+    }
+}
+
+/* selected state still works everywhere */
+.soft-pink.selectedBoardColour {
+    outline: solid var(--soft-pink-outline);
+}
+
+.light-mint-green.selectedBoardColour {
+    outline: solid var(--light-mint-green-outline);
+}
+
+.aqua.selectedBoardColour {
+    outline: solid var(--aqua-outline);
+}
+
+.lavender-blue.selectedBoardColour {
+    outline: solid var(--lavender-blue-outline);
+}
+
+.light-purple.selectedBoardColour {
+    outline: solid var(--light-purple-outline);
+}
+
+.bright-pink.selectedBoardColour {
+    outline: solid var(--bright-pink-outline);
+}
+
 

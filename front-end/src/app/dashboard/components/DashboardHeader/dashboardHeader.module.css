@@ -7,12 +7,15 @@
     justify-content: space-between;
 }
 
-.wrapper > div {
+.appLogo, 
+.searchWrapper, 
+.dashboardMenuWrapper {
     margin: auto 2px;
 }
 
 .appLogo {
     flex: 0 1 auto;
+    
 }
 
 .searchWrapper {

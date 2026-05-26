@@ -35,6 +35,7 @@ export default function BoardMenuOptions({
     const availableColours: BoardColour[] = BoardColoursList; 
     
     const viewOnlyBoard = userRole === 'Viewer'; 
+    const ownerOnlyFeature = userRole !== 'Owner'; 
 
 
     async function handleBoardColourChange(newColour: BoardColour) {
@@ -117,7 +118,7 @@ export default function BoardMenuOptions({
                     </div>
                 </div>
                 <div className={styles.optionList}>
-                    <button disabled={viewOnlyBoard} onClick={e => {
+                    <button disabled={viewOnlyBoard || ownerOnlyFeature} onClick={e => {
                         e.stopPropagation(); 
                         setActivePanel('manageMembersOptions'); 
                     }}>
@@ -152,7 +153,7 @@ export default function BoardMenuOptions({
                             </svg> 
                             <span>{favouriteBoard ? 'Unfavourite' : 'Favourite'}</span>
                         </button>
-                        <button disabled={viewOnlyBoard} onClick={e => {
+                        <button disabled={viewOnlyBoard || ownerOnlyFeature} onClick={e => {
                             e.stopPropagation();
                             setActivePanel('shareBoardOptions'); 
                         }}>
@@ -169,7 +170,7 @@ export default function BoardMenuOptions({
                     </div>
                 </div>
                 <div className={styles.deleteBoardButton}>
-                    <Button disabled={viewOnlyBoard} name='Delete Board' color='red' onClick={() => { setShowDeleteBoard(true) }} />
+                    <Button disabled={viewOnlyBoard || ownerOnlyFeature} name='Delete Board' color='red' onClick={() => { setShowDeleteBoard(true) }} />
                 </div>
             </div>
             {showDeleteBoard && <DeleteBoardDialogBox boardId={boardId} onCancel={() => setShowDeleteBoard(false)}/>}

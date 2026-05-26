@@ -1,0 +1,145 @@
+/* inboxOptionsLoadingSkeleton.module.css */
+
+.wrapper {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    min-height: 300px;
+}
+
+.card {
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.wrapper li:first-child {
+    margin-top: 20px;
+}
+
+@media (min-width: 700px) {
+    .card {
+        padding: 20px;
+        flex-direction: row;
+    }
+}
+
+.inviteInfo {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions {
+    flex: 1 1 auto;
+
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (min-width: 700px) {
+    .actions {
+        flex: 0 0 230px;
+        margin: auto;
+        margin-left: 20px;
+    }
+}
+
+.boardName,
+.invitedBy,
+.metaItem,
+.button,
+.expireText {
+    position: relative;
+    overflow: hidden;
+
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+/* .boardName::before,
+.invitedBy::before,
+.metaItem::before,
+.button::before,
+.expireText::before {
+    content: '';
+
+    position: absolute;
+    inset: 0;
+
+    transform: translateX(-100%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+    );
+
+    animation: shimmer 1.5s infinite;
+} */
+
+.boardName {
+    width: 180px;
+    height: 24px;
+}
+
+.invitedBy {
+    width: 100%;
+    max-width: 420px;
+    height: 18px;
+}
+
+.meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.metaItem {
+    width: 90px;
+    height: 32px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+.button {
+    flex: 1;
+    height: 42px;
+    border-radius: 12px;
+}
+
+.expireText {
+    width: 160px;
+    height: 16px;
+    margin: 0 auto;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}

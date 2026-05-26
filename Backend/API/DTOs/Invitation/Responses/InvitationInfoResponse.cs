@@ -6,6 +6,8 @@ public class InvitationInfoResponse
 {
     public required int Id { get; set; }
 
+    public required int BoardId { get; set; }
+
     public required string BoardName { get; set; }
 
     public required string InvitedByUserEmail { get; set; }

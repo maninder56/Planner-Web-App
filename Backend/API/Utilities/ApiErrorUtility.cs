@@ -20,6 +20,15 @@ public static class ApiErrorUtility
             ErrorType.Unauthorized => new UnauthorizedObjectResult(problemDetails),
             ErrorType.NotFound => new NotFoundObjectResult(problemDetails), 
             ErrorType.Conflict => new ConflictObjectResult(problemDetails),
+            ErrorType.TooManyRequests => new ObjectResult(new ProblemDetails
+            {
+                Status = StatusCodes.Status429TooManyRequests,
+                Title = error.Title,
+                Detail = error.Description
+            })
+            {
+                StatusCode = StatusCodes.Status429TooManyRequests
+            }, 
             ErrorType.InternalServerError or _ => new ObjectResult(new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,

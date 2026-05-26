@@ -25,6 +25,9 @@ export function ApiErrorFromStatusCode(statusCode: number) {
         case 409: 
         return ApiRequestFailed('Conflict'); 
 
+        case 429: 
+        return ApiRequestFailed('TooManyRequests'); 
+
         case 500: 
         return ApiRequestFailed('InternalServerError');
 

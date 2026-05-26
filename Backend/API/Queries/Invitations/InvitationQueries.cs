@@ -17,8 +17,9 @@ public class InvitationQueries(PlannerContext database)
             .Select(i => new InvitationInfoResponse
             {
                 Id = i.Id, 
+                BoardId = i.BoardId,
                 BoardName = i.Board.Name, 
-                InvitedByUserEmail = i.InvitedByUser.Name, 
+                InvitedByUserEmail = i.InvitedByUser.Email, 
                 Role = i.Role,
                 Status = i.Status,
                 ExpiresAt = i.ExpiresAt,
@@ -26,4 +27,27 @@ public class InvitationQueries(PlannerContext database)
 
         return query;       
     }
+
+
+    public async Task<InvitationInfoResponse?> GetInvitationInfo(int invitationId)
+    {
+        var query = await database.Invitations.AsNoTracking()
+            .Where(i => i.Id == invitationId)
+            .Select(i => new InvitationInfoResponse
+            {
+                Id = i.Id,
+                BoardId = i.BoardId,
+                BoardName = i.Board.Name,
+                InvitedByUserEmail = i.InvitedByUser.Email,
+                Role = i.Role,
+                Status = i.Status,
+                ExpiresAt = i.ExpiresAt,
+            })
+            .FirstOrDefaultAsync(); 
+
+        return query;
+    }
+
+
+
 }

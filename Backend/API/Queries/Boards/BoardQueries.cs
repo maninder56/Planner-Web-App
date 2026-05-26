@@ -116,4 +116,13 @@ public class BoardQueries(PlannerContext database)
             .FirstOrDefaultAsync(b => b.BoardId == id);
     }
 
+
+    public async Task<string?> GetBoardNameAsync(int id)
+    {
+        return await database.Boards.AsNoTracking()
+            .Where(b => b.BoardId == id)
+            .Select(b => b.Name)
+            .FirstOrDefaultAsync(); 
+    }
+
 }

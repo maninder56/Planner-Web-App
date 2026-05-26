@@ -14,9 +14,13 @@ import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAnd
 import { UserProfileDataRequest } from '@/Services/userService';
 import { useBoardUIStore } from '../../Store/boardUIStore';
 import SwitchBoardOptions from './SwitchBoard/switchBoardOptions';
+import InboxOptions from './Inbox/InboxOptions/inboxOptions';
+import InboxButton from './Inbox/inboxButton';
+import { useInvitationStore } from '../../Store/invitationStore';
 
 export default function DashboardHeader() {
     const isSwitchBoardOptionsOpen = useBoardUIStore((state) => state.activePanel === 'switchBoardOptions'); 
+    const isInboxOptionsOpen = useBoardUIStore((state) => state.activePanel === 'inboxOptionsPanel'); 
 
     return (
         <section className={styles.wrapper}>
@@ -38,10 +42,12 @@ export default function DashboardHeader() {
                 <div className={styles.dashboardOptions}>
                     <NewBoardButton />
                     <SwitchBoardButton />
+                    <InboxButton />
                     <ProfileButton />
                 </div>
             </div>
-            {isSwitchBoardOptionsOpen && <SwitchBoardOptions/> }
+            { isSwitchBoardOptionsOpen && <SwitchBoardOptions/> }
+            { isInboxOptionsOpen && <InboxOptions /> }
         </section>
     ); 
 }

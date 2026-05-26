@@ -1,6 +1,7 @@
 
 
 import styles from '@/Components/Inputs/formInput.module.css'; 
+import { Ref } from 'react';
 
 
 export default function FormInput({
@@ -12,6 +13,7 @@ export default function FormInput({
     error,
     type, 
     className, 
+    inputRef, 
 }: {
     label: string;
     value: string; 
@@ -21,11 +23,13 @@ export default function FormInput({
     error?: string; 
     type: 'text' | 'password'; 
     className?: string; 
+    inputRef?: Ref<HTMLInputElement>; 
 }) {
     return (
         <div className={[styles.formInput, className ?? ''].join(' ')}>
             <label htmlFor={label}>{label}</label>
             <input 
+                ref={inputRef}
                 name={label}
                 id={label}
                 type={type}

@@ -1,6 +1,6 @@
 
 export type panelType = 
-    'none' | 
+    'none'                          | 
     'globalSearchBarPanel'          | 
     'searchButtonPanel'             | 
     'profileOptions'                | 
@@ -15,6 +15,7 @@ export type panelType =
     'cardDetailsPanel'              | 
     'newListForm'                   | 
     'createNewCardPanel'            |
-    'deleteListDialogBox'           ; 
+    'deleteListDialogBox'           | 
+    'inboxOptionsPanel'             ; 
 
 

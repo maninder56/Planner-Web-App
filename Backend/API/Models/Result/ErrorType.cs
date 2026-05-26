@@ -8,5 +8,6 @@ public enum ErrorType
     Unauthorized,
     NotFound,
     Conflict,
+    TooManyRequests,
     InternalServerError
 }

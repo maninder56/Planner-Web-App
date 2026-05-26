@@ -5,6 +5,7 @@ using API.ServiceRegistrationExtensions;
 using API.Handler;
 using System.Text.Json.Serialization;
 using API.Policies.Requirements;
+using API.SignalRHubs.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +21,18 @@ builder.Services.AddControllers()
 
 builder.Services.AddProblemDetails();
 
+
+// Add SignalR serivce
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters
+            .Add(new JsonStringEnumConverter());
+    });
+
+
 // Add database services
 builder.Services.AddDatabaseService(builder.Configuration);
-
 
 
 // CORS Policy
@@ -62,6 +72,9 @@ scope.Dispose();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
+// Map signalR Hubs
+app.MapPlannerHubs();
 
 
 // Configure the HTTP request pipeline.

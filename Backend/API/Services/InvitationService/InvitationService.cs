@@ -7,8 +7,10 @@ using API.Queries.Invitations;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
 using API.Repositories.InvitationRepository;
+using API.SignalRHubs.Notification;
 using DatabaseContext;
 using DatabaseContext.Types;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Options;
@@ -24,7 +26,8 @@ public class InvitationService(
     InvitationQueries invitationQueries, 
     BoardQueries boardQueries, 
     PlannerContext plannerContext,
-    IOptions<InvitationConfigurations> invitationOptions 
+    IOptions<InvitationConfigurations> invitationOptions, 
+    IHubContext<NotificationHub, INotificationClient> notificationHubContext
     ) : IInvitationService
 {
     private readonly InvitationConfigurations invitationConfigurations = invitationOptions.Value;
@@ -80,34 +83,35 @@ public class InvitationService(
             // check if latest pending invitation
             var latestPendingInvitation = await invitationRepository.GetLatestPendingInvitationAsync(invitedUserId, newInvitation.BoardId);
 
-
-            if (latestPendingInvitation is null)
-            {
-                // create new invitation
-                await invitationRepository.CreateNewInvitation(newInvitation);
-                
-            }
-            else if (latestPendingInvitation.ExpiresAt < DateTime.Now)
-            {
-                // start transaction
-                await using var transaction = await plannerContext.Database.BeginTransactionAsync();
-
-                // invalidate all pending invitations and add new invitation
-                await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, newInvitation.BoardId);
-                await invitationRepository.CreateNewInvitation(newInvitation);
-                await transaction.CommitAsync();
-            }
-            else if (latestPendingInvitation.CreatedAt > DateTime.Now.AddMinutes(-5))
+            if (latestPendingInvitation is not null && latestPendingInvitation.CreatedAt > DateTime.Now.AddMinutes(-5))
             {
                 // user can not send multiple invitation one after another
                 logger.LogInformation("Skipped invitation creation because a recent pending invitation created at {CreatedAt} already exists; send by User with id {UserID}",
                     latestPendingInvitation.CreatedAt, invitedByUserId);
+                return Result.Failed(ErrorType.TooManyRequests, "Too many invitations sent withing 5 min");
             }
-            else
+            
+            // start transaction
+            await using var transaction = await plannerContext.Database.BeginTransactionAsync();
+
+            // invalidate all pending invitations and add new invitation
+            await invitationRepository.InvalidatePreviousPendingInvitationsAsync(invitedUserId, newInvitation.BoardId);
+            Invitation createdInvitation = await invitationRepository.CreateNewInvitation(newInvitation);
+            await transaction.CommitAsync();
+            
+            var boardName = await boardQueries.GetBoardNameAsync(createdInvitation.BoardId);
+
+            // Send user notification
+            await notificationHubContext.Clients.User(invitedUserId.ToString()).ReceiveInvitationNotification(new InvitationInfoResponse
             {
-                logger.LogInformation("User {Email} has pending invitation from board with id {ID}",
-                    newInvitation.InvitedUserEmail, newInvitation.BoardId);
-            }
+                Id = createdInvitation.Id, 
+                BoardId = createdInvitation.BoardId, 
+                BoardName = boardName ?? "-",
+                InvitedByUserEmail = createdInvitation.InvitedUserEmail,
+                Role = createdInvitation.Role,
+                Status = createdInvitation.Status,
+                ExpiresAt = createdInvitation.ExpiresAt,
+            });
 
             return Result.Success();
         }
