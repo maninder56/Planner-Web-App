@@ -1,0 +1,23 @@
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: 60px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.logoElement, 
+.searchElement, 
+.menuElement {
+    flex: 1 1 auto;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.searchElement {
+   flex-grow: 2;
+}
+ 
