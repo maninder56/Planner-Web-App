@@ -199,13 +199,18 @@ export default function BoardCardDetails({
                             <textarea name='description' maxLength={400} value={description} placeholder='card details...'
                                 onChange={e => setDescription(e.target.value)} />
                         </div>
-                        <div className={styles.buttonsContainer}>
-                            <button type='submit' className='button blue' disabled={disableSaveButton()}>Save</button>
-                        </div>
-                        <div className={styles.deleteButton}>
-                            <Button name='Delete Card' color='red' disabled={buttonDisabled || viewOnlyBoard } 
-                                onClick={() => setShowDeleteCardDialogBox(true)} />
-                        </div>
+                        {
+                            !viewOnlyBoard && 
+                            <>
+                            <div className={styles.buttonsContainer}>
+                                <button type='submit' className='button blue' disabled={disableSaveButton()}>Save</button>
+                            </div>
+                            <div className={styles.deleteButton}>
+                                <Button name='Delete Card' color='red' disabled={buttonDisabled || viewOnlyBoard } 
+                                    onClick={() => setShowDeleteCardDialogBox(true)} />
+                            </div>
+                            </>
+                        }
                     </form>
                     {showDeleteCardDialogBox && <DeleteCardDialogBox boardId={boardId} listId={parentListIdAsNumber} 
                         cardId={cardDetails.id} cardTitle={cardDetails.name} onCancel={() => setShowDeleteCardDialogBox(false)}/> }

@@ -48,6 +48,10 @@ export default function AddNewListButton({
         }
     }
 
+    if (viewOnly) {
+        return null; 
+    }
+
 
     return (
         <div className={styles.wrapper}>

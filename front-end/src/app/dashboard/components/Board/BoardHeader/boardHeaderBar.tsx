@@ -29,8 +29,6 @@ export default function BoardHeaderBar() {
         ); 
     }
 
-    const viewOnly = boardData.role === 'Viewer'; 
-
     return (
         <div className={[styles.wrapper, styles[boardData.boardColour]].join(' ')}>
             <div className={styles.boardNameContainer} onClick={e => { 
@@ -52,7 +50,7 @@ export default function BoardHeaderBar() {
                     </div>
                 </div>
                 <div>
-                    <BoardMenu initialBoardColour={boardData.boardColour} boardId={boardData.id} userRole={boardData.role} />
+                    <BoardMenu boardId={boardData.id} userRole={boardData.role} />
                 </div>
             </div>
             { isShareBoardOptionsOpen && <ShareButtonOptions />}

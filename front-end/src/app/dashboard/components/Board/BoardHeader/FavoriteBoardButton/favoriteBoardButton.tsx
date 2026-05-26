@@ -22,7 +22,7 @@ export default function FavoriteBoardButton({
     
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     
-    const buttonDisabled = userRole === 'Viewer'; 
+    const viewOnlyBoard = userRole === 'Viewer'; 
 
     async function handleButtonClick() {
         if (favouriteBoard === undefined) {
@@ -52,9 +52,13 @@ export default function FavoriteBoardButton({
         }
     }
 
+    if (viewOnlyBoard) {
+        return null; 
+    }
+
     return (
         <button className={styles.wrapper}
-            disabled={buttonDisabled}
+            disabled={viewOnlyBoard}
             onClick={e => {
                 e.stopPropagation(); 
                 handleButtonClick(); 

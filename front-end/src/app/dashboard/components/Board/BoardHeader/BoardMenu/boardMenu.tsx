@@ -9,11 +9,9 @@ import ManageBoardMembersOptions from '../ManageBoardMembers/manageBoardMembersO
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 
 export default function BoardMenu({
-    initialBoardColour, 
     boardId, 
     userRole,
 }: {
-    initialBoardColour: BoardColour; 
     boardId: number; 
     userRole: UserRole; 
 }) {
@@ -22,6 +20,12 @@ export default function BoardMenu({
 
     const isManageMembersOptionsOpen = activePanel === 'manageMembersOptions'; 
     const isBoardMenuOptionsOpen = activePanel === 'boardMenuOptions';  
+
+    const viewOnlyBoard = userRole === 'Viewer'; 
+
+    if (viewOnlyBoard) {
+        return null; 
+    }
 
     return (
         <div className={styles.wrapper}>

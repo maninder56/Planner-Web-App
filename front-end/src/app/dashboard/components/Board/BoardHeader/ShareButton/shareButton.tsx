@@ -12,12 +12,16 @@ export default function ShareButton({
 }) {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
-    const canShare = userRole !== 'Owner'; 
+    const canNotShare = userRole !== 'Owner'; 
+
+    if (canNotShare) {
+        return null;
+    }
 
     return (
         <div className={styles.wrapper}>
             <button className={styles.mainButton}
-                disabled={canShare}
+                disabled={canNotShare}
                 onClick={e => {
                     e.stopPropagation(); 
                     setActivePanel('shareBoardOptions'); 
