@@ -31,6 +31,8 @@
     flex: 1 1 auto;
 
     border-radius: 0px 0px 10px 10px;
+    border: solid 2px rgba(0, 0, 0, 0.050);
+    border-top: none;
 
     display: flex;
     overflow: hidden;
