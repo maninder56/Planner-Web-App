@@ -57,7 +57,7 @@ export default function FilterBoardOptions() {
         const offSetRight = window.innerWidth - rect.right; 
 
         element.style.setProperty('--rightValueForFilterOptionsPanel', 
-            offSetRight > 50 ? `${-offSetRight + 10}px`: '0px'); 
+            offSetRight > 50 ? `${-50}px`: '0px'); 
     }, []); 
 
     return (
