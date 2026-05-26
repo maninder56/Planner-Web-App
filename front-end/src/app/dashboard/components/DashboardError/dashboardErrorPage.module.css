@@ -1,0 +1,32 @@
+/* .wrapper * {
+    border: solid 1px red;
+} */
+
+.wrapper {
+    flex: 1 1 auto;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    text-align: center;
+}
+
+.wrapper h2 {
+    margin-top: 20vh;
+    margin-bottom: 0;
+
+    font-size: 1.8rem;
+}
+
+.wrapper p {
+    margin: 0;
+
+    font-size: 1rem;
+}
+
+.wrapper button, 
+.wrapper a {
+    margin-top: 30px;
+}
