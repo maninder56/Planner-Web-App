@@ -34,15 +34,17 @@
     margin: 20px 0px;
 }
 
-.fromElement {
+.formElement {
     margin: 10px;
     margin-left: 15px;
 
     font-size: 1rem;
 }
 
-.fromElement p {
+.formElement p {
     margin-left: 5px;
+
+    word-break: break-all;
 }
 
 .saveButton {

@@ -147,7 +147,7 @@ export default function Page () {
                             }
                         }}/>
                 </div>
-                <div className={styles.fromElement}>
+                <div className={styles.formElement}>
                     <header>Email</header>
                     <p>{userData.email}</p>
                 </div>

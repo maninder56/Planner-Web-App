@@ -1,10 +1,13 @@
 
-
+/* .optionsList * {
+    border: solid 1px red;
+} */
 
 .optionsList {
     margin: 0;
     padding: 0;
     min-width: 150px;
+    max-width: 300px;
 }
 
 .error {

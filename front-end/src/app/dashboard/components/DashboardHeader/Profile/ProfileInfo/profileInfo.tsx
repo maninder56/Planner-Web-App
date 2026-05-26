@@ -1,5 +1,6 @@
 
-import { profileColour } from '@/app/dashboard/Types/UIState';
+
+import { profileColour } from '@/Utilities/user';
 import ProfileIcon from '../../../DashboardHeader/Profile/ProfileIcon/profileIcon';
 import styles from './profileInfo.module.css'; 
 import { UserProfile } from '@/Types/userTypes';
