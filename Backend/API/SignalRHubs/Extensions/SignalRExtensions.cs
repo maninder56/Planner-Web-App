@@ -1,4 +1,4 @@
-﻿using API.SignalRHubs.Notification;
+﻿using API.SignalRHubs.Hub;
 
 namespace API.SignalRHubs.Extensions; 
 
@@ -6,7 +6,7 @@ public static class SignalRExtensions
 {
     public static WebApplication MapPlannerHubs(this WebApplication app)
     {
-        app.MapHub<NotificationHub>("/api/hubs/notifications"); 
+        app.MapHub<GlobalHub>("/api/hub"); 
 
         return app; 
     }

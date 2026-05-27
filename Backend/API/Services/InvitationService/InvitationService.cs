@@ -7,7 +7,7 @@ using API.Queries.Invitations;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
 using API.Repositories.InvitationRepository;
-using API.SignalRHubs.Notification;
+using API.SignalRHubs.Hub;
 using DatabaseContext;
 using DatabaseContext.Types;
 using Microsoft.AspNetCore.SignalR;
@@ -27,7 +27,7 @@ public class InvitationService(
     BoardQueries boardQueries, 
     PlannerContext plannerContext,
     IOptions<InvitationConfigurations> invitationOptions, 
-    IHubContext<NotificationHub, INotificationClient> notificationHubContext
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext
     ) : IInvitationService
 {
     private readonly InvitationConfigurations invitationConfigurations = invitationOptions.Value;
@@ -102,7 +102,7 @@ public class InvitationService(
             var boardName = await boardQueries.GetBoardNameAsync(createdInvitation.BoardId);
 
             // Send user notification
-            await notificationHubContext.Clients.User(invitedUserId.ToString()).ReceiveInvitationNotification(new InvitationInfoResponse
+            await globalHubContext.Clients.User(invitedUserId.ToString()).ReceiveInvitationNotification(new InvitationInfoResponse
             {
                 Id = createdInvitation.Id, 
                 BoardId = createdInvitation.BoardId, 

@@ -1,8 +1,8 @@
 ﻿using API.DTOs.Invitation.Responses;
 
-namespace API.SignalRHubs.Notification; 
+namespace API.SignalRHubs.Hub; 
 
-public interface INotificationClient
+public interface IGlobalHubClient
 {
     Task ReceiveInvitationNotification(InvitationInfoResponse invitationInfo);
 }
