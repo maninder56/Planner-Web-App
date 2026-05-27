@@ -8,7 +8,7 @@ import BoardContent from './BoardContent/boardContent';
 import BoardHeaderBar from './BoardHeader/boardHeaderBar';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { useBoardUIStore } from '../../Store/boardUIStore';
-import SignalRInvitationProvider from '../../providers/signalRInvitationProvider';
+import SignalRProvider from '../../providers/signalRProvider';
 import dynamic from 'next/dynamic';
 
 export default function Board() {

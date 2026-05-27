@@ -11,12 +11,12 @@ import {
 const apiUrl = process.env.NEXT_PUBLIC_APIURL; 
 
 
-class SignalRInvitationService {
+class SignalRService {
     public connection: HubConnection; 
 
     constructor() {
         this.connection = new HubConnectionBuilder()
-            .withUrl(apiUrl + '/hubs/notifications', { withCredentials: true })
+            .withUrl(apiUrl + '/hub', { withCredentials: true })
             .withAutomaticReconnect()
             .build(); 
     }
@@ -56,5 +56,5 @@ class SignalRInvitationService {
     }
 }
 
-export const signalRInvitationService = new SignalRInvitationService(); 
+export const signalRService = new SignalRService(); 
 

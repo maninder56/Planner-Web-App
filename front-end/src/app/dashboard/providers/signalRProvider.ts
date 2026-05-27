@@ -2,11 +2,11 @@
 
 import { useEffect } from 'react';
 import { useInvitationStore } from '../Store/invitationStore';
-import { signalRInvitationService } from '../Services/signalRInvitationService'; 
 import { InvitationInfoSchema, SignalRClientMethods } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
+import { signalRService } from '../Services/signalRService';
 
-export default function SignalRInvitationProvider({
+export default function SignalRProvider({
     children, 
 }: {
     children: React.ReactNode; 
@@ -14,7 +14,7 @@ export default function SignalRInvitationProvider({
     const addInvitation = useInvitationStore((state) => state.addInvitation); 
     const setInvitationsStale = useInvitationStore((state) => state.setStale); 
     const setShowInvitationBanner = useInvitationStore((state) => state.setShowInvitationBanner); 
-    const invitationReceivedMethod: SignalRClientMethods = 'ReceiveInvitationNotification'; 
+    const invitationReceivedMethodName: SignalRClientMethods = 'ReceiveInvitationNotification'; 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -36,24 +36,24 @@ export default function SignalRInvitationProvider({
 
     useEffect(() => {
         async function init() {
-            if (signalRInvitationService === null) {
+            if (signalRService === null) {
                 return; 
             }
 
-            await signalRInvitationService.start(); 
+            await signalRService.start(); 
 
-            signalRInvitationService.connection
-                .on(invitationReceivedMethod, invitationReceived); 
+            signalRService.connection
+                .on(invitationReceivedMethodName, invitationReceived); 
         }
 
         init(); 
 
         return () => {
-            if (signalRInvitationService === null) {
+            if (signalRService === null) {
                 return; 
             }
             
-            signalRInvitationService.connection.off(invitationReceivedMethod); 
+            signalRService.connection.off(invitationReceivedMethodName); 
         }
     }, []); 
 
