@@ -5,8 +5,9 @@ using API.Models.Account;
 using API.Queries.Boards;
 using API.Queries.Profile;
 using API.SignalR.BoardPresenceTracker;
+using DatabaseContext;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR; 
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR.Hub;
 
@@ -14,7 +15,7 @@ namespace API.SignalR.Hub;
 public class GlobalHub(
     IBoardPresenceTracker presenceTracker, 
     BoardQueries boardQueries, ProfileQueries profileQueries, 
-     ILogger<GlobalHub> _logger) : Hub<IGlobalHubClient>
+    ILogger<GlobalHub> _logger) : Hub<IGlobalHubClient>
 {
     public async Task<JoinBoardResponse> JoinBoard(int boardId)
     {
@@ -82,5 +83,38 @@ public class GlobalHub(
 
         return new LeaveBoardResponse() { success = true, message = string.Empty };
 
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        int? userId = Context.User?.GetUserId();
+
+        if (userId is null)
+        {
+            _logger.LogWarning("Clean up failed. Invalid user. ConnectionId: {ConnectionId}", Context.ConnectionId); 
+            await base.OnDisconnectedAsync(exception);
+            return;
+        }
+
+        var boards = presenceTracker.GetBoardsForUser((int)userId); 
+
+
+        foreach (var boardId in boards)
+        {
+            presenceTracker.RemoveConnection(boardId, (int)userId, Context.ConnectionId); 
+
+            if (!presenceTracker.IsUserInBoard(boardId, (int)userId))
+            {
+                string groupName = $"board:{boardId}";
+
+                await Clients.Group(groupName).UserHasLeftTheBoard(new UserLeavingInfoResponse
+                {
+                    UserId = (int)userId
+                });
+            }
+        }
+
+
+        await base.OnDisconnectedAsync(exception);
     }
 }

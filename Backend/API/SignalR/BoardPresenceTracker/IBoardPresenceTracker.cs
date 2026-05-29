@@ -9,4 +9,6 @@ public interface IBoardPresenceTracker
     bool IsUserInBoard(int boardId, int userId);
 
     IReadOnlyCollection<int> GetUsersInBoard(int boardId);
+
+    public List<int> GetBoardsForUser(int userId); 
 }

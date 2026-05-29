@@ -59,4 +59,19 @@ public class BoardPresenceTracker : IBoardPresenceTracker
 
         return boardUsers.Keys.ToList();
     }
+
+    public List<int> GetBoardsForUser(int userId)
+    {
+        var result = new List<int>();
+
+        foreach (var board in _boards)
+        {
+            if (board.Value.ContainsKey(userId))
+            {
+                result.Add(board.Key);
+            }
+        }
+
+        return result;
+    }
 }
