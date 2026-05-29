@@ -15,6 +15,8 @@ import Button from '@/Components/Buttons/button';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { useUserStore } from '@/Store/userStore';
+import { SignalRServerMethod } from '@/app/dashboard/Types/signalRTypes';
+import { signalRService } from '@/app/dashboard/Services/signalRService';
 
 type BoardsState = {
     owned: BoardArray, 
@@ -44,6 +46,10 @@ export default function SwitchBoardOptions() {
 
     const boardsState: BoardsState = splitBoardArrayIntoGroups(boards); 
     const filteredBoards = filterBoards(searchInput, boardsState); 
+
+    const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
+    const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
+
     
     const favouriteBoardStar = <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11.245 4.174c.232-.666.347-.999.518-1.091a.5.5 0 0 1 .475 0c.171.092.287.425.518 1.091l1.53 4.402c.066.19.1.285.159.355a.5.5 0 0 0 .195.142c.085.034.185.036.386.04l4.66.096c.705.014 1.057.021 1.198.155a.5.5 0 0 1 .146.452c-.035.191-.315.404-.877.83l-3.714 2.816c-.16.12-.24.181-.289.26a.5.5 0 0 0-.074.229c-.007.092.022.188.08.38l1.35 4.46c.204.676.306 1.013.222 1.188a.5.5 0 0 1-.384.28c-.193.025-.482-.176-1.06-.579l-3.826-2.662c-.165-.114-.247-.172-.337-.194a.5.5 0 0 0-.24 0c-.09.022-.173.08-.337.194L7.718 19.68c-.579.403-.868.604-1.06.578a.5.5 0 0 1-.385-.279c-.084-.175.018-.512.222-1.187l1.35-4.461c.058-.192.087-.288.08-.38a.5.5 0 0 0-.074-.23c-.049-.078-.128-.138-.288-.26l-3.714-2.815c-.562-.426-.843-.639-.878-.83a.5.5 0 0 1 .147-.452c.14-.134.493-.141 1.198-.155l4.66-.095c.2-.005.3-.007.386-.041a.5.5 0 0 0 .195-.142c.059-.07.092-.165.158-.355z" 
@@ -121,6 +127,8 @@ export default function SwitchBoardOptions() {
         }
 
         setBoardLoading(true); 
+
+        const oldBoardId = currentBoardData?.id; 
         
         try {
             const result = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardRequest, boardId); 
@@ -129,7 +137,9 @@ export default function SwitchBoardOptions() {
                 hydrateBoard(NormaliseBoardData(result.data)); 
                 setLastUsedBoard(boardId); 
                 setErrorMessage(undefined); 
-                setActivePanel('none');     
+                setActivePanel('none');    
+                JoinBoard(boardId); 
+                LeaveBoard(oldBoardId);
             } else if (!result.ok && result.error === 'Unauthorized') {
                 setSessionExpired(true); 
             } else if (!result.ok && result.error === 'NotFound') {
@@ -141,6 +151,16 @@ export default function SwitchBoardOptions() {
 
         } finally {
             setBoardLoading(false); 
+        }
+    }
+
+    async function JoinBoard(boardId: number) {
+        await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
+    }
+
+    async function LeaveBoard(boardId?: number) {
+        if (boardId !== undefined) {
+            await signalRService.connection.invoke(leaveBoardServerMethodName, boardId); 
         }
     }
 

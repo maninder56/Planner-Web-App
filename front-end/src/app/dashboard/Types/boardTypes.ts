@@ -107,8 +107,13 @@ export type UpdateCardOrder = {
 
 export const OnlineUserSchema = z.object({
     userId: z.number(), 
+    boardId: z.number(), 
     name: z.string(), 
     email: z.string(), 
-})
+}); 
 
 export type OnlineUser = z.infer<typeof OnlineUserSchema>; 
+
+export const OnlineUserLeavingSchema = z.object({
+    userId: z.number(), 
+}); 

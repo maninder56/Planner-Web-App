@@ -43,9 +43,10 @@ public class GlobalHub(
 
         presenceTracker.AddConnection(boardId, (int)userId, Context.ConnectionId);
 
-        await Clients.Group(groupName).UserHasJoinedTheBoard(new UserInfo()
+        await Clients.Group(groupName).UserHasJoinedTheBoard(new UserJoiningInfoResponse()
         {
             UserId = (int)userId,
+            BoardId = boardId, 
             Name = userProfile.Name,
             Email = userProfile.Email,
         }); 

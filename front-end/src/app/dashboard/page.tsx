@@ -17,6 +17,7 @@ import BoardContentLoadingSkeleton from './components/Board/BoardContent/BoardCo
 import DashboardHeaderLoadingSkeleton from './components/DashboardHeader/DashboardHeaderLoadingSkeleton/dashboardHeaderLoadingSkeleton';
 import { RefreshTokensRequest } from '@/Services/ApiRequest';
 import DashboardErrorPage from './components/DashboardError/dashboardErrorPage';
+import { useBoardStore } from './Store/boardStore';
 
 export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -24,6 +25,9 @@ export default function Dashboard() {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const [loading, setLoading] = useState(true); 
     const [showErrorPage, setShowErrorPage] = useState(false); 
+
+    // temporary 
+    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
 
     // signalR library uses require which turbopack can't statically analyze. 
     // use of dynamic is to make sure the module is rendered only on client side

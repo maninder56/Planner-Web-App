@@ -9,6 +9,6 @@ public interface IGlobalHubClient
     Task ReceiveInvitationNotification(InvitationInfoResponse invitationInfo);
 
 
-    Task UserHasJoinedTheBoard(UserInfo userInfo);
+    Task UserHasJoinedTheBoard(UserJoiningInfoResponse userInfo);
     Task UserHasLeftTheBoard(UserLeavingInfoResponse userInfo);
 }
