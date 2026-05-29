@@ -5,7 +5,7 @@ import { useInvitationStore } from '../Store/invitationStore';
 import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
-import { SignalRClientMethod } from '../Types/signalRTypes';
+import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
 import { OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 
@@ -20,8 +20,10 @@ export default function SignalRProvider({
     const invitationReceivedMethodName: SignalRClientMethod = 'ReceiveInvitationNotification'; 
     const userHasJoinedTheBoardMethodName: SignalRClientMethod = 'UserHasJoinedTheBoard'; 
     const userHasLeftTheBoardMethodName: SignalRClientMethod = 'UserHasLeftTheBoard'; 
+    const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const addNewOnlineUser = useBoardStore((state) => state.addNewOnlineUser); 
     const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
+    const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -64,6 +66,10 @@ export default function SignalRProvider({
         }
     }
 
+    async function JoinBoard(boardId: number) {
+        await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
+    }
+
     useEffect(() => {
         async function init() {
             if (signalRService === null) {
@@ -77,6 +83,9 @@ export default function SignalRProvider({
             signalRService.connection.on(userHasJoinedTheBoardMethodName, UserHasJoinedTheBoard); 
             signalRService.connection.on(userHasLeftTheBoardMethodName, UserHasLeftTheBoard); 
 
+            if (currentBoardId !== undefined) {
+                JoinBoard(currentBoardId); 
+            }
         }
 
         init(); 

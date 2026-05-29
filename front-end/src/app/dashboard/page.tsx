@@ -89,6 +89,7 @@ export default function Dashboard() {
                     e.stopPropagation(); 
                     setActivePanel('none'); 
                 }}>
+                    <div>{JSON.stringify(onlineUsers.map(u => u.name))}</div>
                     <DashboardHeader />
                     <Board />   
                     { isSessionExpired && <SessionExpired /> }

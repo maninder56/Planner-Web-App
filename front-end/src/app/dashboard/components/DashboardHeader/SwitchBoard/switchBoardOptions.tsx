@@ -1,3 +1,4 @@
+'use client'; 
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './switchBoardOptions.module.css'; 
@@ -16,7 +17,9 @@ import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { useUserStore } from '@/Store/userStore';
 import { SignalRServerMethod } from '@/app/dashboard/Types/signalRTypes';
+import dynamic from 'next/dynamic';
 import { signalRService } from '@/app/dashboard/Services/signalRService';
+
 
 type BoardsState = {
     owned: BoardArray, 
