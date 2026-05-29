@@ -41,15 +41,18 @@ public class GlobalHub(
 
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-        presenceTracker.AddConnection(boardId, (int)userId, Context.ConnectionId);
+        bool isFirstJoin = presenceTracker.AddConnection(boardId, (int)userId, Context.ConnectionId);
 
-        await Clients.Group(groupName).UserHasJoinedTheBoard(new UserJoiningInfoResponse()
+        if (isFirstJoin)
         {
-            UserId = (int)userId,
-            BoardId = boardId, 
-            Name = userProfile.Name,
-            Email = userProfile.Email,
-        }); 
+            await Clients.Group(groupName).UserHasJoinedTheBoard(new UserJoiningInfoResponse()
+            {
+                UserId = (int)userId,
+                BoardId = boardId,
+                Name = userProfile.Name,
+                Email = userProfile.Email,
+            });
+        }
 
         return new JoinBoardResponse() { success = true, message = string.Empty };
     }
@@ -81,8 +84,12 @@ public class GlobalHub(
                 UserId = (int)userId
             });
         }
+        else
+        {
+            _logger.LogInformation("User still has not left"); 
+        }
 
-        return new LeaveBoardResponse() { success = true, message = string.Empty };
+            return new LeaveBoardResponse() { success = true, message = string.Empty };
 
     }
 
