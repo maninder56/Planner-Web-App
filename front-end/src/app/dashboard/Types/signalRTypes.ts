@@ -1,0 +1,4 @@
+
+export type SignalRServerMethod = 'JoinBoard' | 'LeaveBoard'; 
+
+export type SignalRClientMethod = 'ReceiveInvitationNotification' | 'UserHasJoinedTheBoard' | 'UserHasLeftTheBoard'; 
