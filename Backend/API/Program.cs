@@ -5,7 +5,7 @@ using API.ServiceRegistrationExtensions;
 using API.Handler;
 using System.Text.Json.Serialization;
 using API.Policies.Requirements;
-using API.SignalRHubs.Extensions;
+using API.SignalR.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
