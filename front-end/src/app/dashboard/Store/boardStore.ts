@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser } from "../Types/boardTypes";
 
 
 
@@ -46,7 +46,8 @@ type State = {
     lists: Record<ListId, List>, 
     cards: Record<CardId, Card>, 
     listOrder: ListId[], 
-    boardError: string; 
+    boardError: string, 
+    onlineUsers: OnlineUser[], 
 }
 
 
@@ -88,6 +89,12 @@ type Action = {
     addNewCard: (parentListId: number, card: Card) => void;
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
+
+
+    // online users 
+    addNewOnlineUser: (user: OnlineUser) => void; 
+    removeOnlineUser: (userId: number) => void; 
+    setOnlineUsers: (users: OnlineUser[]) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set, get) => ({
@@ -99,6 +106,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     cards: {}, 
     listOrder: [],
     boardError: '', 
+    onlineUsers: [],
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -423,7 +431,19 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             }
 
             return updatedState; 
-        })
+        }), 
+
+        addNewOnlineUser: (user) => set((state) => ({
+            onlineUsers: [...state.onlineUsers, user],
+        })), 
+
+        removeOnlineUser: (userId: number) => set((state) => ({
+            onlineUsers: state.onlineUsers.filter(u => u.userId !== userId), 
+        })), 
+
+        setOnlineUsers: (users: OnlineUser[]) => set((state) => ({
+            onlineUsers: users, 
+        })), 
 }))
 
 

@@ -105,11 +105,10 @@ export type UpdateCardOrder = {
     cardIDsInOrder: number[]; 
 }[]; 
 
+export const OnlineUserSchema = z.object({
+    userId: z.number(), 
+    name: z.string(), 
+    email: z.string(), 
+})
 
-// {
-//     "boardId": 5,
-//     "name": "qqq",
-//     "isFavoriteBoard": false,
-//     "backgroundColour": "light-purple",
-//     "role": "Owner"
-// }
+export type OnlineUser = z.infer<typeof OnlineUserSchema>; 
