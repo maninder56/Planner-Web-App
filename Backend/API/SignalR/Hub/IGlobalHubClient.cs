@@ -11,4 +11,6 @@ public interface IGlobalHubClient
 
     Task UserHasJoinedTheBoard(UserJoiningInfoResponse userInfo);
     Task UserHasLeftTheBoard(UserLeavingInfoResponse userInfo);
+
+    Task CurrentOnlineUsers(List<UserInfo> users); 
 }

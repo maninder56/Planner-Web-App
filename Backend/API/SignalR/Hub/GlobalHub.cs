@@ -48,12 +48,15 @@ public class GlobalHub(
             await Clients.Group(groupName).UserHasJoinedTheBoard(new UserJoiningInfoResponse()
             {
                 UserId = (int)userId,
-                BoardId = boardId,
                 Name = userProfile.Name,
                 Email = userProfile.Email,
             });
         }
 
+        var userIDs = presenceTracker.GetUsersInBoard(boardId);
+        var onlineUsersInfo = await profileQueries.GetUsersInfoAsync(userIDs.ToArray());
+        await Clients.Caller.CurrentOnlineUsers(onlineUsersInfo); 
+        
         return new JoinBoardResponse() { success = true, message = string.Empty };
     }
 
@@ -89,7 +92,7 @@ public class GlobalHub(
             _logger.LogInformation("User still has not left"); 
         }
 
-            return new LeaveBoardResponse() { success = true, message = string.Empty };
+        return new LeaveBoardResponse() { success = true, message = string.Empty };
 
     }
 
