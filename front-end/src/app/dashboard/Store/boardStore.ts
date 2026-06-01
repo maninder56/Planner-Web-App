@@ -447,9 +447,12 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             }
         }), 
 
-        setOnlineUsers: (users) => set({ 
+        setOnlineUsers: (users) =>{
+            console.log("setOnlineUsers called with:", users);
+            set({ 
             onlineUsers: new Map(users.map(u => [u.userId, u]))
-        }), 
+        })
+        }, 
 
         clearOnlineUsers: () => set({ onlineUsers: new Map() }),
 }))
