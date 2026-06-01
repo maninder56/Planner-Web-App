@@ -47,7 +47,7 @@ type State = {
     cards: Record<CardId, Card>, 
     listOrder: ListId[], 
     boardError: string, 
-    onlineUsers: OnlineUser[], 
+    onlineUsers: Map<number, OnlineUser>, 
 }
 
 
@@ -95,6 +95,7 @@ type Action = {
     addNewOnlineUser: (user: OnlineUser) => void; 
     removeOnlineUser: (userId: number) => void; 
     setOnlineUsers: (users: OnlineUser[]) => void; 
+    clearOnlineUsers: () => void; 
 }
 
 export const useBoardStore = create<State & Action>((set, get) => ({
@@ -106,7 +107,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     cards: {}, 
     listOrder: [],
     boardError: '', 
-    onlineUsers: [],
+    onlineUsers: new Map(),
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -434,16 +435,23 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         }), 
 
         addNewOnlineUser: (user) => set((state) => ({
-            onlineUsers: [...state.onlineUsers, user],
+            onlineUsers: new Map(state.onlineUsers).set(user.userId, user),
         })), 
 
-        removeOnlineUser: (userId: number) => set((state) => ({
-            onlineUsers: state.onlineUsers.filter(u => u.userId !== userId), 
-        })), 
+        removeOnlineUser: (userId: number) => set((state) => {
+            const newOnlineUserMap = new Map(state.onlineUsers); 
+            newOnlineUserMap.delete(userId); 
+            
+            return {
+                onlineUsers: newOnlineUserMap,
+            }
+        }), 
 
-        setOnlineUsers: (users: OnlineUser[]) => set((state) => ({
-            onlineUsers: users, 
-        })), 
+        setOnlineUsers: (users) => set({ 
+            onlineUsers: new Map(users.map(u => [u.userId, u]))
+        }), 
+
+        clearOnlineUsers: () => set({ onlineUsers: new Map() }),
 }))
 
 
