@@ -158,6 +158,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         lists: {}, 
         cards: {}, 
         listOrder: [], 
+        onlineUsers: new Map(),
     })), 
     
 

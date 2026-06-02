@@ -141,7 +141,7 @@ export default function SwitchBoardOptions() {
                 setLastUsedBoard(boardId); 
                 setErrorMessage(undefined); 
                 setActivePanel('none');    
-                JoinBoard(boardId); 
+                // JoinBoard(boardId); 
                 LeaveBoard(oldBoardId);
             } else if (!result.ok && result.error === 'Unauthorized') {
                 setSessionExpired(true); 

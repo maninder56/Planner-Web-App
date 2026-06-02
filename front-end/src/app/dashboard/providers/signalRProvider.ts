@@ -1,6 +1,6 @@
 'use client'; 
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInvitationStore } from '../Store/invitationStore';
 import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
@@ -8,6 +8,7 @@ import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
 import { AllOnlineUsersSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
+import { HubConnectionState } from '@microsoft/signalr';
 
 export default function SignalRProvider({
     children, 
@@ -23,15 +24,14 @@ export default function SignalRProvider({
     const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
 
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
-    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
 
     const invitationReceivedMethodName: SignalRClientMethod = 'ReceiveInvitationNotification'; 
     const userHasJoinedTheBoardMethodName: SignalRClientMethod = 'UserHasJoinedTheBoard'; 
     const userHasLeftTheBoardMethodName: SignalRClientMethod = 'UserHasLeftTheBoard'; 
     const CurrentOnlineUsersMethodName: SignalRClientMethod = 'CurrentOnlineUsers'; 
-    const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
 
+    const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -86,16 +86,22 @@ export default function SignalRProvider({
         }
     }
 
-    // async function JoinBoard(boardId?: number) {
+    function tryJoinBoard() {
+        const connectionReady = signalRService.connection.state === HubConnectionState.Connected; 
 
-    //     while(boardLoading) {
-    //         await new Promise(r => setTimeout(r, 2000)); 
-    //     }
+        const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 
+        const boardLoadingLatest = useBoardStore.getState().isBoardLoading; 
 
-    //     if (currentBoardId !== undefined) {
-    //         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
-    //     }
-    // }
+        if (!connectionReady) return;
+        if (boardLoadingLatest) return; 
+        if (!currentBoardIdLatest) return; 
+
+        signalRService.connection.invoke(joinBoardServerMethodName, currentBoardIdLatest); 
+    }
+
+    useEffect(() => {
+        tryJoinBoard(); 
+    }, [boardLoading, currentBoardId]); 
 
     useEffect(() => {
         async function init() {
@@ -110,8 +116,7 @@ export default function SignalRProvider({
             signalRService.connection.on(CurrentOnlineUsersMethodName, CurrentOnlineUsers); 
 
             await signalRService.start(); 
-
-            // signalRService.connection.invoke(joinBoardServerMethodName, JoinBoard); 
+            tryJoinBoard(); 
         }
 
         init(); 
@@ -121,7 +126,10 @@ export default function SignalRProvider({
                 return; 
             }
             
-            signalRService.connection.off(invitationReceivedMethodName); 
+            signalRService.connection.off(invitationReceivedMethodName);
+            signalRService.connection.off(userHasJoinedTheBoardMethodName);
+            signalRService.connection.off(userHasLeftTheBoardMethodName);
+            signalRService.connection.off(CurrentOnlineUsersMethodName);
         }
     }, []); 
 

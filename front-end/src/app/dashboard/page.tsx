@@ -32,6 +32,7 @@ export default function Dashboard() {
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const [loading, setLoading] = useState(true); 
     const [showErrorPage, setShowErrorPage] = useState(false); 
+    const resetCurrentBoardData = useBoardStore((state) => state.resetCurrentBoardData); 
 
     async function fetchRefrehTokens() {
         const request = await RefreshTokensRequest(); 
@@ -49,6 +50,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchRefrehTokens(); 
+        resetCurrentBoardData(); 
     }, []); 
 
     function handleTryAgain() {
