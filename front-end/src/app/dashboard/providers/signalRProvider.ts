@@ -17,17 +17,21 @@ export default function SignalRProvider({
     const addInvitation = useInvitationStore((state) => state.addInvitation); 
     const setInvitationsStale = useInvitationStore((state) => state.setStale); 
     const setShowInvitationBanner = useInvitationStore((state) => state.setShowInvitationBanner); 
+
+    const addNewOnlineUser = useBoardStore((state) => state.addNewOnlineUser); 
+    const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
+    const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
+
+    const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
+    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
+    const boardLoading = useBoardStore((state) => state.isBoardLoading); 
+
     const invitationReceivedMethodName: SignalRClientMethod = 'ReceiveInvitationNotification'; 
     const userHasJoinedTheBoardMethodName: SignalRClientMethod = 'UserHasJoinedTheBoard'; 
     const userHasLeftTheBoardMethodName: SignalRClientMethod = 'UserHasLeftTheBoard'; 
     const CurrentOnlineUsersMethodName: SignalRClientMethod = 'CurrentOnlineUsers'; 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
-    const addNewOnlineUser = useBoardStore((state) => state.addNewOnlineUser); 
-    const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
-    const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
-    const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
-    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
-    const boardLoading = useBoardStore((state) => state.isBoardLoading); 
+
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -46,6 +50,7 @@ export default function SignalRProvider({
             setInvitationsStale(true); 
         }
     }
+    
 
     function UserHasJoinedTheBoard(data: any) {
         const validData = OnlineUserSchema.safeParse(data); 
@@ -70,28 +75,11 @@ export default function SignalRProvider({
         }
     }
 
-    const onlineUsersdummy: OnlineUser[] = [
-  {
-    userId: 1,
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  {
-    userId: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-  },
-];
-
     function CurrentOnlineUsers(data: any) {
         const validData = AllOnlineUsersSchema.safeParse(data); 
 
         if (validData.success) {
-            console.log(JSON.stringify(validData.data)); 
             setOnlineUsers(validData.data); 
-            console.log(JSON.stringify(useBoardStore.getState().onlineUsers));
-            setOnlineUsers(onlineUsersdummy); 
-            console.log(JSON.stringify(useBoardStore.getState().onlineUsers));
         } else {
             console.error('Invalid online users data recieved from Signal R'); 
             console.error(validData.error); 

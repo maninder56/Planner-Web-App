@@ -33,9 +33,6 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true); 
     const [showErrorPage, setShowErrorPage] = useState(false); 
 
-    // temporary 
-    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
-
     async function fetchRefrehTokens() {
         const request = await RefreshTokensRequest(); 
         setSessionExpired(false); 
@@ -89,7 +86,6 @@ export default function Dashboard() {
                     e.stopPropagation(); 
                     setActivePanel('none'); 
                 }}>
-                    <div>{JSON.stringify(onlineUsers)}</div>
                     <DashboardHeader />
                     <Board />   
                     { isSessionExpired && <SessionExpired /> }
