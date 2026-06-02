@@ -13,6 +13,7 @@ import { CreateNewBoardRequest, UpdateLastUsedBoardRequest } from '@/app/dashboa
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { useSignalR } from '@/app/dashboard/Context/signalRContext';
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 

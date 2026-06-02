@@ -27,6 +27,8 @@ export default function SignalRProvider({
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
 
+    const previousBoardIDRef = useRef<number | null>(null); 
+
     const invitationReceivedMethodName: SignalRClientMethod = 'ReceiveInvitationNotification'; 
     const userHasJoinedTheBoardMethodName: SignalRClientMethod = 'UserHasJoinedTheBoard'; 
     const userHasLeftTheBoardMethodName: SignalRClientMethod = 'UserHasLeftTheBoard'; 
@@ -88,19 +90,6 @@ export default function SignalRProvider({
         }
     }
 
-    function tryJoinBoard() {
-        const connectionReady = signalRService.connection.state === HubConnectionState.Connected; 
-
-        const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 
-        const boardLoadingLatest = useBoardStore.getState().isBoardLoading; 
-
-        if (!connectionReady) return;
-        if (boardLoadingLatest) return; 
-        if (!currentBoardIdLatest) return; 
-
-        signalRService.connection.invoke(joinBoardServerMethodName, currentBoardIdLatest); 
-    }
-
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
     }
@@ -109,9 +98,30 @@ export default function SignalRProvider({
         await signalRService.connection.invoke(leaveBoardServerMethodName, boardId); 
     }
 
+    async function tryJoinAndLeaveBoard() {
+        const connectionReady = signalRService.connection.state === HubConnectionState.Connected; 
+
+        const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 
+        const boardLoadingLatest = useBoardStore.getState().isBoardLoading; 
+        const previousBoardId = previousBoardIDRef.current; 
+
+        if (!connectionReady) return;
+        if (boardLoadingLatest) return; 
+        if (currentBoardIdLatest === previousBoardId) return; 
+
+        if (previousBoardId !== null) {
+            await LeaveBoard(previousBoardId); 
+        }
+
+        if (currentBoardIdLatest !== undefined) {
+            await JoinBoard(currentBoardIdLatest); 
+            previousBoardIDRef.current = currentBoardIdLatest; 
+        }
+    }
+
 
     useEffect(() => {
-        tryJoinBoard(); 
+        tryJoinAndLeaveBoard(); 
     }, [boardLoading, currentBoardId]); 
 
     useEffect(() => {
@@ -127,7 +137,7 @@ export default function SignalRProvider({
             signalRService.connection.on(CurrentOnlineUsersMethodName, CurrentOnlineUsers); 
 
             await signalRService.start(); 
-            tryJoinBoard(); 
+            tryJoinAndLeaveBoard(); 
         }
 
         init(); 
