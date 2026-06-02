@@ -1,0 +1,42 @@
+
+
+.wrapper {
+    --size: 40px; 
+    margin: 5px;
+    height: var(--size);
+    position: relative;
+
+    border-radius: 10px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+
+    transition: width 0.5s ease-in-out;
+}
+
+@media (pointer: fine) {
+    .wrapper:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }  
+}
+
+
+.mainButton {
+    padding: 5px 7px;
+
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    background-color: transparent;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.mainButton svg {
+    --svgSize: calc(var(--size) - 15px);
+    width: var(--svgSize);
+    height: var(--svgSize);
+    margin: auto;
+}
