@@ -9,6 +9,7 @@ import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes'
 import { AllOnlineUsersSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
+import { SignalRContext } from '../Context/signalRContext';
 
 export default function SignalRProvider({
     children, 
@@ -32,6 +33,7 @@ export default function SignalRProvider({
     const CurrentOnlineUsersMethodName: SignalRClientMethod = 'CurrentOnlineUsers'; 
 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
+    const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -99,6 +101,15 @@ export default function SignalRProvider({
         signalRService.connection.invoke(joinBoardServerMethodName, currentBoardIdLatest); 
     }
 
+    async function JoinBoard(boardId: number) {
+        await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
+    }
+
+    async function LeaveBoard(boardId: number) {
+        await signalRService.connection.invoke(leaveBoardServerMethodName, boardId); 
+    }
+
+
     useEffect(() => {
         tryJoinBoard(); 
     }, [boardLoading, currentBoardId]); 
@@ -133,5 +144,11 @@ export default function SignalRProvider({
         }
     }, []); 
 
-    return children; 
+    return (
+        <SignalRContext value={{JoinBoard, LeaveBoard}}>
+            {children}
+        </SignalRContext>
+    ); 
+           
+    
 }
