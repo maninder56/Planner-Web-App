@@ -16,6 +16,7 @@ export type panelType =
     'newListForm'                   | 
     'createNewCardPanel'            |
     'deleteListDialogBox'           | 
-    'inboxOptionsPanel'             ; 
+    'inboxOptionsPanel'             | 
+    'onlineUsersOptions'            ; 
 
 

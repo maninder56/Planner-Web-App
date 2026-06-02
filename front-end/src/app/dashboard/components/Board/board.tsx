@@ -21,8 +21,6 @@ export default function Board() {
     const boardError = useBoardStore((state) => state.boardError); 
     const userRole = useBoardStore((state) => state.currentBoardData?.role); 
 
-    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
-
     async function fetchData() {
         const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
         if (dataRequest.ok) {
@@ -58,13 +56,6 @@ export default function Board() {
                 </div>
             }
             <span className={styles.error}>{boardError}</span>
-            <div>
-                {[...onlineUsers.values()].map((user) => (
-                    <div key={user.userId}>
-                        {user.name}
-                    </div>
-                ))}
-            </div>
             <section>
                 <BoardHeaderBar />
             </section>
