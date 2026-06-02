@@ -123,7 +123,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     })),
 
     AddNewBoardToBoardArray: (board) => set((state) => ({
-        boards: state.boards === null ? [board] : [...state.boards, board],
+        boards: state.boards === null ? null : [...state.boards, board],
     })), 
 
     resetBoardArray: () => set(() => ({
