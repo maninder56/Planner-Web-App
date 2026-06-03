@@ -4,13 +4,34 @@ import styles from './onlineUsersButtonOptions.module.css';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useUserStore } from '@/Store/userStore';
+import { useLayoutEffect, useRef } from 'react';
 
 export default function OnlineUsersButtonOptions() {
     const onlineUsers = useBoardStore((state) => state.onlineUsers);
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
+    const isPanelOpen = useBoardUIStore((state) => state.activePanel === 'onlineUsersOptions'); 
+    const optionsPanelRef = useRef<HTMLDivElement | null>(null); 
+
+    useLayoutEffect(() => {
+        if (!isPanelOpen || !optionsPanelRef.current?.parentElement) return; 
+
+        // get parent element's position relative to viewport
+        const element = optionsPanelRef.current.parentElement; 
+        const rect = element.getBoundingClientRect(); 
+
+        // calculate how far is element from right side 
+        const offSetRight = window.innerWidth - rect.right; 
+
+        element.style.setProperty('--rightValueForOnlineUsersOptionsPanel', 
+            offSetRight > 50 ? `${-105}px`: '0px'); 
+
+        console.log(rect); 
+    }, []); 
+
     return (
-        <HoverOptionsPanel title='Online Users' offsetZeroTo={'right'} onCloseClick={() => setActivePanel('none')}>
+        <HoverOptionsPanel title='Online Users' offsetZeroTo={'right'} onCloseClick={() => setActivePanel('none')}
+            className={styles.hoverPanel} ref={optionsPanelRef}>
             <ul className={styles.wrapper}>
                 {[...onlineUsers.values()].map((user) => (
                     <li key={user.userId}>

@@ -10,6 +10,7 @@
     margin: 0;
     min-width: 200px;
     max-width: 300px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -63,4 +64,13 @@
     font-size: 1rem; 
     font-weight: 600;
     color: #4b5563;
+}
+
+
+@media (width < 500) {
+    .hoverPanel {
+        max-width: 90vw;
+        padding: 10px;
+        right: var(--rightValueForOnlineUsersOptionsPanel, 0px);
+    }   
 }
