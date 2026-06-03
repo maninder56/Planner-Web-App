@@ -25,8 +25,6 @@ export default function OnlineUsersButtonOptions() {
 
         element.style.setProperty('--rightValueForOnlineUsersOptionsPanel', 
             offSetRight > 50 ? `${-105}px`: '0px'); 
-
-        console.log(rect); 
     }, []); 
 
     return (

@@ -19,6 +19,7 @@ import { ApiRequestWithRefreshTokenAttempt } from '@/Services/ApiRequest';
 import { LogoutUserRequest } from '@/Services/userService';
 import { useUserStore } from '@/Store/userStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { useSignalR } from '@/app/dashboard/Context/signalRContext';
 
 export default function ProfileOptions({
     userData,
@@ -29,8 +30,11 @@ export default function ProfileOptions({
 }) {
     const resetBoardData = useBoardStore((state) => state.resetBoardData); 
     const resetUserData = useUserStore((state) => state.resetUserData); 
+    const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
 
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
+
+    const { LeaveBoard } = useSignalR(); 
     
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [error, setError] = useState(''); 
@@ -46,6 +50,9 @@ export default function ProfileOptions({
         try {
             const result = await ApiRequestWithRefreshTokenAttempt(LogoutUserRequest); 
             if (result.ok) {
+                if (currentBoardId !== undefined) {
+                    LeaveBoard(currentBoardId); 
+                }
                 resetBoardData(); 
                 resetUserData(); 
                 setActivePanel('none');
