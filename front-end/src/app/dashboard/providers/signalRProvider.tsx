@@ -99,6 +99,7 @@ export default function SignalRProvider({
     }
 
     async function tryJoinAndLeaveBoard() {
+
         const connectionReady = signalRService.connection.state === HubConnectionState.Connected; 
 
         const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 

@@ -226,7 +226,6 @@ export default function BoardContent() {
                     const sourceParentListId = source.data.parentListId; 
                     const targetParentListId = target.data.parentListId; 
                     const targetIndex = target.data.index; 
-                    console.log('Move card'); 
                     moveCard(source.id as CardId, sourceParentListId, targetParentListId, targetIndex); 
                 } else if (source.type === 'boardCard' && target.type === 'cardDropZone') {
                     const sourceParentListId = source.data.parentListId;
