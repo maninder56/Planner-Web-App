@@ -57,7 +57,9 @@ public class ListsController(
             return Forbid(); 
         }
 
-        var newListResult = await listService.CreateNewListAsync(boardId, request);
+        int userID = User.GetUserId(); 
+
+        var newListResult = await listService.CreateNewListAsync(userID, boardId, request);
 
         if (newListResult.Successful)
         {

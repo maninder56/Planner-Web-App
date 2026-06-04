@@ -29,6 +29,8 @@ public interface IGlobalHubClient
     Task ListPositionChanged(ListOrderResponse newListOrder);
     Task CardPositionChanged(UpdatedCardOrderResponse updatedCardOrder);
 
-    Task NewCardAdded(CardInfoResponse newCard);
-    Task NewListAdded(NewListResponse newList); 
+    Task NewCardAdded(NewCardAddedResponse newCard);
+    Task NewListAdded(NewListAddedResponse newList);
+
+    Task ListNameUpdated(ListNameUpdated listName); 
 }

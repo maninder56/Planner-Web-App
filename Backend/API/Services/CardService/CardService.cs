@@ -1,16 +1,23 @@
 ﻿using API.DTOs.Board.Responses;
 using API.DTOs.Card.Requests;
 using API.DTOs.Card.Responses;
+using API.DTOs.List.Responses;
 using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Queries.Cards;
 using API.Repositories.CardRepository;
+using API.SignalR.Hub;
 using DatabaseContext;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.CardService; 
 
-public class CardService(ILogger<CardService> logger, CardQueries cardQueries, ICardRepository cardRepository) : ICardService
+public class CardService(
+    ILogger<CardService> logger, 
+    CardQueries cardQueries, 
+    ICardRepository cardRepository,
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : ICardService
 {
     // Read operations
 
@@ -31,11 +38,25 @@ public class CardService(ILogger<CardService> logger, CardQueries cardQueries, I
 
     // Create operations 
 
-    public async Task<Result<CardInfoResponse>> CreateNewCardAsync(int boardId, int listId, NewCardRequest request)
+    public async Task<Result<CardInfoResponse>> CreateNewCardAsync(int userId, int boardId, int listId, NewCardRequest request)
     {
         try
         {
             Card cardCreated = await cardRepository.CreateNewCardAsync(boardId, listId, request);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).NewCardAdded(new NewCardAddedResponse
+            {
+                ByUserId = userId, 
+                CardId = cardCreated.CardId,
+                Title = cardCreated.Title,
+                Description = cardCreated.Description,
+                CardPosition = cardCreated.CardPosition,
+                IsDone = cardCreated.IsDone,
+                DueDate = cardCreated.DueDate,
+                Priority = cardCreated.Priority,
+                BoardListId = cardCreated.BoardListId,
+            });
 
             return Result<CardInfoResponse>.Success(new CardInfoResponse
             {

@@ -61,7 +61,7 @@ public class CardsController(
             return Forbid();
         }
 
-        var newCardResult = await cardService.CreateNewCardAsync(boardId, listId, request);
+        var newCardResult = await cardService.CreateNewCardAsync(User.GetUserId(), boardId, listId, request);
 
         if (newCardResult.Successful)
         {
