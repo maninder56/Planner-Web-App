@@ -1,5 +1,6 @@
 ﻿using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
+using API.DTOs.List.Responses;
 using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
@@ -184,11 +185,18 @@ public class BoardService(
 
     // Delete operations
 
-    public async Task<Result> DeleteBoardAsync(int boardId)
+    public async Task<Result> DeleteBoardAsync(int userId, int boardId)
     {
         try
         {
             await boardRepository.DeleteBoardAsync(boardId);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).BoardHasBeenDeleted(new BoardDeletedResponse
+            {
+                ByUserId = userId,
+                BoardId = boardId,
+            });
 
             return Result.Success();
         }
