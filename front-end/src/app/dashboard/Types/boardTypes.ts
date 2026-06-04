@@ -126,4 +126,13 @@ export const BoardColourChangedSchema = z.object({
     newBackgroundColour: BoardColourSchema
 }); 
 
+export const NewListAddedSchema = z.object({
+    byUserId: z.number(), 
+    listId: z.number(), 
+    name: z.string(), 
+    listPosition: z.number(), 
+    boardId: z.number(),
+}); 
+
+export type NewListAdded = z.infer<typeof NewListAddedSchema>; 
 

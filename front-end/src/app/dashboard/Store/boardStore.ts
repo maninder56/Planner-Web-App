@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded } from "../Types/boardTypes";
 
 
 
@@ -79,6 +79,7 @@ type Action = {
 
     // Lists operations
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
+    AddNewListToBoardFromSignalR: (data: NewListAdded) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
     deleteList: (ListId: ListId) => void; 
     getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
@@ -258,6 +259,38 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             listOrder: [...state.listOrder, listId],
         }
     }), 
+
+    AddNewListToBoardFromSignalR: (data) => set((state) => {
+        if (data.boardId !== state.currentBoardData?.id) {
+            return state; 
+        }
+
+        const listId: ListId = `list-${data.listId}`; 
+
+        if (state.lists[listId]) {
+            return state; 
+        }
+
+        const newLists: Record<ListId, List> = {
+            ...state.lists, 
+            [listId]: {
+                id: data.listId, 
+                name: data.name, 
+                position: data.listPosition, 
+                CardIDsAndOrder: []
+            }
+        }; 
+
+        const newListOrder: ListId[] = Object.entries(newLists)
+            .sort(([, a], [, b]) => a.position - b.position)
+            .map(([id]) => id as ListId); 
+
+        return {
+            lists: newLists, 
+            listOrder: newListOrder, 
+        }
+
+    }),
 
     deleteList: (listId) => set((state) => {
         const list = state.lists[listId]; 
