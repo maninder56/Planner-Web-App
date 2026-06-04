@@ -5,4 +5,5 @@ export type SignalRClientMethod =
     'ReceiveInvitationNotification' | 
     'UserHasJoinedTheBoard'         | 
     'UserHasLeftTheBoard'           | 
-    'CurrentOnlineUsers'            ; 
+    'CurrentOnlineUsers'            |
+    'BoardColourChanged'            ; 

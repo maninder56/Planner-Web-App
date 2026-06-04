@@ -2,7 +2,7 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './boardMenuOptions.module.css'; 
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
-import { BoardColour, UserRole } from '@/app/dashboard/Types/boardTypes';
+import { BoardColourSchema, UserRole } from '@/app/dashboard/Types/boardTypes';
 import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 import { useState } from 'react';
 import Button from '@/Components/Buttons/button';
@@ -32,13 +32,13 @@ export default function BoardMenuOptions({
 
     const [showDeleteBoard, setShowDeleteBoard] = useState(false);
 
-    const availableColours: BoardColour[] = BoardColoursList; 
+    const availableColours: BoardColourSchema[] = BoardColoursList; 
     
     const viewOnlyBoard = userRole === 'Viewer'; 
     const isNotOwner = userRole !== 'Owner'; 
 
 
-    async function handleBoardColourChange(newColour: BoardColour) {
+    async function handleBoardColourChange(newColour: BoardColourSchema) {
         if (boardColour === undefined || newColour === boardColour) {
             return; 
         }

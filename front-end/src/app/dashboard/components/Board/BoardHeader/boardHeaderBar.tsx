@@ -5,7 +5,7 @@ import styles from './boardHeaderBar.module.css';
 import BoardNameInput from './BoardNameInput/boardNameInput';
 import FavoriteBoardButton from './FavoriteBoardButton/favoriteBoardButton';
 import FilterButton from './FilterButton/filterButton';
-import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import { BoardColourSchema } from '@/app/dashboard/Types/boardTypes';
 import ShareButton from './ShareButton/shareButton';
 import BoardMenu from './BoardMenu/boardMenu';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';

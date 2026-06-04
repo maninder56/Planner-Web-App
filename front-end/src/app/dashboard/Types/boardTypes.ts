@@ -1,7 +1,7 @@
 import * as z from 'zod'; 
 
-const BoardColour = z.literal(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
-export type BoardColour = z.infer<typeof BoardColour>; 
+const BoardColourSchema = z.enum(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
+export type BoardColour = z.infer<typeof BoardColourSchema>; 
 
 export const UserRoleSchema = z.enum([
   "Owner",
@@ -42,7 +42,7 @@ export const BoardSchema = z.object({
     boardId: z.number(), 
     name: z.string(),
     isFavoriteBoard: z.boolean(), 
-    backgroundColour: BoardColour,
+    backgroundColour: BoardColourSchema,
     role: UserRoleSchema,
     boardList: z.union([z.array(BoardListSchema), z.undefined()]) ,
 }); 
@@ -54,7 +54,7 @@ export type BoardArray = z.infer<typeof BoardArraySchema>;
 export const BoardInfoSchema = z.object({
     name: z.union([z.string(), z.undefined()]),
     isFavoriteBoard: z.union([z.boolean(), z.undefined()]),
-    backgroundColour: z.union([BoardColour, z.undefined()]),
+    backgroundColour: z.union([BoardColourSchema, z.undefined()]),
 });
 export type BoardInfo = z.infer<typeof BoardInfoSchema>; 
 
@@ -118,3 +118,12 @@ export const OnlineUserLeavingSchema = z.object({
 }); 
 
 export const AllOnlineUsersSchema = z.array(OnlineUserSchema); 
+
+
+export const BoardColourChangedSchema = z.object({
+    boardId: z.number(), 
+    changedByUserId: z.number(),
+    newBackgroundColour: BoardColourSchema
+}); 
+
+

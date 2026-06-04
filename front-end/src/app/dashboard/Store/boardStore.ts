@@ -60,6 +60,8 @@ type Action = {
     setCurrentBoardFavourite: (isFavourite: boolean) => void; 
     setCurrentBoardColour: (colour: BoardColour) => void; 
 
+    updateBoardColour: (colour: BoardColour, boardId: number) => void; 
+
     resetCurrentBoardData: () => void; 
 
     hydrateBoard: (data: NormalisedBoardData) => void; 
@@ -152,6 +154,30 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         currentBoardData: state.currentBoardData === undefined ? undefined : 
             { ...state.currentBoardData, boardColour: colour }
     })), 
+
+    updateBoardColour: (colour, boardId) => set((state) => {
+        let newBoardData = state.currentBoardData === undefined ? undefined : 
+            { ...state.currentBoardData }; 
+
+        if (newBoardData !== undefined && newBoardData.id === boardId) {
+            newBoardData = {...newBoardData, boardColour: colour}; 
+        }
+
+        let newBoardArray = state.boards === null ? null : 
+            state.boards.map(b => {
+                if (b.boardId === boardId) {
+                    return {...b, backgroundColour: colour, }; 
+                } else {
+                    return b; 
+                }
+            }); 
+
+
+        return {
+            currentBoardData: newBoardData, 
+            boards: newBoardArray, 
+        }
+    }), 
 
     resetCurrentBoardData: () => set(() => ({
         currentBoardData: undefined, 

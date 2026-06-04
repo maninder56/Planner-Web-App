@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -24,6 +24,8 @@ export default function SignalRProvider({
     const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
     const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
 
+    const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
+
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
 
@@ -33,6 +35,9 @@ export default function SignalRProvider({
     const userHasJoinedTheBoardMethodName: SignalRClientMethod = 'UserHasJoinedTheBoard'; 
     const userHasLeftTheBoardMethodName: SignalRClientMethod = 'UserHasLeftTheBoard'; 
     const CurrentOnlineUsersMethodName: SignalRClientMethod = 'CurrentOnlineUsers'; 
+
+    // Board changes
+    const BoardColourChangedMethodName: SignalRClientMethod = 'BoardColourChanged'; 
 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
@@ -90,6 +95,18 @@ export default function SignalRProvider({
         }
     }
 
+    // Board changes 
+    function BoardColourChanged(data: any) {
+        const validData = BoardColourChangedSchema.safeParse(data); 
+
+        if (validData.success) {
+            updateBoardColour(validData.data.newBackgroundColour, validData.data.boardId); 
+        } else {
+            console.error('Invalid Board data recieved from Signal R'); 
+            console.error(validData.error); 
+        }
+    }
+
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
     }
@@ -137,6 +154,8 @@ export default function SignalRProvider({
             signalRService.connection.on(userHasLeftTheBoardMethodName, UserHasLeftTheBoard); 
             signalRService.connection.on(CurrentOnlineUsersMethodName, CurrentOnlineUsers); 
 
+            signalRService.connection.on(BoardColourChangedMethodName, BoardColourChanged); 
+
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
         }
@@ -152,6 +171,7 @@ export default function SignalRProvider({
             signalRService.connection.off(userHasJoinedTheBoardMethodName);
             signalRService.connection.off(userHasLeftTheBoardMethodName);
             signalRService.connection.off(CurrentOnlineUsersMethodName);
+            signalRService.connection.off(BoardColourChangedMethodName); 
         }
     }, []); 
 
