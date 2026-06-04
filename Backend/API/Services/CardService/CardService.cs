@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Board.Responses;
+using API.DTOs.Card.Models;
 using API.DTOs.Card.Requests;
 using API.DTOs.Card.Responses;
 using API.DTOs.List.Responses;
@@ -10,6 +11,7 @@ using API.Repositories.CardRepository;
 using API.SignalR.Hub;
 using DatabaseContext;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics;
 
 namespace API.Services.CardService; 
 
@@ -134,6 +136,18 @@ public class CardService(
         try
         {
             await cardRepository.UpdateCardOrderAsync(boardId, request);
+
+            int numberOfLists = request.ListsAndCards.Count;
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).CardPositionChanged(new UpdatedCardOrderResponse
+            {
+                BoardId = boardId, 
+                ByUserId = userId,
+                firstList = request.ListsAndCards[0], 
+                secondList = numberOfLists > 1 ? request.ListsAndCards[1] : null,
+            }); 
+
             return Result.Success(); 
         }
         catch (BadRequestException ex)

@@ -106,7 +106,7 @@ public class ListService(
             await listRepository.UpdateBoardListOrderAsync(boardId, request.ListIdsInOrder);
 
             string groupName = $"board:{boardId}";
-            await globalHubContext.Clients.Group(groupName).ListPositionChanged(new ListOrderResponse
+            await globalHubContext.Clients.Group(groupName).ListPositionChanged(new UpdatedListOrderResponse
             {
                 ByUserId = userId,
                 BoardId = boardId,

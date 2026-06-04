@@ -25,7 +25,7 @@ public interface IGlobalHubClient
     Task CardHasBeenDeleted(CardDeletedResponse cardDeleted);
 
 
-    Task ListPositionChanged(ListOrderResponse newListOrder);
+    Task ListPositionChanged(UpdatedListOrderResponse newListOrder);
     Task CardPositionChanged(UpdatedCardOrderResponse updatedCardOrder);
 
     Task NewCardAdded(NewCardAddedResponse newCard);
