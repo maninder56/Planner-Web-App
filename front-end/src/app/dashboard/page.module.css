@@ -18,7 +18,25 @@
     /* background-color: rgb(238, 126, 126); */
 }
 
+.activityMessage {
+    font-size: 0.8rem;
+    text-align: center;
+    min-height: 15px;
+}
 
+.disappear {
+    animation: disappear 1s forwards;
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
 
 
 @media (min-width: 600) {

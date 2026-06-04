@@ -30,8 +30,13 @@ export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const isSessionExpired = useUserStore((state) => state.sessionExpired);  
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+    const boardActivityMessage = useBoardStore((state) => state.boardActivityMessage); 
+    const setBoardActivityMessage = useBoardStore((state) => state.setBoardActivityMessage); 
+    const [activityMessageDisappearing, setActivityMessageDisappearing] = useState(false); 
+    
     const [loading, setLoading] = useState(true); 
     const [showErrorPage, setShowErrorPage] = useState(false); 
+
 
     async function fetchRefrehTokens() {
         const request = await RefreshTokensRequest(); 
@@ -56,6 +61,26 @@ export default function Dashboard() {
         setShowErrorPage(false); 
         fetchRefrehTokens(); 
     }
+
+    useEffect(() => {
+        if (boardActivityMessage === '') return; 
+
+        setActivityMessageDisappearing(false); 
+
+        const setMessageToDisapear = setTimeout(() => {
+            setActivityMessageDisappearing(true); 
+        }, 2000);
+
+        const clearMessagetimer = setTimeout(() => {
+            setBoardActivityMessage(''); 
+            setActivityMessageDisappearing(true); 
+        }, 3000); 
+
+        return () => {
+            clearTimeout(clearMessagetimer); 
+            clearTimeout(setMessageToDisapear); 
+        } 
+    }, [boardActivityMessage])
 
 
     if (loading) {
@@ -87,6 +112,10 @@ export default function Dashboard() {
                     setActivePanel('none'); 
                 }}>
                     <DashboardHeader />
+                    <span className={[styles.activityMessage, 
+                        activityMessageDisappearing ? styles.disappear : ''].join(' ')}>
+                        {boardActivityMessage}
+                    </span>
                     <Board />   
                     { isSessionExpired && <SessionExpired /> }
                     { <InvitationBannerNotification /> }

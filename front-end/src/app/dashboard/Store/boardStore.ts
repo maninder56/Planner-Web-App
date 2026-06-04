@@ -48,6 +48,7 @@ type State = {
     listOrder: ListId[], 
     boardError: string, 
     onlineUsers: Map<number, OnlineUser>, 
+    boardActivityMessage: string; 
 }
 
 
@@ -98,6 +99,9 @@ type Action = {
     removeOnlineUser: (userId: number) => void; 
     setOnlineUsers: (users: OnlineUser[]) => void; 
     clearOnlineUsers: () => void; 
+
+    // board activity
+    setBoardActivityMessage: (newMessage: string) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set, get) => ({
@@ -110,6 +114,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     listOrder: [],
     boardError: '', 
     onlineUsers: new Map(),
+    boardActivityMessage: '', 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -481,8 +486,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
         clearOnlineUsers: () => set({ onlineUsers: new Map() }),
 
-
-
+        setBoardActivityMessage: (newMessage) => set({ boardActivityMessage: newMessage }), 
 }))
 
 

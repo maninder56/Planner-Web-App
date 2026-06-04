@@ -20,12 +20,14 @@ export default function SignalRProvider({
     const setInvitationsStale = useInvitationStore((state) => state.setStale); 
     const setShowInvitationBanner = useInvitationStore((state) => state.setShowInvitationBanner); 
 
+    const setBoardActivityMessage = useBoardStore((state) => state.setBoardActivityMessage); 
     const addNewOnlineUser = useBoardStore((state) => state.addNewOnlineUser); 
     const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
     const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
 
     const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
 
+    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
 
@@ -95,12 +97,27 @@ export default function SignalRProvider({
         }
     }
 
+    function GetOnlineUser(userId: number) {
+        const user = useBoardStore.getState().onlineUsers.get(userId); 
+        if (user) {
+            return {...user}; 
+        } else {
+            return undefined; 
+        }
+    }
+
     // Board changes 
     function BoardColourChanged(data: any) {
         const validData = BoardColourChangedSchema.safeParse(data); 
 
         if (validData.success) {
             updateBoardColour(validData.data.newBackgroundColour, validData.data.boardId); 
+            const userName = GetOnlineUser(validData.data.changedByUserId)?.name; 
+            if (userName) {
+                setBoardActivityMessage(`Board Colour Changed by ${userName}`); 
+            } else {
+                setBoardActivityMessage(`Board Colour Changed`); 
+            }
         } else {
             console.error('Invalid Board data recieved from Signal R'); 
             console.error(validData.error); 
