@@ -84,7 +84,7 @@ public class ListsController(
             return Forbid();
         }
 
-        var changedList = await listService.UpdateListInfo(boardId, id, request);
+        var changedList = await listService.UpdateListInfo(User.GetUserId(), boardId, id, request);
 
         if (changedList.Successful)
         {
@@ -110,7 +110,7 @@ public class ListsController(
             return Forbid();
         }
 
-        var listOrderResult = await listService.UpdateListOrderAsync(boardId, request);
+        var listOrderResult = await listService.UpdateListOrderAsync(User.GetUserId(), boardId, request);
 
         if (listOrderResult.Successful)
         {
@@ -138,7 +138,7 @@ public class ListsController(
             return Forbid();
         }
 
-        var deleteListResult = await listService.DeleteList(boardId, id);
+        var deleteListResult = await listService.DeleteList(User.GetUserId(), boardId, id);
 
         if (deleteListResult.Successful)
         {

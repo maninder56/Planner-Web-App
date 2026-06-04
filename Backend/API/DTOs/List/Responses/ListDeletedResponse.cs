@@ -2,5 +2,7 @@
 
 public class ListDeletedResponse
 {
-    public required int ListID { get; set; }
+    public required int ByUserId { get; set; }
+    public required int ListId { get; set; }
+    public required int BoardId { get; set; }
 }

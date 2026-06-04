@@ -45,7 +45,7 @@ public class ListService(
             string groupName = $"board:{boardId}";
             await globalHubContext.Clients.Group(groupName).NewListAdded(new NewListAddedResponse
             {
-                ByUserId = userID, ListId = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition
+                ByUserId = userID, ListId = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition, BoardId = boardId
             }); 
             
             return Result<NewListResponse>.Success(new NewListResponse 
@@ -74,7 +74,9 @@ public class ListService(
             await globalHubContext.Clients.Group(groupName).ListNameUpdated(new ListNameUpdated
             {
                 ByUserId = userId,
+                ListId = listId, 
                 NewName = changedBoardList.Name,
+                BoardId = boardId,
             });
 
 
@@ -127,6 +129,15 @@ public class ListService(
         try
         {
             await listRepository.DeleteListAsync(boardId, listId);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).ListHasBeenDeleted(new ListDeletedResponse
+            {
+                ByUserId = userId,
+                ListId = listId,
+                BoardId = boardId, 
+            });
+
             return Result.Success(); 
         }
         catch (Exception ex)

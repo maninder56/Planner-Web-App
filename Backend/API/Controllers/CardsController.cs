@@ -87,7 +87,7 @@ public class CardsController(
             return Forbid();
         }
 
-        var updateResult = await cardService.UpdateCardInfo(boardId, listId, id, request);
+        var updateResult = await cardService.UpdateCardInfo(User.GetUserId(), boardId, listId, id, request);
 
         if (updateResult.Successful)
         {
@@ -111,7 +111,7 @@ public class CardsController(
             return Forbid();
         }
 
-        var updateResult = await cardService.UpdateCardOrderAsync(boardId, request);
+        var updateResult = await cardService.UpdateCardOrderAsync(User.GetUserId(), boardId, request);
 
         if (updateResult.Successful)
         {
@@ -137,7 +137,7 @@ public class CardsController(
             return Forbid();
         }
 
-        var deleteResult = await cardService.DeleteCardAsync(boardId, listId, id);
+        var deleteResult = await cardService.DeleteCardAsync(User.GetUserId(), boardId, listId, id);
 
         if (deleteResult.Successful)
         {

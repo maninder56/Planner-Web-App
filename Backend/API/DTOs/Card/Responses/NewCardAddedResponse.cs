@@ -6,6 +6,8 @@ public class NewCardAddedResponse
 {
     public required int ByUserId { get; set; }
 
+    public required int BoardId { get; set; }
+
     public int CardId { get; set; }
 
     public required string Title { get; set; }

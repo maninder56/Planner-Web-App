@@ -4,6 +4,8 @@ public class NewListAddedResponse
 {
     public required int ByUserId { get; set; }
 
+    public required int BoardId { get; set; }
+    
     public required int ListId { get; set; }
 
     public required string Name { get; set; }
