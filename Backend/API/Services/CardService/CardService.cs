@@ -92,6 +92,20 @@ public class CardService(
         {
             Card updatedCard = await cardRepository.UpdateCardAsync(boardId, listId, cardId, request);
 
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).CardHasBeenUpdated(new CardUpdatedResponse
+            {
+                ByUserId = userId,
+                BoardId = boardId,
+                ListId = listId,
+                CardId = updatedCard.CardId,
+                Title = request.Title,
+                Description = request.Description,
+                IsDone = request.IsDone,
+                DueDate = request.DueDate,
+                Priority = request.Priority,
+            });
+
             return Result<UpdateCardResponse>.Success(new UpdateCardResponse
             {
                 CardId = updatedCard.CardId,

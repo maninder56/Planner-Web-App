@@ -1,4 +1,5 @@
 ﻿using API.DTOs.Board.Responses;
+using API.DTOs.Card.Responses;
 using API.DTOs.List.Requests;
 using API.DTOs.List.Responses;
 using API.Exceptions;
@@ -103,6 +104,14 @@ public class ListService(
         try
         {
             await listRepository.UpdateBoardListOrderAsync(boardId, request.ListIdsInOrder);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).ListPositionChanged(new ListOrderResponse
+            {
+                ByUserId = userId,
+                BoardId = boardId,
+                ListOrder = request.ListIdsInOrder,
+            });
 
             return Result.Success();
         }
