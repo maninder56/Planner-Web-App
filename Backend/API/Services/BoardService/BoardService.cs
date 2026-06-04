@@ -4,12 +4,18 @@ using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
+using API.SignalR.Hub;
 using DatabaseContext;
 using DatabaseContext.Types;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.BoardService;
 
-public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries, IBoardRepository boardRepository) : IBoardService
+public class BoardService(
+    ILogger<BoardService> logger, 
+    BoardQueries boardQueries, 
+    IBoardRepository boardRepository,
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : IBoardService
 {
     // Read operations
 
@@ -121,6 +127,17 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             if (request.Name is not null || request.BackgroundColour is not null)
             {
                 await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);
+                
+                if (request.BackgroundColour is not null)
+                {
+                    string groupName = $"board:{boardId}";
+                    await globalHubContext.Clients.Group(groupName).BoardColourChanged(new BoardColourChangedResponse
+                    { 
+                        BoardId = boardId,
+                        ChangedByUserId = userId,
+                        NewBackgroundColour = request.BackgroundColour 
+                    }); 
+                }
             }
 
             if (request.IsFavoriteBoard is bool favorite)
