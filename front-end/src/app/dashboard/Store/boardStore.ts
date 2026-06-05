@@ -81,7 +81,7 @@ type Action = {
 
     // Lists operations
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
-    AddNewListToBoardFromSignalR: (data: NewListAdded) => void; 
+    AddNewListToBoardFromSignalR: (data: NewListAdded, activityMessage?: string) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
     deleteList: (ListId: ListId) => void; 
     getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
@@ -264,7 +264,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         }
     }), 
 
-    AddNewListToBoardFromSignalR: (data) => set((state) => {
+    AddNewListToBoardFromSignalR: (data, activityMessage) => set((state) => {
         if (data.boardId !== state.currentBoardData?.id) {
             return state; 
         }
@@ -281,7 +281,8 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                 id: data.listId, 
                 name: data.name, 
                 position: data.listPosition, 
-                CardIDsAndOrder: []
+                CardIDsAndOrder: [], 
+                activityMessage: activityMessage,
             }
         }; 
 

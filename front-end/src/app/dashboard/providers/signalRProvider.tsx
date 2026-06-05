@@ -130,7 +130,13 @@ export default function SignalRProvider({
         const validData = NewListAddedSchema.safeParse(data); 
 
         if (validData.success) {
-            AddNewListToBoardFromSignalR(validData.data); 
+            let message = `New list added`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+
+            AddNewListToBoardFromSignalR(validData.data, message); 
         } else {
             console.error('Invalid list data recieved from Signal R'); 
             console.error(validData.error); 
