@@ -19,6 +19,7 @@ type List = {
     name: string, 
     position: number,
     CardIDsAndOrder: CardId[],
+    activityMessage?: string, 
 }
 
 type Card = { 
@@ -29,6 +30,7 @@ type Card = {
     priority: CardPriority,
     dueDate: string, 
     position: number, 
+    activityMessage?: string, 
 }
 
 type NormalisedBoardData = {
@@ -83,6 +85,7 @@ type Action = {
     UpdateListName: (listId: ListId, newName: string) => void; 
     deleteList: (ListId: ListId) => void; 
     getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
+    setListActivityMessage: (listId: ListId, message?: string) => void; 
 
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
@@ -93,6 +96,7 @@ type Action = {
     addNewCard: (parentListId: number, card: Card) => void;
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
+    setCardActivityMessage: (cardId: CardId, message?: string) => void; 
 
 
     // online users 
@@ -335,6 +339,24 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
+
+    setListActivityMessage: (listId, message) => set((state) => {
+        const list = state.lists[listId]; 
+
+        if (!list) {
+            return state; 
+        }
+
+        return {
+            lists: { 
+                ...state.lists, 
+                [listId]: {
+                    ...list, 
+                    activityMessage: message, 
+                }
+            }
+        }
+    }),
     
 
     // Card actions
@@ -499,6 +521,25 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             return updatedState; 
         }), 
 
+        setCardActivityMessage: (cardId, message) => set((state) => {
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: {
+                        ...card, 
+                        activityMessage: message,
+                    }
+                }
+            }
+        }),
+
+        // online users 
         addNewOnlineUser: (user) => set((state) => ({
             onlineUsers: new Map(state.onlineUsers).set(user.userId, user),
         })), 
