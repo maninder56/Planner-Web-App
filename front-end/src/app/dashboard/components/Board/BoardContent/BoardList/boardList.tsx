@@ -21,6 +21,7 @@ import {
   pointerIntersection,
   directionBiased
 } from '@dnd-kit/collision';
+import DisappearingMessage from '@/Components/Alert/DisappearingMessage/disappearingMessage';
 
 export default function BoardList({
     boardId, 
@@ -46,8 +47,10 @@ export default function BoardList({
 
     const initialListName = useBoardStore((state) => state.lists[listId].name); 
     const listCardsIdsAndOrder = useBoardStore((state) => state.lists[listId].CardIDsAndOrder); 
+    const activityMessage = useBoardStore((state) => state.lists[listId].activityMessage); 
     const setBoardError = useBoardStore((state) => state.setBoardError);  
     const UpdateListName = useBoardStore((state) => state.UpdateListName); 
+    const setListActivityMessage = useBoardStore((state) => state.setListActivityMessage); 
     
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
@@ -116,8 +119,15 @@ export default function BoardList({
         }
     }
 
+    function handleListActivityMessage(message?: string) {
+        setListActivityMessage(listId, message); 
+    }
+
     return (
         <div className={[styles.wrapper, isDragging ? styles.dragging : ''].join(' ')} ref={ref}>
+            <div className={styles.disappearingMessage}>
+                <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleListActivityMessage} />
+            </div>
             <div className={styles.header}>
                 <div ref={handleRef} className={[styles.grabListIcon, viewOnly ? styles.disable : ''].join(' ')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

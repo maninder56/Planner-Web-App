@@ -1,0 +1,26 @@
+
+.activityMessage {
+    font-size: 0.8rem;
+}
+
+.disappear {
+    animation: disappear 1s forwards;
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+
+@media (min-width: 600) {
+
+    .page {
+        margin: 0px 20px;
+    }
+}
