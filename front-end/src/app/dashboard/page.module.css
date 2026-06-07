@@ -18,24 +18,16 @@
     /* background-color: rgb(238, 126, 126); */
 }
 
-.activityMessage {
-    font-size: 0.8rem;
-    text-align: center;
+.disappearingMessage {
+    margin: 1px 0px;
     min-height: 15px;
-}
+    
+    font-size: 0.8rem;
+    
+    display: flex;
+    justify-content: center;
 
-.disappear {
-    animation: disappear 1s forwards;
-}
-
-@keyframes disappear {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
+    color: rgb(46, 46, 46);
 }
 
 

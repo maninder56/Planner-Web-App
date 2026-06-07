@@ -50,7 +50,7 @@ type State = {
     listOrder: ListId[], 
     boardError: string, 
     onlineUsers: Map<number, OnlineUser>, 
-    boardActivityMessage: string; 
+    boardActivityMessage?: string; 
 }
 
 
@@ -108,7 +108,7 @@ type Action = {
     clearOnlineUsers: () => void; 
 
     // board activity
-    setBoardActivityMessage: (newMessage: string) => void; 
+    setBoardActivityMessage: (newMessage?: string) => void; 
 }
 
 export const useBoardStore = create<State & Action>((set, get) => ({
