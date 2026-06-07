@@ -7,4 +7,5 @@ export type SignalRClientMethod =
     'UserHasLeftTheBoard'           | 
     'CurrentOnlineUsers'            |
     'BoardColourChanged'            | 
-    'NewListAdded'                  ; 
+    'NewListAdded'                  | 
+    'ListNameUpdated'               ; 

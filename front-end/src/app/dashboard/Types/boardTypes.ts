@@ -136,3 +136,15 @@ export const NewListAddedSchema = z.object({
 
 export type NewListAdded = z.infer<typeof NewListAddedSchema>; 
 
+
+export const ListNameUpdatedSchema = z.object({
+    byUserId: z.number(), 
+    listId: z.number(), 
+    newName: z.string(), 
+    boardId: z.number(),
+});
+
+export type ListNameUpdated = z.infer<typeof ListNameUpdatedSchema>; 
+
+
+

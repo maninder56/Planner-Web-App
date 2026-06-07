@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, ListNameUpdatedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -27,8 +27,8 @@ export default function SignalRProvider({
 
     const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
     const AddNewListToBoardFromSignalR = useBoardStore((state) => state.AddNewListToBoardFromSignalR); 
-
-    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
+    const UpdateListNameFromSignalR = useBoardStore((state) => state.UpdateListNameFromSignalR); 
+ 
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
 
@@ -41,7 +41,10 @@ export default function SignalRProvider({
 
     // Board changes
     const BoardColourChangedMethodName: SignalRClientMethod = 'BoardColourChanged'; 
+
+    // list changes
     const NewListAddedMethodName: SignalRClientMethod = 'NewListAdded'; 
+    const ListNameUpdatedMethodName: SignalRClientMethod = 'ListNameUpdated'; 
 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
@@ -138,10 +141,30 @@ export default function SignalRProvider({
 
             AddNewListToBoardFromSignalR(validData.data, message); 
         } else {
-            console.error('Invalid list data recieved from Signal R'); 
+            console.error('Invalid new list data recieved from Signal R'); 
             console.error(validData.error); 
         }
     }
+
+    function ListNameUpdated(data: any) {
+        const validData = ListNameUpdatedSchema.safeParse(data); 
+
+        if (validData.success) {
+            let message = `List renamed`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+
+            UpdateListNameFromSignalR(validData.data, message); 
+        } else {
+            console.error('Invalid list name data recieved from Signal R'); 
+            console.error(validData.error); 
+        }
+    }
+
+
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -191,7 +214,8 @@ export default function SignalRProvider({
             signalRService.connection.on(CurrentOnlineUsersMethodName, CurrentOnlineUsers); 
 
             signalRService.connection.on(BoardColourChangedMethodName, BoardColourChanged); 
-            signalRService.connection.on(NewListAddedMethodName, NewListAdded); 
+            signalRService.connection.on(NewListAddedMethodName, NewListAdded);
+            signalRService.connection.on(ListNameUpdatedMethodName, ListNameUpdated); 
 
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
@@ -212,6 +236,7 @@ export default function SignalRProvider({
 
             signalRService.connection.off(BoardColourChangedMethodName); 
             signalRService.connection.off(NewListAddedMethodName); 
+            signalRService.connection.off(ListNameUpdatedMethodName); 
         }
     }, []); 
 

@@ -5,7 +5,7 @@ import styles from './boardList.module.css';
 import { CardId, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import Image from 'next/image';
 import ListMenuButton from './ListMenu/listMenuButton';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BoardCard from '../BoardCard/boardCard';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
 import {RestrictToElement, RestrictToWindow} from '@dnd-kit/dom/modifiers';
@@ -81,6 +81,11 @@ export default function BoardList({
         // collisionDetector: pointerIntersection, 
         collisionPriority: CollisionPriority.Normal,
     }); 
+
+
+    useEffect(() => {
+        setListName(initialListName); 
+    }, [initialListName]); 
 
 
     async function handleNameChange() {

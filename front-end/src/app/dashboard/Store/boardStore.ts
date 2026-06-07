@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated } from "../Types/boardTypes";
 
 
 
@@ -83,6 +83,7 @@ type Action = {
     AddNewListToBoard: (data: {id: number, title: string, position: number}) => void; 
     AddNewListToBoardFromSignalR: (data: NewListAdded, activityMessage?: string) => void; 
     UpdateListName: (listId: ListId, newName: string) => void; 
+    UpdateListNameFromSignalR: (data: ListNameUpdated, activityMessage?: string) => void; 
     deleteList: (ListId: ListId) => void; 
     getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
     setListActivityMessage: (listId: ListId, message?: string) => void; 
@@ -240,6 +241,32 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                     name: newName, 
                 }
         }
+        }
+    }), 
+
+    UpdateListNameFromSignalR: (data, activityMessage) => set((state) => {
+        if (data.boardId !== state.currentBoardData?.id) {
+            return state; 
+        }
+
+        const listId: ListId = `list-${data.listId}`; 
+        const list = state.lists[listId]; 
+
+        if (!list) {
+            return state; 
+        }
+
+        const newList: List = {
+            ...list,
+            name: data.newName, 
+            activityMessage: activityMessage,
+        }
+
+        return {
+            lists: {
+                ...state.lists, 
+                [listId]: newList
+            }
         }
     }), 
 
