@@ -10,4 +10,5 @@ export type SignalRClientMethod =
     'NewListAdded'                  | 
     'ListNameUpdated'               | 
     'NewCardAdded'                  | 
-    'CardHasBeenDeleted'            ; 
+    'CardHasBeenDeleted'            | 
+    'ListHasBeenDeleted'            ; 

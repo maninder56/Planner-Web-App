@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, CardHasBeenDeletedSchema, ListNameUpdatedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, CardHasBeenDeletedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -30,6 +30,7 @@ export default function SignalRProvider({
     const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
     const AddNewListToBoardFromSignalR = useBoardStore((state) => state.AddNewListToBoardFromSignalR); 
     const UpdateListNameFromSignalR = useBoardStore((state) => state.UpdateListNameFromSignalR); 
+    const DeleteListFromBoardFromSignalR = useBoardStore((state) => state.DeleteListFromBoardFromSignalR); 
 
     const AddNewCardFromSignalR = useBoardStore((state) => state.AddNewCardFromSignalR); 
     const DeleteCardFromListFromSignalR = useBoardStore((state) => state.DeleteCardFromListFromSignalR); 
@@ -50,6 +51,7 @@ export default function SignalRProvider({
     // list changes
     const NewListAddedMethodName: SignalRClientMethod = 'NewListAdded'; 
     const ListNameUpdatedMethodName: SignalRClientMethod = 'ListNameUpdated'; 
+    const ListHasBeenDeletedMethodName: SignalRClientMethod = 'ListHasBeenDeleted'; 
 
     // card changes 
     const NewCardAddedMethodName: SignalRClientMethod = 'NewCardAdded'; 
@@ -206,6 +208,23 @@ export default function SignalRProvider({
         }
     }
 
+    function ListHasBeenDeleted(data: any) {
+        const validData = ListHasBeenDeletedSchema.safeParse(data); 
+
+        if (validData.success) {
+            let message = `List removed`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+            setActivePanel('none'); 
+            DeleteListFromBoardFromSignalR(validData.data, message); 
+        } else {
+            console.error('Invalid deleted list data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -257,6 +276,7 @@ export default function SignalRProvider({
             signalRService.connection.on(BoardColourChangedMethodName, BoardColourChanged); 
             signalRService.connection.on(NewListAddedMethodName, NewListAdded);
             signalRService.connection.on(ListNameUpdatedMethodName, ListNameUpdated); 
+            signalRService.connection.on(ListHasBeenDeletedMethodName, ListHasBeenDeleted); 
 
             signalRService.connection.on(NewCardAddedMethodName, NewCardAdded); 
             signalRService.connection.on(CardHasBeenDeletedMethodName, CardHasBeenDeleted); 
@@ -281,6 +301,7 @@ export default function SignalRProvider({
             signalRService.connection.off(BoardColourChangedMethodName); 
             signalRService.connection.off(NewListAddedMethodName); 
             signalRService.connection.off(ListNameUpdatedMethodName); 
+            signalRService.connection.off(ListHasBeenDeletedMethodName); 
 
             signalRService.connection.off(NewCardAddedMethodName); 
             signalRService.connection.off(CardHasBeenDeletedMethodName); 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData } from "../Types/boardTypes";
 
 
 
@@ -85,6 +85,7 @@ type Action = {
     UpdateListName: (listId: ListId, newName: string) => void; 
     UpdateListNameFromSignalR: (data: ListNameUpdated, activityMessage?: string) => void; 
     deleteList: (ListId: ListId) => void; 
+    DeleteListFromBoardFromSignalR: (data: ListHasBeenDeletedData, activityMessage?: string) => void; 
     getCardIDsInOrderFromList: (listId: ListId) => CardId[] | undefined; 
     setListActivityMessage: (listId: ListId, message?: string) => void; 
 
@@ -355,6 +356,45 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             listOrder: newListOrder, 
         };
     }), 
+
+
+    DeleteListFromBoardFromSignalR: (data, activityMessage) => set((state) => {
+        if (data.boardId !== state.currentBoardData?.id) {
+            return state; 
+        }
+
+        const listId: ListId = `list-${data.listId}`; 
+
+        const list = state.lists[listId]; 
+
+        if (!list) {
+            return state; 
+        }
+
+        const cardIdsToDelete = new Set(list.CardIDsAndOrder); 
+
+        // filter cards
+        const newCards = Object.fromEntries(
+            Object.entries(state.cards).filter(
+                ([cardId]) => !cardIdsToDelete.has(cardId as CardId))
+        ); 
+
+        // filter lists
+        const newLists = Object.fromEntries(
+            Object.entries(state.lists).filter(([Id]) => Id !== listId)
+        );
+    
+        // filter list order 
+        const newListOrder = state.listOrder.filter(id => id !== listId); 
+
+        return {
+            cards: newCards, 
+            lists: newLists, 
+            listOrder: newListOrder, 
+            boardActivityMessage: activityMessage, 
+        };
+    }), 
+
 
     getCardIDsInOrderFromList: (listId) => {
         const { lists } = get(); 

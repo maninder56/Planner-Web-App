@@ -172,3 +172,11 @@ export const CardHasBeenDeletedSchema = z.object({
 export type CardHasBeenDeletedData = z.infer<typeof CardHasBeenDeletedSchema>; 
 
 
+export const ListHasBeenDeletedSchema = z.object({
+    byUserId: z.number(), 
+    listId: z.number(),  
+    boardId: z.number(),
+}); 
+
+export type ListHasBeenDeletedData = z.infer<typeof ListHasBeenDeletedSchema>; 
+
