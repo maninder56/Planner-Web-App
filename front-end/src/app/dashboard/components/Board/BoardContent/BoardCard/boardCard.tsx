@@ -19,6 +19,7 @@ import {
   directionBiased
 } from '@dnd-kit/collision';
 import { DragOverlay } from '@dnd-kit/react';
+import DisappearingMessage from '@/Components/Alert/DisappearingMessage/disappearingMessage';
 
 export default function BoardCard({
     cardId, 
@@ -43,6 +44,9 @@ export default function BoardCard({
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
 
     const setCardDetailsPanelData = useBoardUIStore((state) => state.setCardDetailsPanelData); 
+
+    const activityMessage = useBoardStore((state) => state.cards[cardId].activityMessage); 
+    const setCardActivityMessage = useBoardStore((state) => state.setCardActivityMessage); 
 
     const [IsCardDone, setIsCardDone] = useState(cardDetails.done); 
 
@@ -113,6 +117,10 @@ export default function BoardCard({
     }
 
 
+    function handleCardActivityMessage(message?: string) {
+        setCardActivityMessage(cardId, message); 
+    }
+
     return (
         <div className={[styles.wrapper, 
             IsCardDone ? styles.taskDone : '', 
@@ -124,6 +132,9 @@ export default function BoardCard({
                 setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
+            <div className={styles.disappearingMessage}>
+                <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleCardActivityMessage} />
+            </div>
             <header>
                 <input type='checkbox' disabled={viewOnly} className={styles.checkbox} defaultChecked={IsCardDone} 
                     onClick={(e) => {
