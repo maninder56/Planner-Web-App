@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData } from "../Types/boardTypes";
 
 
 
@@ -98,6 +98,7 @@ type Action = {
     AddNewCardFromSignalR: (data: NewCardAdded, activityMessage?: string) => void; 
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
+    DeleteCardFromListFromSignalR: (data: CardHasBeenDeletedData, activityMessage?: string) => void; 
     setCardActivityMessage: (cardId: CardId, message?: string) => void; 
 
 
@@ -495,6 +496,10 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         }), 
 
         AddNewCardFromSignalR: (data, activityMessage) => set((state) => {
+            if (data.boardId !== state.currentBoardData?.id) {
+                return state; 
+            }
+
             const cardId: CardId = `card-${data.cardId}`; 
             const listId: ListId = `list-${data.boardListId}`; 
 
@@ -586,6 +591,44 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
             if (card) {
                  // filter cards
+                const newCards = Object.fromEntries(Object.entries(state.cards)
+                    .filter(([id]) => id !== cardId)); 
+
+                updatedState.cards = newCards; 
+            }
+
+            return updatedState; 
+        }), 
+
+        DeleteCardFromListFromSignalR: (data, activityMessage) => set((state) => {
+            if (data.boardId !== state.currentBoardData?.id) {
+                return state; 
+            }
+
+            const listId: ListId = `list-${data.listId}`; 
+            const cardId: CardId = `card-${data.cardId}`; 
+
+            const list = state.lists[listId]; 
+            const card = state.cards[cardId]; 
+
+            if (!list && !card) {
+                return state; 
+            }
+
+            const updatedState: Partial<typeof state> = {}; 
+
+            if (list) {
+                updatedState.lists = {
+                    ...state.lists, 
+                    [listId]: {
+                        ...list, 
+                        CardIDsAndOrder: list.CardIDsAndOrder.filter(id => id !== cardId), 
+                        activityMessage: activityMessage, 
+                    }
+                }
+            }
+
+            if (card) {
                 const newCards = Object.fromEntries(Object.entries(state.cards)
                     .filter(([id]) => id !== cardId)); 
 

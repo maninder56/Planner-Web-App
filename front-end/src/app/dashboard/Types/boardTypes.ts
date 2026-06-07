@@ -162,4 +162,13 @@ export const NewCardAddedSchema = z.object({
 
 export type NewCardAdded = z.infer<typeof NewCardAddedSchema>; 
 
+export const CardHasBeenDeletedSchema = z.object({
+    byUserId: z.number(), 
+    listId: z.number(),  
+    boardId: z.number(),
+    cardId: z.number(),
+}); 
+
+export type CardHasBeenDeletedData = z.infer<typeof CardHasBeenDeletedSchema>; 
+
 

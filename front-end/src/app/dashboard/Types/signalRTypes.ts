@@ -9,4 +9,5 @@ export type SignalRClientMethod =
     'BoardColourChanged'            | 
     'NewListAdded'                  | 
     'ListNameUpdated'               | 
-    'NewCardAdded'                  ; 
+    'NewCardAdded'                  | 
+    'CardHasBeenDeleted'            ; 
