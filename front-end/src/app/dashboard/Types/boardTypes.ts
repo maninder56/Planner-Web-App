@@ -146,5 +146,20 @@ export const ListNameUpdatedSchema = z.object({
 
 export type ListNameUpdated = z.infer<typeof ListNameUpdatedSchema>; 
 
+export const NewCardAddedSchema = z.object({
+    byUserId: z.number(),
+    boardId: z.number(), 
+    boardListId: z.number(), 
+    cardId: z.number(), 
+    title: z.string(), 
+    description: z.union([z.string(), z.undefined()]), 
+    isDone: z.boolean(), 
+    priority: CardPrioritySchema,
+    dueDate: z.string(), 
+    cardPosition: z.number(), 
+}); 
+
+
+export type NewCardAdded = z.infer<typeof NewCardAddedSchema>; 
 
 

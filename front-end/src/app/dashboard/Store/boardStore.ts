@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded } from "../Types/boardTypes";
 
 
 
@@ -95,6 +95,7 @@ type Action = {
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
     addNewCard: (parentListId: number, card: Card) => void;
+    AddNewCardFromSignalR: (data: NewCardAdded, activityMessage?: string) => void; 
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
     setCardActivityMessage: (cardId: CardId, message?: string) => void; 
@@ -492,6 +493,51 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                 }
             }
         }), 
+
+        AddNewCardFromSignalR: (data, activityMessage) => set((state) => {
+            const cardId: CardId = `card-${data.cardId}`; 
+            const listId: ListId = `list-${data.boardListId}`; 
+
+            const list = state.lists[listId]; 
+
+            if (!list) {
+                return state; 
+            }
+
+            if (list.CardIDsAndOrder.includes(cardId)) {
+                return state; 
+            }
+
+            const newCards: Record<CardId, Card> = {
+                ...state.cards, 
+                [cardId]: {
+                    id: data.cardId,
+                    name: data.title,
+                    description: data.description ?? '',
+                    done: data.isDone,
+                    priority: data.priority,
+                    dueDate: data.dueDate,
+                    position: data.cardPosition, 
+                    activityMessage: activityMessage, 
+                }
+            }
+
+            const newCardIDsAndOrder: CardId[] = [...list.CardIDsAndOrder, cardId]    
+                .sort((a, b) => newCards[a].position - newCards[b].position); 
+                
+            const newLists: Record<ListId, List> = {
+                ...state.lists, 
+                [listId]: {
+                    ...list, 
+                    CardIDsAndOrder: newCardIDsAndOrder,
+                }
+            }
+
+            return {
+                lists: newLists, 
+                cards: newCards, 
+            }
+        }),
 
         updateCardInfo: (cardId, updateCard) => set((state) => {
             const card = state.cards[cardId]; 

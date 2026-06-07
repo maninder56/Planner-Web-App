@@ -8,4 +8,5 @@ export type SignalRClientMethod =
     'CurrentOnlineUsers'            |
     'BoardColourChanged'            | 
     'NewListAdded'                  | 
-    'ListNameUpdated'               ; 
+    'ListNameUpdated'               | 
+    'NewCardAdded'                  ; 

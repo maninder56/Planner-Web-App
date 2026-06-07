@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, ListNameUpdatedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, ListNameUpdatedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -28,6 +28,8 @@ export default function SignalRProvider({
     const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
     const AddNewListToBoardFromSignalR = useBoardStore((state) => state.AddNewListToBoardFromSignalR); 
     const UpdateListNameFromSignalR = useBoardStore((state) => state.UpdateListNameFromSignalR); 
+
+    const AddNewCardFromSignalR = useBoardStore((state) => state.AddNewCardFromSignalR); 
  
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -45,6 +47,9 @@ export default function SignalRProvider({
     // list changes
     const NewListAddedMethodName: SignalRClientMethod = 'NewListAdded'; 
     const ListNameUpdatedMethodName: SignalRClientMethod = 'ListNameUpdated'; 
+
+    // card changes 
+    const NewCardAddedMethodName: SignalRClientMethod = 'NewCardAdded'; 
 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
@@ -163,6 +168,22 @@ export default function SignalRProvider({
         }
     }
 
+    function NewCardAdded(data: any) {
+        const validData = NewCardAddedSchema.safeParse(data); 
+
+        if (validData.success) {
+            let message = `New card added`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+
+            AddNewCardFromSignalR(validData.data, message); 
+        } else {
+            console.error('Invalid new card data recieved from Signal R'); 
+            console.error(validData.error); 
+        }
+    }
 
 
 
@@ -217,6 +238,8 @@ export default function SignalRProvider({
             signalRService.connection.on(NewListAddedMethodName, NewListAdded);
             signalRService.connection.on(ListNameUpdatedMethodName, ListNameUpdated); 
 
+            signalRService.connection.on(NewCardAddedMethodName, NewCardAdded); 
+
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
         }
@@ -237,6 +260,8 @@ export default function SignalRProvider({
             signalRService.connection.off(BoardColourChangedMethodName); 
             signalRService.connection.off(NewListAddedMethodName); 
             signalRService.connection.off(ListNameUpdatedMethodName); 
+
+            signalRService.connection.off(NewCardAddedMethodName); 
         }
     }, []); 
 
