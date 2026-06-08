@@ -205,4 +205,11 @@ export const CardHasBeenUpdatedSchema = z.object({
 export type CardHasBeenUpdatedData = z.infer<typeof CardHasBeenUpdatedSchema>; 
 
 
+export const ListPositionChangedSchema = z.object({
+   byUserId: z.number(),  
+   boardId: z.number(),
+   listOrder: z.array(z.number()), 
+}); 
+
+export type ListPositionChangedData = z.infer<typeof ListPositionChangedSchema>; 
 

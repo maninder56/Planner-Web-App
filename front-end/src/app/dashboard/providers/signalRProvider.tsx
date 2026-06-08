@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -34,6 +34,7 @@ export default function SignalRProvider({
     const AddNewListToBoardFromSignalR = useBoardStore((state) => state.AddNewListToBoardFromSignalR); 
     const UpdateListNameFromSignalR = useBoardStore((state) => state.UpdateListNameFromSignalR); 
     const DeleteListFromBoardFromSignalR = useBoardStore((state) => state.DeleteListFromBoardFromSignalR); 
+    const UpdateListOrderFromSignalR = useBoardStore((state) => state.UpdateListOrderFromSignalR); 
 
     // Card functions 
     const AddNewCardFromSignalR = useBoardStore((state) => state.AddNewCardFromSignalR); 
@@ -58,6 +59,7 @@ export default function SignalRProvider({
     const NewListAddedMethodName: SignalRClientMethod = 'NewListAdded'; 
     const ListNameUpdatedMethodName: SignalRClientMethod = 'ListNameUpdated'; 
     const ListHasBeenDeletedMethodName: SignalRClientMethod = 'ListHasBeenDeleted'; 
+    const ListPositionChangedMethodName: SignalRClientMethod = 'ListPositionChanged'; 
 
     // card changes 
     const NewCardAddedMethodName: SignalRClientMethod = 'NewCardAdded'; 
@@ -266,6 +268,22 @@ export default function SignalRProvider({
         }   
     }
 
+    function ListPositionChanged(data: any) {
+        const validData = ListPositionChangedSchema.safeParse(data); 
+
+        if (validData.success) {
+            let message = `List moved`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+            UpdateListOrderFromSignalR(validData.data, message); 
+        } else {
+            console.error('Invalid updated card data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -320,6 +338,7 @@ export default function SignalRProvider({
             signalRService.connection.on(NewListAddedMethodName, NewListAdded);
             signalRService.connection.on(ListNameUpdatedMethodName, ListNameUpdated); 
             signalRService.connection.on(ListHasBeenDeletedMethodName, ListHasBeenDeleted); 
+            signalRService.connection.on(ListPositionChangedMethodName, ListPositionChanged); 
 
             signalRService.connection.on(NewCardAddedMethodName, NewCardAdded); 
             signalRService.connection.on(CardHasBeenDeletedMethodName, CardHasBeenDeleted); 
@@ -348,6 +367,7 @@ export default function SignalRProvider({
             signalRService.connection.off(NewListAddedMethodName); 
             signalRService.connection.off(ListNameUpdatedMethodName); 
             signalRService.connection.off(ListHasBeenDeletedMethodName); 
+            signalRService.connection.off(ListPositionChangedMethodName);
 
             signalRService.connection.off(NewCardAddedMethodName); 
             signalRService.connection.off(CardHasBeenDeletedMethodName); 

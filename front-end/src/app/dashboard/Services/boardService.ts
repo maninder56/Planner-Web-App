@@ -1,6 +1,6 @@
 import { ApiErrorFromStatusCode, ApiRequestFailed, ApiRequestSuccessfull } from '@/Utilities/ApiUtilities';
 import z from 'zod';
-import { BoardSchema, BoardDataFromAPI, BoardColourSchema, BoardArraySchema, BoardInfo, BoardInfoSchema } from '../Types/boardTypes';
+import { BoardSchema, BoardDataFromAPI, BoardColour, BoardArraySchema, BoardInfo, BoardInfoSchema } from '../Types/boardTypes';
 import { ApiFetchRequest } from '@/Services/ApiRequest';
 
 const boardRoute = '/boards'; 
@@ -107,7 +107,7 @@ export async function LastUsedBoardRequest() {
 
 // Post Requests
 
-export async function CreateNewBoardRequest(data: {name: string, colour: BoardColourSchema}) {
+export async function CreateNewBoardRequest(data: {name: string, colour: BoardColour}) {
     const subUrl = boardRoute; 
     const request: RequestInit = {
         headers: {

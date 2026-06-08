@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData } from "../Types/boardTypes";
 
 
 
@@ -93,6 +93,7 @@ type Action = {
     // re-ordering
     setListOrder: (newListOrder: ListId[]) => void; 
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
+    UpdateListOrderFromSignalR: (data: ListPositionChangedData, activityMessage?: string) => void; 
     
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
@@ -431,6 +432,19 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
 
     setListOrder: (newListOrder) => set(() => ({ listOrder: newListOrder })), 
+
+    UpdateListOrderFromSignalR: (data, activityMessage) => set((state) => {
+        if (data.boardId !== state.currentBoardData?.id) {
+            return state; 
+        }
+
+        const newListOrder: ListId[] = data.listOrder.map(id => `list-${id}` as ListId); 
+
+        return {
+            listOrder: newListOrder, 
+            boardActivityMessage: activityMessage, 
+        }
+    }),
 
     setListActivityMessage: (listId, message) => set((state) => {
         const list = state.lists[listId]; 
