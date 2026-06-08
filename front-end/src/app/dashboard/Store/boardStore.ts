@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData } from "../Types/boardTypes";
 
 
 
@@ -99,6 +99,7 @@ type Action = {
     addNewCard: (parentListId: number, card: Card) => void;
     AddNewCardFromSignalR: (data: NewCardAdded, activityMessage?: string) => void; 
     updateCardInfo: (cardId: CardId, cardUpdate: UpdateCard) => void; 
+    UpdateCardFromSignalR: (data: CardHasBeenUpdatedData, activityMessage?: string) => void; 
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
     DeleteCardFromListFromSignalR: (data: CardHasBeenDeletedData, activityMessage?: string) => void; 
     setCardActivityMessage: (cardId: CardId, message?: string) => void; 
@@ -626,6 +627,38 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                 }
             }
         }), 
+
+        UpdateCardFromSignalR: (data, activityMessage) => set((state) => {
+            if (state.currentBoardData?.id !== data.boardId) {
+                return state; 
+            }
+
+            const cardId: CardId = `card-${data.cardId}`; 
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            return {
+                cards: {
+                    ...state.cards, 
+                    [cardId]: {
+                        ...card, 
+                        name: data.title ?? card.name, 
+                        description: data.description ?? card.description, 
+                        done: data.isDone ?? card.done, 
+                        dueDate: data.dueDate ?? card.dueDate, 
+                        priority: data.priority ?? card.priority, 
+                        activityMessage: activityMessage, 
+                    }
+                }
+            }
+
+            
+        }),
+
+
 
         deleteCard: (listIdAsNumber, cardIdAsNumber) => set((state) => {
             const listId: ListId = `list-${listIdAsNumber}`; 

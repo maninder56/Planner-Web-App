@@ -189,3 +189,20 @@ export const BoardHasBeenDeletedSchema = z.object({
 
 export type BoardHasBeenDeletedData = z.infer<typeof BoardHasBeenDeletedSchema>; 
 
+export const CardHasBeenUpdatedSchema = z.object({
+    byUserId: z.number(), 
+    listId: z.number(),  
+    boardId: z.number(),
+    cardId: z.number(),
+
+    title: z.union([z.string(), z.undefined()]), 
+    description: z.union([z.string(), z.undefined()]), 
+    isDone: z.union([z.boolean(), z.undefined()]), 
+    dueDate:z.union([z.string(), z.undefined()]), 
+    priority: z.union([CardPrioritySchema, z.undefined()]),  
+}); 
+
+export type CardHasBeenUpdatedData = z.infer<typeof CardHasBeenUpdatedSchema>; 
+
+
+

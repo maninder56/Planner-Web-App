@@ -5,7 +5,7 @@ import {CollisionPriority} from '@dnd-kit/abstract';
 import {RestrictToElement, RestrictToWindow} from '@dnd-kit/dom/modifiers';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BoardCardDetails from './boardCardDetails';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
 import { dateFormatter } from '@/app/dashboard/Utilities/boardData';
@@ -80,6 +80,10 @@ export default function BoardCard({
         }
     }); 
 
+    useEffect(() => {
+        setIsCardDone(cardDetails.done); 
+    }, [cardDetails.done]); 
+
     async function handleDoneOnCard(cardId: CardId, isDone: boolean) {
         if (boardId === undefined || parentListIdAsNumber === -1) {
             setBoardError('Failed to update card, please try again.'); 
@@ -136,7 +140,7 @@ export default function BoardCard({
                 <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleCardActivityMessage} />
             </div>
             <header>
-                <input type='checkbox' disabled={viewOnly} className={styles.checkbox} defaultChecked={IsCardDone} 
+                <input type='checkbox' disabled={viewOnly} className={styles.checkbox} checked={IsCardDone} readOnly={true}
                     onClick={(e) => {
                         e.stopPropagation(); 
                         handleDoneOnCard(cardId, !IsCardDone)}} />
