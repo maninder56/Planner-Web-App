@@ -26,8 +26,8 @@ builder.Services.AddProblemDetails();
 builder.Services.AddSignalR()
     .AddJsonProtocol(options =>
     {
-        options.PayloadSerializerOptions.Converters
-            .Add(new JsonStringEnumConverter());
+        options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.PayloadSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; 
     });
 
 
