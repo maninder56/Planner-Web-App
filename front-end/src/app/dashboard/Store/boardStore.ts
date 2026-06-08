@@ -440,9 +440,24 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
         const newListOrder: ListId[] = data.listOrder.map(id => `list-${id}` as ListId); 
 
+        const positions = Object.fromEntries(
+            newListOrder.map((id, index) => [id, index])
+        ) as Record<ListId, number>; 
+
+        const newLists: Record<ListId, List> = Object.fromEntries(Object.entries(state.lists)
+            .map(([id, list]) => [
+                id, 
+                {
+                    ...list, 
+                    position: positions[id as ListId]
+                }
+            ])
+        ); 
+
         return {
             listOrder: newListOrder, 
             boardActivityMessage: activityMessage, 
+            lists: newLists, 
         }
     }),
 
