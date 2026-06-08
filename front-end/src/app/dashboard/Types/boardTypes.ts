@@ -213,3 +213,19 @@ export const ListPositionChangedSchema = z.object({
 
 export type ListPositionChangedData = z.infer<typeof ListPositionChangedSchema>; 
 
+
+const ListAndCardOrder = z.object({
+    listId: z.number(),  
+    cardIDsInOrder: z.array(z.number()), 
+}); 
+
+export const CardPositionChangedSchema = z.object({
+   byUserId: z.number(),  
+   boardId: z.number(),
+   firstList: ListAndCardOrder, 
+   secondList: z.union([ListAndCardOrder, z.undefined()]), 
+}); 
+
+export type CardPositionChangedData = z.infer<typeof CardPositionChangedSchema>; 
+
+

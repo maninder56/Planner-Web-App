@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData } from "../Types/boardTypes";
 
 
 
@@ -94,6 +94,7 @@ type Action = {
     setListOrder: (newListOrder: ListId[]) => void; 
     moveCard: (cardId: CardId, sourceListId: ListId, destinationListId: ListId, destinationIndex: number) => void; 
     UpdateListOrderFromSignalR: (data: ListPositionChangedData, activityMessage?: string) => void; 
+    UpdateCardOrderFromSignalR: (data: CardPositionChangedData, activityMessage?: string) => void; 
     
     // Card actions
     setDoneOnCard: (cardId: CardId, done: boolean) => void; 
@@ -458,6 +459,113 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             listOrder: newListOrder, 
             boardActivityMessage: activityMessage, 
             lists: newLists, 
+        }
+    }),
+
+    UpdateCardOrderFromSignalR: (data, activityMessage) => set((state) => {
+        if (data.boardId !== state.currentBoardData?.id) {
+            return state; 
+        }
+
+        const firstListId: ListId = `list-${data.firstList.listId}`; 
+        const firstList = state.lists[firstListId]; 
+
+        const secondListId: ListId | undefined = data.secondList 
+            ? (`list-${data.secondList.listId}` as ListId)
+            : undefined; 
+
+        const secondList = secondListId && state.lists[secondListId];
+
+        if (!firstList) {
+            return state; 
+        }
+
+        const firstListCardIDsAndOrder = data.firstList.cardIDsInOrder
+            .map(id => `card-${id}` as CardId); 
+
+        const firstListCardPositions = Object.fromEntries(
+            firstListCardIDsAndOrder.map((id, index) => [id, index])
+        ) as Record<CardId, number>; 
+
+        if (data.secondList === undefined) {
+            const newLists: Record<ListId, List> = {
+                ...state.lists, 
+                [firstListId]: {
+                    ...firstList, 
+                    CardIDsAndOrder: firstListCardIDsAndOrder, 
+                    activityMessage: activityMessage, 
+                }
+            }; 
+
+            const newCards = { ...state.cards }; 
+
+            for (const [cardId, position] of Object.entries(firstListCardPositions)) {
+                const typedCardId = cardId as CardId;
+
+                if (!newCards[typedCardId]) continue; 
+
+                newCards[typedCardId] = {
+                    ...newCards[typedCardId],
+                    position: position,
+                };
+            }
+
+            return {
+                lists: newLists, 
+                cards: newCards, 
+            }
+        } else if (!secondList) {
+            return state; 
+        } else {
+            const secondListCardIDsAndOrder = data.secondList.cardIDsInOrder
+                .map(id => `card-${id}` as CardId); 
+
+            const secondListCardPositions = Object.fromEntries(
+                secondListCardIDsAndOrder.map((id, index) => [id, index])
+            ) as Record<CardId, number>; 
+
+            const newCards = { ...state.cards }; 
+
+            for (const [cardId, position] of Object.entries(firstListCardPositions)) {
+                const typedCardId = cardId as CardId;
+
+                if (!newCards[typedCardId]) continue; 
+
+                newCards[typedCardId] = {
+                    ...newCards[typedCardId],
+                    position: position,
+                };
+            }
+
+            for (const [cardId, position] of Object.entries(secondListCardPositions)) {
+                const typedCardId = cardId as CardId;
+
+                if (!newCards[typedCardId]) continue; 
+
+                newCards[typedCardId] = {
+                    ...newCards[typedCardId],
+                    position: position,
+                };
+            }
+
+            const newListsWithSecondList: Record<ListId, List> = {
+                ...state.lists, 
+                [firstListId]: {
+                    ...firstList, 
+                    CardIDsAndOrder: firstListCardIDsAndOrder, 
+                    activityMessage: activityMessage, 
+                }, 
+                [secondListId]: {
+                    ...secondList, 
+                    CardIDsAndOrder: secondListCardIDsAndOrder, 
+                    activityMessage: activityMessage, 
+                }
+            }; 
+
+            return {
+                lists: newListsWithSecondList, 
+                cards: newCards, 
+            }
         }
     }),
 

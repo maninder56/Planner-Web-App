@@ -14,4 +14,5 @@ export type SignalRClientMethod =
     'ListHasBeenDeleted'            | 
     'BoardHasBeenDeleted'           |
     'CardHasBeenUpdated'            | 
-    'ListPositionChanged'           ; 
+    'ListPositionChanged'           | 
+    'CardPositionChanged'           ; 

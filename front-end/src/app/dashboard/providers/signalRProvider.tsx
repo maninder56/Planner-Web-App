@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardColourChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -40,6 +40,7 @@ export default function SignalRProvider({
     const AddNewCardFromSignalR = useBoardStore((state) => state.AddNewCardFromSignalR); 
     const DeleteCardFromListFromSignalR = useBoardStore((state) => state.DeleteCardFromListFromSignalR); 
     const UpdateCardFromSignalR = useBoardStore((state) => state.UpdateCardFromSignalR); 
+    const UpdateCardOrderFromSignalR = useBoardStore((state) => state.UpdateCardOrderFromSignalR); 
  
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -65,6 +66,7 @@ export default function SignalRProvider({
     const NewCardAddedMethodName: SignalRClientMethod = 'NewCardAdded'; 
     const CardHasBeenDeletedMethodName: SignalRClientMethod = 'CardHasBeenDeleted'; 
     const CardHasBeenUpdatedMethodName: SignalRClientMethod = 'CardHasBeenUpdated'; 
+    const CardPositionChangedMethodName: SignalRClientMethod = 'CardPositionChanged'; 
 
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
@@ -279,7 +281,24 @@ export default function SignalRProvider({
             }
             UpdateListOrderFromSignalR(validData.data, message); 
         } else {
-            console.error('Invalid updated card data recieved from Signal R'); 
+            console.error('Invalid new list position data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
+
+    function CardPositionChanged(data: any) {
+        const validData = CardPositionChangedSchema.safeParse(data); 
+
+        if (validData.success) {
+            let message = `Card moved`
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            if (userName) {
+                message += ` by ${userName}`; 
+            }
+            UpdateCardOrderFromSignalR(validData.data, message); 
+        } else {
+            console.error('Invalid new card position data recieved from Signal R'); 
             console.error(validData.error); 
         }   
     }
@@ -343,6 +362,7 @@ export default function SignalRProvider({
             signalRService.connection.on(NewCardAddedMethodName, NewCardAdded); 
             signalRService.connection.on(CardHasBeenDeletedMethodName, CardHasBeenDeleted); 
             signalRService.connection.on(CardHasBeenUpdatedMethodName, CardHasBeenUpdated); 
+            signalRService.connection.on(CardPositionChangedMethodName, CardPositionChanged); 
 
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
@@ -372,6 +392,7 @@ export default function SignalRProvider({
             signalRService.connection.off(NewCardAddedMethodName); 
             signalRService.connection.off(CardHasBeenDeletedMethodName); 
             signalRService.connection.off(CardHasBeenUpdatedMethodName); 
+            signalRService.connection.off(CardPositionChangedMethodName); 
         }
     }, []); 
 
