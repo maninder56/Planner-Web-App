@@ -180,3 +180,12 @@ export const ListHasBeenDeletedSchema = z.object({
 
 export type ListHasBeenDeletedData = z.infer<typeof ListHasBeenDeletedSchema>; 
 
+
+
+export const BoardHasBeenDeletedSchema = z.object({
+    byUserId: z.number(), 
+    boardId: z.number(),
+}); 
+
+export type BoardHasBeenDeletedData = z.infer<typeof BoardHasBeenDeletedSchema>; 
+

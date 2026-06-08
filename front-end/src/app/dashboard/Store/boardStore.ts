@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData } from "../Types/boardTypes";
 
 
 
@@ -58,17 +58,18 @@ type Action = {
     setBoardLoading: (isLoading: boolean) => void; 
     setBoards: (boards: BoardArray) => void; 
 
-    // Board Info operations
+    // Board operations
     setCurrentBoardName: (boardName: string) => void; 
     setCurrentBoardFavourite: (isFavourite: boolean) => void; 
     setCurrentBoardColour: (colour: BoardColour) => void; 
 
     updateBoardColour: (colour: BoardColour, boardId: number) => void; 
-
     resetCurrentBoardData: () => void; 
+    DeleteBoardFromSignalR: (data: BoardHasBeenDeletedData, activityMessage?: string) => void; 
 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
+
     
     // Board array 
     AddNewBoardToBoardArray: (board: BoardDataFromAPI) => void; 
@@ -200,6 +201,26 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         listOrder: [], 
         onlineUsers: new Map(),
     })), 
+
+    DeleteBoardFromSignalR: (data, activityMessage) => set((state) => {
+        if (state.currentBoardData?.id !== data.boardId) {
+            return state; 
+        }
+
+        const newBoardsArray = state.boards === null ? null : 
+            state.boards.filter(b => b.boardId !== data.boardId); 
+
+        return {
+            lastUsedBoardExists: false, 
+            boards: newBoardsArray, 
+            currentBoardData: undefined, 
+            lists: {}, 
+            cards: {}, 
+            listOrder: [], 
+            onlineUsers: new Map(),
+            boardActivityMessage: activityMessage, 
+        }
+    }),
     
 
     hydrateBoard: (data) => {
