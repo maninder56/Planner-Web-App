@@ -120,11 +120,15 @@ export const OnlineUserLeavingSchema = z.object({
 export const AllOnlineUsersSchema = z.array(OnlineUserSchema); 
 
 
-export const BoardColourChangedSchema = z.object({
+export const BoardInfoChangedSchema = z.object({
     boardId: z.number(), 
-    changedByUserId: z.number(),
-    newBackgroundColour: BoardColourSchema
+    byUserId: z.number(),
+    newBackgroundColour: z.union([BoardColourSchema, z.undefined()]), 
+    newBoardName: z.union([z.string(), z.undefined()]), 
 }); 
+
+export type BoardInfoChangedData = z.infer<typeof BoardInfoChangedSchema>; 
+
 
 export const NewListAddedSchema = z.object({
     byUserId: z.number(), 

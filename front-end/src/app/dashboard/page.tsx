@@ -31,7 +31,7 @@ export default function Dashboard() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const isSessionExpired = useUserStore((state) => state.sessionExpired);  
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
-    const boardActivityMessage = useBoardStore((state) => state.boardActivityMessage); 
+    const boardActivityMessage = useBoardStore((state) => state.globalActivityMessage); 
     const setBoardActivityMessage = useBoardStore((state) => state.setBoardActivityMessage); 
     
     const [loading, setLoading] = useState(true); 

@@ -19,8 +19,7 @@ export default function BoardNameInput({
     boardId: number; 
     userRole: UserRole; 
 }) {
-    const boardName = initialName; 
-    const [input, setInput] = useState(boardName); 
+    const [input, setInput] = useState(initialName); 
 
     const setCurrentBoardName = useBoardStore((state) => state.setCurrentBoardName); 
     const resetBoardArray = useBoardStore((state) => state.resetBoardArray); 
@@ -35,7 +34,7 @@ export default function BoardNameInput({
     async function handleNameChange() {
         const inputTrimmed = input.trim(); 
         if (inputTrimmed === '') {
-            setInput(boardName); 
+            setInput(initialName); 
             return; 
         } else if (inputTrimmed === initialName) {
             return; 
@@ -56,10 +55,10 @@ export default function BoardNameInput({
             setBoardError(''); 
         } else if (request.error === 'Unauthorized') {
             setSessionExpired(true); 
-            setInput(boardName); 
+            setInput(initialName); 
         } else {
             setBoardError('Failed to change board name, please try again.'); 
-            setInput(boardName); 
+            setInput(initialName); 
         }
     }
 
@@ -69,6 +68,10 @@ export default function BoardNameInput({
             await handleNameChange(); 
         }
     }
+
+    useEffect(() => {
+        setInput(initialName); 
+    }, [initialName]); 
 
 
     return (

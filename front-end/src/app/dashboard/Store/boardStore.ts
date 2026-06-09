@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData } from "../Types/boardTypes";
 
 
 
@@ -50,7 +50,7 @@ type State = {
     listOrder: ListId[], 
     boardError: string, 
     onlineUsers: Map<number, OnlineUser>, 
-    boardActivityMessage?: string; 
+    globalActivityMessage?: string; 
 }
 
 
@@ -65,7 +65,8 @@ type Action = {
 
     updateBoardColour: (colour: BoardColour, boardId: number) => void; 
     resetCurrentBoardData: () => void; 
-    DeleteBoardFromSignalR: (data: BoardHasBeenDeletedData, activityMessage?: string) => void; 
+    DeleteBoardFromSignalR: (data: BoardHasBeenDeletedData, activityMessage?: string) => void;
+    UpdateBoardInfoFromSignalR: (data: BoardInfoChangedData, byUserName?: string) => void; 
 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
@@ -127,7 +128,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     listOrder: [],
     boardError: '', 
     onlineUsers: new Map(),
-    boardActivityMessage: '', 
+    globalActivityMessage: '', 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -221,7 +222,47 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             cards: {}, 
             listOrder: [], 
             onlineUsers: new Map(),
-            boardActivityMessage: activityMessage, 
+            globalActivityMessage: activityMessage, 
+        }
+    }),
+
+    UpdateBoardInfoFromSignalR: (data, byUserName) => set((state) => {
+        if (state.currentBoardData?.id !== data.boardId) {
+            return state; 
+        }
+
+        const changes = [];
+
+        if (data.newBackgroundColour) changes.push('Board Colour Changed');
+        if (data.newBoardName) changes.push('Board Name Changed');
+
+        const globalActivityMessage = changes.length > 0
+                ? `${changes.join(' and ')}${byUserName ? ` by ${byUserName}` : ''}`
+                : undefined;
+
+        const newBoard: BoardData = {
+            ...state.currentBoardData, 
+            title: data.newBoardName ?? state.currentBoardData.title, 
+            boardColour: data.newBackgroundColour ?? state.currentBoardData.boardColour, 
+        }
+
+        const newBoardArray = state.boards === null ? null : 
+            state.boards.map(b => {
+                if (b.boardId === data.boardId) {
+                    return {
+                        ...b, 
+                        name: data.newBoardName ?? b.name, 
+                        backgroundColour: data.newBackgroundColour ?? b.backgroundColour, 
+                    }; 
+                } else {
+                    return b; 
+                }
+            }); 
+        
+        return {
+            currentBoardData: newBoard, 
+            boards: newBoardArray, 
+            globalActivityMessage: globalActivityMessage, 
         }
     }),
     
@@ -415,7 +456,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             cards: newCards, 
             lists: newLists, 
             listOrder: newListOrder, 
-            boardActivityMessage: activityMessage, 
+            globalActivityMessage: activityMessage, 
         };
     }), 
 
@@ -457,7 +498,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
         return {
             listOrder: newListOrder, 
-            boardActivityMessage: activityMessage, 
+            globalActivityMessage: activityMessage, 
             lists: newLists, 
         }
     }),
@@ -908,7 +949,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
         clearOnlineUsers: () => set({ onlineUsers: new Map() }),
 
-        setBoardActivityMessage: (newMessage) => set({ boardActivityMessage: newMessage }), 
+        setBoardActivityMessage: (newMessage) => set({ globalActivityMessage: newMessage }), 
 }))
 
 

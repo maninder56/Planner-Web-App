@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardColourChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -23,8 +23,7 @@ export default function SignalRProvider({
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
 
     // Board function
-    const updateBoardColour = useBoardStore((state) => state.updateBoardColour); 
-    const setBoardActivityMessage = useBoardStore((state) => state.setBoardActivityMessage); 
+    const UpdateBoardInfoFromSignalR = useBoardStore((state) => state.UpdateBoardInfoFromSignalR); 
     const addNewOnlineUser = useBoardStore((state) => state.addNewOnlineUser); 
     const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
     const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
@@ -53,7 +52,7 @@ export default function SignalRProvider({
     const CurrentOnlineUsersMethodName: SignalRClientMethod = 'CurrentOnlineUsers'; 
 
     // Board changes
-    const BoardColourChangedMethodName: SignalRClientMethod = 'BoardColourChanged'; 
+    const BoardInfoChangedMethodName: SignalRClientMethod = 'BoardInfoChanged'; 
     const BoardHasBeenDeletedMethodName: SignalRClientMethod = 'BoardHasBeenDeleted'; 
 
     // list changes
@@ -134,17 +133,12 @@ export default function SignalRProvider({
     }
 
     // Board changes 
-    function BoardColourChanged(data: any) {
-        const validData = BoardColourChangedSchema.safeParse(data); 
+    function BoardInfoChanged(data: any) {
+        const validData = BoardInfoChangedSchema.safeParse(data); 
 
         if (validData.success) {
-            updateBoardColour(validData.data.newBackgroundColour, validData.data.boardId); 
-            const userName = GetOnlineUser(validData.data.changedByUserId)?.name; 
-            if (userName) {
-                setBoardActivityMessage(`Board Colour Changed by ${userName}`); 
-            } else {
-                setBoardActivityMessage(`Board Colour Changed`); 
-            }
+            const userName = GetOnlineUser(validData.data.byUserId)?.name; 
+            UpdateBoardInfoFromSignalR(validData.data, userName); 
         } else {
             console.error('Invalid Board data recieved from Signal R'); 
             console.error(validData.error); 
@@ -351,7 +345,7 @@ export default function SignalRProvider({
             signalRService.connection.on(userHasLeftTheBoardMethodName, UserHasLeftTheBoard); 
             signalRService.connection.on(CurrentOnlineUsersMethodName, CurrentOnlineUsers); 
 
-            signalRService.connection.on(BoardColourChangedMethodName, BoardColourChanged); 
+            signalRService.connection.on(BoardInfoChangedMethodName, BoardInfoChanged); 
             signalRService.connection.on(BoardHasBeenDeletedMethodName, BoardHasBeenDeleted); 
 
             signalRService.connection.on(NewListAddedMethodName, NewListAdded);
@@ -381,7 +375,7 @@ export default function SignalRProvider({
             signalRService.connection.off(userHasLeftTheBoardMethodName);
             signalRService.connection.off(CurrentOnlineUsersMethodName);
 
-            signalRService.connection.off(BoardColourChangedMethodName); 
+            signalRService.connection.off(BoardInfoChangedMethodName); 
             signalRService.connection.off(BoardHasBeenDeletedMethodName); 
 
             signalRService.connection.off(NewListAddedMethodName); 
