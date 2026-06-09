@@ -18,7 +18,7 @@ public interface IGlobalHubClient
     Task CurrentOnlineUsers(List<UserInfo> users);
 
     // Board changes
-    Task BoardColourChanged(BoardColourChangedResponse newBackgroundColour);
+    Task BoardInfoChanged(BoardInfoChangedResponse newBackgroundColour);
     
     Task BoardHasBeenDeleted(BoardDeletedResponse boardDeleted);
     Task ListHasBeenDeleted(ListDeletedResponse listDeleted); 

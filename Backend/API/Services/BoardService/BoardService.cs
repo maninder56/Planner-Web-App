@@ -129,16 +129,14 @@ public class BoardService(
             {
                 await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);
                 
-                if (request.BackgroundColour is not null)
-                {
-                    string groupName = $"board:{boardId}";
-                    await globalHubContext.Clients.Group(groupName).BoardColourChanged(new BoardColourChangedResponse
-                    { 
-                        BoardId = boardId,
-                        ChangedByUserId = userId,
-                        NewBackgroundColour = request.BackgroundColour 
-                    }); 
-                }
+                string groupName = $"board:{boardId}";
+                await globalHubContext.Clients.Group(groupName).BoardInfoChanged(new BoardInfoChangedResponse
+                { 
+                    BoardId = boardId,
+                    ByUserId = userId,
+                    NewBackgroundColour = request.BackgroundColour, 
+                    NewBoardName = request.Name,
+                }); 
             }
 
             if (request.IsFavoriteBoard is bool favorite)
