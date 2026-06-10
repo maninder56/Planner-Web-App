@@ -10,6 +10,7 @@ using API.Services.InvitationService;
 using API.Services.ListService;
 using API.Services.ProfileService;
 using API.SignalR.BoardPresenceTracker;
+using API.SignalR.CardLockTracker;
 using API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 
@@ -26,7 +27,9 @@ public static class PlannerServiceRegistration
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IListService, ListService>();
         services.AddScoped<IInvitationService, InvitationService>();
+
         services.AddSingleton<IBoardPresenceTracker, BoardPresenceTracker>();
+        services.AddSingleton<ICardLockTracker, CardLockTracker>();
 
         // Authorization handlers
         services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();

@@ -1,21 +1,26 @@
 ﻿using API.DTOs.Board.Responses;
+using API.DTOs.Card.Responses;
 using API.DTOs.User.Responses;
 using API.Extensions;
 using API.Models.Account;
+using API.Models.Card;
 using API.Queries.Boards;
 using API.Queries.Profile;
 using API.SignalR.BoardPresenceTracker;
+using API.SignalR.CardLockTracker;
 using DatabaseContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics;
 
 namespace API.SignalR.Hub;
 
 [Authorize]
 public class GlobalHub(
-    IBoardPresenceTracker presenceTracker, 
+    IBoardPresenceTracker presenceTracker, ICardLockTracker cardLockTracker, 
     BoardQueries boardQueries, ProfileQueries profileQueries, 
-    ILogger<GlobalHub> _logger) : Hub<IGlobalHubClient>
+    ILogger<GlobalHub> _logger,
+    IAuthorizationService authorizationService) : Hub<IGlobalHubClient>
 {
     public async Task<JoinBoardResponse> JoinBoard(int boardId)
     {
@@ -116,6 +121,8 @@ public class GlobalHub(
 
             if (!presenceTracker.IsUserInBoard(boardId, (int)userId))
             {
+                cardLockTracker.UnlockAllCardsFromUserInBoard((int)userId, boardId); 
+
                 string groupName = $"board:{boardId}";
 
                 await Clients.Group(groupName).UserHasLeftTheBoard(new UserLeavingInfoResponse
@@ -127,5 +134,71 @@ public class GlobalHub(
 
 
         await base.OnDisconnectedAsync(exception);
+    }
+
+    // Soft lock for card 
+    public async Task<CardLockResponse> LockCard(int boardId, int cardId)
+    {
+        var user = Context.User;
+
+        if (user is null)
+        {
+            return new CardLockResponse(false); 
+        }
+
+        var authResult = await authorizationService.AuthorizeAsync(
+            user, boardId, "CanEditBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return new CardLockResponse(false);
+        }
+
+        int userId = user.GetUserId(); 
+
+        if (cardLockTracker.UserHasACardLocked(userId))
+        {
+            var lockRemovedFromAllCards = cardLockTracker.UnlockAllCardsFromUser(userId);
+
+            if (!lockRemovedFromAllCards)
+            {
+                return new CardLockResponse(false); 
+            }
+        }
+
+        var lockInfo = new CardLockInfo
+        { 
+            BoardId = boardId, 
+            CardId = cardId, 
+            UserId = userId, 
+            LockedAt = DateTime.Now 
+        };
+
+        var cardLocked = cardLockTracker.LockCard(lockInfo); 
+
+        if (cardLocked)
+        {
+            // invoke client method 
+        }
+
+        return new CardLockResponse(cardLocked);
+    }
+
+
+    public async Task UnlockCard(int cardId)
+    {
+        var user = Context.User;
+
+        if (user is null)
+        {
+            return; 
+        }
+
+        var cardUnlocked = cardLockTracker.UnlockCard(cardId, user.GetUserId());
+
+        if (cardUnlocked)
+        {
+            // invoke client method
+        }
     }
 }

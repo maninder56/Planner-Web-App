@@ -8,6 +8,7 @@ using API.Models.Result;
 using API.Queries.Boards;
 using API.Queries.Cards;
 using API.Repositories.CardRepository;
+using API.SignalR.CardLockTracker;
 using API.SignalR.Hub;
 using DatabaseContext;
 using Microsoft.AspNetCore.SignalR;
@@ -19,6 +20,7 @@ public class CardService(
     ILogger<CardService> logger, 
     CardQueries cardQueries, 
     ICardRepository cardRepository,
+    ICardLockTracker cardLockTracker, 
     IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : ICardService
 {
     // Read operations
@@ -92,6 +94,11 @@ public class CardService(
     {
         try
         {
+            if (cardLockTracker.IsCardLockedByAnotherUser(cardId, userId))
+            {
+                return Result<UpdateCardResponse>.Failed(ErrorType.Conflict, "Another user is editing the card"); 
+            }
+
             Card updatedCard = await cardRepository.UpdateCardAsync(boardId, listId, cardId, request);
 
             string groupName = $"board:{boardId}";
