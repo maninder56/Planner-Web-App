@@ -40,6 +40,12 @@ public class CardLockTracker : ICardLockTracker
         return _cardLocks.Any(card  => card.Value.UserId == userId);
     }
 
+    public List<CardLockInfo> GetAllCardsLockedInBoard(int boardId)
+    {
+        return _cardLocks.Where(card => card.Value.BoardId == boardId)
+            .Select(card => card.Value).ToList();   
+    }
+
     public bool UnlockAllCardsFromUser(int userId)
     {
         var cardsLocked = _cardLocks

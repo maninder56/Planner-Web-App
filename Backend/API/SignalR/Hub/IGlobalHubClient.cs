@@ -37,4 +37,5 @@ public interface IGlobalHubClient
 
     Task CardHasBeenLocked(CardLockedByAnohterUserResponse cardLockedByAnohterUser);
     Task CardHasBeenUnLocked(CardUnLockedByAnohterUserResponse cardUnLockedByAnohterUser);
+    Task CurrentlyLockedCards(AllCardsLockedResponse allCardsLockedResponse); 
 }

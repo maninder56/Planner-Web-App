@@ -60,7 +60,13 @@ public class GlobalHub(
 
         var userIDs = presenceTracker.GetUsersInBoard(boardId);
         var onlineUsersInfo = await profileQueries.GetUsersInfoAsync(userIDs.ToArray());
-        await Clients.Caller.CurrentOnlineUsers(onlineUsersInfo); 
+        await Clients.Caller.CurrentOnlineUsers(onlineUsersInfo);
+
+        var lockedCardsInThisBoard = cardLockTracker.GetAllCardsLockedInBoard(boardId); 
+        await Clients.Caller.CurrentlyLockedCards(new AllCardsLockedResponse
+        { 
+            lockedCards = lockedCardsInThisBoard 
+        }); 
         
         return new JoinBoardResponse() { success = true, message = string.Empty };
     }
