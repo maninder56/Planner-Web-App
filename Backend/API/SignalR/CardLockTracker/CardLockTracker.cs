@@ -32,12 +32,12 @@ public class CardLockTracker : ICardLockTracker
 
     public bool IsCardLockedByAnotherUser(int cardId, int UserId)
     {
-        return _cardLocks.Where(card => card.Key == cardId && card.Value.UserId !=  UserId).Any();
+        return _cardLocks.Any(card => card.Key == cardId && card.Value.UserId !=  UserId);
     }
 
     public bool UserHasACardLocked(int userId)
     {
-        return _cardLocks.Where(card  => card.Value.UserId == userId).Any();
+        return _cardLocks.Any(card  => card.Value.UserId == userId);
     }
 
     public bool UnlockAllCardsFromUser(int userId)
@@ -65,6 +65,9 @@ public class CardLockTracker : ICardLockTracker
             _cardLocks.TryRemove(cardId, out _);
         }
 
-        return !UserHasACardLocked(userId);
+        var anyCardLocked = !_cardLocks.Any(card => 
+            card.Value.UserId == userId && card.Value.BoardId == boardId);
+
+        return anyCardLocked; 
     }
 }

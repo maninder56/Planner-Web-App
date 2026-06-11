@@ -33,5 +33,8 @@ public interface IGlobalHubClient
 
     Task ListNameUpdated(ListNameUpdated listName);
 
-    Task CardHasBeenUpdated(CardUpdatedResponse cardUpdated); 
+    Task CardHasBeenUpdated(CardUpdatedResponse cardUpdated);
+
+    Task CardHasBeenLocked(CardLockedByAnohterUserResponse cardLockedByAnohterUser);
+    Task CardHasBeenUnLocked(CardUnLockedByAnohterUserResponse cardUnLockedByAnohterUser);
 }

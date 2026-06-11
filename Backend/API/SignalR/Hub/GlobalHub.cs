@@ -178,14 +178,20 @@ public class GlobalHub(
 
         if (cardLocked)
         {
-            // invoke client method 
+            string groupName = $"board:{boardId}";
+            await Clients.Group(groupName).CardHasBeenLocked(new CardLockedByAnohterUserResponse
+            { 
+                BoardId = boardId, 
+                CardId = cardId, 
+                ByUserId = userId,  
+            }); 
         }
 
         return new CardLockResponse(cardLocked);
     }
 
 
-    public async Task UnlockCard(int cardId)
+    public async Task UnlockCard(int boardId, int cardId)
     {
         var user = Context.User;
 
@@ -198,7 +204,13 @@ public class GlobalHub(
 
         if (cardUnlocked)
         {
-            // invoke client method
+            string groupName = $"board:{boardId}";
+            await Clients.Group(groupName).CardHasBeenUnLocked(new CardUnLockedByAnohterUserResponse
+            {
+                BoardId = boardId,
+                CardId = cardId,
+                ByUserId = user.GetUserId(),
+            });
         }
     }
 }
