@@ -190,6 +190,7 @@ public class GlobalHub(
                 BoardId = boardId, 
                 CardId = cardId, 
                 ByUserId = userId,  
+                LockedAt = lockInfo.LockedAt, 
             }); 
         }
 
