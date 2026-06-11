@@ -233,3 +233,19 @@ export const CardPositionChangedSchema = z.object({
 export type CardPositionChangedData = z.infer<typeof CardPositionChangedSchema>; 
 
 
+export const CardLockInfoSchema = z.object({
+   cardId: z.number(), 
+   boardId: z.number(), 
+   userId: z.number(), 
+   lockedAt: z.string(), 
+}); 
+
+export type CardLockInfo = z.infer<typeof CardLockInfoSchema>; 
+
+
+export const CurrentlyLockedCardsSchema = z.object({
+    lockedCards: z.array(CardLockInfoSchema),  
+}); 
+
+export type CurrentlyLockedCardsData = z.infer<typeof CurrentlyLockedCardsSchema>; 
+

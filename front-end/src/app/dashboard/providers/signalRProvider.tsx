@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema, CurrentlyLockedCardsSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -40,6 +40,7 @@ export default function SignalRProvider({
     const DeleteCardFromListFromSignalR = useBoardStore((state) => state.DeleteCardFromListFromSignalR); 
     const UpdateCardFromSignalR = useBoardStore((state) => state.UpdateCardFromSignalR); 
     const UpdateCardOrderFromSignalR = useBoardStore((state) => state.UpdateCardOrderFromSignalR); 
+    const UpdateCardLockedStateFromSignalR = useBoardStore((state) => state.UpdateCardLockedStateFromSignalR); 
  
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -66,6 +67,7 @@ export default function SignalRProvider({
     const CardHasBeenDeletedMethodName: SignalRClientMethod = 'CardHasBeenDeleted'; 
     const CardHasBeenUpdatedMethodName: SignalRClientMethod = 'CardHasBeenUpdated'; 
     const CardPositionChangedMethodName: SignalRClientMethod = 'CardPositionChanged'; 
+    const CurrentlyLockedCardsMethodName: SignalRClientMethod = 'CurrentlyLockedCards'; 
 
     // Server functions
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
@@ -300,6 +302,17 @@ export default function SignalRProvider({
         }   
     }
 
+    function CurrentlyLockedCards(data: any) {
+        const validData = CurrentlyLockedCardsSchema.safeParse(data); 
+
+        if (validData.success) {
+            UpdateCardLockedStateFromSignalR(validData.data); 
+        } else {
+            console.error('Invalid locked cards data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -376,6 +389,7 @@ export default function SignalRProvider({
             signalRService.connection.on(CardHasBeenDeletedMethodName, CardHasBeenDeleted); 
             signalRService.connection.on(CardHasBeenUpdatedMethodName, CardHasBeenUpdated); 
             signalRService.connection.on(CardPositionChangedMethodName, CardPositionChanged); 
+            signalRService.connection.on(CurrentlyLockedCardsMethodName, CurrentlyLockedCards); 
 
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
@@ -406,6 +420,7 @@ export default function SignalRProvider({
             signalRService.connection.off(CardHasBeenDeletedMethodName); 
             signalRService.connection.off(CardHasBeenUpdatedMethodName); 
             signalRService.connection.off(CardPositionChangedMethodName); 
+            signalRService.connection.off(CurrentlyLockedCardsMethodName); 
         }
     }, []); 
 
