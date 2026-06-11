@@ -67,8 +67,11 @@ export default function SignalRProvider({
     const CardHasBeenUpdatedMethodName: SignalRClientMethod = 'CardHasBeenUpdated'; 
     const CardPositionChangedMethodName: SignalRClientMethod = 'CardPositionChanged'; 
 
+    // Server functions
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
     const leaveBoardServerMethodName: SignalRServerMethod = 'LeaveBoard'; 
+    const lockCardServerMethodName: SignalRServerMethod = 'LockCard'; 
+    const unlockCardServerMethodName: SignalRServerMethod = 'UnlockCard'; 
 
     function invitationReceived(data: any) {
         const validData = InvitationInfoSchema.safeParse(data); 
@@ -306,6 +309,22 @@ export default function SignalRProvider({
         await signalRService.connection.invoke(leaveBoardServerMethodName, boardId); 
     }
 
+    async function LockCard(cardId: number) {
+        const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 
+
+        if (currentBoardIdLatest) {
+            await signalRService.connection.invoke(lockCardServerMethodName, currentBoardIdLatest, cardId); 
+        }
+    }
+
+    async function UnlockCard(cardId: number) {
+        const currentBoardIdLatest = useBoardStore.getState().currentBoardData?.id; 
+
+        if (currentBoardIdLatest) {
+            await signalRService.connection.invoke(unlockCardServerMethodName, currentBoardIdLatest, cardId); 
+        }
+    }
+
     async function tryJoinAndLeaveBoard() {
 
         const connectionReady = signalRService.connection.state === HubConnectionState.Connected; 
@@ -391,7 +410,7 @@ export default function SignalRProvider({
     }, []); 
 
     return (
-        <SignalRContext value={{JoinBoard, LeaveBoard}}>
+        <SignalRContext value={{JoinBoard, LeaveBoard, LockCard, UnlockCard}}>
             {children}
         </SignalRContext>
     ); 

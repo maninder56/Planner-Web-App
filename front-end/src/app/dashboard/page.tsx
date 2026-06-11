@@ -44,6 +44,7 @@ export default function Dashboard() {
 
         if (request.ok) {
             setLoading(false); 
+            setSessionExpired(false); 
         } else if (request.error === 'BadRequest') {
             setSessionExpired(true); 
         } else {

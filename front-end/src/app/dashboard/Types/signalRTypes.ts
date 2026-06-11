@@ -1,5 +1,9 @@
 
-export type SignalRServerMethod = 'JoinBoard' | 'LeaveBoard'; 
+export type SignalRServerMethod = 
+    'JoinBoard'     | 
+    'LeaveBoard'    |
+    'LockCard'      |
+    'UnlockCard'    ; 
 
 export type SignalRClientMethod = 
     'ReceiveInvitationNotification' | 
