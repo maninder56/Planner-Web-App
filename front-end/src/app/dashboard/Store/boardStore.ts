@@ -934,7 +934,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             const lockedCards = data.lockedCards; 
             const currentBoardId = state.currentBoardData?.id; 
 
-            if (lockedCards.length === 0 || currentBoardId === undefined) {
+            if (lockedCards === undefined || lockedCards.length === 0 || currentBoardId === undefined) {
                 return state; 
             }
 

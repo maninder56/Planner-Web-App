@@ -34,7 +34,7 @@ type HiddenListsAndCards = {
     hiddenLists: Set<ListId>; 
 }
 
-type CardDetailsPanelData = {
+export type CardDetailsPanelData = {
     parentListId: ListId, 
     cardId: CardId
 }

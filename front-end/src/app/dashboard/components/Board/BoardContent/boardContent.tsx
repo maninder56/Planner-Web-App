@@ -4,14 +4,14 @@ import {move} from '@dnd-kit/helpers';
 import styles from './boardContent.module.css'; 
 import { CardId, List, ListId, useBoardStore } from '@/app/dashboard/Store/boardStore';
 import BoardList from './BoardList/boardList';
-import { DragEventHandler, useRef, useState } from 'react';
+import { DragEventHandler, useEffect, useRef, useState } from 'react';
 import BoardCard from './BoardCard/boardCard';
 import {RestrictToWindow, RestrictToElement} from '@dnd-kit/dom/modifiers';
 import {RestrictToVerticalAxis, RestrictToHorizontalAxis} from '@dnd-kit/abstract/modifiers';
 import BoardContentSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 import BoardContentLoadingSkeleton from './BoardContentLoadingSkeleton/boardContentLoadingSkeleton';
 import AddNewListButton from './AddNewListButton/addNewListButton';
-import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
+import { CardDetailsPanelData, useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import AddNewCardPanel from './AddNewCardPanel/addNewCardPanel';
 import DeleteListDialogBox from './BoardList/DeleteListDialogBox/deleteListDialogBox';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
@@ -26,6 +26,7 @@ import { UpdateCardOrder } from '@/app/dashboard/Types/boardTypes';
 import {Debug} from '@dnd-kit/dom/plugins/debug';
 import { GetBoardRequest } from '@/app/dashboard/Services/boardService';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
+import { useSignalR } from '@/app/dashboard/Context/signalRContext';
 
 type previousCardOrder = {
     cardId: CardId;
@@ -55,10 +56,33 @@ export default function BoardContent() {
     // list to which the new card will be added
     const [createNewCardListId, setCreateNewCardListId] = useState<number | undefined>(undefined); 
 
-    const cardDetailsPanelData = useBoardUIStore((state) => state.cardDetailsPanelData); 
+    const { LockCard, UnlockCard } = useSignalR(); 
+    const cardDetailsPanelData = useBoardUIStore((state) => state.cardDetailsPanelData);
+    const previousCardId = useRef<number | null>(null); 
 
     const previousListOrder = useRef(listOrder); 
     const previousCardOrder = useRef<previousCardOrder>(null); 
+
+    async function LockAndUnlockCard() {
+        if (isCardDetailsPanelOpen && cardDetailsPanelData !== undefined) {
+            const cardId = ConvertCardIdToNumeric(cardDetailsPanelData.cardId); 
+            if (cardId !== -1) {
+                await LockCard(cardId); 
+                previousCardId.current = cardId; 
+                console.log('locked card'); 
+            }
+        }
+
+        if (!isCardDetailsPanelOpen && previousCardId.current !== null) {
+            await UnlockCard(previousCardId.current); 
+            previousCardId.current = null; 
+            console.log('unlocked card');
+        }
+    }
+
+    useEffect(() => {
+        LockAndUnlockCard(); 
+    }, [isCardDetailsPanelOpen]); 
 
     async function handleListReOrder(boardId: number, newListOrder: ListId[]) {
         const listIDsInOrder: number[] = [];

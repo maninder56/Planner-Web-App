@@ -244,7 +244,7 @@ export type CardLockInfo = z.infer<typeof CardLockInfoSchema>;
 
 
 export const CurrentlyLockedCardsSchema = z.object({
-    lockedCards: z.array(CardLockInfoSchema),  
+    lockedCards: z.union([z.array(CardLockInfoSchema), z.undefined()]),  
 }); 
 
 export type CurrentlyLockedCardsData = z.infer<typeof CurrentlyLockedCardsSchema>; 
