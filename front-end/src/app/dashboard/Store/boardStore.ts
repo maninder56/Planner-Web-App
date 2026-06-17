@@ -936,7 +936,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             const lockedCards = data.lockedCards; 
             const currentBoardId = state.currentBoardData?.id; 
 
-            if (lockedCards === undefined || lockedCards.length === 0 || currentBoardId === undefined) {
+            if (lockedCards === undefined || currentBoardId === undefined) {
                 return state; 
             }
 
@@ -946,8 +946,6 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                     { ...card, cardLockInfo: undefined },
                 ])
             ) as Record<CardId, Card>;
-
-            let hasChanges = false; 
 
             for (const lockedCard of lockedCards) {
                 if (lockedCard.boardId !== currentBoardId) continue; 
@@ -960,12 +958,6 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                     ...existingCard, 
                     cardLockInfo: lockedCard, 
                 }
-
-                hasChanges = true; 
-            }
-
-            if (!hasChanges) {
-                return state; 
             }
 
             return {
