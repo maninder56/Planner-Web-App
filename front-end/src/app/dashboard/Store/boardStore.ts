@@ -107,7 +107,7 @@ type Action = {
     deleteCard: (listIdAsNumber: number, cardIdAsNumber: number) => void; 
     DeleteCardFromListFromSignalR: (data: CardHasBeenDeletedData, activityMessage?: string) => void; 
     setCardActivityMessage: (cardId: CardId, message?: string) => void; 
-    UpdateCardLockedStateFromSignalR: (data: CurrentlyLockedCardsData) => void; 
+    UpdateCurrentCardLockStateOfAllCardsFromSignalR: (data: CurrentlyLockedCardsData) => void; 
 
 
     // online users 
@@ -930,7 +930,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             }
         }),
 
-        UpdateCardLockedStateFromSignalR: (data) => set((state) => {
+        UpdateCurrentCardLockStateOfAllCardsFromSignalR: (data) => set((state) => {
             const lockedCards = data.lockedCards; 
             const currentBoardId = state.currentBoardData?.id; 
 

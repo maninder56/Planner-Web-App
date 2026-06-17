@@ -40,7 +40,7 @@ export default function SignalRProvider({
     const DeleteCardFromListFromSignalR = useBoardStore((state) => state.DeleteCardFromListFromSignalR); 
     const UpdateCardFromSignalR = useBoardStore((state) => state.UpdateCardFromSignalR); 
     const UpdateCardOrderFromSignalR = useBoardStore((state) => state.UpdateCardOrderFromSignalR); 
-    const UpdateCardLockedStateFromSignalR = useBoardStore((state) => state.UpdateCardLockedStateFromSignalR); 
+    const UpdateCurrentCardLockStateOfAllCardsFromSignalR = useBoardStore((state) => state.UpdateCurrentCardLockStateOfAllCardsFromSignalR); 
  
     const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
     const boardLoading = useBoardStore((state) => state.isBoardLoading); 
@@ -306,7 +306,7 @@ export default function SignalRProvider({
         const validData = CurrentlyLockedCardsSchema.safeParse(data); 
 
         if (validData.success) {
-            UpdateCardLockedStateFromSignalR(validData.data); 
+            UpdateCurrentCardLockStateOfAllCardsFromSignalR(validData.data); 
         } else {
             console.error('Invalid locked cards data recieved from Signal R'); 
             console.error(validData.error); 
