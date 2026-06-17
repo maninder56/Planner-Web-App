@@ -32,7 +32,6 @@ export default function BoardCard({
     userRole: UserRole; 
     parentListId: ListId; 
 }) {
-    const viewOnly = userRole === 'Viewer'; 
 
     const boardId = useBoardStore((state) => state.currentBoardData?.id); 
     const parentListIdAsNumber = ConvertListIdToNumeric(parentListId); 
@@ -48,7 +47,12 @@ export default function BoardCard({
     const activityMessage = useBoardStore((state) => state.cards[cardId].activityMessage); 
     const setCardActivityMessage = useBoardStore((state) => state.setCardActivityMessage); 
 
-    const cardLockDetailes = useBoardStore((state) => state.cards[cardId].cardLockInfo); 
+    const cardLockDetailes = useBoardStore((state) => state.cards[cardId].cardLockInfo);
+    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
+    const cardLockedbyUser = cardLockDetailes && onlineUsers.get(cardLockDetailes.userId); 
+    const cardLockedByUserName = cardLockedbyUser === undefined ? 'User' : 
+        cardLockedbyUser.name.length > 25 ? `${cardLockedbyUser.name.slice(0, 25)}...` : 
+        cardLockedbyUser.name;  
 
     const [IsCardDone, setIsCardDone] = useState(cardDetails.done); 
 
@@ -61,6 +65,8 @@ export default function BoardCard({
         `${cardDetails.description.slice(0, 100)}...` : 
         cardDetails.description; 
     const bigCard = cardDescription.length > 10; 
+
+    const cardDisabled = userRole === 'Viewer' || cardLockDetailes !== undefined; 
 
     const {ref, handleRef, isDragging} = useSortable({
         id: cardId, 
@@ -75,7 +81,7 @@ export default function BoardCard({
             parentListId,
             index,
         }, 
-        disabled: viewOnly, 
+        disabled: cardDisabled, 
         transition: {
             duration: 0, 
             idle: false,
@@ -142,20 +148,23 @@ export default function BoardCard({
                 setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
+            {cardLockDetailes && <div className={styles.blurOverlay} />}
             {
                 !cardLockDetailes ? null :
-                <div>Card is locked</div>
+                <div className={styles.cardLockMessage}>
+                    <span>{cardLockedByUserName} is Editing</span>
+                </div>
             }
             <div className={styles.disappearingMessage}>
                 <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleCardActivityMessage} />
             </div>
             <header>
-                <input type='checkbox' disabled={viewOnly} className={styles.checkbox} checked={IsCardDone} readOnly={true}
+                <input type='checkbox' disabled={cardDisabled} className={styles.checkbox} checked={IsCardDone} readOnly={true}
                     onClick={(e) => {
                         e.stopPropagation(); 
                         handleDoneOnCard(cardId, !IsCardDone)}} />
                 <h3 className={[styles.cardName, IsCardDone ? styles.taskDone : ''].join(' ')}>{cardDetails.name}</h3>
-                <div ref={handleRef} className={[styles.grabCardIcon, viewOnly ? styles.disabled : ''].join(' ')}>
+                <div ref={handleRef} className={[styles.grabCardIcon, cardDisabled ? styles.disabled : ''].join(' ')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6h.01M15 6h.01M15 12h.01M9 12h.01M9 18h.01M15 18h.01M10 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" 
                             stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
