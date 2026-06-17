@@ -5,5 +5,5 @@ namespace API.DTOs.Card.Responses;
 
 public class AllCardsLockedResponse
 {
-    public List<CardLockInfo> lockedCards = new List<CardLockInfo>();
+    public List<CardLockInfo> lockedCards { get; set; } = []; 
 }
