@@ -244,8 +244,26 @@ export type CardLockInfo = z.infer<typeof CardLockInfoSchema>;
 
 
 export const CurrentlyLockedCardsSchema = z.object({
-    lockedCards: z.union([z.array(CardLockInfoSchema), z.undefined()]),  
+    lockedCards: z.array(CardLockInfoSchema),
 }); 
 
 export type CurrentlyLockedCardsData = z.infer<typeof CurrentlyLockedCardsSchema>; 
 
+
+export const CardHasBeenLockedSchema = z.object({
+   cardId: z.number(), 
+   boardId: z.number(), 
+   byUserId: z.number(), 
+   lockedAt: z.string(), 
+}); 
+
+export type CardHasBeenLockedData = z.infer<typeof CardHasBeenLockedSchema>; 
+
+
+export const CardHasBeenUnLockedSchema = z.object({
+   cardId: z.number(), 
+   boardId: z.number(), 
+   byUserId: z.number(),
+}); 
+
+export type CardHasBeenUnLockedData = z.infer<typeof CardHasBeenUnLockedSchema>; 

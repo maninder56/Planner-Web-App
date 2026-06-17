@@ -64,6 +64,10 @@
     }
 }
 
+.cardLocked {
+    filter: blur(4px);
+}
+
 .wrapper.taskDone {
     filter: grayscale(30%);
 }

@@ -69,14 +69,14 @@ export default function BoardContent() {
             if (cardId !== -1) {
                 await LockCard(cardId); 
                 previousCardId.current = cardId; 
-                console.log('locked card'); 
+                console.log(`locked card: ${previousCardId.current}`); 
             }
         }
 
         if (!isCardDetailsPanelOpen && previousCardId.current !== null) {
             await UnlockCard(previousCardId.current); 
+            console.log(`Unlocked card: ${previousCardId.current}`);
             previousCardId.current = null; 
-            console.log('unlocked card');
         }
     }
 

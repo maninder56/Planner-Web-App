@@ -48,6 +48,8 @@ export default function BoardCard({
     const activityMessage = useBoardStore((state) => state.cards[cardId].activityMessage); 
     const setCardActivityMessage = useBoardStore((state) => state.setCardActivityMessage); 
 
+    const cardLockDetailes = useBoardStore((state) => state.cards[cardId].cardLockInfo); 
+
     const [IsCardDone, setIsCardDone] = useState(cardDetails.done); 
 
     const isCardHidden = useBoardUIStore((state) => state.hiddenCardsAndLists.hiddenCards.has(cardId)); 
@@ -129,13 +131,21 @@ export default function BoardCard({
         <div className={[styles.wrapper, 
             IsCardDone ? styles.taskDone : '', 
             isDragging ? styles.isDragging : '', 
+            cardLockDetailes ? styles.cardLocked : '',
             bigCard ? styles.bigCard : ''].join(' ')} ref={ref} 
             onClick={(e) => {
                 e.stopPropagation(); 
+                if (cardLockDetailes) {
+                    return; 
+                }
                 setActivePanel('cardDetailsPanel');
                 setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
+            {
+                !cardLockDetailes ? null :
+                <div>Card is locked</div>
+            }
             <div className={styles.disappearingMessage}>
                 <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleCardActivityMessage} />
             </div>

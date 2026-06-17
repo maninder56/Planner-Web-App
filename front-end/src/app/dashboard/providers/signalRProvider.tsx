@@ -6,7 +6,7 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema, CurrentlyLockedCardsSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema, CurrentlyLockedCardsSchema, CardHasBeenLockedSchema, CardHasBeenUnLockedSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
@@ -68,6 +68,8 @@ export default function SignalRProvider({
     const CardHasBeenUpdatedMethodName: SignalRClientMethod = 'CardHasBeenUpdated'; 
     const CardPositionChangedMethodName: SignalRClientMethod = 'CardPositionChanged'; 
     const CurrentlyLockedCardsMethodName: SignalRClientMethod = 'CurrentlyLockedCards'; 
+    const CardHasBeenLockedMethodName: SignalRClientMethod = 'CardHasBeenLocked'; 
+    const CardHasBeenUnLockedMethodName: SignalRClientMethod = 'CardHasBeenUnLocked'; 
 
     // Server functions
     const joinBoardServerMethodName: SignalRServerMethod = 'JoinBoard'; 
@@ -313,6 +315,28 @@ export default function SignalRProvider({
         }   
     }
 
+    function CardHasBeenLocked(data: any) {
+        const validData = CardHasBeenLockedSchema.safeParse(data); 
+
+        if (validData.success) {
+            // UpdateCardLockedStateFromSignalR(validData.data);
+        } else {
+            console.error('Invalid card lock data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
+    function CardHasBeenUnLocked(data: any) {
+        const validData = CardHasBeenUnLockedSchema.safeParse(data); 
+
+        if (validData.success) {
+            // UpdateCardLockedStateFromSignalR(validData.data);
+        } else {
+            console.error('Invalid card unlock data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -390,6 +414,8 @@ export default function SignalRProvider({
             signalRService.connection.on(CardHasBeenUpdatedMethodName, CardHasBeenUpdated); 
             signalRService.connection.on(CardPositionChangedMethodName, CardPositionChanged); 
             signalRService.connection.on(CurrentlyLockedCardsMethodName, CurrentlyLockedCards); 
+            signalRService.connection.on(CardHasBeenLockedMethodName, CardHasBeenLocked); 
+            signalRService.connection.on(CardHasBeenUnLockedMethodName, CardHasBeenUnLocked); 
 
             await signalRService.start(); 
             tryJoinAndLeaveBoard(); 
@@ -421,6 +447,8 @@ export default function SignalRProvider({
             signalRService.connection.off(CardHasBeenUpdatedMethodName); 
             signalRService.connection.off(CardPositionChangedMethodName); 
             signalRService.connection.off(CurrentlyLockedCardsMethodName); 
+            signalRService.connection.off(CardHasBeenLockedMethodName); 
+            signalRService.connection.off(CardHasBeenUnLockedMethodName); 
         }
     }, []); 
 
