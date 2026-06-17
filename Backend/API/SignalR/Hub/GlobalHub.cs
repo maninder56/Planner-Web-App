@@ -135,6 +135,12 @@ public class GlobalHub(
                 {
                     UserId = (int)userId
                 });
+
+                var lockedCardsInThisBoard = cardLockTracker.GetAllCardsLockedInBoard(boardId);
+                await Clients.Group(groupName).CurrentlyLockedCards(new AllCardsLockedResponse
+                {
+                    lockedCards = lockedCardsInThisBoard
+                });
             }
         }
 
