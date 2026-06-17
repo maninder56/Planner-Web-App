@@ -68,14 +68,12 @@ export default function BoardContent() {
             const cardId = ConvertCardIdToNumeric(cardDetailsPanelData.cardId); 
             if (cardId !== -1) {
                 await LockCard(cardId); 
-                previousCardId.current = cardId; 
-                console.log(`locked card: ${previousCardId.current}`); 
+                previousCardId.current = cardId;  
             }
         }
 
         if (!isCardDetailsPanelOpen && previousCardId.current !== null) {
             await UnlockCard(previousCardId.current); 
-            console.log(`Unlocked card: ${previousCardId.current}`);
             previousCardId.current = null; 
         }
     }

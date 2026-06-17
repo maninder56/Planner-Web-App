@@ -983,7 +983,12 @@ export const useBoardStore = create<State & Action>((set, get) => ({
                 ...state.cards, 
                 [cardId]: {
                     ...card, 
-                    cardLockInfo: data
+                    cardLockInfo: {
+                        cardId: data.cardId,
+                        boardId: data.boardId,
+                        userId: data.byUserId,
+                        lockedAt: data.lockedAt,
+                    }
                 }
             }
 

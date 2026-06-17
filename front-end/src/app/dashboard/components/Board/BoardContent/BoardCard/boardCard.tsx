@@ -148,7 +148,6 @@ export default function BoardCard({
                 setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
-            {cardLockDetailes && <div className={styles.blurOverlay} />}
             {
                 !cardLockDetailes ? null :
                 <div className={styles.cardLockMessage}>
