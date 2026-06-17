@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData } from "../Types/boardTypes";
 
 
 
@@ -108,6 +108,8 @@ type Action = {
     DeleteCardFromListFromSignalR: (data: CardHasBeenDeletedData, activityMessage?: string) => void; 
     setCardActivityMessage: (cardId: CardId, message?: string) => void; 
     UpdateCurrentCardLockStateOfAllCardsFromSignalR: (data: CurrentlyLockedCardsData) => void; 
+    LockCardFromSignalR: (data: CardHasBeenLockedData) => void; 
+    UnLockCardFromSignalR: (data: CardHasBeenUnLockedData) => void; 
 
 
     // online users 
@@ -968,6 +970,60 @@ export const useBoardStore = create<State & Action>((set, get) => ({
 
             return {
                 cards: newCards,
+            }
+        }),
+
+        LockCardFromSignalR: (data) => set((state) => {
+            const currentBoardId = state.currentBoardData?.id; 
+
+            if (currentBoardId !== data.boardId) {
+                return state; 
+            }
+
+            const cardId: CardId = `card-${data.cardId}`; 
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            const newCards: Record<CardId, Card> = {
+                ...state.cards, 
+                [cardId]: {
+                    ...card, 
+                    cardLockInfo: data
+                }
+            }
+
+            return {
+                cards: newCards, 
+            }
+        }),
+
+        UnLockCardFromSignalR: (data) => set((state) => {
+            const currentBoardId = state.currentBoardData?.id; 
+
+            if (currentBoardId !== data.boardId) {
+                return state; 
+            }
+
+            const cardId: CardId = `card-${data.cardId}`; 
+            const card = state.cards[cardId]; 
+
+            if (!card) {
+                return state; 
+            }
+
+            const newCards: Record<CardId, Card> = {
+                ...state.cards, 
+                [cardId]: {
+                    ...card, 
+                    cardLockInfo: undefined
+                }
+            }
+
+            return {
+                cards: newCards, 
             }
         }),
 
