@@ -151,7 +151,7 @@ export default function BoardCard({
             {
                 !cardLockDetailes ? null :
                 <div className={styles.cardLockMessage}>
-                    <span>{cardLockedByUserName} is Editing</span>
+                    <div><span>{cardLockedByUserName} is Editing</span></div>
                 </div>
             }
             <div className={styles.disappearingMessage}>
