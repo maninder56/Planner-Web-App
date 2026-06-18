@@ -124,5 +124,14 @@ JOIN boards B
 WHERE B.BoardId = 32;
 
 
+SELECT
+    BM.BoardId,
+    U.UserId,
+    U.Name,
+    BM.Role
+FROM boardmembers BM
+LEFT JOIN users U
+    ON BM.UserId = U.UserId
+WHERE BM.BoardId = 20;
 
 

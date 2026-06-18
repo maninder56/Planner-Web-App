@@ -192,7 +192,27 @@ public class BoardService(
         }
 
     }
-    
+
+
+    public async Task<Result> UpdateBoardMembership(int userId, int boardId, UpdateBoardMembershipRequest request)
+    {
+        try
+        {
+            if (request.Roles.Any(r => r.userId == userId))
+            {
+                return Result.Failed(ErrorType.BadRequest, "Can not update role of owner"); 
+            }
+
+            throw new NotImplementedException();    
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to get board members info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
 
 
     // Delete operations

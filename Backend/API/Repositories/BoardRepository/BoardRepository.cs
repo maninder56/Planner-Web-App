@@ -113,6 +113,27 @@ public class BoardRepository : IBoardRepository
     }
 
 
+    public async Task UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request)
+    {
+        var boardMembers = await database.BoardMembers
+            .Where(bm => bm.BoardId == boardId)
+            .ToListAsync();
+
+        foreach (var member in boardMembers)
+        {
+            var newBoardRole = request.Roles
+                .FirstOrDefault(r => r.userId  == member.UserId);
+
+            if (newBoardRole is null)
+            {
+                continue;
+            }
+
+            member.Role = newBoardRole.NewRole; 
+        }
+    }
+
+
     // Delete operations
 
     public async Task DeleteBoardAsync(int boardId)

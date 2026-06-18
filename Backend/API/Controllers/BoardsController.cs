@@ -206,7 +206,31 @@ public class BoardsController : ControllerBase
     }
 
 
-    
+    [HttpPatch("{id}/members")]
+    public async Task<IActionResult> UpdateBoardMembershipAsync(int id, UpdateBoardMembershipRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, id, "CanShareBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        throw new NotImplementedException(); 
+
+        //var result = await boardService.GetAllMembersOfBoard(id);
+
+        //if (result.Successful)
+        //{
+        //    return Ok(result.Data);
+        //}
+        //else
+        //{
+        //    return result.Error.ErrorToActionResult();
+        //}
+    }
+
 
 
 
