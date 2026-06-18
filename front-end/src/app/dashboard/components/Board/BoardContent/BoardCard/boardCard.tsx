@@ -5,7 +5,7 @@ import {CollisionPriority} from '@dnd-kit/abstract';
 import {RestrictToElement, RestrictToWindow} from '@dnd-kit/dom/modifiers';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BoardCardDetails from './boardCardDetails';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
 import { dateFormatter } from '@/app/dashboard/Utilities/boardData';
@@ -19,6 +19,7 @@ import {
   directionBiased
 } from '@dnd-kit/collision';
 import { DragOverlay } from '@dnd-kit/react';
+import DisappearingMessage from '@/Components/Alert/DisappearingMessage/disappearingMessage';
 
 export default function BoardCard({
     cardId, 
@@ -31,7 +32,6 @@ export default function BoardCard({
     userRole: UserRole; 
     parentListId: ListId; 
 }) {
-    const viewOnly = userRole === 'Viewer'; 
 
     const boardId = useBoardStore((state) => state.currentBoardData?.id); 
     const parentListIdAsNumber = ConvertListIdToNumeric(parentListId); 
@@ -44,6 +44,16 @@ export default function BoardCard({
 
     const setCardDetailsPanelData = useBoardUIStore((state) => state.setCardDetailsPanelData); 
 
+    const activityMessage = useBoardStore((state) => state.cards[cardId].activityMessage); 
+    const setCardActivityMessage = useBoardStore((state) => state.setCardActivityMessage); 
+
+    const cardLockDetailes = useBoardStore((state) => state.cards[cardId].cardLockInfo);
+    const onlineUsers = useBoardStore((state) => state.onlineUsers); 
+    const cardLockedbyUser = cardLockDetailes && onlineUsers.get(cardLockDetailes.userId); 
+    const cardLockedByUserName = cardLockedbyUser === undefined ? 'User' : 
+        cardLockedbyUser.name.length > 25 ? `${cardLockedbyUser.name.slice(0, 25)}...` : 
+        cardLockedbyUser.name;  
+
     const [IsCardDone, setIsCardDone] = useState(cardDetails.done); 
 
     const isCardHidden = useBoardUIStore((state) => state.hiddenCardsAndLists.hiddenCards.has(cardId)); 
@@ -55,6 +65,8 @@ export default function BoardCard({
         `${cardDetails.description.slice(0, 100)}...` : 
         cardDetails.description; 
     const bigCard = cardDescription.length > 10; 
+
+    const cardDisabled = userRole === 'Viewer' || cardLockDetailes !== undefined; 
 
     const {ref, handleRef, isDragging} = useSortable({
         id: cardId, 
@@ -69,12 +81,16 @@ export default function BoardCard({
             parentListId,
             index,
         }, 
-        disabled: viewOnly, 
+        disabled: cardDisabled, 
         transition: {
             duration: 0, 
             idle: false,
         }
     }); 
+
+    useEffect(() => {
+        setIsCardDone(cardDetails.done); 
+    }, [cardDetails.done]); 
 
     async function handleDoneOnCard(cardId: CardId, isDone: boolean) {
         if (boardId === undefined || parentListIdAsNumber === -1) {
@@ -113,24 +129,41 @@ export default function BoardCard({
     }
 
 
+    function handleCardActivityMessage(message?: string) {
+        setCardActivityMessage(cardId, message); 
+    }
+
     return (
         <div className={[styles.wrapper, 
             IsCardDone ? styles.taskDone : '', 
             isDragging ? styles.isDragging : '', 
+            cardLockDetailes ? styles.cardLocked : '',
             bigCard ? styles.bigCard : ''].join(' ')} ref={ref} 
             onClick={(e) => {
                 e.stopPropagation(); 
+                if (cardLockDetailes) {
+                    return; 
+                }
                 setActivePanel('cardDetailsPanel');
                 setCardDetailsPanelData({parentListId: parentListId, cardId: cardId}); 
             }}
         >
+            {
+                !cardLockDetailes ? null :
+                <div className={styles.cardLockMessage}>
+                    <div><span>{cardLockedByUserName} is Editing</span></div>
+                </div>
+            }
+            <div className={styles.disappearingMessage}>
+                <DisappearingMessage message={activityMessage} durationInSeconds={2} setMessage={handleCardActivityMessage} />
+            </div>
             <header>
-                <input type='checkbox' disabled={viewOnly} className={styles.checkbox} defaultChecked={IsCardDone} 
+                <input type='checkbox' disabled={cardDisabled} className={styles.checkbox} checked={IsCardDone} readOnly={true}
                     onClick={(e) => {
                         e.stopPropagation(); 
                         handleDoneOnCard(cardId, !IsCardDone)}} />
                 <h3 className={[styles.cardName, IsCardDone ? styles.taskDone : ''].join(' ')}>{cardDetails.name}</h3>
-                <div ref={handleRef} className={[styles.grabCardIcon, viewOnly ? styles.disabled : ''].join(' ')}>
+                <div ref={handleRef} className={[styles.grabCardIcon, cardDisabled ? styles.disabled : ''].join(' ')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6h.01M15 6h.01M15 12h.01M9 12h.01M9 18h.01M15 18h.01M10 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" 
                             stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

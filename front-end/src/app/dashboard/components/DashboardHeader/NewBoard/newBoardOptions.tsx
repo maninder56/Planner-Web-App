@@ -6,13 +6,14 @@ import CloseButton from '@/Components/Buttons/closeButton';
 import { FormEvent, useActionState, useState } from 'react';
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import HoverOptionsPanel from '@/Components/HoverPanels/HoverOptionsPanel/hoverOptionsPanel';
-import { BoardColour } from '@/app/dashboard/Types/boardTypes';
+import { BoardColourSchema } from '@/app/dashboard/Types/boardTypes';
 import { BoardColoursList } from '@/app/dashboard/Utilities/boardColours';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { CreateNewBoardRequest, UpdateLastUsedBoardRequest } from '@/app/dashboard/Services/boardService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { useSignalR } from '@/app/dashboard/Context/signalRContext';
 
 export default function NewBoardOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -23,7 +24,7 @@ export default function NewBoardOptions() {
     const addNewBoard = useBoardStore((state) => state.AddNewBoardToBoardArray); 
     const setBoardLoading = useBoardStore((state) => state.setBoardLoading); 
 
-    const colours: BoardColour[] = BoardColoursList; 
+    const colours: BoardColourSchema[] = BoardColoursList; 
 
     const [boardColour, setBoardColour] = useState(colours[0]); 
     const [boardName, setBoardName] = useState(''); 

@@ -1,4 +1,6 @@
 ﻿using API.DTOs.Profile.Responses;
+using API.DTOs.User.Responses;
+using API.Models.Account;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,5 +19,20 @@ public class ProfileQueries (PlannerContext database)
             }).SingleOrDefaultAsync();
 
         return query; 
+    }
+
+    public async Task<List<UserInfo>> GetUsersInfoAsync(int[] userIDs)
+    {
+        var query = await database.Users.AsNoTracking()
+            .Where(u => userIDs.Contains(u.UserId))
+            .Select(u => new UserInfo
+            {
+                UserId = u.UserId,
+                Name = u.Name,
+                Email = u.Email,
+            }).ToListAsync(); 
+
+        return query;
+
     }
 }

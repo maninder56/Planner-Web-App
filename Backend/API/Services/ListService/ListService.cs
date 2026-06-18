@@ -1,14 +1,22 @@
-﻿using API.DTOs.List.Requests;
+﻿using API.DTOs.Board.Responses;
+using API.DTOs.Card.Responses;
+using API.DTOs.List.Requests;
 using API.DTOs.List.Responses;
 using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Lists;
 using API.Repositories.ListRepository;
+using API.SignalR.Hub;
 using DatabaseContext;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.ListService; 
 
-public class ListService(ILogger<ListService> logger, IListRepository listRepository, ListQueries listQueries) : IListService
+public class ListService(
+    ILogger<ListService> logger, 
+    IListRepository listRepository,
+    ListQueries listQueries,
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : IListService
 {
 
     public async Task<Result<ListOrderResponse>> GetListOrderAsync(int boardId)
@@ -29,11 +37,18 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
 
     // Create operations
 
-    public async Task<Result<NewListResponse>> CreateNewListAsync(int boardId, NewListRequest request)
+    public async Task<Result<NewListResponse>> CreateNewListAsync(int userID, int boardId, NewListRequest request)
     {
         try
         {
             BoardList newList = await listRepository.CreateNewBoardListAsync(boardId, request.Name);
+            
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).NewListAdded(new NewListAddedResponse
+            {
+                ByUserId = userID, ListId = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition, BoardId = boardId
+            }); 
+            
             return Result<NewListResponse>.Success(new NewListResponse 
             { 
                 Id = newList.BoardListId, Name = newList.Name, ListPosition = newList.ListPosition 
@@ -50,11 +65,21 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
 
     // update operations
 
-    public async Task<Result<ChangeListInfoResponse>> UpdateListInfo(int boardId, int listId, ChangeListInfoRequest request)
+    public async Task<Result<ChangeListInfoResponse>> UpdateListInfo(int userId, int boardId, int listId, ChangeListInfoRequest request)
     {
         try
         {
             BoardList changedBoardList = await listRepository.UpdateBoardListAsync(boardId, listId, request);
+            
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).ListNameUpdated(new ListNameUpdated
+            {
+                ByUserId = userId,
+                ListId = listId, 
+                NewName = changedBoardList.Name,
+                BoardId = boardId,
+            });
+
 
             return Result<ChangeListInfoResponse>.Success(new ChangeListInfoResponse
             {
@@ -74,11 +99,19 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
     }
 
 
-    public async Task<Result> UpdateListOrderAsync(int boardId, ChangeListOrderRequest request)
+    public async Task<Result> UpdateListOrderAsync(int userId, int boardId, ChangeListOrderRequest request)
     {
         try
         {
             await listRepository.UpdateBoardListOrderAsync(boardId, request.ListIdsInOrder);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).ListPositionChanged(new UpdatedListOrderResponse
+            {
+                ByUserId = userId,
+                BoardId = boardId,
+                ListOrder = request.ListIdsInOrder,
+            });
 
             return Result.Success();
         }
@@ -100,11 +133,20 @@ public class ListService(ILogger<ListService> logger, IListRepository listReposi
 
     // Delete operations
 
-    public async Task<Result> DeleteList(int boardId, int listId)
+    public async Task<Result> DeleteList(int userId, int boardId, int listId)
     {
         try
         {
             await listRepository.DeleteListAsync(boardId, listId);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).ListHasBeenDeleted(new ListDeletedResponse
+            {
+                ByUserId = userId,
+                ListId = listId,
+                BoardId = boardId, 
+            });
+
             return Result.Success(); 
         }
         catch (Exception ex)

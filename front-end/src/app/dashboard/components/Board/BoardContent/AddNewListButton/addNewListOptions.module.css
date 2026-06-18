@@ -1,0 +1,61 @@
+
+
+.formContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.formContainer form {
+    flex: 1 1 auto;
+
+    margin: 5px;
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.formContainer input {
+    flex: 1 1 auto;
+
+    margin: 5px 0px;
+    padding: 5px 5px;
+
+    border: solid 1.5px;
+    border-radius: 5px;
+
+    font-size: 0.9rem;
+}
+
+.error {
+    display: block;
+    
+    font-size: 0.8rem;
+    text-align: center;
+    color: red;
+}
+
+.listformButtons {
+    margin-top: 5px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.listformButtons button {
+    font-size: 1rem ;
+}

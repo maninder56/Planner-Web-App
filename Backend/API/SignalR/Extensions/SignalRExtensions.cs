@@ -1,6 +1,7 @@
-﻿using API.SignalRHubs.Hub;
+﻿
+using API.SignalR.Hub;
 
-namespace API.SignalRHubs.Extensions; 
+namespace API.SignalR.Extensions; 
 
 public static class SignalRExtensions
 {

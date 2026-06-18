@@ -5,7 +5,6 @@ import styles from './boardHeaderBar.module.css';
 import BoardNameInput from './BoardNameInput/boardNameInput';
 import FavoriteBoardButton from './FavoriteBoardButton/favoriteBoardButton';
 import FilterButton from './FilterButton/filterButton';
-import { BoardColour } from '@/app/dashboard/Types/boardTypes';
 import ShareButton from './ShareButton/shareButton';
 import BoardMenu from './BoardMenu/boardMenu';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
@@ -14,6 +13,7 @@ import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import BoardHeaderSkeleton from './BoardHeaderSkeleton/boardHeaderSkeleton';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import ShareButtonOptions from './ShareButton/shareButtonOptions';
+import OnlineUsersButton from './OnlineUsersButton/onlineUsersButton';
 
 export default function BoardHeaderBar() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -38,6 +38,9 @@ export default function BoardHeaderBar() {
                 <BoardNameInput initialName={boardData.title} boardId={boardData.id} userRole={boardData.role} />
             </div>
             <div className={styles.barOptionList}>
+                <div>
+                    <OnlineUsersButton />
+                </div>
                 <div>
                     <FilterButton />
                 </div>

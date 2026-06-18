@@ -92,6 +92,10 @@
     margin: auto 4px;
 }
 
+.toolTipText {
+    display: none;
+}
+
 @media (pointer: fine) {
 
     .toolTip {
@@ -100,6 +104,7 @@
     }
 
     .toolTipText {
+        display: block;
         position: absolute;
         z-index: 2;
         top: calc(100%);

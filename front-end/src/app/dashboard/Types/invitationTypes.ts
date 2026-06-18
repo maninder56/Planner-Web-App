@@ -1,8 +1,7 @@
 import * as z from 'zod'; 
 import { UserRoleSchema } from './boardTypes';
 
-
-export type SignalRClientMethods = 'ReceiveInvitationNotification'; 
+ 
 
 export const InvitationStatusSchema = z.enum([
   "Pending",

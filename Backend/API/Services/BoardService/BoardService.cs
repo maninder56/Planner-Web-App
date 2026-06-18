@@ -1,15 +1,22 @@
 ﻿using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
+using API.DTOs.List.Responses;
 using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
+using API.SignalR.Hub;
 using DatabaseContext;
 using DatabaseContext.Types;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.BoardService;
 
-public class BoardService(ILogger<BoardService> logger, BoardQueries boardQueries, IBoardRepository boardRepository) : IBoardService
+public class BoardService(
+    ILogger<BoardService> logger, 
+    BoardQueries boardQueries, 
+    IBoardRepository boardRepository,
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : IBoardService
 {
     // Read operations
 
@@ -121,6 +128,15 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
             if (request.Name is not null || request.BackgroundColour is not null)
             {
                 await boardRepository.UpdateBoardInfoAsync(userId, boardId, request.Name, request.BackgroundColour);
+                
+                string groupName = $"board:{boardId}";
+                await globalHubContext.Clients.Group(groupName).BoardInfoChanged(new BoardInfoChangedResponse
+                { 
+                    BoardId = boardId,
+                    ByUserId = userId,
+                    NewBackgroundColour = request.BackgroundColour, 
+                    NewBoardName = request.Name,
+                }); 
             }
 
             if (request.IsFavoriteBoard is bool favorite)
@@ -167,11 +183,18 @@ public class BoardService(ILogger<BoardService> logger, BoardQueries boardQuerie
 
     // Delete operations
 
-    public async Task<Result> DeleteBoardAsync(int boardId)
+    public async Task<Result> DeleteBoardAsync(int userId, int boardId)
     {
         try
         {
             await boardRepository.DeleteBoardAsync(boardId);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).BoardHasBeenDeleted(new BoardDeletedResponse
+            {
+                ByUserId = userId,
+                BoardId = boardId,
+            });
 
             return Result.Success();
         }

@@ -7,7 +7,7 @@ using API.Queries.Invitations;
 using API.Repositories.Account;
 using API.Repositories.BoardRepository;
 using API.Repositories.InvitationRepository;
-using API.SignalRHubs.Hub;
+using API.SignalR.Hub;
 using DatabaseContext;
 using DatabaseContext.Types;
 using Microsoft.AspNetCore.SignalR;

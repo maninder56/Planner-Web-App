@@ -198,7 +198,7 @@ public class BoardsController : ControllerBase
             return Forbid();
         }
 
-        var deleteResult = await boardService.DeleteBoardAsync(id);
+        var deleteResult = await boardService.DeleteBoardAsync(User.GetUserId(), id);
 
         if (deleteResult.Successful)
         {

@@ -5,7 +5,7 @@ using API.ServiceRegistrationExtensions;
 using API.Handler;
 using System.Text.Json.Serialization;
 using API.Policies.Requirements;
-using API.SignalRHubs.Extensions;
+using API.SignalR.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,8 +26,8 @@ builder.Services.AddProblemDetails();
 builder.Services.AddSignalR()
     .AddJsonProtocol(options =>
     {
-        options.PayloadSerializerOptions.Converters
-            .Add(new JsonStringEnumConverter());
+        options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.PayloadSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; 
     });
 
 

@@ -23,5 +23,5 @@ public interface IBoardService
     public Task<Result> UpdateLastUsedBoardAsync(int userId, LastUsedBoardChangeRequest request); 
 
     // Delete 
-    public Task<Result> DeleteBoardAsync(int boardId); 
+    public Task<Result> DeleteBoardAsync(int userId, int boardId); 
 }

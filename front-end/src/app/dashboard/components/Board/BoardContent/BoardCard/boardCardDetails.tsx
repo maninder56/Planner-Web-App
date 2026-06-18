@@ -42,11 +42,11 @@ export default function BoardCardDetails({
 
     const parentListIdAsNumber = ConvertListIdToNumeric(parentListId); 
     
-    const [title, setTitle] = useState(cardDetails.name); 
-    const [description, setDescription] = useState(cardDetails.description); 
-    const [isDone, setIsDone] = useState(cardDetails.done); 
-    const [dueDate, setDueDate] = useState(getLocalDate(cardDetails.dueDate)); 
-    const [priority, setPriority] = useState<CardPriority>(cardDetails.priority); 
+    const [title, setTitle] = useState(cardDetails?.name ?? ''); 
+    const [description, setDescription] = useState(cardDetails?.description ?? ''); 
+    const [isDone, setIsDone] = useState(cardDetails?.done ?? false); 
+    const [dueDate, setDueDate] = useState(getLocalDate(cardDetails?.dueDate ?? '')); 
+    const [priority, setPriority] = useState<CardPriority>(cardDetails?.priority ?? 'Low'); 
 
     const [buttonDisabled, setButtonDisabled] = useState(false); 
     const [submitError, setSubmitError] = useState(''); 
@@ -149,6 +149,10 @@ export default function BoardCardDetails({
         } else {
             return true; 
         }
+    }
+
+    if (!cardDetails) {
+        return null; 
     }
 
 

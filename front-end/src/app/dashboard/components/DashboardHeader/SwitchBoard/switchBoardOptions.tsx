@@ -1,3 +1,4 @@
+'use client'; 
 
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './switchBoardOptions.module.css'; 
@@ -15,6 +16,11 @@ import Button from '@/Components/Buttons/button';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { useUserStore } from '@/Store/userStore';
+import { SignalRServerMethod } from '@/app/dashboard/Types/signalRTypes';
+import dynamic from 'next/dynamic';
+import { signalRService } from '@/app/dashboard/Services/signalRService';
+import { useSignalR } from '@/app/dashboard/Context/signalRContext';
+
 
 type BoardsState = {
     owned: BoardArray, 
@@ -129,7 +135,7 @@ export default function SwitchBoardOptions() {
                 hydrateBoard(NormaliseBoardData(result.data)); 
                 setLastUsedBoard(boardId); 
                 setErrorMessage(undefined); 
-                setActivePanel('none');     
+                setActivePanel('none');    
             } else if (!result.ok && result.error === 'Unauthorized') {
                 setSessionExpired(true); 
             } else if (!result.ok && result.error === 'NotFound') {
@@ -143,6 +149,7 @@ export default function SwitchBoardOptions() {
             setBoardLoading(false); 
         }
     }
+
 
     async function setLastUsedBoard(boardId: number) {
         const lastUsedBoardResult =  await ApiRequestWithRefreshTokenAttemptAndData(

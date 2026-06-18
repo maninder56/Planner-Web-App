@@ -1,5 +1,5 @@
-/* 
-.wrapper * {
+
+/* .wrapper * {
     outline: solid 1px rgb(255, 0, 0);
 } */
 
@@ -42,15 +42,6 @@
 }
 
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
 
 .wrapper.bigCard {
     height: 155px;
@@ -64,6 +55,43 @@
     }
 }
 
+.cardLocked {
+    position: relative;
+    cursor: not-allowed;
+}
+
+.cardLocked .cardContent, 
+.cardLocked header, 
+.cardLocked .disappearingMessage {
+    animation: blur-in 0.2s ease-in forwards; 
+}
+
+.cardLockMessage {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardLockMessage div {
+    z-index: 1;
+}
+
+.cardLockMessage span {
+    font-size: 1rem;
+    color: rgb(0, 0, 0);
+
+    padding: 5px 10px;
+
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.813);
+
+    animation: fade-in 0.3s ease-in forwards; 
+}
+
 .wrapper.taskDone {
     filter: grayscale(30%);
 }
@@ -72,9 +100,24 @@
     opacity: 0.9;
 }
 
+
+.disappearingMessage {
+    margin-top: 1px;
+    min-height: 14px;
+    
+    font-size: 0.8rem;
+    
+    display: flex;
+    justify-content: center;
+
+    color: rgb(46, 46, 46);
+    background-color: rgba(255, 255, 80, 0.546);
+}
+
+
 .wrapper > header {
     margin: 0px;
-    padding: 10px 0px;
+    padding-bottom: 10px;
 
     display: flex;
     background-color: rgba(255, 255, 80, 0.546);
@@ -209,4 +252,25 @@
 .disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes blur-in {
+    from {
+        filter: blur(0px);
+    }
+
+    to {
+        filter: blur(5px);
+    }
 }
