@@ -125,4 +125,17 @@ public class BoardQueries(PlannerContext database)
             .FirstOrDefaultAsync(); 
     }
 
+    public async Task<List<BoardMemberResponse>> GetAllMembersOfBoard(int boardId)
+    {
+        return await database.BoardMembers.AsNoTracking()
+            .Where(bm => bm.BoardId == boardId)
+            .Select(bm => new BoardMemberResponse()
+            {
+                UserId = bm.UserId,
+                Email = bm.User.Email,
+                Name = bm.User.Name,
+                Role = bm.Role
+            }).ToListAsync(); 
+    }
+
 }

@@ -86,6 +86,20 @@ public class BoardService(
         return Result<BoardMember>.Success(boardMember);
     }
 
+    public async Task<Result<List<BoardMemberResponse>>> GetAllMembersOfBoard(int boardId)
+    {
+        try
+        {
+            var boardMembers = await boardQueries.GetAllMembersOfBoard(boardId);
+            return Result<List<BoardMemberResponse>>.Success(boardMembers);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to get board members info, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<List<BoardMemberResponse>>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
 
 
     // Create operations

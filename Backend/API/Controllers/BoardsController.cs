@@ -95,6 +95,29 @@ public class BoardsController : ControllerBase
         }
     }
 
+    [HttpGet("{id}/members")]
+    public async Task<IActionResult> GetBoardMembersAsync(int id)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, id, "CanViewBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var result = await boardService.GetAllMembersOfBoard(id);
+
+        if (result.Successful)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult();
+        }
+    }
+
 
 
 
@@ -181,6 +204,9 @@ public class BoardsController : ControllerBase
             return updateResult.Error.ErrorToActionResult();
         }
     }
+
+
+    
 
 
 
