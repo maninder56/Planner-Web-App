@@ -5,6 +5,7 @@ import FilterBoardOptions from './filterButtonOptions';
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import Button from '@/Components/Buttons/button';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { useEffect } from 'react';
 
 export default function FilterButton() {
     const cards = useBoardStore((state) => state.cards); 
@@ -19,6 +20,10 @@ export default function FilterButton() {
         applyFilters(cards); 
         setActivePanel('none'); 
     }
+
+    useEffect(() => {
+        handleClearFilter(); 
+    }, []); 
 
     return (
         <div className={[styles.wrapper, 
