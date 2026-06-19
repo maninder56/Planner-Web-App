@@ -15,7 +15,7 @@ public class UpdateBoardMembershipRequest : IValidatableObject
                 "No new roles provided", [nameof(Roles)]); 
         }
 
-        if (IsUserIdUnique())
+        if (!IsUserIdUnique())
         {
             yield return new ValidationResult(
                 "No Duplicate user Ids allowed", [nameof(Roles)]); 

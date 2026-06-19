@@ -217,18 +217,16 @@ public class BoardsController : ControllerBase
             return Forbid();
         }
 
-        throw new NotImplementedException(); 
+        var result = await boardService.UpdateBoardMembership(User.GetUserId(), id, request);
 
-        //var result = await boardService.GetAllMembersOfBoard(id);
-
-        //if (result.Successful)
-        //{
-        //    return Ok(result.Data);
-        //}
-        //else
-        //{
-        //    return result.Error.ErrorToActionResult();
-        //}
+        if (result.Successful)
+        {
+            return Ok();
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult();
+        }
     }
 
 

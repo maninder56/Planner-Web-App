@@ -5,7 +5,7 @@ namespace API.DTOs.Board.Models;
 
 public class NewBoardRole : IValidatableObject
 {
-    [MinLength(1)]
+    [Range(1, int.MaxValue)]
     public required int userId { get; set; }
 
     public required Role NewRole { get; set; }

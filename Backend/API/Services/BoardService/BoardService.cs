@@ -203,7 +203,8 @@ public class BoardService(
                 return Result.Failed(ErrorType.BadRequest, "Can not update role of owner"); 
             }
 
-            throw new NotImplementedException();    
+            await boardRepository.UpdateBoardMembership(boardId, request); 
+            return Result.Success();
 
         }
         catch (Exception ex)

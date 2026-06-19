@@ -116,7 +116,7 @@ public class BoardRepository : IBoardRepository
     public async Task UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request)
     {
         var boardMembers = await database.BoardMembers
-            .Where(bm => bm.BoardId == boardId)
+            .Where(bm => bm.BoardId == boardId && bm.Role != Role.Owner)
             .ToListAsync();
 
         foreach (var member in boardMembers)
@@ -129,8 +129,10 @@ public class BoardRepository : IBoardRepository
                 continue;
             }
 
-            member.Role = newBoardRole.NewRole; 
+            member.Role = newBoardRole.NewRole;
         }
+
+        await database.SaveChangesAsync();
     }
 
 

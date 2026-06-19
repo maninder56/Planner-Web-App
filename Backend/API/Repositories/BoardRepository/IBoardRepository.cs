@@ -19,7 +19,9 @@ public interface IBoardRepository
 
     public Task UpdateBoardStarAsync(int userId, int boardId, bool isFavorite);
 
-    public Task UpdateLastUsedBoardAsync(int userId, int newLastUsedBoardId); 
+    public Task UpdateLastUsedBoardAsync(int userId, int newLastUsedBoardId);
+
+    public Task UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request); 
 
     // Delete
     public Task DeleteBoardAsync(int boardId); 
