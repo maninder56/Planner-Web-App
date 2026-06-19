@@ -245,4 +245,37 @@ public class BoardService(
         }
     }
 
+
+    public async Task<Result> RemoveUserFromBoardAsync(int userId, int boardId, RemoveUserFromBoardRequest request)
+    {
+        try
+        {
+            if (userId == request.UserId)
+            {
+                return Result.Failed(ErrorType.BadRequest, "You can not remove yourself"); 
+            }
+
+            await boardRepository.RemoveUserFromBoardAsync(request.UserId, boardId);
+
+            //string groupName = $"board:{boardId}";
+            //await globalHubContext.Clients.Group(groupName).BoardHasBeenDeleted(new BoardDeletedResponse
+            //{
+            //    ByUserId = userId,
+            //    BoardId = boardId,
+            //});
+
+            return Result.Success();
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to delete board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to remove user from board, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
+    }
+
 }

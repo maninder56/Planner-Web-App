@@ -143,5 +143,27 @@ public class BoardRepository : IBoardRepository
         await database.Boards.Where(b => b.BoardId == boardId)
             .ExecuteDeleteAsync();
     }
+
+    public async Task RemoveUserFromBoardAsync(int userIdToRemove, int boardId)
+    {
+        await database.BoardMembers.Where(
+            bm => bm.UserId == userIdToRemove &&
+            bm.BoardId == boardId && 
+            bm.Role != Role.Owner)
+            .ExecuteDeleteAsync();
+
+        var user = await database.Users.FirstOrDefaultAsync(u => u.UserId == userIdToRemove);
+
+        if (user is not null && user.LastBoardId == boardId)
+        {
+            user.LastBoardId = null; 
+        }
+
+        await database.BoardStars
+            .Where(bs => bs.UserId == userIdToRemove && bs.BoardId == boardId)
+            .ExecuteDeleteAsync();
+
+        await database.SaveChangesAsync();
+    }
     
 }

@@ -258,4 +258,28 @@ public class BoardsController : ControllerBase
         }
     }
 
+
+    [HttpDelete("{id}/members")]
+    public async Task<IActionResult> DeleteBoardMembershipAsync(int id, RemoveUserFromBoardRequest request)
+    {
+        var authResult = await authorizationService.AuthorizeAsync(
+            User, id, "CanShareBoard");
+
+        if (!authResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var result = await boardService.RemoveUserFromBoardAsync(User.GetUserId(), id, request);
+
+        if (result.Successful)
+        {
+            return Ok();
+        }
+        else
+        {
+            return result.Error.ErrorToActionResult();
+        }
+    }
+
 }
