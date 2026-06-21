@@ -21,9 +21,9 @@ public interface IBoardRepository
 
     public Task UpdateLastUsedBoardAsync(int userId, int newLastUsedBoardId);
 
-    public Task UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request); 
+    public Task<List<BoardMember>> UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request); 
 
     // Delete
     public Task DeleteBoardAsync(int boardId);
-    public Task RemoveUserFromBoardAsync(int userIdToRemove, int boardId); 
+    public Task<User?> RemoveUserFromBoardAsync(int userIdToRemove, int boardId); 
 }

@@ -37,5 +37,9 @@ public interface IGlobalHubClient
 
     Task CardHasBeenLocked(CardLockedByAnohterUserResponse cardLockedByAnohterUser);
     Task CardHasBeenUnLocked(CardUnLockedByAnohterUserResponse cardUnLockedByAnohterUser);
-    Task CurrentlyLockedCards(AllCardsLockedResponse allCardsLockedResponse); 
+    Task CurrentlyLockedCards(AllCardsLockedResponse allCardsLockedResponse);
+
+    // User membership
+    Task UsersMembershipChnaged(List<NewBoardRoleResponse> newBoardRoleResponse);
+    Task UserHasBeenRemovedFromBoard(UserRemovedFromBoardResponse userRemovedFromBoardResponse); 
 }

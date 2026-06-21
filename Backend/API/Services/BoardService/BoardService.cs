@@ -203,7 +203,18 @@ public class BoardService(
                 return Result.Failed(ErrorType.BadRequest, "Can not update role of owner"); 
             }
 
-            await boardRepository.UpdateBoardMembership(boardId, request); 
+            var affectedUsers = await boardRepository.UpdateBoardMembership(boardId, request);
+
+            string groupName = $"board:{boardId}";
+            await globalHubContext.Clients.Group(groupName).UsersMembershipChnaged(
+                affectedUsers.Select(bm => new NewBoardRoleResponse
+            {
+                BoardId = boardId,
+                Email = bm.User.Email,
+                UserId = userId,
+                NewRole = bm.Role
+            }).ToList()); 
+
             return Result.Success();
 
         }
@@ -255,14 +266,18 @@ public class BoardService(
                 return Result.Failed(ErrorType.BadRequest, "You can not remove yourself"); 
             }
 
-            await boardRepository.RemoveUserFromBoardAsync(request.UserId, boardId);
+            var user = await boardRepository.RemoveUserFromBoardAsync(request.UserId, boardId);
 
-            //string groupName = $"board:{boardId}";
-            //await globalHubContext.Clients.Group(groupName).BoardHasBeenDeleted(new BoardDeletedResponse
-            //{
-            //    ByUserId = userId,
-            //    BoardId = boardId,
-            //});
+            if (user is not null)
+            {
+                string groupName = $"board:{boardId}";
+                await globalHubContext.Clients.Group(groupName).UserHasBeenRemovedFromBoard(new UserRemovedFromBoardResponse
+                {
+                    userId = userId,
+                    Email = user.Email,
+                    BoardId = boardId,
+                });
+            }
 
             return Result.Success();
         }

@@ -113,9 +113,10 @@ public class BoardRepository : IBoardRepository
     }
 
 
-    public async Task UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request)
+    public async Task<List<BoardMember>> UpdateBoardMembership(int boardId, UpdateBoardMembershipRequest request)
     {
         var boardMembers = await database.BoardMembers
+            .Include(bm => bm.User)
             .Where(bm => bm.BoardId == boardId && bm.Role != Role.Owner)
             .ToListAsync();
 
@@ -133,6 +134,8 @@ public class BoardRepository : IBoardRepository
         }
 
         await database.SaveChangesAsync();
+
+        return boardMembers; 
     }
 
 
@@ -144,7 +147,7 @@ public class BoardRepository : IBoardRepository
             .ExecuteDeleteAsync();
     }
 
-    public async Task RemoveUserFromBoardAsync(int userIdToRemove, int boardId)
+    public async Task<User?> RemoveUserFromBoardAsync(int userIdToRemove, int boardId)
     {
         await database.BoardMembers.Where(
             bm => bm.UserId == userIdToRemove &&
@@ -164,6 +167,8 @@ public class BoardRepository : IBoardRepository
             .ExecuteDeleteAsync();
 
         await database.SaveChangesAsync();
+
+        return user; 
     }
     
 }
