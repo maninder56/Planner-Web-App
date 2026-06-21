@@ -1,3 +1,4 @@
+import { UserProfileSchema } from '@/Types/userTypes';
 import * as z from 'zod'; 
 
 const BoardColourSchema = z.enum(['soft-pink', 'light-mint-green', 'aqua', 'lavender-blue', 'light-purple', 'bright-pink']); 
@@ -267,3 +268,24 @@ export const CardHasBeenUnLockedSchema = z.object({
 }); 
 
 export type CardHasBeenUnLockedData = z.infer<typeof CardHasBeenUnLockedSchema>; 
+
+
+export const BoardMemberSchema = z.object({
+    userId: z.number(), 
+    name: z.string(), 
+    email: z.string(), 
+    role: UserRoleSchema, 
+}); 
+
+export const BoardMembersListSchema = z.array(BoardMemberSchema); 
+
+export type BoardMembersListData = z.infer<typeof BoardMembersListSchema>; 
+
+export const UpdateUserRolesSchema = z.object({
+    roles: z.array(z.object({
+        userId: z.number(), 
+        newRole: UserRoleSchema,
+    }))
+}); 
+
+export type UpdateUserRolesData = z.infer<typeof UpdateUserRolesSchema>; 
