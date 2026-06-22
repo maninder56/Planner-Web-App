@@ -277,6 +277,8 @@ export const BoardMemberSchema = z.object({
     role: UserRoleSchema, 
 }); 
 
+export type BoardMemberData = z.infer<typeof BoardMemberSchema>; 
+
 export const BoardMembersListSchema = z.array(BoardMemberSchema); 
 
 export type BoardMembersListData = z.infer<typeof BoardMembersListSchema>; 

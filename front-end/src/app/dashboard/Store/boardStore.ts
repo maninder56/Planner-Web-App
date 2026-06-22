@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData, BoardMemberData } from "../Types/boardTypes";
 
 
 
@@ -52,6 +52,7 @@ type State = {
     boardError: string, 
     onlineUsers: Map<number, OnlineUser>, 
     globalActivityMessage?: string; 
+    boardMembers?: BoardMemberData[];
 }
 
 
@@ -71,6 +72,9 @@ type Action = {
 
     hydrateBoard: (data: NormalisedBoardData) => void; 
     resetBoardData: () => void; 
+
+    // Board members
+    SetBoardMembers: (data?: BoardMemberData[]) => void; 
 
     
     // Board array 
@@ -133,6 +137,44 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     boardError: '', 
     onlineUsers: new Map(),
     globalActivityMessage: '', 
+    boardMembers: [
+        {
+            userId: 1,
+            name: "Sarah Johnson",
+            email: "sarah.johnson@example.com",
+            role: "Owner",
+        },
+        {
+            userId: 2,
+            name: "Michael Chen",
+            email: "michael.chen@example.com",
+            role: "Member",
+        },
+        {
+            userId: 3,
+            name: "Emma Wilson",
+            email: "emma.wilson@example.com",
+            role: "Member",
+        },
+        {
+            userId: 4,
+            name: "James Patel",
+            email: "james.patel@example.com",
+            role: "Member",
+        },
+        {
+            userId: 5,
+            name: "Olivia Brown",
+            email: "olivia.brown@example.com",
+            role: "Viewer",
+        },
+        {
+            userId: 6,
+            name: "Daniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel Garcia",
+            email: "daniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.com",
+            role: "Viewer",
+        },
+    ], 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -291,6 +333,11 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             listOrder: [], 
          })); 
     }, 
+
+
+    SetBoardMembers: (data) => set(() => ({
+        boardMembers: data, 
+    })),
 
     setBoardError: (error) => set(() => ({
         boardError: error, 
