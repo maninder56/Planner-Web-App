@@ -3,10 +3,6 @@
     border: solid 1px red;
 } */
 
-.wrapper {
-    
-}
-
 
 .wrapper {
     display: flex;
@@ -14,6 +10,8 @@
     gap: 30px;
     
     margin: 20px 40px;
+
+    min-height: 400px;
 }
 
 .memberCategoryContainer {

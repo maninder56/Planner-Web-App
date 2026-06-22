@@ -7,6 +7,8 @@ import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useState } from 'react';
 import { UserRole } from '@/app/dashboard/Types/boardTypes';
 import Button from '@/Components/Buttons/button';
+import InboxOptionsLoadingSkeleton from '../../../DashboardHeader/Inbox/InboxOptions/InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
+import ManageBoardMembersOptionsSkeleton from './manageBoardMembersOptionsSkeleton';
 
 export default function ManageBoardMembersOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -32,7 +34,7 @@ export default function ManageBoardMembersOptions() {
         return (
             <BigHoverPanel title='Manage Board Members' onCloseClick={() => setActivePanel('none')}>
                 <div className={styles.wrapper}>
-                    loading
+                    <ManageBoardMembersOptionsSkeleton />
                 </div>
             </BigHoverPanel>
         ); 
