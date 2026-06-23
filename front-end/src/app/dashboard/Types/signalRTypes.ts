@@ -22,4 +22,5 @@ export type SignalRClientMethod =
     'CardPositionChanged'           | 
     'CurrentlyLockedCards'          | 
     'CardHasBeenLocked'             | 
-    'CardHasBeenUnLocked'           ; 
+    'CardHasBeenUnLocked'           | 
+    'UsersMembershipChnaged'        ; 

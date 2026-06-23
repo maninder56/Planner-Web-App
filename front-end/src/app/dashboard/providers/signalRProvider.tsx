@@ -6,10 +6,11 @@ import { InvitationInfoSchema } from '../Types/invitationTypes';
 import { useBoardUIStore } from '../Store/boardUIStore';
 import { signalRService } from '../Services/signalRService';
 import { SignalRClientMethod, SignalRServerMethod } from '../Types/signalRTypes';
-import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema, CurrentlyLockedCardsSchema, CardHasBeenLockedSchema, CardHasBeenUnLockedSchema } from '../Types/boardTypes';
+import { AllOnlineUsersSchema, BoardInfoChangedSchema, BoardHasBeenDeletedSchema, CardHasBeenDeletedSchema, CardHasBeenUpdatedSchema, CardPositionChangedSchema, ListHasBeenDeletedSchema, ListNameUpdatedSchema, ListPositionChangedSchema, NewCardAddedSchema, NewListAddedSchema, OnlineUser, OnlineUserLeavingSchema, OnlineUserSchema, CurrentlyLockedCardsSchema, CardHasBeenLockedSchema, CardHasBeenUnLockedSchema, UsersMembershipChnagedListSchema } from '../Types/boardTypes';
 import { useBoardStore } from '../Store/boardStore';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRContext } from '../Context/signalRContext';
+import { useUserStore } from '@/Store/userStore';
 
 export default function SignalRProvider({
     children, 
@@ -28,6 +29,9 @@ export default function SignalRProvider({
     const removeOnlineUser = useBoardStore((state) => state.removeOnlineUser); 
     const setOnlineUsers = useBoardStore((state) => state.setOnlineUsers); 
     const DeleteBoardFromSignalR = useBoardStore((state) => state.DeleteBoardFromSignalR); 
+
+    // Board members 
+    const UsersMembershipChnagedFromSignalR = useBoardStore((state) => state.UsersMembershipChnagedFromSignalR); 
 
     // List functions 
     const AddNewListToBoardFromSignalR = useBoardStore((state) => state.AddNewListToBoardFromSignalR); 
@@ -57,6 +61,9 @@ export default function SignalRProvider({
     // Board changes
     const BoardInfoChangedMethodName: SignalRClientMethod = 'BoardInfoChanged'; 
     const BoardHasBeenDeletedMethodName: SignalRClientMethod = 'BoardHasBeenDeleted'; 
+
+    // Board members
+    const UsersMembershipChnagedMethodName: SignalRClientMethod = 'UsersMembershipChnaged';
 
     // list changes
     const NewListAddedMethodName: SignalRClientMethod = 'NewListAdded'; 
@@ -339,6 +346,20 @@ export default function SignalRProvider({
         }   
     }
 
+    function UsersMembershipChnaged(data: any) {
+        const validData = UsersMembershipChnagedListSchema.safeParse(data); 
+
+        if (validData.success) {
+            const userEmail = useUserStore.getState().userData?.email; 
+            if (userEmail) {
+                UsersMembershipChnagedFromSignalR(validData.data, userEmail); 
+            }
+        } else {
+            console.error('Invalid card unlock data recieved from Signal R'); 
+            console.error(validData.error); 
+        }   
+    }
+
 
     async function JoinBoard(boardId: number) {
         await signalRService.connection.invoke(joinBoardServerMethodName, boardId); 
@@ -406,6 +427,8 @@ export default function SignalRProvider({
             signalRService.connection.on(BoardInfoChangedMethodName, BoardInfoChanged); 
             signalRService.connection.on(BoardHasBeenDeletedMethodName, BoardHasBeenDeleted); 
 
+            signalRService.connection.on(UsersMembershipChnagedMethodName, UsersMembershipChnaged); 
+
             signalRService.connection.on(NewListAddedMethodName, NewListAdded);
             signalRService.connection.on(ListNameUpdatedMethodName, ListNameUpdated); 
             signalRService.connection.on(ListHasBeenDeletedMethodName, ListHasBeenDeleted); 
@@ -438,6 +461,8 @@ export default function SignalRProvider({
 
             signalRService.connection.off(BoardInfoChangedMethodName); 
             signalRService.connection.off(BoardHasBeenDeletedMethodName); 
+
+            signalRService.connection.off(UsersMembershipChnagedMethodName); 
 
             signalRService.connection.off(NewListAddedMethodName); 
             signalRService.connection.off(ListNameUpdatedMethodName); 

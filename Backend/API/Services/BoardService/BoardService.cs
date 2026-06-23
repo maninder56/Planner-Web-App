@@ -211,7 +211,7 @@ public class BoardService(
             {
                 BoardId = boardId,
                 Email = bm.User.Email,
-                UserId = userId,
+                UserId = bm.User.UserId,
                 NewRole = bm.Role
             }).ToList()); 
 

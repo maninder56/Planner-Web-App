@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData, BoardMemberData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData, BoardMemberData, UsersMembershipChnagedData, UsersMembershipChnagedListData } from "../Types/boardTypes";
 
 
 
@@ -9,6 +9,7 @@ type BoardData = {
     idFavouriteBoard: boolean,
     role: UserRole, 
     boardColour: BoardColour,
+    userMembershipChanged?: UsersMembershipChnagedData; 
 }
 
 type ListId = `list-${number}`; 
@@ -75,6 +76,7 @@ type Action = {
 
     // Board members
     SetBoardMembers: (data?: BoardMemberData[]) => void; 
+    UsersMembershipChnagedFromSignalR: (data: UsersMembershipChnagedListData, userEmail: string) => void; 
 
     
     // Board array 
@@ -301,6 +303,30 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     SetBoardMembers: (data) => set(() => ({
         boardMembers: data, 
     })),
+
+    UsersMembershipChnagedFromSignalR: (data, userEmail) => set((state) => {
+        const currentBoardData = state.currentBoardData; 
+
+        if (!currentBoardData) {
+            return state; 
+        }
+
+        const currentBoardAndUserMembershipChanged = data.find(b => b.boardId === currentBoardData.id && b.email === userEmail); 
+
+        if (!currentBoardAndUserMembershipChanged) {
+            return state; 
+        }
+
+        const newCurrentBoardData: BoardData = {
+            ...currentBoardData, 
+            role: currentBoardAndUserMembershipChanged.newRole, 
+            userMembershipChanged: currentBoardAndUserMembershipChanged
+        }
+
+        return {
+            currentBoardData: newCurrentBoardData
+        }
+    }),
 
     setBoardError: (error) => set(() => ({
         boardError: error, 

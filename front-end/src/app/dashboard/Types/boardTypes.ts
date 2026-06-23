@@ -291,3 +291,19 @@ export const UpdateUserRolesSchema = z.object({
 }); 
 
 export type UpdateUserRolesData = z.infer<typeof UpdateUserRolesSchema>; 
+
+
+export const UserMembershipChnagedSchema = z.object({
+    boardId: z.number(), 
+    email: z.string(), 
+    userId: z.number(), 
+    newRole: UserRoleSchema, 
+}); 
+
+export type UsersMembershipChnagedData = z.infer<typeof UserMembershipChnagedSchema>; 
+
+export const UsersMembershipChnagedListSchema = z.array(UserMembershipChnagedSchema); 
+
+export type UsersMembershipChnagedListData = z.infer<typeof UsersMembershipChnagedListSchema>; 
+
+
