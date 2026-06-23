@@ -10,11 +10,18 @@ import Button from '@/Components/Buttons/button';
 import InboxOptionsLoadingSkeleton from '../../../DashboardHeader/Inbox/InboxOptions/InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
 import ManageBoardMembersOptionsSkeleton from './manageBoardMembersOptionsSkeleton';
 import RemoveMemberFromBoardConfirmation from './RemoveMemberFromBoardConfirmation/removeMemberFromBoardConfirmation';
+import { useUserStore } from '@/Store/userStore';
+import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
+import { GetBoardMembersRequest } from '@/app/dashboard/Services/boardService';
 
 
 export default function ManageBoardMembersOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const boardMembers = useBoardStore((state) => state.boardMembers); 
+    const setBoardMembers = useBoardStore((state) => state.SetBoardMembers); 
+    const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const currentBoardId = useBoardStore((state) => state.currentBoardData?.id); 
 
     const [loading, setLoading] = useState(false); 
     const availalbeRoles: UserRole[] = ['Member', 'Viewer']; 
@@ -102,6 +109,35 @@ export default function ManageBoardMembersOptions() {
 
         setViewers(newViewers); 
     }
+
+    async function fetchMemberData() { 
+        setBoardMembers(undefined); 
+
+        if (!currentBoardId) {
+            return; 
+        }
+
+        setLoading(true);
+
+        try {
+            const result = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardMembersRequest, currentBoardId); 
+            if (result.ok) {
+                if (result.data !== undefined) {
+                    setBoardMembers(result.data); 
+                    setMembers(result.data?.filter(u => u.role === 'Member')); 
+                    setViewers(result.data?.filter(u => u.role === 'Viewer')); 
+                }
+            } else if (result.error === 'Unauthorized') {
+                setSessionExpired(true); 
+            }
+        } finally {
+            setLoading(false); 
+        }
+    }
+
+    useEffect(() => {
+        fetchMemberData(); 
+    }, [])
     
     if (loading) {
         return (
@@ -119,7 +155,7 @@ export default function ManageBoardMembersOptions() {
                 <div className={styles.wrapper}>
                     <div className={styles.failedToGetData}>
                         <p>Failed to get board members.</p>
-                        <Button name='Try again' color='red' onClick={() => {}} />
+                        <Button name='Try again' color='red' onClick={fetchMemberData} />
                     </div>
                 </div>
             </BigHoverPanel>
@@ -136,7 +172,7 @@ export default function ManageBoardMembersOptions() {
                         <ul>
                             {
                                 owner.map(u => 
-                                    <li className={styles.grid}>
+                                    <li key={u.userId} className={styles.grid}>
                                         <div className={styles.userInfo}>
                                             <header>{u.name}</header>
                                             <span>{u.email}</span>
@@ -154,13 +190,13 @@ export default function ManageBoardMembersOptions() {
                     </div>
                 }
                 {
-                    members && 
+                    members && members.length > 0 &&
                     <div className={styles.memberCategoryContainer}>
                         <header className={styles.categoryHeader}>Members</header>
                         <ul>
                             {
                                 members.map(u => 
-                                    <li className={styles.grid}>
+                                    <li key={u.userId} className={styles.grid}>
                                         <div className={styles.userInfo}>
                                             <header>{u.name}</header>
                                             <span>{u.email}</span>
@@ -180,13 +216,13 @@ export default function ManageBoardMembersOptions() {
                     </div>
                 }
                 {
-                    viewers &&
+                    viewers && viewers.length > 0 &&
                     <div className={styles.memberCategoryContainer}>
                         <header className={styles.categoryHeader}>Viewers</header>
                         <ul>
                             {
                                 viewers.map(u => 
-                                    <li className={styles.grid}>
+                                    <li key={u.userId} className={styles.grid}>
                                         <div className={styles.userInfo}>
                                             <header>{u.name}</header>
                                             <span>{u.email}</span>
@@ -208,7 +244,7 @@ export default function ManageBoardMembersOptions() {
                 {
                     showUpdateButton &&
                     <div className={styles.saveButton}>
-                        <Button name='Cancle' color='transparent-with-outline' onClick={ResetMembership} />
+                        <Button name='Cancel' color='transparent-with-outline' onClick={ResetMembership} />
                         <Button name='Save' color='blue' onClick={() => {}} />
                     </div>
                 }

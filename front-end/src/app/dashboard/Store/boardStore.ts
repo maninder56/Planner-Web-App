@@ -137,44 +137,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     boardError: '', 
     onlineUsers: new Map(),
     globalActivityMessage: '', 
-    boardMembers: [
-        {
-            userId: 1,
-            name: "Sarah Johnson",
-            email: "sarah.johnson@example.com",
-            role: "Owner",
-        },
-        {
-            userId: 2,
-            name: "Michael Chen",
-            email: "michael.chen@example.com",
-            role: "Member",
-        },
-        {
-            userId: 3,
-            name: "Emma Wilson",
-            email: "emma.wilson@example.com",
-            role: "Member",
-        },
-        {
-            userId: 4,
-            name: "James Patel",
-            email: "james.patel@example.com",
-            role: "Member",
-        },
-        {
-            userId: 5,
-            name: "Olivia Brown",
-            email: "olivia.brown@example.com",
-            role: "Viewer",
-        },
-        {
-            userId: 6,
-            name: "Daniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel GarciaDaniel Garcia",
-            email: "daniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.comdaniel.garcia@example.com",
-            role: "Viewer",
-        },
-    ], 
+    boardMembers: undefined, 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
