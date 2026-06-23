@@ -117,7 +117,10 @@ export default function ManageBoardMembersOptions() {
         return (
             <BigHoverPanel title='Manage Board Members' onCloseClick={() => setActivePanel('none')}>
                 <div className={styles.wrapper}>
-                    Failed to get board members, please try again.
+                    <div className={styles.failedToGetData}>
+                        <p>Failed to get board members.</p>
+                        <Button name='Try again' color='red' onClick={() => {}} />
+                    </div>
                 </div>
             </BigHoverPanel>
         ); 
