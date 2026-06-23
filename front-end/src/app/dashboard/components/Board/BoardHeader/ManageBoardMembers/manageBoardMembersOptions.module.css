@@ -14,6 +14,14 @@
     min-height: 400px;
 }
 
+.error {
+    text-align: center;
+    font-size: 1rem;
+    color: red;
+
+    min-height: 18px;
+}
+
 .memberCategoryContainer {
     display: flex;
     flex-direction: column;

@@ -5,14 +5,14 @@ import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelCon
 import { useBoardUIStore } from '@/app/dashboard/Store/boardUIStore';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
 import { useEffect, useState } from 'react';
-import { BoardMemberData, UserRole } from '@/app/dashboard/Types/boardTypes';
+import { BoardMemberData, UpdateUserRolesData, UserRole } from '@/app/dashboard/Types/boardTypes';
 import Button from '@/Components/Buttons/button';
 import InboxOptionsLoadingSkeleton from '../../../DashboardHeader/Inbox/InboxOptions/InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
 import ManageBoardMembersOptionsSkeleton from './manageBoardMembersOptionsSkeleton';
 import RemoveMemberFromBoardConfirmation from './RemoveMemberFromBoardConfirmation/removeMemberFromBoardConfirmation';
 import { useUserStore } from '@/Store/userStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
-import { GetBoardMembersRequest } from '@/app/dashboard/Services/boardService';
+import { GetBoardMembersRequest, UpdateBoardMembershipRequest } from '@/app/dashboard/Services/boardService';
 
 
 export default function ManageBoardMembersOptions() {
@@ -29,6 +29,8 @@ export default function ManageBoardMembersOptions() {
     const owner = boardMembers?.filter(u => u.role === 'Owner'); 
     const [members, setMembers] = useState(boardMembers?.filter(u => u.role === 'Member')); 
     const [viewers, setViewers] = useState(boardMembers?.filter(u => u.role === 'Viewer')); 
+
+    const [error, setError] = useState(''); 
 
     const [showUpdateButton, setShowUpdateButton] = useState(false); 
 
@@ -110,6 +112,56 @@ export default function ManageBoardMembersOptions() {
         setViewers(newViewers); 
     }
 
+    async function handleSaveButton() {
+        if (!currentBoardId || !boardMembers) {
+            return; 
+        }
+
+        const newMemberRole = [...(members ?? []), ...(viewers ?? [])]
+            .filter(user => {
+                const originalUser = boardMembers.find(u => u.userId === user.userId); 
+                return originalUser?.role !== user.role; 
+            })
+            .map(user => {
+                return {
+                    userId: user.userId, 
+                    newRole: user.role
+                }
+            }); 
+
+        const updatedRoles: UpdateUserRolesData = {
+            roles: newMemberRole,
+        }
+
+        const result = await ApiRequestWithRefreshTokenAttemptAndData(UpdateBoardMembershipRequest, {
+            boardId: currentBoardId, updatedRoles: updatedRoles
+        }); 
+
+        if (result.ok) {
+            setError(''); 
+            const newBoardMembers = boardMembers.map(user => {
+                const newUser = newMemberRole.find(u => u.userId === user.userId); 
+                if (newUser) {
+                    return {
+                        ...user, 
+                        role: newUser.newRole, 
+                    }
+                } else {
+                    return user
+                }
+            }); 
+
+            setBoardMembers(newBoardMembers); 
+            setMembers(newBoardMembers.filter(u => u.role === 'Member')); 
+            setViewers(newBoardMembers.filter(u => u.role === 'Viewer')); 
+        } else if (result.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        } else {
+            setError('Failed to update roles, please try again'); 
+        }
+    }
+
+
     async function fetchMemberData() { 
         setBoardMembers(undefined); 
 
@@ -165,6 +217,7 @@ export default function ManageBoardMembersOptions() {
     return (
         <BigHoverPanel title='Manage Board Members' onCloseClick={() => setActivePanel('none')}>
             <div className={styles.wrapper}>
+            <div className={styles.error}>{error}</div>
                 {
                     owner &&
                     <div className={styles.memberCategoryContainer}>
@@ -245,7 +298,7 @@ export default function ManageBoardMembersOptions() {
                     showUpdateButton &&
                     <div className={styles.saveButton}>
                         <Button name='Cancel' color='transparent-with-outline' onClick={ResetMembership} />
-                        <Button name='Save' color='blue' onClick={() => {}} />
+                        <Button name='Save' color='blue' onClick={handleSaveButton} />
                     </div>
                 }
                 {
