@@ -66,6 +66,11 @@ export default function ManageBoardMembersOptions() {
         setShowUpdateButton(HasUserMembershipChanged()); 
     }, [members, viewers, boardMembers]); 
 
+    useEffect(() => {
+        setMembers(boardMembers?.filter(u => u.role === 'Member')); 
+        setViewers(boardMembers?.filter(u => u.role === 'Viewer')); 
+    }, [boardMembers]); 
+
     function handleMemberRoleChange(role: string, userId: number) {
         if (!(role === 'Member' || role === 'Viewer')) {
             return; 
@@ -152,8 +157,6 @@ export default function ManageBoardMembersOptions() {
             }); 
 
             setBoardMembers(newBoardMembers); 
-            setMembers(newBoardMembers.filter(u => u.role === 'Member')); 
-            setViewers(newBoardMembers.filter(u => u.role === 'Viewer')); 
         } else if (result.error === 'Unauthorized') {
             setSessionExpired(true); 
         } else {
@@ -176,8 +179,6 @@ export default function ManageBoardMembersOptions() {
             if (result.ok) {
                 if (result.data !== undefined) {
                     setBoardMembers(result.data); 
-                    setMembers(result.data?.filter(u => u.role === 'Member')); 
-                    setViewers(result.data?.filter(u => u.role === 'Viewer')); 
                 }
             } else if (result.error === 'Unauthorized') {
                 setSessionExpired(true); 
