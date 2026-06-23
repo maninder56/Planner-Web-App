@@ -9,6 +9,8 @@ import { BoardMemberData, UserRole } from '@/app/dashboard/Types/boardTypes';
 import Button from '@/Components/Buttons/button';
 import InboxOptionsLoadingSkeleton from '../../../DashboardHeader/Inbox/InboxOptions/InboxOptionsLoadingSkeleton/inboxOptionsLoadingSkeleton';
 import ManageBoardMembersOptionsSkeleton from './manageBoardMembersOptionsSkeleton';
+import RemoveMemberFromBoardConfirmation from './RemoveMemberFromBoardConfirmation/removeMemberFromBoardConfirmation';
+
 
 export default function ManageBoardMembersOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -22,6 +24,8 @@ export default function ManageBoardMembersOptions() {
     const [viewers, setViewers] = useState(boardMembers?.filter(u => u.role === 'Viewer')); 
 
     const [showUpdateButton, setShowUpdateButton] = useState(false); 
+
+    const [userToRemove, setUserToRemove] = useState<BoardMemberData | undefined>(undefined); 
     
 
     function ResetMembership() {
@@ -164,7 +168,7 @@ export default function ManageBoardMembersOptions() {
                                             </select>
                                         </div>
                                         <div className={styles.removeButton}>
-                                            <Button name={'Remove'} color={'red'} onClick={() => {}} />
+                                            <Button name={'Remove'} color={'red'} onClick={() => setUserToRemove(u)} />
                                         </div>
                                     </li>
                                 )
@@ -190,7 +194,7 @@ export default function ManageBoardMembersOptions() {
                                             </select>
                                         </div>
                                         <div className={styles.removeButton}>
-                                            <Button name={'Remove'} color={'red'} onClick={() => {}} />
+                                            <Button name={'Remove'} color={'red'} onClick={() => setUserToRemove(u)} />
                                         </div>
                                     </li>
                                 )
@@ -204,6 +208,9 @@ export default function ManageBoardMembersOptions() {
                         <Button name='Cancle' color='transparent-with-outline' onClick={ResetMembership} />
                         <Button name='Save' color='blue' onClick={() => {}} />
                     </div>
+                }
+                {
+                    userToRemove && <RemoveMemberFromBoardConfirmation memberData={userToRemove} onCancel={() => setUserToRemove(undefined)} />
                 }
             </div>
         </BigHoverPanel>
