@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData, BoardMemberData, UsersMembershipChnagedData, UsersMembershipChnagedListData } from "../Types/boardTypes";
+import { BoardDataFromAPI, BoardColour, CardPriority, UserRole, BoardArray, CardUpdated, UpdateCard, OnlineUser, NewListAdded, ListNameUpdated, NewCardAdded, CardHasBeenDeletedData, ListHasBeenDeletedData, BoardHasBeenDeletedData, CardHasBeenUpdatedData, ListPositionChangedData, CardPositionChangedData, BoardInfoChangedData, CardLockInfo, CurrentlyLockedCardsData, CardHasBeenLockedData, CardHasBeenUnLockedData, BoardMemberData, UsersMembershipChnagedData, UsersMembershipChnagedListData, UserHasBeenRemovedFromBoardData } from "../Types/boardTypes";
 
 
 
@@ -54,6 +54,7 @@ type State = {
     onlineUsers: Map<number, OnlineUser>, 
     globalActivityMessage?: string; 
     boardMembers?: BoardMemberData[];
+    userRemovedFromCurrentBoard: boolean; 
 }
 
 
@@ -77,6 +78,8 @@ type Action = {
     // Board members
     SetBoardMembers: (data?: BoardMemberData[]) => void; 
     UsersMembershipChnagedFromSignalR: (data: UsersMembershipChnagedListData, userEmail: string) => void; 
+    UserHasBeenRemovedFromBoardFromSignalR: (data: UserHasBeenRemovedFromBoardData, userEmail: string) => void; 
+    SetUserRemovedFromCurrentBoard: (data: boolean) => void; 
 
     
     // Board array 
@@ -140,6 +143,7 @@ export const useBoardStore = create<State & Action>((set, get) => ({
     onlineUsers: new Map(),
     globalActivityMessage: '', 
     boardMembers: undefined, 
+    userRemovedFromCurrentBoard: false, 
 
     setBoardLoading: (isLoading) => {
       set(() => ({ isBoardLoading: isLoading }))  
@@ -327,6 +331,38 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             currentBoardData: newCurrentBoardData
         }
     }),
+
+
+    UserHasBeenRemovedFromBoardFromSignalR: (data, userEmail) => set((state) => {
+        const currentBoardData = state.currentBoardData; 
+
+        if (!currentBoardData) {
+            return state; 
+        }
+
+        if (data.boardId !== currentBoardData.id || data.email !== userEmail) {
+            return state; 
+        }
+
+        const newBoardArray = state.boards === null ? null :  
+            state.boards.filter(b => b.boardId !== data.boardId); 
+
+        return {
+            boards: newBoardArray, 
+            currentBoardData: undefined, 
+            lastUsedBoardExists: false, 
+            lists: {}, 
+            cards: {}, 
+            listOrder: [],
+            onlineUsers: new Map(),
+            userRemovedFromCurrentBoard: true, 
+        }
+    }),
+
+    SetUserRemovedFromCurrentBoard: (data) => set(() => ({
+        userRemovedFromCurrentBoard: data
+    })),
+
 
     setBoardError: (error) => set(() => ({
         boardError: error, 

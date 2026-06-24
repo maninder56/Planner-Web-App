@@ -23,4 +23,5 @@ export type SignalRClientMethod =
     'CurrentlyLockedCards'          | 
     'CardHasBeenLocked'             | 
     'CardHasBeenUnLocked'           | 
-    'UsersMembershipChnaged'        ; 
+    'UsersMembershipChnaged'        | 
+    'UserHasBeenRemovedFromBoard'   ; 

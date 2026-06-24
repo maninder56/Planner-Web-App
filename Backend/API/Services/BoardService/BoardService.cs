@@ -273,7 +273,7 @@ public class BoardService(
                 string groupName = $"board:{boardId}";
                 await globalHubContext.Clients.Group(groupName).UserHasBeenRemovedFromBoard(new UserRemovedFromBoardResponse
                 {
-                    userId = userId,
+                    userId = user.UserId,
                     Email = user.Email,
                     BoardId = boardId,
                 });

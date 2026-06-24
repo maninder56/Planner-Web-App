@@ -307,3 +307,12 @@ export const UsersMembershipChnagedListSchema = z.array(UserMembershipChnagedSch
 export type UsersMembershipChnagedListData = z.infer<typeof UsersMembershipChnagedListSchema>; 
 
 
+export const UserHasBeenRemovedFromBoardSchema = z.object({
+   userId: z.number(), 
+   email: z.string(), 
+   boardId: z.number(), 
+}); 
+
+export type UserHasBeenRemovedFromBoardData = z.infer<typeof UserHasBeenRemovedFromBoardSchema>; 
+
+
