@@ -19,7 +19,7 @@ export default function UserRoleChangedDialogBox({
         <HoverConfirmation 
             title='Role Changed'
             message={`Your role in this board has changed to '${newMembershipData.newRole}'.`}
-            onConfirmName='Ok'
+            onConfirmName='OK'
             onConfirm={handleConfirm} />
     ); 
 }

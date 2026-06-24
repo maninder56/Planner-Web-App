@@ -10,6 +10,7 @@ import { ApiRequestWithRefreshTokenAttempt, ApiRequestWithRefreshTokenAttemptAnd
 import { useBoardUIStore } from '../../Store/boardUIStore';
 import SignalRProvider from '../../providers/signalRProvider';
 import dynamic from 'next/dynamic';
+import UserRemovedFromBoardDialogBox from './BoardHeader/ManageBoardMembers/UserRemovedFromBoardDialogBox/UserRemovedFromBoardDialogBox';
 
 export default function Board() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
@@ -20,6 +21,8 @@ export default function Board() {
     const lastBoardExists = useBoardStore((state) => state.lastUsedBoardExists); 
     const boardError = useBoardStore((state) => state.boardError); 
     const userRole = useBoardStore((state) => state.currentBoardData?.role); 
+
+    const userRemovedFromCurrentBoard = useBoardStore((state) => state.userRemovedFromCurrentBoard); 
 
     async function fetchData() {
         const dataRequest = await ApiRequestWithRefreshTokenAttempt(LastUsedBoardRequest); 
@@ -62,6 +65,7 @@ export default function Board() {
             <section>
                 <BoardContent />
             </section>
+            { userRemovedFromCurrentBoard && <UserRemovedFromBoardDialogBox /> }
         </main>
     ); 
 }
