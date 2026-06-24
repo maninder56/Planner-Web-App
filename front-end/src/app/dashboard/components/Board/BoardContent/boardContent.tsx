@@ -27,6 +27,7 @@ import {Debug} from '@dnd-kit/dom/plugins/debug';
 import { GetBoardRequest } from '@/app/dashboard/Services/boardService';
 import { NormaliseBoardData } from '@/app/dashboard/Utilities/boardData';
 import { useSignalR } from '@/app/dashboard/Context/signalRContext';
+import UserRoleChangedDialogBox from '../BoardHeader/ManageBoardMembers/UserRoleChangedDialogBox/userRoleChangedDialogBox';
 
 type previousCardOrder = {
     cardId: CardId;
@@ -46,6 +47,8 @@ export default function BoardContent() {
     const hydrateBoard = useBoardStore((state) => state.hydrateBoard); 
 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
+
+    const UserMembershipChangedData = useBoardStore((state) => state.currentBoardData?.userMembershipChanged); 
 
     const isCreateNewCardPanelOpen = useBoardUIStore((state) => state.activePanel === 'createNewCardPanel'); 
     const isDeleteListDialogBoxOpen = useBoardUIStore((state) => state.activePanel === 'deleteListDialogBox'); 
@@ -291,12 +294,17 @@ export default function BoardContent() {
                         <AddNewListButton boardId={boardDetials.id} userRole={boardDetials.role} />
                     </div>
                 </div>
+                
                 { isCreateNewCardPanelOpen && createNewCardListId && 
                     <AddNewCardPanel boardId={boardDetials.id} parentListId={createNewCardListId}/> }
+                
                 { isDeleteListDialogBoxOpen && currentOpenListMenu && <DeleteListDialogBox boardId={boardDetials.id} listId={currentOpenListMenu} /> }
+                
                 { isCardDetailsPanelOpen && cardDetailsPanelData && 
                     <BoardCardDetails boardId={boardDetials.id} cardId={cardDetailsPanelData.cardId} 
                     parentListId={cardDetailsPanelData.parentListId} viewOnlyBoard={viewOnly} /> }
+                
+                { UserMembershipChangedData && <UserRoleChangedDialogBox newMembershipData={UserMembershipChangedData} /> }
             </div>
         </DragDropProvider>
     )

@@ -80,6 +80,7 @@ type Action = {
     UsersMembershipChnagedFromSignalR: (data: UsersMembershipChnagedListData, userEmail: string) => void; 
     UserHasBeenRemovedFromBoardFromSignalR: (data: UserHasBeenRemovedFromBoardData, userEmail: string) => void; 
     SetUserRemovedFromCurrentBoard: (data: boolean) => void; 
+    SetUserMembershipChanged: (data?: UsersMembershipChnagedData) => void; 
 
     
     // Board array 
@@ -373,6 +374,21 @@ export const useBoardStore = create<State & Action>((set, get) => ({
         userRemovedFromCurrentBoard: data
     })),
 
+    SetUserMembershipChanged: (data) => set((state) => {
+        const currentBoardData = state.currentBoardData; 
+
+        if (!currentBoardData) {
+            return state; 
+        }
+
+        return {
+            currentBoardData: {
+                ...currentBoardData, 
+                userMembershipChanged: data
+            }
+        }
+
+    }),
 
     setBoardError: (error) => set(() => ({
         boardError: error, 
