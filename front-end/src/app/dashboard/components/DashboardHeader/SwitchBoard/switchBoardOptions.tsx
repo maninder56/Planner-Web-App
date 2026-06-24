@@ -56,6 +56,8 @@ export default function SwitchBoardOptions() {
                                         fill="gold" stroke="#000" />
                                 </svg>
 
+    
+
     function filterBoards(search: string, boards: BoardsState): BoardsState {
 
         if (boards.numberOfTotalBoards === 0 || search.trim() === '') {

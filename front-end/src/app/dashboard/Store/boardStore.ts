@@ -340,12 +340,22 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             return state; 
         }
 
+        const newBoardArray = state.boards === null ? null :  
+            state.boards.filter(b => b.boardId !== data.boardId); 
+
+        if (data.boardId !== currentBoardData.id) {
+            if (data.email === userEmail) {
+                return {
+                    boards: newBoardArray, 
+                }
+            } else {
+                return state; 
+            }
+        }
+
         if (data.boardId !== currentBoardData.id || data.email !== userEmail) {
             return state; 
         }
-
-        const newBoardArray = state.boards === null ? null :  
-            state.boards.filter(b => b.boardId !== data.boardId); 
 
         return {
             boards: newBoardArray, 
