@@ -5,6 +5,7 @@ using API.Exceptions;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
+using API.SignalR.BoardPresenceTracker;
 using API.SignalR.Hub;
 using DatabaseContext;
 using DatabaseContext.Types;
@@ -16,6 +17,7 @@ public class BoardService(
     ILogger<BoardService> logger, 
     BoardQueries boardQueries, 
     IBoardRepository boardRepository,
+    IBoardPresenceTracker boardPresenceTracker, 
     IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : IBoardService
 {
     // Read operations
@@ -267,16 +269,19 @@ public class BoardService(
             }
 
             var user = await boardRepository.RemoveUserFromBoardAsync(request.UserId, boardId);
+            var connectionIDs = boardPresenceTracker.GetConnectionIDsOfUser(request.UserId); 
 
-            if (user is not null)
+            if (user is not null && connectionIDs.Count > 0)
             {
-                string groupName = $"board:{boardId}";
-                await globalHubContext.Clients.Group(groupName).UserHasBeenRemovedFromBoard(new UserRemovedFromBoardResponse
+                foreach (var connectionID in connectionIDs)
                 {
-                    userId = user.UserId,
-                    Email = user.Email,
-                    BoardId = boardId,
-                });
+                    await globalHubContext.Clients.Client(connectionID).UserHasBeenRemovedFromBoard(new UserRemovedFromBoardResponse
+                    {
+                        userId = user.UserId,
+                        Email = user.Email,
+                        BoardId = boardId,
+                    });
+                }
             }
 
             return Result.Success();

@@ -86,6 +86,21 @@ public class BoardPresenceTracker(ILogger<BoardPresenceTracker> _logger) : IBoar
         return result;
     }
 
+    public List<string> GetConnectionIDsOfUser(int userId)
+    {
+        var result = new List<string>();
+
+        foreach (var board in _boards.Values)
+        {
+            if (board.TryGetValue(userId, out var connections))
+            { 
+                result.AddRange(connections.ToArray()); 
+            }
+        }
+
+        return result;
+    }
+
 
     private void LogState(string message)
     {

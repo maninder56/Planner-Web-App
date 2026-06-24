@@ -10,5 +10,7 @@ public interface IBoardPresenceTracker
 
     IReadOnlyCollection<int> GetUsersInBoard(int boardId);
 
+    public List<string> GetConnectionIDsOfUser(int userId); 
+
     public List<int> GetBoardsForUser(int userId); 
 }
