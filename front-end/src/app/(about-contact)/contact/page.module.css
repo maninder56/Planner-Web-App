@@ -1,0 +1,40 @@
+
+/* 
+.wrapper * {
+    border: solid 1px red;
+} */
+
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.wrapper header {
+    margin: 0;
+    padding: 0;
+
+    font-size: 2rem;
+    text-align: center;
+}
+
+.wrapper p {
+    padding: 0;
+    margin: 0;
+
+    font-size: 1rem;
+
+    text-align: center;
+}
+
+.wrapper a {
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+@media (pointer: fine) {
+    .wrapper a:hover {
+        text-decoration: none;
+    }
+}

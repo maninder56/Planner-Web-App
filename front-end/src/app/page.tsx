@@ -73,7 +73,7 @@ export default function Home() {
                   <Link href={'/signup'} className='button red'>Sign up</Link>
                 </div>
                 <p>Signing up will alow you to invite other members, so you can work together on a project</p>
-                <p>Or create a guest account to try the planner without needing an account. But you won&apos;t be able to invite or collaborate with other members</p>
+                <p>Or create a guest account to try the planner without needing an account.</p>
                 <div className={styles.guestButtonContainer}>
                   <Button name='Guest' color='black' onClick={() => {}} />
                 </div>
@@ -93,12 +93,12 @@ export default function Home() {
           </div>
           <div>
             <div>
-              <Link href={'/login'} className='button'>About Planner</Link>
+              <Link href={'/about'} className='button'>About Planner</Link>
             </div>
           </div>
           <div>
             <div>
-              <Link href={'/login'} className='button'>Contact</Link>
+              <Link href={'/contact'} className='button'>Contact</Link>
             </div>
           </div>
         </div>
