@@ -167,6 +167,27 @@ public class AccountService : IAccountService
     }
 
 
+    public NewUserRequest CreateGuestUser()
+    {
+        string[] GuestNames =["John", "Henry", "Alice", "Emma", "Sophia", "Oliver", "Liam", "Noah", "Mason", "Lucas", "Ethan", "Charlotte"];
+
+        var random = Random.Shared;
+
+        string name = GuestNames[random.Next(GuestNames.Length)];
+
+        // Generate a random 10-digit number
+        string emailNumber = random.NextInt64(1_000_000_000L, 10_000_000_000L).ToString();
+
+        // Generate an 8-digit number for the password
+        string passwordNumber = random.Next(10_000_000, 100_000_000).ToString();
+
+        string email = $"{name.ToLower()}{emailNumber}@gmail.com";
+        string password = $"{name}{passwordNumber}";
+
+        return new NewUserRequest() { Name = name, Email = email, Password = password };
+    }
+
+
 
 
     // Update operations
