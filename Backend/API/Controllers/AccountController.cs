@@ -57,9 +57,8 @@ public class AccountController : ControllerBase
     [HttpPost("guest")]
     public async Task<IActionResult> CreateGuestAccountAsync()
     {
-        var guestUser = accountService.CreateGuestUser();
-        var newGuestUserResult = await accountService.CreateNewUserAsync(guestUser); 
-
+        var newGuestUserResult = await accountService.CreateNewGuestUserAsync(); 
+        
         throw new NotImplementedException();
     }
 

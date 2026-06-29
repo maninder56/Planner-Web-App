@@ -166,6 +166,56 @@ public class AccountService : IAccountService
         }
     }
 
+    public async Task<Result<Tokens>> CreateNewGuestUserAsync()
+    {
+        var guest = CreateGuestUser(); 
+
+        try
+        {
+            string passwordHash = PasswordUtility.HashPassword(guest.Password);
+
+            var userSaved = await repository.CreateNewGuestUserAsync(guest.Name, guest.Email, passwordHash);
+
+            if (userSaved is null)
+            {
+                logger.LogWarning("Failed to save new user user: {Email}", guest.Email);
+                return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error");
+            }
+
+            // Create tokens
+            byte[] refreshTokenBytes = TokenUtility.GenerateTokenAsByteArray();
+            string base64TokenHash = TokenUtility.ConvertTokenBytesToBase64Hash(refreshTokenBytes);
+
+            Tokens tokens = new Tokens
+            {
+                AccessToken = tokenProviderUtility.Create(userSaved.UserId, userSaved.Email),
+                RefreshToken = TokenUtility.Encode(refreshTokenBytes)
+            };
+
+            await repository.CreateNewRefreshTokenAsync(userSaved.UserId, base64TokenHash,
+                DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
+
+            return Result<Tokens>.Success(tokens);
+        }
+        catch (DbUpdateException ex) when (ex.GetBaseException() is MySqlException { Number: 1062 })
+        {
+            logger.LogWarning("User provided email which is already likned to an account, Email: {Email}", guest.Email);
+            return Result<Tokens>.Failed(ErrorType.Conflict,
+                "Duplicate value", "A record with this value already exists");
+        }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Failed to create new user, resource not found, Exception message {ExceptionMessage}", ex.Message);
+            return Result<Tokens>.Failed(ErrorType.NotFound, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Error occured while saving new user, User Email: {Email} Error Message: {ErrorMessage}",
+                guest.Email, ex.Message);
+            return Result<Tokens>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
+        }
+    }
+
 
     public NewUserRequest CreateGuestUser()
     {

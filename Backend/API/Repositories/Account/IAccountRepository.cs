@@ -15,6 +15,7 @@ public interface IAccountRepository
 
     // Create Operations
     public Task<User?> CreateNewUserAsync(string username, string email, string passwordHash);
+    public Task<User?> CreateNewGuestUserAsync(string username, string email, string passwordHash); 
     public Task CreateNewRefreshTokenAsync(int userId, string base64TokenHash, DateTime expiresAt);
     public Task CreateNewPasswordResetTokenAsync(int userId, string base64TokenHash, DateTime expiresAt); 
 

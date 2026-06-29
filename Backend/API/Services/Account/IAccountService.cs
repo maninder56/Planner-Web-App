@@ -11,7 +11,8 @@ public interface IAccountService
 
     // Create operations
     public Task<Result<Tokens>> CreateNewUserAsync(NewUserRequest newUser);
-    public NewUserRequest CreateGuestUser(); 
+    public NewUserRequest CreateGuestUser();
+    public Task<Result<Tokens>> CreateNewGuestUserAsync(); 
 
     // Update operations 
     public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64);

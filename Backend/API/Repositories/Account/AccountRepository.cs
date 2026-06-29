@@ -76,6 +76,24 @@ public class AccountRepository : IAccountRepository
     }
 
 
+    public async Task<User?> CreateNewGuestUserAsync(string username, string email, string passwordHash)
+    {
+        User newUser = new User
+        {
+            Name = username,
+            Email = email,
+            PasswordHash = passwordHash,
+            Guest = true,
+            LastBoardId = null
+        };
+
+        database.Users.Add(newUser);
+        await database.SaveChangesAsync();
+
+        return newUser;
+    }
+
+
     public async Task CreateNewRefreshTokenAsync(int userId, string base64TokenHash, DateTime expiresAt)
     {
         User user = await database.Users
