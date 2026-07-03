@@ -197,17 +197,6 @@ public class AccountService : IAccountService
 
             return Result<Tokens>.Success(tokens);
         }
-        catch (DbUpdateException ex) when (ex.GetBaseException() is MySqlException { Number: 1062 })
-        {
-            logger.LogWarning("User provided email which is already likned to an account, Email: {Email}", guest.Email);
-            return Result<Tokens>.Failed(ErrorType.Conflict,
-                "Duplicate value", "A record with this value already exists");
-        }
-        catch (NotFoundException ex)
-        {
-            logger.LogWarning("Failed to create new user, resource not found, Exception message {ExceptionMessage}", ex.Message);
-            return Result<Tokens>.Failed(ErrorType.NotFound, ex.Message);
-        }
         catch (Exception ex)
         {
             logger.LogWarning("Error occured while saving new user, User Email: {Email} Error Message: {ErrorMessage}",
