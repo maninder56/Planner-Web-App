@@ -6,6 +6,7 @@ using API.Models.Board;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
+using API.Services.GuestService;
 using API.SignalR.BoardPresenceTracker;
 using API.SignalR.Hub;
 using DatabaseContext;
@@ -19,6 +20,7 @@ public class BoardService(
     BoardQueries boardQueries, 
     IBoardRepository boardRepository,
     IBoardPresenceTracker boardPresenceTracker, 
+    GuestDataService guestDataService, 
     IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) : IBoardService
 {
     // Read operations
@@ -137,7 +139,17 @@ public class BoardService(
 
     public async Task<Result> CreateNewGuestBoardAsync(int userId)
     {
+        try
+        {
+            var result = await boardRepository.CreateNewGuestBoardAsync(userId, guestDataService.GuestBoardData);
 
+            return Result.Success(); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Failed to add new guest board data, Exception Message: {ExceptionMessage}", ex.Message);
+            return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
+        }
 
         throw new NotImplementedException();
     }

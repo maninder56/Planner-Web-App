@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Board;
 using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
+using API.Models.Board;
 using API.Models.Result;
 using DatabaseContext;
 using DatabaseContext.Types;
@@ -12,6 +13,7 @@ public interface IBoardRepository
     // Create 
     public Task<BoardMember> CreateNewBoardAsync(BoardMember boardMembers);
     public Task<BoardMember> CreateNewBoardMemberAsync(int userID, int boardID, Role role);
+    public Task<BoardMember> CreateNewGuestBoardAsync(int userId, GuestBoard guestBoard); 
 
     // Update 
     public Task<BoardMember> UpdateBoardMemberRoleAsync(int userID, int boardID, Role role); 

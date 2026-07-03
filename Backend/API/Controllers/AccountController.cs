@@ -3,9 +3,11 @@ using API.Extensions;
 using API.Models.Account;
 using API.Models.Result;
 using API.Services.Account;
+using API.Services.BoardService;
 using API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
@@ -20,13 +22,15 @@ public class AccountController : ControllerBase
 
     private ILogger<AccountController> logger; 
     private IAccountService accountService;
+    private IBoardService boardService;
     private CookiesUtility cookiesUtility; 
 
-    public AccountController(ILogger<AccountController> logger, IAccountService accountService, CookiesUtility cookiesUtility)
+    public AccountController(ILogger<AccountController> logger, IAccountService accountService, IBoardService boardService, CookiesUtility cookiesUtility)
     {
         this.logger = logger;
         this.accountService = accountService;
         this.cookiesUtility = cookiesUtility;
+        this.boardService = boardService;
     }
 
 
@@ -58,8 +62,27 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> CreateGuestAccountAsync()
     {
         var newGuestUserResult = await accountService.CreateNewGuestUserAsync(); 
-        
-        throw new NotImplementedException();
+
+        if (!newGuestUserResult.Successful || newGuestUserResult.Data is null || newGuestUserResult.Data2 is null)
+        {
+            return newGuestUserResult.Error.ErrorToActionResult();
+        }
+
+        var newGuestBoardResult = await boardService.CreateNewGuestBoardAsync(newGuestUserResult.Data2.UserId); 
+
+        if (newGuestBoardResult.Successful)
+        {
+            cookiesUtility.SetNewTokensInsideCookies(HttpContext, newGuestUserResult.Data);
+
+            logger.LogInformation("User with email {email} successfully logged in at {time}",
+                newGuestUserResult.Data2.Email, DateTime.UtcNow.ToString());
+
+            return NoContent(); 
+        }
+        else
+        {
+            return newGuestBoardResult.Error.ErrorToActionResult();
+        }
     }
 
 

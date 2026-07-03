@@ -2,6 +2,7 @@
 using API.DTOs.Board.Requests;
 using API.DTOs.Board.Responses;
 using API.Exceptions;
+using API.Models.Board;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
@@ -50,6 +51,46 @@ public class BoardRepository : IBoardRepository
 
         await database.SaveChangesAsync();
         return newBoard; 
+    }
+
+    public async Task<BoardMember> CreateNewGuestBoardAsync(int userId, GuestBoard guestBoard)
+    {
+        var user = await database.Users
+            .FirstOrDefaultAsync(u => u.UserId  == userId)
+            ?? throw new NotFoundException("User not found");
+
+        var newBoardMember = new BoardMember()
+        {
+            UserId = userId,
+            Role = Role.Owner, 
+
+            Board = new Board()
+            {
+                Name = guestBoard.BoardName, 
+                BackgroundColour = guestBoard.BoardBackgroundColour,
+                Lists = guestBoard.GuestLists.Select((list, listIndex) => new BoardList
+                {
+                    Name = list.Name,
+                    ListPosition = listIndex, 
+                    Cards = list.Cards.Select((card, cardIndex) => new Card
+                    {
+                        Title = card.Title,
+                        Description = card.Description,
+                        CardPosition = cardIndex,
+                        IsDone = card.IsDone, 
+                        DueDate = card.DueDate,
+                        Priority = card.Priority,
+                    }).ToList()
+                }).ToList()
+            }
+        };
+
+        database.BoardMembers.Add(newBoardMember);
+        user.LastBoardId = newBoardMember.Board.BoardId; 
+
+        await database.SaveChangesAsync();
+
+        return newBoardMember;
     }
 
     // Update operations
