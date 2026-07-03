@@ -6,6 +6,7 @@ using API.Services.Account;
 using API.Services.BoardService;
 using API.Services.CardService;
 using API.Services.EmailService;
+using API.Services.GuestService;
 using API.Services.InvitationService;
 using API.Services.ListService;
 using API.Services.ProfileService;
@@ -27,6 +28,7 @@ public static class PlannerServiceRegistration
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IListService, ListService>();
         services.AddScoped<IInvitationService, InvitationService>();
+        services.AddSingleton<GuestDataService>(); 
 
         services.AddSingleton<IBoardPresenceTracker, BoardPresenceTracker>();
         services.AddSingleton<ICardLockTracker, CardLockTracker>();

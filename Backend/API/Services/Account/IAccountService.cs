@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Account.Requests;
 using API.Models.Account;
 using API.Models.Result;
+using DatabaseContext;
 
 namespace API.Services.Account; 
 
@@ -12,7 +13,7 @@ public interface IAccountService
     // Create operations
     public Task<Result<Tokens>> CreateNewUserAsync(NewUserRequest newUser);
     public NewUserRequest CreateGuestUser();
-    public Task<Result<Tokens>> CreateNewGuestUserAsync(); 
+    public Task<Result<Tokens, User>> CreateNewGuestUserAsync(); 
 
     // Update operations 
     public Task<Result<Tokens>> UpdateRefreshTokenAsync(string refreshTokenInBase64);

@@ -1,0 +1,96 @@
+{
+  "boardName": "Website Redesign",
+  "boardBackgroundColour": "bright-pink",
+  "guestLists": [
+    {
+      "name": "To Do",
+      "cards": [
+        {
+          "title": "Wireframe homepage",
+          "description": "Create low-fidelity wireframes for the new homepage layout.",
+          "isDone": false,
+          "dueDate": "2026-07-10",
+          "priority": "High"
+        },
+        {
+          "title": "Research competitors",
+          "description": "Look at 3-5 competitor sites for design inspiration.",
+          "isDone": false,
+          "dueDate": "2026-07-08",
+          "priority": "Medium"
+        },
+        {
+          "title": "Draft content outline",
+          "description": null,
+          "isDone": false,
+          "dueDate": "2026-07-12",
+          "priority": "Low"
+        }
+      ]
+    },
+    {
+      "name": "In Progress",
+      "cards": [
+        {
+          "title": "Set up design system",
+          "description": "Define colours, typography, and spacing tokens.",
+          "isDone": false,
+          "dueDate": "2026-07-15",
+          "priority": "High"
+        },
+        {
+          "title": "Build navigation component",
+          "description": "Responsive nav bar with mobile hamburger menu.",
+          "isDone": false,
+          "dueDate": "2026-07-18",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "name": "Done",
+      "cards": [
+        {
+          "title": "Kickoff meeting",
+          "description": null,
+          "isDone": true,
+          "dueDate": "2026-06-20",
+          "priority": "Low"
+        },
+        {
+          "title": "Stakeholder requirements gathering",
+          "description": "Collected feedback from marketing and sales teams.",
+          "isDone": true,
+          "dueDate": "2026-06-25",
+          "priority": "Medium"
+        },
+        {
+          "title": "Domain and hosting setup",
+          "description": "Registered domain and configured staging environment.",
+          "isDone": true,
+          "dueDate": "2026-06-28",
+          "priority": "High"
+        },
+        {
+          "title": "Brand style guide approved",
+          "description": null,
+          "isDone": true,
+          "dueDate": "2026-06-15",
+          "priority": "Low"
+        }
+      ]
+    },
+    {
+      "name": "Extra",
+      "cards": [
+        {
+          "title": "Explore dark mode support",
+          "description": "Nice-to-have if time allows before launch.",
+          "isDone": false,
+          "dueDate": "2026-08-01",
+          "priority": "Low"
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 using API.DTOs.Board.Responses;
 using API.DTOs.List.Responses;
 using API.Exceptions;
+using API.Models.Board;
 using API.Models.Result;
 using API.Queries.Boards;
 using API.Repositories.BoardRepository;
@@ -131,6 +132,14 @@ public class BoardService(
             BackgroundColour = savedBoardMember.Board.BackgroundColour, 
             IsFavoriteBoard = false,
         }); 
+    }
+
+
+    public async Task<Result> CreateNewGuestBoardAsync(int userId)
+    {
+
+
+        throw new NotImplementedException();
     }
     
     

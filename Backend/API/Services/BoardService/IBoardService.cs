@@ -17,6 +17,7 @@ public interface IBoardService
 
     // Create 
     public Task<Result<BoardDataResponse>> CreateNewBoardAsync(int userId, NewBoardRequest newBoardRequest);
+    public Task<Result> CreateNewGuestBoardAsync(int userId); 
 
     // Update 
     public Task<Result<BoardInfoResponse>> UpdateBoardInfoAsync(int userId, int boardId, BoardInfoChangeRequest request);

@@ -166,7 +166,7 @@ public class AccountService : IAccountService
         }
     }
 
-    public async Task<Result<Tokens>> CreateNewGuestUserAsync()
+    public async Task<Result<Tokens, User>> CreateNewGuestUserAsync()
     {
         var guest = CreateGuestUser(); 
 
@@ -179,7 +179,7 @@ public class AccountService : IAccountService
             if (userSaved is null)
             {
                 logger.LogWarning("Failed to save new user user: {Email}", guest.Email);
-                return Result<Tokens>.Failed(ErrorType.InternalServerError, "Server Error");
+                return Result<Tokens, User>.Failed(ErrorType.InternalServerError, "Server Error");
             }
 
             // Create tokens
@@ -195,13 +195,13 @@ public class AccountService : IAccountService
             await repository.CreateNewRefreshTokenAsync(userSaved.UserId, base64TokenHash,
                 DateTime.UtcNow.AddDays(refreshTokenLifeInDays));
 
-            return Result<Tokens>.Success(tokens);
+            return Result<Tokens, User>.Success(tokens, userSaved);
         }
         catch (Exception ex)
         {
             logger.LogWarning("Error occured while saving new user, User Email: {Email} Error Message: {ErrorMessage}",
                 guest.Email, ex.Message);
-            return Result<Tokens>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
+            return Result<Tokens, User>.Failed(ErrorType.InternalServerError, "An Unexpected error occured");
         }
     }
 
