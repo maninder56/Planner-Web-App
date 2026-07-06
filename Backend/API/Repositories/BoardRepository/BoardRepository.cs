@@ -59,6 +59,8 @@ public class BoardRepository : IBoardRepository
             .FirstOrDefaultAsync(u => u.UserId  == userId)
             ?? throw new NotFoundException("User not found");
 
+        var today = DateOnly.FromDateTime(DateTime.Now); 
+
         var board = new Board()
         {
             Name = guestBoard.BoardName,
@@ -73,7 +75,7 @@ public class BoardRepository : IBoardRepository
                     Description = card.Description,
                     CardPosition = cardIndex,
                     IsDone = card.IsDone,
-                    DueDate = card.DueDate,
+                    DueDate = today.AddDays(card.DueInDays),
                     Priority = card.Priority,
                 }).ToList()
             }).ToList()

@@ -9,21 +9,21 @@
           "Title": "Wireframe homepage",
           "Description": "Create low-fidelity wireframes for the new homepage layout.",
           "IsDone": false,
-          "DueDate": "2026-07-10",
+          "DueInDays": 2,
           "Priority": "High"
         },
         {
           "Title": "Research competitors",
           "Description": "Look at 3-5 competitor sites for design inspiration.",
           "IsDone": false,
-          "DueDate": "2026-07-08",
+          "DueInDays": 5,
           "Priority": "Medium"
         },
         {
           "Title": "Draft content outline",
           "Description": null,
           "IsDone": false,
-          "DueDate": "2026-07-12",
+          "DueInDays": 9,
           "Priority": "Low"
         }
       ]
@@ -35,14 +35,14 @@
           "Title": "Set up design system",
           "Description": "Define colours, typography, and spacing tokens.",
           "IsDone": false,
-          "DueDate": "2026-07-15",
+          "DueInDays": -2,
           "Priority": "High"
         },
         {
           "Title": "Build navigation component",
           "Description": "Responsive nav bar with mobile hamburger menu.",
           "IsDone": false,
-          "DueDate": "2026-07-18",
+          "DueInDays": 1,
           "Priority": "Medium"
         }
       ]
@@ -54,28 +54,28 @@
           "Title": "Kickoff meeting",
           "Description": null,
           "IsDone": true,
-          "DueDate": "2026-06-20",
+          "DueInDays": -2,
           "Priority": "Low"
         },
         {
           "Title": "Stakeholder requirements gathering",
           "Description": "Collected feedback from marketing and sales teams.",
           "IsDone": true,
-          "DueDate": "2026-06-25",
+          "DueInDays": -5,
           "Priority": "Medium"
         },
         {
           "Title": "Domain and hosting setup",
           "Description": "Registered domain and configured staging environment.",
           "IsDone": true,
-          "DueDate": "2026-06-28",
+          "DueInDays": -9,
           "Priority": "High"
         },
         {
           "Title": "Brand style guide approved",
           "Description": null,
           "IsDone": true,
-          "DueDate": "2026-06-15",
+          "DueInDays": -1,
           "Priority": "Low"
         }
       ]
@@ -87,7 +87,7 @@
           "Title": "Explore dark mode support",
           "Description": "Nice-to-have if time allows before launch.",
           "IsDone": false,
-          "DueDate": "2026-08-01",
+          "DueInDays": 20,
           "Priority": "Low"
         }
       ]

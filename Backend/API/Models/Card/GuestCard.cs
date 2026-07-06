@@ -11,7 +11,7 @@ public class GuestCard
 
     public bool IsDone { get; set; }
 
-    public DateOnly DueDate { get; set; }
+    public int DueInDays { get; set; }
 
     public Priority Priority { get; set; }
 }
