@@ -5,8 +5,36 @@ import styles from "./page.module.css";
 import Button from "@/Components/Buttons/button";
 import Link from "next/link";
 import AppFeaturesTabbedNavigation from "./components/appFeaturesTabbedNavigation";
+import { useState } from "react";
+import { CreateNewGuestUserRequest } from "@/Services/userService";
+import { AppRoute } from "@/Types/appRoutes";
+import { permanentRedirect } from "next/navigation";
 
 export default function Home() {
+
+  const [dissableButtons, setDissableButtons] = useState(false); 
+  const [error, setError] = useState(''); 
+
+  const dashboard: AppRoute = '/dashboard'; 
+
+  async function handleGuestButton() {
+    setDissableButtons(true); 
+
+    try {
+      const request = await CreateNewGuestUserRequest(); 
+
+      if (request.ok) {
+        permanentRedirect(dashboard); 
+      } else {
+        setError('Failed to create guest account, please try again.'); 
+      }
+
+    } finally {
+      setDissableButtons(false); 
+    }
+
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.headerWrapper}>
@@ -29,6 +57,7 @@ export default function Home() {
         </header>
       </div>
       <main className={styles.main}>
+        <p className={styles.error}>{error}</p>
         <section className={styles.firstSection}>
           <div className={styles.firstSectionContainer}>
             <div className={styles.childOne}>
@@ -43,7 +72,7 @@ export default function Home() {
                 <p>don&apos;t want to create an account?, then just create an guest account.</p>
               </div>
               <div className={styles.guestButton}>
-                <Button name='Guest' color='black' onClick={() => {}} />
+                <Button name='Guest' color='black' disabled={dissableButtons} onClick={handleGuestButton} />
               </div>
             </div>
             <div className={styles.childTwo}>
@@ -75,7 +104,7 @@ export default function Home() {
                 <p>Signing up will alow you to invite other members, so you can work together on a project</p>
                 <p>Or create a guest account to try the planner without needing an account.</p>
                 <div className={styles.guestButtonContainer}>
-                  <Button name='Guest' color='black' onClick={() => {}} />
+                  <Button name='Guest' color='black' disabled={dissableButtons} onClick={handleGuestButton} />
                 </div>
               </div>
             </div>

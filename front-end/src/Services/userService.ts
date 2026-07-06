@@ -29,6 +29,27 @@ export async function LogoutUserRequest() {
     }
 }
 
+export async function CreateNewGuestUserRequest() {
+    const subUrl = accountRoute + '/guest'; 
+    const request: RequestInit = { 
+        method: 'POST', 
+    };
+
+    try {
+        const response = await ApiFetchRequest(subUrl, request); 
+
+        if (response.ok) {
+            return ApiRequestSuccessfull(undefined); 
+        } else {
+            return ApiErrorFromStatusCode(response.status); 
+        }
+
+    } catch (error) {
+        console.error('Error occured while requesting to new account: ', error); 
+        return ApiRequestFailed('FetchRequestFailed'); 
+    }
+}
+
 
 export async function ChangeUserPasswordRequest(data: {oldPassword: string, newPassword: string}) {
     const subUrl = accountRoute + '/password'; 

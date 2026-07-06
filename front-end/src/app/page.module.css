@@ -3,6 +3,16 @@
     background-color: white;
 }
 
+.error {
+    color: red;
+    text-align: center;
+
+    font-size: 1rem;
+
+    margin: 0;
+    margin-top: 5px;
+    padding: 0;
+}
 
 .header,
 .appHeading > svg, 
