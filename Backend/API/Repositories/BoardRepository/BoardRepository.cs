@@ -86,8 +86,9 @@ public class BoardRepository : IBoardRepository
         };
 
         database.BoardMembers.Add(newBoardMember);
-        user.LastBoardId = newBoardMember.Board.BoardId; 
+        await database.SaveChangesAsync();
 
+        user.LastBoardId = newBoardMember.Board.BoardId; 
         await database.SaveChangesAsync();
 
         return newBoardMember;
