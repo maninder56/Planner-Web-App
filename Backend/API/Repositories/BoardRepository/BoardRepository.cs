@@ -59,38 +59,37 @@ public class BoardRepository : IBoardRepository
             .FirstOrDefaultAsync(u => u.UserId  == userId)
             ?? throw new NotFoundException("User not found");
 
+        var board = new Board()
+        {
+            Name = guestBoard.BoardName,
+            BackgroundColour = guestBoard.BoardBackgroundColour,
+            Lists = guestBoard.GuestLists.Select((list, listIndex) => new BoardList
+            {
+                Name = list.Name,
+                ListPosition = listIndex,
+                Cards = list.Cards.Select((card, cardIndex) => new Card
+                {
+                    Title = card.Title,
+                    Description = card.Description,
+                    CardPosition = cardIndex,
+                    IsDone = card.IsDone,
+                    DueDate = card.DueDate,
+                    Priority = card.Priority,
+                }).ToList()
+            }).ToList()
+        }; 
+
         var newBoardMember = new BoardMember()
         {
             UserId = userId,
             Role = Role.Owner, 
-
-            Board = new Board()
-            {
-                Name = guestBoard.BoardName, 
-                BackgroundColour = guestBoard.BoardBackgroundColour,
-                Lists = guestBoard.GuestLists.Select((list, listIndex) => new BoardList
-                {
-                    Name = list.Name,
-                    ListPosition = listIndex, 
-                    Cards = list.Cards.Select((card, cardIndex) => new Card
-                    {
-                        Title = card.Title,
-                        Description = card.Description,
-                        CardPosition = cardIndex,
-                        IsDone = card.IsDone, 
-                        DueDate = card.DueDate,
-                        Priority = card.Priority,
-                    }).ToList()
-                }).ToList()
-            }
+            Board = board,
         };
 
         database.BoardMembers.Add(newBoardMember);
-        await database.SaveChangesAsync();
+        user.LastBoard = board; 
 
-        user.LastBoardId = newBoardMember.Board.BoardId; 
         await database.SaveChangesAsync();
-
         return newBoardMember;
     }
 

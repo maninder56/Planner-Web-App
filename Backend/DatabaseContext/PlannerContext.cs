@@ -40,6 +40,12 @@ public class PlannerContext : DbContext
             .Property(u => u.Guest)
             .HasDefaultValue(false); 
 
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.LastBoard)
+            .WithMany()
+            .HasForeignKey(u => u.LastBoardId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<RefreshToken>()
             .Property(r => r.CreatedAt)
             .HasDefaultValueSql("(CURRENT_TIMESTAMP)");
