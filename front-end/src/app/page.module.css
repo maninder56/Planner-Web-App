@@ -140,9 +140,14 @@
 }
 
 .appPhoto > img {
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
     border-radius: 20px;
+
+    width: 500px;
+    height: auto;
+
+    min-width: 0;
 }
 
 .guestAccountInfo > p {

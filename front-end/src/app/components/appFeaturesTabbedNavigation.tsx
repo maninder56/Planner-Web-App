@@ -15,25 +15,25 @@ export default function AppFeaturesTabbedNavigation() {
         {
             tabId: 0,
             tabTitle: 'Manage To-Dos', 
-            imageSrc: '/mockImage.jpg', 
+            imageSrc: '/manageCards.gif', 
             description: 'See all of your to-dos of a project in one place, Drag and drop to-dos from one category to another, Create new lists to manage as the projects grows.'
         }, 
         {
             tabId: 1,
             tabTitle: 'Multiple Projects', 
-            imageSrc: '/mockImage.jpg', 
+            imageSrc: '/multipleProjects.gif', 
             description: 'Want to keep track of other projects not just the main one? then create new board for those project.'
         }, 
         {
             tabId: 2,
-            tabTitle: 'Colaborate', 
-            imageSrc: '/mockImage.jpg', 
+            tabTitle: 'Collaborate', 
+            imageSrc: '/collaborate.gif', 
             description: 'Invite your friends to your project to work on it together.'
         }, 
         {
             tabId: 3,
             tabTitle: 'Customise', 
-            imageSrc: '/mockImage.jpg', 
+            imageSrc: '/customise.gif', 
             description: 'Choose the colours that fit your style and make your dashboard personal.'
         }
     ]; 
@@ -59,7 +59,7 @@ export default function AppFeaturesTabbedNavigation() {
                 <div className={styles.contentContainer}>
                     <div>
                         <div className={styles.feature} key={currentTab.tabId}>
-                            <Image src={currentTab.imageSrc}  alt={`${currentTab.tabTitle} image`} width={640} height={400} loading='eager' />
+                            <Image src={currentTab.imageSrc} unoptimized={true} alt={`${currentTab.tabTitle} image`} width={640} height={400} loading='eager' />
                             <p>{currentTab.description}</p>
                         </div>
                     </div>

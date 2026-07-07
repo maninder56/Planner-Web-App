@@ -77,7 +77,7 @@ export default function Home() {
             </div>
             <div className={styles.childTwo}>
               <div className={styles.appPhoto}>
-                <Image src={'/mockImage.jpg'}  alt='Dashboard image' width={1920} height={1200} loading='eager' />
+                <Image src={'/dashbaordDemo2.png'}  alt='Dashboard image' width={1622} height={1203} loading='eager' />
               </div>
               <div className={styles.guestAccountInfo}>
                 <p>
