@@ -90,7 +90,8 @@ export async function LastUsedBoardRequest() {
             if (validData.success) {
                 return ApiRequestSuccessfull(validData.data); 
             } else {
-                console.error('Invalid data recieved from API'); 
+                console.error('Invalid data recieved from API');
+                console.error(validData.error);  
                 return ApiRequestFailed('DataValidationFailed'); 
             }
 

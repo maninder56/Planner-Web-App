@@ -33,13 +33,14 @@ export async function CreateNewGuestUserRequest() {
     const subUrl = accountRoute + '/guest'; 
     const request: RequestInit = { 
         method: 'POST', 
+        credentials: 'include', 
     };
 
     try {
         const response = await ApiFetchRequest(subUrl, request); 
 
         if (response.ok) {
-            return ApiRequestSuccessfull(undefined); 
+            return ApiRequestSuccessfull(); 
         } else {
             return ApiErrorFromStatusCode(response.status); 
         }
