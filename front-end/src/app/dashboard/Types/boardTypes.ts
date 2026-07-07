@@ -23,7 +23,7 @@ export type CardPriority = z.infer<typeof CardPrioritySchema>;
 const CardSchema = z.object({
     cardId: z.number(),
     title: z.string(), 
-    description: z.string(), 
+    description: z.union([z.string(), z.undefined()]), 
     isDone: z.boolean(), 
     priority: CardPrioritySchema,
     dueDate: z.string(), 

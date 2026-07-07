@@ -38,7 +38,7 @@ export function NormaliseBoardData(data: BoardDataFromAPI): NormalisedBoardData 
                 cards[`card-${card.cardId}`] = {
                     id: card.cardId, 
                     name: card.title, 
-                    description: card.description, 
+                    description: card.description ?? '', 
                     done: card.isDone, 
                     priority: card.priority, 
                     dueDate: card.dueDate, 
