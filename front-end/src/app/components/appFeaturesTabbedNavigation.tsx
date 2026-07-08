@@ -12,31 +12,31 @@ interface tabInterface {
 
 export default function AppFeaturesTabbedNavigation() {
     const tabs = [
-        {
-            tabId: 0,
-            tabTitle: 'Manage To-Dos', 
-            imageSrc: '/manageCards.gif', 
-            description: 'See all of your to-dos of a project in one place, Drag and drop to-dos from one category to another, Create new lists to manage as the projects grows.'
-        }, 
-        {
-            tabId: 1,
-            tabTitle: 'Multiple Projects', 
-            imageSrc: '/multipleProjects.gif', 
-            description: 'Want to keep track of other projects not just the main one? then create new board for those project.'
-        }, 
-        {
-            tabId: 2,
-            tabTitle: 'Collaborate', 
-            imageSrc: '/collaborate.gif', 
-            description: 'Invite your friends to your project to work on it together.'
-        }, 
-        {
-            tabId: 3,
-            tabTitle: 'Customise', 
-            imageSrc: '/customise.gif', 
-            description: 'Choose the colours that fit your style and make your dashboard personal.'
-        }
-    ]; 
+    {
+        tabId: 0,
+        tabTitle: 'Visualise Your Workflow',
+        imageSrc: '/manageCards.gif',
+        description: 'Track every task from start to finish with an intuitive Kanban board. Drag and drop cards between columns, create custom workflows, and keep every project organised at a glance.'
+    },
+    {
+        tabId: 1,
+        tabTitle: 'Manage Multiple Boards',
+        imageSrc: '/multipleProjects.gif',
+        description: 'Create separate boards for different projects, teams, or clients. Switch between them effortlessly while keeping every workflow organised and easy to manage.'
+    },
+    {
+        tabId: 2,
+        tabTitle: 'Collaborate in Real Time',
+        imageSrc: '/collaborate.gif',
+        description: 'Invite teammates to your boards, assign work, and collaborate on projects together. Keep everyone aligned with a shared view of progress.'
+    },
+    {
+        tabId: 3,
+        tabTitle: 'Personalise Your Workspace',
+        imageSrc: '/customise.gif',
+        description: 'Customise your workspace with colours that match your style. Create an environment that feels familiar and helps you stay focused.'
+    }
+];
 
     const [currentTab, setCurrentTab] = useState<tabInterface>(tabs[0]); 
     const scrollTargetRef = useRef<null | HTMLDivElement>(null); 

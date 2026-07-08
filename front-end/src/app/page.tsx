@@ -62,7 +62,7 @@ export default function Home() {
           <div className={styles.firstSectionContainer}>
             <div className={styles.childOne}>
               <div className={styles.introduction}>
-                <p>Have a bunch of to-dos and can&apos;t decide where to start?</p>
+                <p>Starting a new project? Can&apos;t decide where to start?</p>
                 <p>No worries — we have a solution. Start planning your project with our planner.</p>
               </div>
               <div className={styles.signupLink}>
@@ -101,8 +101,8 @@ export default function Home() {
                 <div className={styles.signupLinkContainer}>
                   <Link href={'/signup'} className='button red'>Sign up</Link>
                 </div>
-                <p>Signing up will alow you to invite other members, so you can work together on a project</p>
-                <p>Or create a guest account to try the planner without needing an account.</p>
+                <p>Create a free account to save your boards, manage projects across devices, and collaborate with your team in real time.</p>
+                <p>Not ready to sign up? Try the app instantly with a guest workspace—no account required.</p>
                 <div className={styles.guestButtonContainer}>
                   <Button name='Guest' color='black' disabled={dissableButtons} onClick={handleGuestButton} />
                 </div>
