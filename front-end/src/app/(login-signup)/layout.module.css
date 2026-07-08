@@ -54,6 +54,15 @@
     margin-bottom: 50px;
 }
 
+.homeLink {
+    display: flex;
+    justify-content: center;
+}
+
+.homeLink a {
+    padding: 8px 50px;
+}
+
 
 @media (min-width: 500) {
 

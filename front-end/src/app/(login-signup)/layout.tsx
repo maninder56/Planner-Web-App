@@ -1,6 +1,7 @@
 
 import styles from '@/app/(login-signup)/layout.module.css'; 
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Layout({
     children
@@ -20,6 +21,9 @@ export default function Layout({
                     </div>
                     <div className={styles.content}>
                         {children}
+                    </div>
+                    <div className={styles.homeLink}>
+                        <Link href={'/'} className='button red'>Home</Link>
                     </div>
                 </section>
             </main>
