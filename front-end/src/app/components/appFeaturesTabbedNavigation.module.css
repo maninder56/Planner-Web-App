@@ -8,7 +8,7 @@
 
 .container > div {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 
@@ -53,10 +53,6 @@
 
 @media (min-width: 370) {
 
-    .headerContainer {
-        flex-direction: row;
-    }
-
     .headerContainer > button {
         padding: 10px 15px;
     }
@@ -66,24 +62,53 @@
 
     .headerContainer {
         margin: 10px 10px;
+        flex-direction: row;
     }
 }
 
-@media (min-width: 800) {
+@media (min-width: 1000) {
     .headerContainer > button {
         flex: 1 1 auto;
     }
 }
 
-
+/* .contentContainer, 
+.contentContainer * {
+    border: solid 1px red;
+} */
 
 .contentContainer {
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
     /* Set the height in final version */
-    /* min-height: 500px; */
+    min-height: 300px;
 }
+
+@media (min-width: 370) {
+    .contentContainer {
+        min-height: 330px;
+    }
+}
+
+@media (min-width: 400) {
+    .contentContainer {
+        min-height: 400px;
+    }
+}
+
+@media (min-width: 560) {
+    .contentContainer {
+        min-height: 450px;
+    }
+}
+
+@media (min-width: 600) {
+    .contentContainer {
+        min-height: 490px;
+    }
+}
+
 
 .contentContainer > div {
     max-width: 700px;
@@ -91,7 +116,7 @@
 
 .feature {
     margin: 0px 5px;
-    animation: fadeIn 2s; 
+    animation: fadeIn 1s; 
 }
 
 .feature > p {

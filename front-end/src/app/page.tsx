@@ -101,8 +101,8 @@ export default function Home() {
                 <div className={styles.signupLinkContainer}>
                   <Link href={'/signup'} className='button red'>Sign up</Link>
                 </div>
-                <p>Create a free account to save your boards, manage projects across devices, and collaborate with your team in real time.</p>
-                <p>Not ready to sign up? Try the app instantly with a guest workspace—no account required.</p>
+                <p className={styles.signupDetails}>Create a free account to save your boards, manage projects across devices, and collaborate with your team in real time.</p>
+                <p className={styles.guestDetails}>Not ready to sign up? Try the app instantly with a guest workspace—no account required.</p>
                 <div className={styles.guestButtonContainer}>
                   <Button name='Guest' color='black' disabled={dissableButtons} onClick={handleGuestButton} />
                 </div>

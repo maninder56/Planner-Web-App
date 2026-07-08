@@ -49,7 +49,7 @@ export default function AppFeaturesTabbedNavigation() {
                         <button key={content.tabId}
                             onClick={() => {
                                 setCurrentTab(content); 
-                                scrollTargetRef.current?.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest' }); 
+                                // scrollTargetRef.current?.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest' }); 
                             }}
                             className={content.tabId === currentTab.tabId ? styles.active : undefined}>
                             {content.tabTitle}
