@@ -301,6 +301,11 @@ export const useBoardStore = create<State & Action>((set, get) => ({
             lists: {}, 
             cards: {}, 
             listOrder: [], 
+            boardError: '', 
+            onlineUsers: new Map(),
+            globalActivityMessage: '', 
+            boardMembers: undefined, 
+            userRemovedFromCurrentBoard: false, 
          })); 
     }, 
 
