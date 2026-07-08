@@ -10,11 +10,14 @@ import { useUserStore } from '@/Store/userStore';
 import { ApiRequestWithRefreshTokenAttemptAndData } from '@/Services/ApiRequest';
 import { SendNewInvitationRequest } from '@/app/dashboard/Services/invitationService';
 import { useBoardStore } from '@/app/dashboard/Store/boardStore';
+import { GetBoardMembersRequest } from '@/app/dashboard/Services/boardService';
 
 export default function ShareButtonOptions() {
     const setActivePanel = useBoardUIStore((state) => state.setActivePanel); 
     const setSessionExpired = useUserStore((state) => state.setSessionExpired); 
     const boardId = useBoardStore((state) => state.currentBoardData?.id); 
+    const boardMembers = useBoardStore((state) => state.boardMembers); 
+    const setBoardMembers = useBoardStore((state) => state.SetBoardMembers); 
     
     const [email, setEmail] = useState(''); 
     const [userRole, setUserRole] = useState<UserRole>('Member'); 
@@ -23,8 +26,9 @@ export default function ShareButtonOptions() {
 
     const [emailError, setEmailError] = useState(''); 
     const [submitError, setSubmitError] = useState(''); 
-    const [buttonDisabled, setButtonDisabled] = useState(false); 
+    const [buttonsDisabled, setButtonsDisabled] = useState(false); 
     const [inviteSent, setInviteSent] = useState(false); 
+    const [shareButtonDisabled, setShareButtonDisabled] = useState(false); 
 
     function handleUserRoleChange(role: string) {
         if (role === 'Viewer' || role === 'Member') {
@@ -46,7 +50,7 @@ export default function ShareButtonOptions() {
 
     async function handleFormSubmit(e: FormEvent) {
         e.preventDefault(); 
-        setButtonDisabled(true); 
+        setButtonsDisabled(true); 
 
         if (email.trim() === '' || emailError !== '') {
             return; 
@@ -78,12 +82,12 @@ export default function ShareButtonOptions() {
                 setSubmitError('Failed to send invitation, please try again.'); 
             }
         } finally {
-            setButtonDisabled(false); 
+            setButtonsDisabled(false); 
         }
     }
 
     function disableShareButton() {
-        if (buttonDisabled || inviteSent) {
+        if (buttonsDisabled || inviteSent || shareButtonDisabled) {
             return true; 
         } else if (email.trim() === '' || emailError !== '') {
             return true; 
@@ -92,10 +96,33 @@ export default function ShareButtonOptions() {
         }
     }
 
+    async function fetchMemberData() { 
+        setBoardMembers(undefined); 
+
+        if (!boardId) {
+            return; 
+        }
+       
+        const result = await ApiRequestWithRefreshTokenAttemptAndData(GetBoardMembersRequest, boardId); 
+        if (result.ok) {
+            if (result.data !== undefined) {
+                setBoardMembers(result.data); 
+                if (result.data.length > 4) {
+                    setSubmitError('Maximum number of members reached. Please go to Manage Member Options to manage board members.'); 
+                    setShareButtonDisabled(true); 
+                }
+            }
+        } else if (result.error === 'Unauthorized') {
+            setSessionExpired(true); 
+        }
+    }
+
     useEffect(() => {
         if (emailInputRef.current) {
             emailInputRef.current.focus(); 
         }
+
+        fetchMemberData(); 
     }, []);
 
     return (
@@ -122,7 +149,7 @@ export default function ShareButtonOptions() {
                     </div>
                 </form>
                 <div className={styles.manageMembers}>
-                    <button disabled={buttonDisabled} onClick={e => {
+                    <button disabled={buttonsDisabled} onClick={e => {
                         e.stopPropagation(); 
                         setActivePanel('manageMembersOptions'); 
                     }}>

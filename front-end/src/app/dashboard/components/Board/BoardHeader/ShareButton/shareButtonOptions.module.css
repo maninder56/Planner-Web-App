@@ -107,6 +107,11 @@
     justify-content: start;
 }
 
+.manageMembers button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 @media (pointer: fine) {
     .manageMembers button:hover {
         background-color: rgba(0, 0, 0, 0.05);
