@@ -138,4 +138,11 @@ public class BoardQueries(PlannerContext database)
             }).ToListAsync(); 
     }
 
+
+    public async Task<int> GetTotalNumberOfMembersOfBoard(int boardId)
+    {
+        return await database.BoardMembers.AsNoTracking()
+            .CountAsync(bm => bm.BoardId == boardId); 
+    }
+
 }

@@ -36,6 +36,15 @@ public class InvitationService(
     {
         try
         {
+            // check if the board has more than 5 members
+            int totalMembers = await boardQueries.GetTotalNumberOfMembersOfBoard(request.BoardId);
+
+            if (totalMembers > 4)
+            {
+                logger.LogWarning("Maximum number of board members reached for boardId: {BoardId}", request.BoardId); 
+                return Result.Failed(ErrorType.BadRequest, "Only 5 members per board are allowed"); 
+            }
+
             // validate if invited user exists 
             User? invitedUser = await accountRepository.GetUserByEmail(request.InvitedUserEmail);
             if (invitedUser is null)
