@@ -9,9 +9,12 @@ import { useState } from "react";
 import { CreateNewGuestUserRequest } from "@/Services/userService";
 import { AppRoute } from "@/Types/appRoutes";
 import { permanentRedirect } from "next/navigation";
+import { useUserStore } from "@/Store/userStore";
+import { useBoardStore } from "./dashboard/Store/boardStore";
 
 export default function Home() {
-
+  const resetUserData = useUserStore((state) => state.resetUserData); 
+  const resetBoardData = useBoardStore((state) => state.resetBoardData); 
   const [dissableButtons, setDissableButtons] = useState(false); 
   const [error, setError] = useState(''); 
 
@@ -24,6 +27,8 @@ export default function Home() {
       const request = await CreateNewGuestUserRequest(); 
 
       if (request.ok) {
+        resetUserData(); 
+        resetBoardData(); 
         permanentRedirect(dashboard); 
       } else {
         setError('Failed to create guest account, please try again.'); 
