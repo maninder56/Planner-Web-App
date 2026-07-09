@@ -22,7 +22,8 @@ export default function FilterButton() {
     }
 
     useEffect(() => {
-        handleClearFilter(); 
+        resetFilter(); 
+        applyFilters(cards); 
     }, []); 
 
     return (
