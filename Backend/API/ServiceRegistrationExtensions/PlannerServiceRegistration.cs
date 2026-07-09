@@ -3,6 +3,7 @@ using API.Models.EmailSettings;
 using API.Policies.Handlers;
 using API.Repositories.BoardRepository;
 using API.Services.Account;
+using API.Services.BackgroundServices;
 using API.Services.BoardService;
 using API.Services.CardService;
 using API.Services.EmailService;
@@ -38,7 +39,10 @@ public static class PlannerServiceRegistration
 
         // Utilities
         services.AddSingleton<TokenProviderUtility>();
-        services.AddSingleton<CookiesUtility>(); 
+        services.AddSingleton<CookiesUtility>();
+
+        // Background services 
+        services.AddHostedService<DeleteGuestUsersHostedService>(); 
 
         return services;
     }
