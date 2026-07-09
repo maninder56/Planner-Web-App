@@ -43,6 +43,7 @@ public static class PlannerServiceRegistration
 
         // Background services 
         services.AddHostedService<DeleteGuestUsersHostedService>(); 
+        services.AddHostedService<DeleteOldInvitationsHostedService>();
 
         return services;
     }
