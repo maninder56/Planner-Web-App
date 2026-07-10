@@ -318,3 +318,47 @@ body {
 }
 
 
+/* Not found page */
+
+/* .pageNotFound * {
+  border: solid 1px red;
+} */
+
+.pageNotFound {
+  flex: 1 1 auto;
+
+  display: flex;
+  justify-content: center;
+
+  margin-top: 10vh;
+  text-align: center;
+}
+
+.pageNotFound header {
+  font-size: 2rem;
+}
+
+.pageNotFound p {
+  font-size: 1rem;
+}
+
+@media (min-width: 600px) {
+  .pageNotFound header {
+    font-size: 3rem;
+  }
+
+  .pageNotFound  p {
+    font-size: 1.2rem;
+  }
+}
+
+.pageNotFoundLinks {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+
+
+
