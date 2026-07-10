@@ -495,6 +495,8 @@ export default function SignalRProvider({
             signalRService.connection.off(CurrentlyLockedCardsMethodName); 
             signalRService.connection.off(CardHasBeenLockedMethodName); 
             signalRService.connection.off(CardHasBeenUnLockedMethodName); 
+
+            signalRService.stop(); 
         }
     }, []); 
 

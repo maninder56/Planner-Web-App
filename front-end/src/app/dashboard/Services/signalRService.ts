@@ -54,6 +54,13 @@ class SignalRService {
             console.error("Max connection retry attempts reached. Giving up.");
         }
     }
+
+    async stop() {
+        if (this.connection.state !== HubConnectionState.Disconnected) {
+            await this.connection.stop(); 
+            console.log('Signal R disconnected');
+        }
+    }
 }
 
 export const signalRService = new SignalRService(); 
