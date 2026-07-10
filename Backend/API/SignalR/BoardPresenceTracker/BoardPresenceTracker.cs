@@ -101,6 +101,11 @@ public class BoardPresenceTracker(ILogger<BoardPresenceTracker> _logger) : IBoar
         return result;
     }
 
+    public List<int> GetAllBoardIds()
+    {
+        return _boards.Keys.ToList();
+    }
+
 
     private void LogState(string message)
     {

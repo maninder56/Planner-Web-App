@@ -2,7 +2,7 @@
 using API.Models.Result;
 using DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+using DatabaseContext.Types; 
 
 namespace API.Queries.Boards; 
 
@@ -143,6 +143,16 @@ public class BoardQueries(PlannerContext database)
     {
         return await database.BoardMembers.AsNoTracking()
             .CountAsync(bm => bm.BoardId == boardId); 
+    }
+
+    public async Task<List<int>> GetAllBoardIDsOwnedByUser(int userId)
+    {
+        return await database.Boards.AsNoTracking()
+            .Where(b => b.BoardMembers.Any(bm => 
+                bm.UserId == userId && 
+                bm.Role == Role.Owner))
+            .Select(b => b.BoardId)
+            .ToListAsync();    
     }
 
 }

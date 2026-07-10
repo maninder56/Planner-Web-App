@@ -1,8 +1,13 @@
-﻿using API.DTOs.Profile.Responses;
+﻿using API.DTOs.Board.Responses;
+using API.DTOs.Profile.Responses;
 using API.Exceptions;
 using API.Models.Result;
+using API.Queries.Boards;
 using API.Queries.Profile;
 using API.Repositories.Profile;
+using API.SignalR.BoardPresenceTracker;
+using API.SignalR.Hub;
+using Microsoft.AspNetCore.SignalR;
 using Pomelo.EntityFrameworkCore.MySql.Storage.Internal.Json;
 
 namespace API.Services.ProfileService; 
@@ -10,7 +15,9 @@ namespace API.Services.ProfileService;
 public class ProfileService (
     ILogger<ProfileService> logger, 
     ProfileQueries profileQueries, 
-    IProfileRepository profileRepository) 
+    BoardQueries boardQueries, 
+    IProfileRepository profileRepository,
+    IHubContext<GlobalHub, IGlobalHubClient> globalHubContext) 
     : IProfileService
 {
     public async Task<Result<ProfileInfoResponse>> GetUserProfileInfoAsync(int userId)
@@ -52,7 +59,20 @@ public class ProfileService (
     {
         try
         {
+            List<int> boardIdsOwnedByUser = await boardQueries.GetAllBoardIDsOwnedByUser(userId);
+
             await profileRepository.DeleteProfileAsync(userId);
+
+            foreach (int boardId in boardIdsOwnedByUser)
+            {
+                string groupName = $"board:{boardId}";
+                await globalHubContext.Clients.Group(groupName).BoardHasBeenDeleted(new BoardDeletedResponse
+                {
+                    ByUserId = userId,
+                    BoardId = boardId,
+                });
+            }
+
             return Result.Success();
         }
         catch (Exception ex)
