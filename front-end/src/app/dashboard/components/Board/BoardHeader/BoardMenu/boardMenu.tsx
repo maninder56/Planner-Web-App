@@ -2,7 +2,7 @@
 import { useActivePanel } from '@/app/dashboard/Hooks/ActivePanel/ActivePanelContext';
 import styles from './boardMenu.module.css'; 
 import BoardMenuOptions from './boardMenuOptions';
-import { BoardColourSchema, UserRole } from '@/app/dashboard/Types/boardTypes';
+import { UserRole } from '@/app/dashboard/Types/boardTypes';
 import FilterBoardOptions from '../FilterButton/filterButtonOptions';
 import ShareButtonOptions from '../ShareButton/shareButtonOptions';
 import ManageBoardMembersOptions from '../ManageBoardMembers/manageBoardMembersOptions';
