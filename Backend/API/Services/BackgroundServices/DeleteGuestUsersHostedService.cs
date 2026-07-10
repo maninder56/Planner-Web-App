@@ -1,5 +1,6 @@
 ﻿
 using DatabaseContext;
+using DatabaseContext.Types;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services.BackgroundServices;
@@ -25,9 +26,22 @@ public class DeleteGuestUsersHostedService : BackgroundService
 
                 var database = scope.ServiceProvider.GetRequiredService<PlannerContext>();
 
-                await database.Users
-                    .Where(u => u.Guest && u.CreatedAt < DateTime.Now.AddDays(-7))
+                await using var transaction = await database.Database.BeginTransactionAsync(stoppingToken);
+
+                var cutoff = DateTime.Now.AddDays(-7);
+
+                await database.Boards
+                    .Where(b => b.BoardMembers.Any(bm =>
+                        bm.Role == Role.Owner &&
+                        bm.User.Guest &&
+                        bm.User.CreatedAt < cutoff))
                     .ExecuteDeleteAsync(stoppingToken);
+
+                await database.Users
+                    .Where(u => u.Guest && u.CreatedAt < cutoff)
+                    .ExecuteDeleteAsync(stoppingToken);
+
+                await transaction.CommitAsync(stoppingToken);
             }
             catch(Exception ex)
             {
