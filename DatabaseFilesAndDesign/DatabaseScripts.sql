@@ -135,3 +135,83 @@ LEFT JOIN users U
 WHERE BM.BoardId = 20;
 
 
+SELECT
+    U.UserId,
+    U.Name,
+    U.Email,
+    U.CreatedAt
+FROM users U
+WHERE U.Guest = 1
+    AND
+    U.CreatedAt < NOW() - INTERVAL 2 DAY;
+
+
+
+SELECT
+    BM.BoardId,
+    BM.UserId,
+    BM.Role,
+    U.Name,
+    U.Email
+FROM boardmembers BM
+LEFT JOIN users u
+    ON u.UserId = Bm.UserId
+WHERE BM.UserId = 40;
+
+
+SELECT *
+FROM users U
+WHERE U.Email = 'liam3468985769@gmail.com';
+
+SELECT * FROM users;
+SELECT * FROM refreshtokens;
+SELECT * FROM passwordresettokens;
+SELECT * FROM invitations;
+
+SELECT * FROM boardmembers;
+SELECT * FROM boards;
+SELECT * FROM boardlists;
+SELECT * FROM cards;
+
+SELECT * FROM boardstar;
+SELECT * FROM refreshtokens;
+
+# DELETE FROM boardmembers;
+# DELETE FROM boards;
+# DELETE FROM users;
+
+# DELETE users, boardmembers, boards
+# FROM users
+# JOIN boardmembers
+#     ON users.UserId = boardmembers.UserId
+# JOIN boards
+#     ON  boardmembers.BoardId = boards.BoardId;
+
+SELECT
+    users.UserId,
+    users.Name,
+    users.Email,
+    users.CreatedAt,
+    users.Guest,
+    boardmembers.Role,
+    boards.Name
+FROM users
+JOIN boardmembers
+    ON users.UserId = boardmembers.UserId
+JOIN boards
+    ON  boardmembers.BoardId = boards.BoardId;
+
+
+SELECT
+    U.UserId,
+    U.Name,
+    U.Email,
+    BM.Role,
+    B.BoardId
+FROM users U
+LEFT JOIN boardmembers BM
+    ON U.UserId = BM.UserId
+LEFT JOIN boards B
+    ON B.BoardId = BM.BoardId;
+
+
