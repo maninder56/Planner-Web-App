@@ -21,7 +21,7 @@ if (builder.Environment.IsProduction())
         .MinimumLevel.Information()
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-        .MinimumLevel.Override(" API", LogEventLevel.Information)
+        .MinimumLevel.Override("API", LogEventLevel.Information)
         .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
         .WriteTo.Console()
         .WriteTo.File(
@@ -92,14 +92,26 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 var app = builder.Build();
 
 // Apply migrations
-using var scope = app.Services.CreateScope();
-var database = scope.ServiceProvider.GetRequiredService<PlannerContext>(); 
-database.Database.Migrate();
-database.SaveChanges();
-database.Dispose(); 
-scope.Dispose();
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var database = scope.ServiceProvider.GetRequiredService<PlannerContext>();
+        database.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Database migration failed.");
+        throw; 
+    }
+}
 
 app.UseExceptionHandler();
+
+if (app.Environment.IsProduction())
+{
+    app.UseSerilogRequestLogging(); 
+}
 
 // Map signalR Hubs
 app.MapPlannerHubs();
