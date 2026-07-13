@@ -91,6 +91,19 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+
+if (app.Environment.IsProduction())
+{
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto |
+            ForwardedHeaders.XForwardedHost,
+    });
+}
+
 // Apply migrations
 using (var scope = app.Services.CreateScope())
 {
@@ -117,19 +130,6 @@ if (app.Environment.IsProduction())
 // Map signalR Hubs
 app.MapPlannerHubs();
 
-
-// Configure the HTTP request pipeline.
-
-if (app.Environment.IsProduction())
-{
-    app.UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders =
-            ForwardedHeaders.XForwardedFor |
-            ForwardedHeaders.XForwardedProto |
-            ForwardedHeaders.XForwardedHost,
-    });
-}
 
 //app.UseHttpsRedirection();
 
