@@ -97,7 +97,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var database = scope.ServiceProvider.GetRequiredService<PlannerContext>();
-        database.Database.Migrate();
+        await database.Database.MigrateAsync();
+        await DbInitializer.SeenAsync(database); 
     }
     catch (Exception ex)
     {
