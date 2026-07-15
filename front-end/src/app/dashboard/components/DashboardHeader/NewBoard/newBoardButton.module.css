@@ -12,6 +12,7 @@
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    color: black;
     background-color: rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: center;
