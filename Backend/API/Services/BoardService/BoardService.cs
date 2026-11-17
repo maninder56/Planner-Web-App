@@ -150,8 +150,6 @@ public class BoardService(
             logger.LogWarning("Failed to add new guest board data, Exception Message: {ExceptionMessage}", ex.Message);
             return Result<BoardInfoResponse>.Failed(ErrorType.InternalServerError, "Unexpected Error");
         }
-
-        throw new NotImplementedException();
     }
     
     
